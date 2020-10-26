@@ -1,17 +1,18 @@
 const Discord = require("discord.js");
-const { promisify } = require("util");
-const client = new Discord.Client({ autoReconnect: true });
-const readdir = promisify(require("fs").readdir);
-client.config = require("./config.js");
-require("./modules/functions.js")(client);
+const fs = require("fs").promises;
 const sql = require("./modules/sql.js");
-client.sql = sql;
+require("./modules/functions.js")(client);
 
+client.sql = sql;
 client.commands = new Discord.Collection();
 client.aliases = new Discord.Collection();
 client.prefix = client.config.prefix;
+
+const client = new Discord.Client({ autoReconnect: true });
+client.config = require("./config.js");
+
 const init = async () => {
-    const cmdFiles = await readdir("./commands/");
+    const cmdFiles = await fs.readdir("./commands/");
     console.log(`Loading a total of ${cmdFiles.length} commands.`);
     cmdFiles.forEach((f) => {
         if (!f.endsWith(".js")) return;
@@ -19,7 +20,7 @@ const init = async () => {
         if (response) console.log(response);
     });
 
-    const evtFiles = await readdir("./events/");
+    const evtFiles = await fs.readdir("./events/");
     console.log(`Loading a total of ${evtFiles.length} events.`);
     evtFiles.forEach((file) => {
         const eventName = file.split(".")[0];
