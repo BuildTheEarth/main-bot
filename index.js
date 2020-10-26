@@ -1,15 +1,7 @@
-const Discord = require("discord.js");
 const fs = require("fs").promises;
-const sql = require("./modules/sql.js");
-require("./modules/functions.js")(client);
-
-client.sql = sql;
-client.commands = new Discord.Collection();
-client.aliases = new Discord.Collection();
-client.prefix = client.config.prefix;
-
-const client = new Discord.Client({ autoReconnect: true });
-client.config = require("./config.js");
+const Client = require("./struct/Client");
+const client = new Client();
+require("./modules/functions.js")();
 
 const init = async () => {
     const cmdFiles = await fs.readdir("./commands/");
@@ -29,7 +21,6 @@ const init = async () => {
         client.on(eventName, event.bind(null, client));
     });
 
-    client.levelCache = {};
     for (let i = 0; i < client.config.permLevels.length; i++) {
         const thisLevel = client.config.permLevels[i];
         client.levelCache[thisLevel.name] = thisLevel.level;
