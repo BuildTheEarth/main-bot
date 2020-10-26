@@ -1,0 +1,18 @@
+{
+  "name": "BTE_Bot",
+  "version": "1.0.0",
+  "description": "Recoding of the original Build the Earth bot.",
+  "main": "index.js",
+  "author": "metalcupcake5",
+  "license": "ISC",
+  "dependencies": {
+    "discord.js": "^12.3.1",
+    "fs": "^0.0.1-security",
+    "ms": "^2.1.2",
+    "mysql": "^2.18.1",
+    "util": "^0.12.3"
+  },
+  "scripts": {
+    "start": "node index"
+  }
+}
