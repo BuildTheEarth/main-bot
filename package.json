@@ -1,6 +1,6 @@
 {
-    "name": "BTE_Bot",
-    "version": "1.0.0",
+    "name": "bte-bot",
+    "version": "0.0.0",
     "description": "Recoding of the original Build the Earth bot.",
     "main": "index.js",
     "author": "metalcupcake5",
