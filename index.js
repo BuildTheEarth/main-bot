@@ -21,10 +21,8 @@ const init = async () => {
         client.on(eventName, event.bind(null, client));
     });
 
-    for (let i = 0; i < client.config.permLevels.length; i++) {
-        const thisLevel = client.config.permLevels[i];
-        client.levelCache[thisLevel.name] = thisLevel.level;
-    }
+    for (const level of client.config.permLevels)
+        client.levelCache[thisLevel.name] = level.level;
 
     client.login(client.config.token);
 };
