@@ -6,7 +6,9 @@ require("./modules/functions.js")();
 async function main() {
     const commands = await fs.readdir("./commands");
     console.log(`Loading ${commands.length} commands...`);
-    commands.forEach(client.loadCommand);
+    commands.forEach(command => {
+        client.loadCommand(command);
+    });
 
     const events = await fs.readdir("./events");
     console.log(`Loading ${events.length} events...`);
