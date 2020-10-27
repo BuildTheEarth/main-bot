@@ -1,6 +1,6 @@
-const sql = require("./modules/sql.js");
+const sql = require("../modules/sql.js");
 const util = require("util");
-const config = require("./config.js");
+const config = require("../config.js");
 const Discord = require("discord.js");
 
 module.exports = class Client extends Discord.Client {
