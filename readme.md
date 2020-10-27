@@ -1,11 +1,22 @@
-# bte-bot-new
+# bte-bot
 
-yea k
-uh
+The main official bot for the BuildTheEarth Discord server.
 
-## running the bot
+## Setup
 
-1.  clone it, run `npm i`
-2.  remove `.example` from `config.js.example`
-3.  Add your token, your user id to the owernIds array if you want to be an admin, and your mysql user, password, and database name
-4.  type `node index` or `npm start` to start the bot
+### Clone the bot
+
+    $ git clone https://github.com/BuildTheEarth/bte-main-bot
+    $ cd bte-main-bot
+
+### Install dependencies
+
+    $ npm install
+
+### Configure the bot
+
+Rename the `config.example.js` file to `config.js` and fill in all of the fields.
+
+## Run
+
+    $ npm start
