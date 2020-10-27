@@ -17,7 +17,7 @@ module.exports = class Client extends Discord.Client {
 
     async permlevel(message) {
         let permlvl = 0;
-        const permOrder = client.config.permLevels
+        const permOrder = this.config.permLevels
             .slice(0)
             .sort((p, c) => (p.level < c.level ? 1 : -1));
 
@@ -40,7 +40,7 @@ module.exports = class Client extends Discord.Client {
         text = text
             .replace(/`/g, "`" + String.fromCharCode(8203))
             .replace(/@/g, "@" + String.fromCharCode(8203))
-            .replace(client.token, "why u tryna steal token");
+            .replace(this.token, "why u tryna steal token");
 
         return text;
     }
@@ -52,11 +52,10 @@ module.exports = class Client extends Discord.Client {
             if (props.init) {
                 props.init(client);
             }
-            client.commands.set(props.conf.name, props);
+            this.commands.set(props.conf.name, props);
             props.conf.aliases.forEach((alias) => {
-                client.aliases.set(alias, props.conf.name);
+                this.aliases.set(alias, props.conf.name);
             });
-            return false;
         } catch (e) {
             return `Unable to load command ${commandName}: ${e}`;
         }
@@ -64,10 +63,10 @@ module.exports = class Client extends Discord.Client {
 
     async unloadCommand(commandName) {
         let command;
-        if (client.commands.has(commandName)) {
-            command = client.commands.get(commandName);
-        } else if (client.aliases.has(commandName)) {
-            command = client.commands.get(client.aliases.get(commandName));
+        if (this.commands.has(commandName)) {
+            command = this.commands.get(commandName);
+        } else if (this.aliases.has(commandName)) {
+            command = this.commands.get(this.aliases.get(commandName));
         }
         if (!command)
             return `The command \`${commandName}\` doesn"t seem to exist, nor is it an alias. Try again!`;
