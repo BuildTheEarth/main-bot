@@ -1,12 +1,15 @@
 const config = {
-    token: "", // discord bot token
-    dbHost: "", // ip for mysql server, localhost if hosted on the same device
-    dbUser: "", // user for mysql server
-    dbPass: "", // password for mysql server
-    dbName: "", // name of the database to use
-    prefix: "=", // prefix of the bot
-    ownerIds: [], // array of discord ids
-    logChannel: "", // channel id
+    prefix: "",
+    ownerIds: [],
+    logChannel: "",
+
+    token: "",
+    db: {
+        host: "",
+        name: "",
+        user: "",
+        password: "",
+    },
 
     permLevels: [
         {
@@ -18,8 +21,8 @@ const config = {
         {
             level: 2,
             name: "Staff",
-            check: (message) =>
-                message.author.roles.cache.has((r) => r.name == "Staff")
+            check: message =>
+                message.author.roles.cache.has(r => r.name == "Staff")
                     ? true
                     : false,
         },
@@ -27,8 +30,8 @@ const config = {
         {
             level: 6,
             name: "Helper",
-            check: (message) =>
-                message.author.roles.cache.has((r) => r.name == "Helper")
+            check: message =>
+                message.author.roles.cache.has(r => r.name == "Helper")
                     ? true
                     : false,
         },
@@ -36,8 +39,8 @@ const config = {
         {
             level: 7,
             name: "Moderator",
-            check: (message) =>
-                message.author.roles.cache.has((r) => r.name == "Moderator")
+            check: message =>
+                message.author.roles.cache.has(r => r.name == "Moderator")
                     ? true
                     : false,
         },
@@ -45,8 +48,8 @@ const config = {
         {
             level: 8,
             name: "Manager",
-            check: (message) =>
-                message.author.roles.cache.has((r) => r.name == "Manager")
+            check: message =>
+                message.author.roles.cache.has(r => r.name == "Manager")
                     ? true
                     : false,
         },
@@ -54,8 +57,8 @@ const config = {
         {
             level: 9,
             name: "Admin",
-            check: (message) =>
-                message.author.roles.cache.has((r) => r.name == "Admin")
+            check: message =>
+                message.author.roles.cache.has(r => r.name == "Admin")
                     ? true
                     : false,
         },
@@ -63,7 +66,7 @@ const config = {
         {
             level: 10,
             name: "Bot Developer",
-            check: (message) => config.ownerIds.includes(message.author.id),
+            check: message => config.ownerIds.includes(message.author.id),
         },
     ],
 };

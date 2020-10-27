@@ -1,11 +1,11 @@
 const mysql = require("mysql");
 const config = require("../config.js");
 const pool = mysql.createPool({
-    host: config.dbHost,
+    database: config.db.name,
+    host: config.db.host,
     port: 3306,
-    user: config.dbUser,
-    password: config.dbPass,
-    database: config.dbName,
+    user: config.db.user,
+    password: config.db.password,
 });
 
 // ? Database function to ensure we always have a connection but without having to repeat ourself in the code.
