@@ -1,24 +1,30 @@
-const Discord = require("discord.js");
-exports.run = async (client, message, args, level) => {
-    let embed = new Discord.MessageEmbed()
-        .setAuthor(message.author.username, message.author.displayAvatarURL())
-        .setColor(0x14ff00)
-        .addField("Commands", "-`=ping`\n-`=help`\n-`=listcommands`");
+exports.run = async function help(client, message, args, level) {
+    const allCommandList = client.commands
+        .map(command => `— \`${client.config.prefix}${command.conf.name}\``)
+        .join("\n");
 
-    if (
-        level >= client.config.permLevels.find((l) => l.name === "Helper").level
-    ) {
-        embed.addField("Helper Commands", "-`=slowmode <time>`");
+    const embed = {
+        color: "#1EAD2F",
+        fields: [{ name: "All Commands", value: allCommandList }],
+    };
+
+    // these 2 are temporary, of course
+    const helper = client.config.permLevels.find(l => l.name === "Helper");
+    if (level >= helper.level) {
+        embed.fields.push({
+            name: "Moderation Commands",
+            value: "— `=slowmode <time>`",
+        });
     }
 
-    if (
-        level >=
-        client.config.permLevels.find((l) => l.name === "Manager").level
-    ) {
-        embed.addField("Helper Commands", "-`=lock [time]`\n-`=unlock`");
-    }
+    const manager = client.config.permLevels.find(l => l.name === "Manager");
+    if (level >= manager.level)
+        embed.fields.push({
+            name: "Management Commands",
+            value: "— `=lock [time]`\n— `=unlock`",
+        });
 
-    message.channel.send(embed);
+    message.channel.send({ embed });
 };
 
 exports.conf = {
