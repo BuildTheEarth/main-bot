@@ -1,6 +1,6 @@
 import Discord from "discord.js"
-import Command from "./Command"
-import loadDir from "../util/loadDir"
+import Command from "../Command"
+import loadDir from "../../util/loadDir"
 
 export default class CommandList extends Discord.Collection<string, Command> {
     async load() {

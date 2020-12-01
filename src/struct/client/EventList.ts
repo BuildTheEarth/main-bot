@@ -1,6 +1,6 @@
 import Discord from "discord.js"
-import loadDir from "../util/loadDir"
-import Client from "./Client"
+import loadDir from "../../util/loadDir"
+import Client from "../Client"
 
 export default class EventList extends Discord.Collection<string, Function> {
     client: Client
