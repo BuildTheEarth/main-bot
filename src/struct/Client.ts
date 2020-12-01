@@ -2,10 +2,12 @@ import sql from "../modules/sql"
 import util from "util"
 import config from "../../config"
 import Discord from "discord.js"
+import EventList from "./EventList"
 
 export default class Client /**/ extends Discord.Client {
     sql = sql
     config = config
+    events = new EventList(this)
     commands = new Discord.Collection()
     aliases = new Discord.Collection()
     levelCache = {}
