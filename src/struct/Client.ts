@@ -3,12 +3,13 @@ import util from "util"
 import config from "../../config"
 import Discord from "discord.js"
 import EventList from "./EventList"
+import CommandList from "./CommandList"
 
 export default class Client /**/ extends Discord.Client {
     sql = sql
     config = config
     events = new EventList(this)
-    commands = new Discord.Collection()
+    commands = new CommandList()
     aliases = new Discord.Collection()
     levelCache = {}
 
@@ -36,8 +37,7 @@ export default class Client /**/ extends Discord.Client {
     // ???????????????????????????????????????????????
     async clean(client: this, text: any) {
         if (text && text.constructor.name == "Promise") text = await text
-        if (typeof text !== "string")
-            text = require("util").inspect(text, { depth: 1 })
+        if (typeof text !== "string") text = require("util").inspect(text, { depth: 1 })
 
         text = text
             .replace(/`/g, "`" + String.fromCharCode(8203))
@@ -54,9 +54,7 @@ export default class Client /**/ extends Discord.Client {
             const props = require(`../commands/${commandName}`)
             if (props.init) props.init(this)
             this.commands.set(props.conf.name, props)
-            props.conf.aliases.forEach(alias =>
-                this.aliases.set(alias, props.conf.name)
-            )
+            props.conf.aliases.forEach(alias => this.aliases.set(alias, props.conf.name))
         } catch (e) {
             return `Unable to load command ${commandName}: ${e}`
         }
@@ -76,11 +74,8 @@ export default class Client /**/ extends Discord.Client {
         if (command.shutdown) {
             await command.shutdown(this)
         }
-        const mod =
-            require.cache[require.resolve(`../commands/${command.conf.name}`)]
-        delete require.cache[
-            require.resolve(`../commands/${command.conf.name}.js`)
-        ]
+        const mod = require.cache[require.resolve(`../commands/${command.conf.name}`)]
+        delete require.cache[require.resolve(`../commands/${command.conf.name}.js`)]
         for (let i = 0; i < mod.parent.children.length; i++) {
             if (mod.parent.children[i] === mod) {
                 mod.parent.children.splice(i, 1)
