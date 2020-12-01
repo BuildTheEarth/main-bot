@@ -1,5 +1,9 @@
 import fs from "fs"
+import Discord from "discord.js"
 import Client from "./struct/Client"
+import GuildMember from "./struct/GuildMember"
+
+Discord.Structures.extend("GuildMember", () => GuildMember)
 const client = new Client()
 
 async function main() {
