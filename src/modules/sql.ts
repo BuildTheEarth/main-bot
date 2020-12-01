@@ -28,4 +28,4 @@ sql.query = function (query, params, callback) {
     })
 }
 
-module.exports = sql
+export default sql
