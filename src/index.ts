@@ -1,8 +1,10 @@
 import Discord from "discord.js"
 import Client from "./struct/Client"
 import GuildMember from "./struct/discord/GuildMember"
+import Role from "./struct/discord/Role"
 
 Discord.Structures.extend("GuildMember", () => GuildMember)
+Discord.Structures.extend("Role", () => Role)
 const client = new Client()
 
 async function main() {
