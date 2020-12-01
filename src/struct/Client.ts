@@ -1,23 +1,24 @@
-const sql = require("../modules/sql.js")
-const util = require("util")
-const config = require("../config.js")
-const Discord = require("discord.js")
+import sql from "../modules/sql.js"
+import util from "util"
+import config from "../../config.js"
+import Discord from "discord.js"
 
-module.exports = class Client extends (
-    Discord.Client
-) {
+export default class Client /**/ extends Discord.Client {
     sql = sql
     config = config
     commands = new Discord.Collection()
     aliases = new Discord.Collection()
-    prefix = this.config.prefix
     levelCache = {}
 
-    async wait(timeout) {
+    get prefix() {
+        return this.config.prefix
+    }
+
+    async wait(timeout: number) {
         await util.promisify(setTimeout)(timeout)
     }
 
-    async permlevel(message) {
+    async permlevel(message: Discord.Message) {
         let permlvl = 0
         const permOrder = this.config.permLevels
             .slice(0)
@@ -34,9 +35,10 @@ module.exports = class Client extends (
         return permlvl
     }
 
-    async clean(client, text) {
+    // ???????????????????????????????????????????????
+    async clean(client: this, text: any) {
         if (text && text.constructor.name == "Promise") text = await text
-        if (typeof evaled !== "string")
+        if (typeof text !== "string")
             text = require("util").inspect(text, { depth: 1 })
 
         text = text
@@ -47,23 +49,23 @@ module.exports = class Client extends (
         return text
     }
 
+    // may God have mercy upon our poor souls
     async loadCommand(commandName) {
         try {
             console.log(`Loading Command: ${commandName}`)
             const props = require(`../commands/${commandName}`)
-            if (props.init) {
-                props.init(client)
-            }
+            if (props.init) props.init(this)
             this.commands.set(props.conf.name, props)
-            props.conf.aliases.forEach(alias => {
+            props.conf.aliases.forEach(alias =>
                 this.aliases.set(alias, props.conf.name)
-            })
+            )
         } catch (e) {
             return `Unable to load command ${commandName}: ${e}`
         }
     }
 
-    async unloadCommand(commandName) {
+    // todo: remove deprecated .parent
+    async unloadCommand(commandName: string) {
         let command
         if (this.commands.has(commandName)) {
             command = this.commands.get(commandName)
@@ -74,7 +76,7 @@ module.exports = class Client extends (
             return `The command \`${commandName}\` doesn"t seem to exist, nor is it an alias. Try again!`
 
         if (command.shutdown) {
-            await command.shutdown(client)
+            await command.shutdown(this)
         }
         const mod =
             require.cache[require.resolve(`../commands/${command.conf.name}`)]
