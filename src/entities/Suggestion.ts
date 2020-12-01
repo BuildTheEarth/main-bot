@@ -3,7 +3,7 @@ import {
     Column,
     PrimaryGeneratedColumn,
     CreateDateColumn,
-    BaseEntity,
+    BaseEntity
 } from "typeorm"
 
 @Entity()
