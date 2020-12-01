@@ -6,7 +6,9 @@
     "dependencies": {
         "discord.js": "^12.5.1",
         "ms": "^2.1.2",
-        "mysql": "^2.18.1"
+        "mysql2": "^2.2.5",
+        "reflect-metadata": "^0.1.13",
+        "typeorm": "^0.2.29"
     },
     "devDependencies": {
         "@types/node": "^14.14.10",
