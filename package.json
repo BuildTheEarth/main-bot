@@ -11,7 +11,10 @@
     "devDependencies": {
         "typescript": "^4.1.2"
     },
-    "scripts": {},
+    "scripts": {
+        "build": "node_modules/.bin/tsc",
+        "watch": "node_modules/.bin/tsc --watch"
+    },
     "repository": "BuildTheEarth/main-bot",
     "author": "BuildTheEarth",
     "license": "MIT",
