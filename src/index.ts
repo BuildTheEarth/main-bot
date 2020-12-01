@@ -1,7 +1,6 @@
-const fs = require("fs").promises
-const Client = require("./struct/Client")
+import fs from "fs/promises"
+import Client from "./struct/Client"
 const client = new Client()
-require("./modules/functions.js")()
 
 async function main() {
     const commands = await fs.readdir("./commands")
