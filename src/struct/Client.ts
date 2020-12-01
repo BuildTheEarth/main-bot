@@ -1,6 +1,6 @@
-import sql from "../modules/sql.js"
+import sql from "../modules/sql"
 import util from "util"
-import config from "../../config.js"
+import config from "../../config"
 import Discord from "discord.js"
 
 export default class Client /**/ extends Discord.Client {
