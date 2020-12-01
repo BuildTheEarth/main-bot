@@ -1,5 +1,5 @@
 const config = {
-    prefix: "",
+    prefix: "=",
     ownerIds: ["377551134702829568", "391984806638125066"],
     logChannel: "",
 
