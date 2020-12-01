@@ -4,8 +4,7 @@
     "description": "The main official bot for the BuildTheEarth Discord server.",
     "main": "src/index.js",
     "dependencies": {
-        "discord.js": "^12.3.1",
-        "fs": "^0.0.1-security",
+        "discord.js": "^12.5.1",
         "ms": "^2.1.2",
         "mysql": "^2.18.1"
     },
