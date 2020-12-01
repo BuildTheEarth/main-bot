@@ -46,42 +46,4 @@ export default class Client /**/ extends Discord.Client {
 
         return text
     }
-
-    // may God have mercy upon our poor souls
-    async loadCommand(commandName) {
-        try {
-            console.log(`Loading Command: ${commandName}`)
-            const props = require(`../commands/${commandName}`)
-            if (props.init) props.init(this)
-            this.commands.set(props.conf.name, props)
-            props.conf.aliases.forEach(alias => this.aliases.set(alias, props.conf.name))
-        } catch (e) {
-            return `Unable to load command ${commandName}: ${e}`
-        }
-    }
-
-    // todo: remove deprecated .parent
-    async unloadCommand(commandName: string) {
-        let command
-        if (this.commands.has(commandName)) {
-            command = this.commands.get(commandName)
-        } else if (this.aliases.has(commandName)) {
-            command = this.commands.get(this.aliases.get(commandName))
-        }
-        if (!command)
-            return `The command \`${commandName}\` doesn"t seem to exist, nor is it an alias. Try again!`
-
-        if (command.shutdown) {
-            await command.shutdown(this)
-        }
-        const mod = require.cache[require.resolve(`../commands/${command.conf.name}`)]
-        delete require.cache[require.resolve(`../commands/${command.conf.name}.js`)]
-        for (let i = 0; i < mod.parent.children.length; i++) {
-            if (mod.parent.children[i] === mod) {
-                mod.parent.children.splice(i, 1)
-                break
-            }
-        }
-        return false
-    }
 }
