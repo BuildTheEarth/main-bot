@@ -1,5 +1,4 @@
 export default async function (client, message) {
-    await client.wait(1000)
     client.user.setActivity(`${client.config.prefix}help`, { type: "PLAYING" })
     console.log(`Ready | ${client.user.username}`)
 

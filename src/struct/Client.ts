@@ -14,10 +14,6 @@ export default class Client /**/ extends Discord.Client {
         return this.config.prefix
     }
 
-    async wait(timeout: number) {
-        await util.promisify(setTimeout)(timeout)
-    }
-
     async permlevel(message: Discord.Message) {
         let permlvl = 0
         const permOrder = this.config.permLevels
