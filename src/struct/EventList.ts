@@ -14,7 +14,7 @@ export default class EventList extends Discord.Collection<string, Function> {
         await loadDir<Function>(__dirname + "/../events/", bind, this)
     }
 
-    async register() {
+    register() {
         // @ts-ignore: a bunch of errors related to event name and handler typings
         this.forEach((handler, name) => this.client.on(name, handler))
     }
