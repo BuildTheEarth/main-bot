@@ -8,6 +8,9 @@
         "ms": "^2.1.2",
         "mysql": "^2.18.1"
     },
+    "devDependencies": {
+        "typescript": "^4.1.2"
+    },
     "scripts": {},
     "repository": "BuildTheEarth/main-bot",
     "author": "BuildTheEarth",
