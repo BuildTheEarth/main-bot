@@ -3,5 +3,6 @@
     "semi": false,
     "endOfLine": "lf",
     "singleQuote": false,
-    "arrowParens": "avoid"
+    "arrowParens": "avoid",
+    "printWidth": 90
 }
