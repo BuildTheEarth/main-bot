@@ -1,4 +1,4 @@
-module.exports = async (client, message) => {
+export default async function (client, message) {
     await client.wait(1000)
     client.user.setActivity(`${client.config.prefix}help`, { type: "PLAYING" })
     console.log(`Ready | ${client.user.username}`)
@@ -23,7 +23,7 @@ module.exports = async (client, message) => {
                         .members.fetch(r.DiscordID)
                         .then(m => {
                             m.roles.remove(muteRole)
-                            sql.query(
+                            client.sql.query(
                                 "Update Members set MutedUntil = null where ID = ?",
                                 [r.ID]
                             )
@@ -37,7 +37,7 @@ module.exports = async (client, message) => {
                         .members.fetch(r.DiscordID)
                         .then(m => {
                             m.roles.remove(muteRole)
-                            sql.query(
+                            client.sql.query(
                                 "Update Members set MutedUntil = null where ID = ?",
                                 [r.ID]
                             )
