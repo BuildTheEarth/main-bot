@@ -24,4 +24,8 @@ export default class Client /**/ extends Discord.Client {
             synchronize: true
         })
     }
+
+    login(): Promise<string> {
+        return super.login(this.config.token)
+    }
 }
