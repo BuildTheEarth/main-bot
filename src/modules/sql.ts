@@ -1,5 +1,5 @@
-const mysql = require("mysql")
-const config = require("../config.js")
+import mysql from "mysql"
+import config from "../../config"
 const pool = mysql.createPool({
     database: config.db.name,
     host: config.db.host,
@@ -9,7 +9,7 @@ const pool = mysql.createPool({
 })
 
 // ? Database function to ensure we always have a connection but without having to repeat ourself in the code.
-let sql = {}
+let sql: any = {}
 sql.query = function (query, params, callback) {
     pool.getConnection(function (err, connection) {
         if (err) {
