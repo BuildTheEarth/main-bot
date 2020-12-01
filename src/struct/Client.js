@@ -1,90 +1,92 @@
-const sql = require("../modules/sql.js");
-const util = require("util");
-const config = require("../config.js");
-const Discord = require("discord.js");
+const sql = require("../modules/sql.js")
+const util = require("util")
+const config = require("../config.js")
+const Discord = require("discord.js")
 
-module.exports = class Client extends Discord.Client {
-    sql = sql;
-    config = config;
-    commands = new Discord.Collection();
-    aliases = new Discord.Collection();
-    prefix = this.config.prefix;
-    levelCache = {};
+module.exports = class Client extends (
+    Discord.Client
+) {
+    sql = sql
+    config = config
+    commands = new Discord.Collection()
+    aliases = new Discord.Collection()
+    prefix = this.config.prefix
+    levelCache = {}
 
     async wait(timeout) {
-        await util.promisify(setTimeout)(timeout);
+        await util.promisify(setTimeout)(timeout)
     }
 
     async permlevel(message) {
-        let permlvl = 0;
+        let permlvl = 0
         const permOrder = this.config.permLevels
             .slice(0)
-            .sort((p, c) => (p.level < c.level ? 1 : -1));
+            .sort((p, c) => (p.level < c.level ? 1 : -1))
 
         while (permOrder.length) {
-            const currentLevel = permOrder.shift();
-            if (message.guild && currentLevel.guildOnly) continue;
+            const currentLevel = permOrder.shift()
+            if (message.guild && currentLevel.guildOnly) continue
             if (currentLevel.check(message)) {
-                permlvl = currentLevel.level;
-                break;
+                permlvl = currentLevel.level
+                break
             }
         }
-        return permlvl;
+        return permlvl
     }
 
     async clean(client, text) {
-        if (text && text.constructor.name == "Promise") text = await text;
+        if (text && text.constructor.name == "Promise") text = await text
         if (typeof evaled !== "string")
-            text = require("util").inspect(text, { depth: 1 });
+            text = require("util").inspect(text, { depth: 1 })
 
         text = text
             .replace(/`/g, "`" + String.fromCharCode(8203))
             .replace(/@/g, "@" + String.fromCharCode(8203))
-            .replace(this.token, "why u tryna steal token");
+            .replace(this.token, "why u tryna steal token")
 
-        return text;
+        return text
     }
 
     async loadCommand(commandName) {
         try {
-            console.log(`Loading Command: ${commandName}`);
-            const props = require(`../commands/${commandName}`);
+            console.log(`Loading Command: ${commandName}`)
+            const props = require(`../commands/${commandName}`)
             if (props.init) {
-                props.init(client);
+                props.init(client)
             }
-            this.commands.set(props.conf.name, props);
-            props.conf.aliases.forEach((alias) => {
-                this.aliases.set(alias, props.conf.name);
-            });
+            this.commands.set(props.conf.name, props)
+            props.conf.aliases.forEach(alias => {
+                this.aliases.set(alias, props.conf.name)
+            })
         } catch (e) {
-            return `Unable to load command ${commandName}: ${e}`;
+            return `Unable to load command ${commandName}: ${e}`
         }
     }
 
     async unloadCommand(commandName) {
-        let command;
+        let command
         if (this.commands.has(commandName)) {
-            command = this.commands.get(commandName);
+            command = this.commands.get(commandName)
         } else if (this.aliases.has(commandName)) {
-            command = this.commands.get(this.aliases.get(commandName));
+            command = this.commands.get(this.aliases.get(commandName))
         }
         if (!command)
-            return `The command \`${commandName}\` doesn"t seem to exist, nor is it an alias. Try again!`;
+            return `The command \`${commandName}\` doesn"t seem to exist, nor is it an alias. Try again!`
 
         if (command.shutdown) {
-            await command.shutdown(client);
+            await command.shutdown(client)
         }
         const mod =
-            require.cache[require.resolve(`../commands/${command.conf.name}`)];
+            require.cache[require.resolve(`../commands/${command.conf.name}`)]
         delete require.cache[
             require.resolve(`../commands/${command.conf.name}.js`)
-        ];
+        ]
         for (let i = 0; i < mod.parent.children.length; i++) {
             if (mod.parent.children[i] === mod) {
-                mod.parent.children.splice(i, 1);
-                break;
+                mod.parent.children.splice(i, 1)
+                break
             }
         }
-        return false;
+        return false
     }
-};
+}

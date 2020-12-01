@@ -1,16 +1,16 @@
 module.exports = () => {
-    process.on("uncaughtException", (err) => {
+    process.on("uncaughtException", err => {
         const errorMsg = err.stack.replace(
             new RegExp(`${__dirname}/`, "g"),
             "./"
-        );
-        console.error(`Uncaught Exception: ${errorMsg}`);
-        console.error(err);
-        process.exit(1);
-    });
+        )
+        console.error(`Uncaught Exception: ${errorMsg}`)
+        console.error(err)
+        process.exit(1)
+    })
 
-    process.on("unhandledRejection", (err) => {
-        console.error(`Unhandled rejection: ${err}`);
-        console.error(err);
-    });
-};
+    process.on("unhandledRejection", err => {
+        console.error(`Unhandled rejection: ${err}`)
+        console.error(err)
+    })
+}

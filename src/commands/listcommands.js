@@ -1,4 +1,4 @@
-const Discord = require("discord.js");
+const Discord = require("discord.js")
 exports.run = async (client, message, args, level) => {
     client.sql.query("Select * from Commands", [], (err, rows) => {
         if (err) {
@@ -11,14 +11,14 @@ exports.run = async (client, message, args, level) => {
                 .setTitle("🚫 An error occurred!")
                 .setDescription(
                     "Please contact one of the bot developers for help."
-                );
-            return message.channel.send(embed);
+                )
+            return message.channel.send(embed)
         }
 
-        let allCommands = "";
-        rows.forEach((row) => {
-            allCommands += "- `=" + row.Command + "`\n";
-        });
+        let allCommands = ""
+        rows.forEach(row => {
+            allCommands += "- `=" + row.Command + "`\n"
+        })
 
         const embed = new Discord.MessageEmbed()
             .setColor(0x14ff00)
@@ -27,15 +27,15 @@ exports.run = async (client, message, args, level) => {
                 message.author.displayAvatarURL()
             )
             .setTitle("All Custom Commands")
-            .setDescription(allCommands);
+            .setDescription(allCommands)
 
-        message.channel.send(embed);
-    });
-};
+        message.channel.send(embed)
+    })
+}
 
 exports.conf = {
     enabled: true,
     aliases: ["listcom", "listcoms"],
     permLevel: "User",
     name: "listcommands",
-};
+}
