@@ -1,15 +1,15 @@
-import fs from "fs/promises"
+import fs from "fs"
 import Client from "./struct/Client"
 const client = new Client()
 
 async function main() {
-    const commands = await fs.readdir("./commands")
+    const commands = await fs.promises.readdir("./commands")
     console.log(`Loading ${commands.length} commands...`)
     commands.forEach(command => {
         client.loadCommand(command)
     })
 
-    const events = await fs.readdir("./events")
+    const events = await fs.promises.readdir("./events")
     console.log(`Loading ${events.length} events...`)
     events.forEach(event => {
         const name = event.replace(/\.js$/, "")
