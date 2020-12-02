@@ -14,7 +14,7 @@ export default async function (this: Client, message: Discord.Message) {
 
     const command = this.commands.search(commandName)
     if (!command) {
-        const firstArg = (args[0] || "").trim().toLowerCase()
+        const firstArg = (args.split(" ")[0] || "").trim().toLowerCase()
         const language = firstArg.length === 2 ? firstArg : "en"
 
         const snippet = await Snippet.findOne({
@@ -27,9 +27,12 @@ export default async function (this: Client, message: Discord.Message) {
             })
 
             if (unlocalizedSnippet) {
-                message.channel.send(
-                    `The **${commandName}** snippet hasn't been translated to \`${language}\` yet.`
-                )
+                message.channel.send({
+                    embed: {
+                        color: this.config.colors.error,
+                        description: `The **${commandName}** snippet hasn't been translated to \`${language}\` yet.`
+                    }
+                })
             }
 
             return
