@@ -3,7 +3,6 @@ import path from "path"
 // TODO: use YAML
 export default class ConfigManager implements Config {
     prefix: string
-    ownerIds: string[]
     logChannel: string
     token: string
     db: { host: string; name: string; user: string; pass: string }
@@ -20,7 +19,6 @@ export type ConfigKey = "prefix" | "ownerIds" | "logChannel" | "token" | "db"
 
 export type Config = {
     prefix: string
-    ownerIds: string[]
     logChannel: string
     guilds: {
         main: string

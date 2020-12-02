@@ -1,6 +1,5 @@
 module.exports = {
     prefix: "",
-    ownerIds: [],
     logChannel: "",
     guilds: {
         main: "",
