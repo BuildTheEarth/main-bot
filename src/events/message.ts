@@ -9,7 +9,7 @@ export default async function (this: Client, message: Discord.Message) {
     if (!message.content.startsWith(this.config.prefix)) return
 
     const body = message.content.slice(this.config.prefix.length).trim()
-    const args = body.replace(/^.+? /, "").trim()
+    const args = body.split(" ").slice(1).join(" ").trim()
     const commandName = body.split(" ")[0].toLowerCase()
 
     const command = this.commands.search(commandName)
