@@ -4,4 +4,4 @@ function get(_target: any, key: string): string {
     return capital.join(" ")
 }
 
-export default new Proxy({}, { get })
+export default <{ [key: string]: string }>new Proxy({}, { get })
