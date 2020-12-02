@@ -1,3 +1,4 @@
+import "reflect-metadata"
 import Discord from "discord.js"
 import Client from "./struct/Client"
 import GuildMember from "./struct/discord/GuildMember"
