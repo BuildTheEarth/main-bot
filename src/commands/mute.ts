@@ -34,10 +34,14 @@ export default new Command({
         }
 
         if (target.hasStaffPermission(roles.STAFF)) {
+            const error =
+                target.id === message.author.id
+                    ? "You can't mute yourself..."
+                    : "You can't mute other staff!"
             return message.channel.send({
                 embed: {
                     color: client.config.colors.error,
-                    description: "You can't mute other staff!"
+                    description: error
                 }
             })
         }
@@ -61,10 +65,7 @@ export default new Command({
         message.channel.send({
             embed: {
                 color: client.config.colors.success,
-                description:
-                    target.id !== message.author.id
-                        ? `Muted \`${target.user.tag}\` ${formattedLength} • *${reason}*`
-                        : `Muting yourself, huh? • *${reason}*`
+                description: `Muted \`${target.user.tag}\` ${formattedLength} • *${reason}*`
             }
         })
 
