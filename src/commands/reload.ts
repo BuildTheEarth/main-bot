@@ -16,7 +16,7 @@ export default new Command({
             return message.channel.send({
                 embed: {
                     color: client.config.colors.error,
-                    description: `Unknown command \`${commandName}\``
+                    description: `Unknown command \`${commandName}\`.`
                 }
             })
         }
@@ -27,7 +27,7 @@ export default new Command({
         message.channel.send({
             embed: {
                 color: client.config.colors.success,
-                description: `Reloaded command \`${command.name}\``
+                description: `Reloaded command \`${command.name}\`.`
             }
         })
     }
