@@ -10,7 +10,7 @@ export default class EventList extends Discord.Collection<string, Function> {
     }
 
     async load() {
-        const bind = (func: Function): Function => func.bind(this)
+        const bind = (func: Function): Function => func.bind(this.client)
         await loadDir<Function>(__dirname + "/../../events/", bind, this)
     }
 
