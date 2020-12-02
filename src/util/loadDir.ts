@@ -1,4 +1,4 @@
-import fs from "fs/promises"
+import fs from "fs"
 import path from "path"
 import Discord from "discord.js"
 
@@ -8,7 +8,7 @@ export default async function loadDir<T>(
     baseCollection?: Discord.Collection<string, T>
 ): Promise<Discord.Collection<string, T>> {
     const result = baseCollection || new Discord.Collection<string, T>()
-    const files = await fs.readdir(dir)
+    const files = await fs.promises.readdir(dir)
     for (const file of files) {
         const name = file.replace(/.js$/, "")
         const filepath = path.join(dir, file)
