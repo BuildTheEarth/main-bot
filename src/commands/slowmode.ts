@@ -7,7 +7,7 @@ export default new Command({
     name: "slowmode",
     aliases: ["cooldown", "ratelimit"],
     description: "Set the slowmode.",
-    permission: [roles.HELPER, roles.MODERATOR, roles.MANAGER, roles.BOT_DEV],
+    permission: [roles.HELPER, roles.MODERATOR, roles.MANAGER],
     usage: "<seconds> [channel]",
     async run(client: Client, message: Discord.Message, args: string) {
         const [inputSlowmode, inputChannel] = args.split(/ +/)
