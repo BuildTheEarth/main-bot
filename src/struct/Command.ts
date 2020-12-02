@@ -4,7 +4,7 @@ export default class Command implements CommandProperties {
     name: string
     aliases: string[]
     description: string
-    permission: string
+    permission: string | string[]
     usage: string
     run: (client: Discord.Client, message: Discord.Message, args: string) => void
 
@@ -22,7 +22,7 @@ export type CommandProperties = {
     name: string
     aliases: string[]
     description: string
-    permission: string
+    permission: string | string[]
     usage: string
     run: (client: Discord.Client, message: Discord.Message, args: string) => void
 }
