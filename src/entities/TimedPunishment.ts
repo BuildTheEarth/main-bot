@@ -1,6 +1,6 @@
 import { Entity, Column, PrimaryGeneratedColumn, BaseEntity } from "typeorm"
 
-@Entity()
+@Entity({ name: "timed_punishments" })
 export default class TimedPunishment extends BaseEntity {
     @PrimaryGeneratedColumn()
     id: number

@@ -1,6 +1,6 @@
 import { Entity, Column, PrimaryGeneratedColumn, BaseEntity } from "typeorm"
 
-@Entity()
+@Entity({ name: "snippets" })
 export default class Snippet extends BaseEntity {
     @PrimaryGeneratedColumn()
     id: number

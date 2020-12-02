@@ -6,7 +6,7 @@ import {
     BaseEntity
 } from "typeorm"
 
-@Entity()
+@Entity({ name: "suggestions" })
 export default class Suggestion extends BaseEntity {
     @PrimaryGeneratedColumn()
     id: number

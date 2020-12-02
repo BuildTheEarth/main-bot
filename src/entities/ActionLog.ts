@@ -6,7 +6,7 @@ import {
     BaseEntity
 } from "typeorm"
 
-@Entity()
+@Entity({ name: "action_logs" })
 export default class ActionLog extends BaseEntity {
     @PrimaryGeneratedColumn()
     id: number
