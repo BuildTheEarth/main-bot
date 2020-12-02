@@ -7,7 +7,7 @@ import createLogger from "@buildtheearth/bot-logger"
 
 export default class Client /**/ extends Discord.Client {
     db: TypeORM.Connection
-    logger = createLogger()
+    logger = createLogger({ filePath: __dirname + "/../../logs/" })
     config = new ConfigManager()
     events = new EventList(this)
     commands = new CommandList()
