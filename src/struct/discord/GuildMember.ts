@@ -7,7 +7,7 @@ export default class GuildMember extends Discord.GuildMember {
     guild: Guild
 
     hasStaffPermission(roles: string | string[]) {
-        if (roles === "any") return true
+        if (roles === "Any") return true
         if (typeof roles === "string") roles = [roles]
         for (const role of roles)
             if (this.roles.cache.find(r => r.name === role)) return true
