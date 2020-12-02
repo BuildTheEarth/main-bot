@@ -5,7 +5,7 @@ import loadDir from "../../util/loadDir"
 export default class CommandList extends Discord.Collection<string, Command> {
     async load() {
         const noop = cmd => cmd
-        await loadDir<Command>(__dirname + "/../commands/", noop, this)
+        await loadDir<Command>(__dirname + "/../../commands/", noop, this)
     }
 
     search(name: string): Command {
