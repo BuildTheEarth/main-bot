@@ -6,6 +6,10 @@ module.exports = {
         main: "",
         staff: ""
     },
+    colors: {
+        success: "",
+        error: ""
+    },
 
     token: "",
     db: {

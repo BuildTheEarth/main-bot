@@ -8,6 +8,7 @@ export default class ConfigManager implements Config {
     token: string
     db: { host: string; name: string; user: string; pass: string }
     guilds: { main: string; staff: string }
+    colors: { success: string; error: string }
 
     async load() {
         const config: Config = await import(path.join(__dirname, "../../../config"))
@@ -24,6 +25,10 @@ export type Config = {
     guilds: {
         main: string
         staff: string
+    }
+    colors: {
+        success: string
+        error: string
     }
 
     token: string
