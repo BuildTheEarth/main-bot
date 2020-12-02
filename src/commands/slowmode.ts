@@ -23,9 +23,7 @@ export default new Command({
                 }
             })
         }
-        const channelID = inputChannel
-            ? inputChannel.match(/\d{18}/)[0]
-            : message.channel.id
+        const channelID = inputChannel.match(/\d{18}/)?.[0]
         const channel = <Discord.TextChannel>(
             (message.guild.channels.cache.get(channelID) || message.channel)
         )
