@@ -1,68 +1,49 @@
 import Discord from "discord.js"
-export default async function (client, message) {
+import Client from "../struct/Client"
+import GuildMember from "../struct/discord/GuildMember"
+import Role from "../struct/discord/Role"
+import Snippet from "../entities/Snippet"
+
+export default async function (this: Client, message: Discord.Message) {
     if (message.author.bot) return
+    if (!message.content.startsWith(this.config.prefix)) return
 
-    if (message.content.indexOf(client.config.prefix) !== 0) return
+    const body = message.content.slice(this.config.prefix.length).trim()
+    const args = body.replace(/^.+ /, "").trim()
+    const commandName = body.split(" ")[0].toLowerCase()
 
-    const args = message.content.slice(1).trim().split(/ +/g)
-    const command = args.shift().toLowerCase()
+    const command = this.commands.search(commandName)
+    if (!command) {
+        const firstArg = (args[0] || "").trim().toLowerCase()
+        const language = firstArg.length === 2 ? firstArg : "en"
 
-    const level = client.permlevel(message)
+        const snippet = await Snippet.findOne({
+            where: { name: commandName, language: language }
+        })
 
-    const cmd =
-        client.commands.get(command) ||
-        client.commands.get(client.aliases.get(command))
-    if (!cmd) {
-        let lang = args[0] || "en"
-        lang = lang.toLowerCase()
-        client.sql.query(
-            "select * from Commands where Command = ? and Language = ?",
-            [command, lang],
-            (err, res) => {
-                if (err) {
-                    const embed = new Discord.MessageEmbed()
-                        .setColor(0x14ff00)
-                        .setAuthor(
-                            message.author.username,
-                            message.author.displayAvatarURL()
-                        )
-                        .setTitle("🚫 An error occurred!")
-                        .setDescription(
-                            "Please contact one of the bot developers for help."
-                        )
-                    message.channel.send(embed)
-                }
+        if (!snippet) {
+            const unlocalizedSnippet = await Snippet.findOne({
+                where: { name: commandName }
+            })
 
-                if (res.length !== 0) {
-                    let user = message.mentions.users.first()
-                        ? message.mentions.users.first().id
-                        : args.length === 1
-                        ? "123456"
-                        : args[1]
-                    message.guild.members
-                        .fetch(user)
-                        .then(m => {
-                            message.channel.send(res[0].Response)
-                        })
-                        .catch(e => {
-                            message.channel.send(res[0].Response)
-                        })
-                }
+            if (unlocalizedSnippet) {
+                message.channel.send(
+                    `The **${commandName}** snippet hasn't been translated to \`${language}\` yet.`
+                )
             }
-        )
-        return
-    }
-    if (level < client.levelCache[cmd.conf.permLevel]) {
-        return
+
+            return
+        }
+
+        return message.channel.send(snippet.body).catch(() => {})
     }
 
-    message.author.permLevel = level
+    const member = <GuildMember>message.member
+    if (!member.hasStaffPermission(command.permission)) return
+    command.run(this, message, args)
 
-    console.log(
-        `${client.config.permLevels.find(l => l.level === level).name} ${
-            message.author.username
-        }(${message.author.id}) ran command ${command}`
+    const highestRole = <Role>member.roles.highest
+    this.logger.info(
+        `${highestRole.format()} ${member.user.tag} ran '${commandName}' command.`
     )
-
-    cmd.run(client, message, args, level)
 }
