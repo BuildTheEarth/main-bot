@@ -1,4 +1,6 @@
 import { Entity, Column, PrimaryGeneratedColumn, BaseEntity } from "typeorm"
+import Client from "../struct/Client"
+import GuildMember from "../struct/discord/GuildMember"
 
 @Entity({ name: "timed_punishments" })
 export default class TimedPunishment extends BaseEntity {
@@ -13,4 +15,17 @@ export default class TimedPunishment extends BaseEntity {
 
     @Column()
     end: number
+
+    async undo(client: Client) {
+        const guild = client.guilds.cache.get(client.config.guilds.main)
+        if (this.type === "mute") {
+            const member: GuildMember = await guild.members
+                .fetch({ user: this.user, cache: true })
+                .catch(() => null)
+            if (!member) return
+            member.unmute("End of punishment")
+        } else if (this.type === "ban") {
+            await guild.members.unban(this.user, "End of punishment").catch(() => null)
+        }
+    }
 }
