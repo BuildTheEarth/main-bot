@@ -2,6 +2,10 @@ module.exports = {
     prefix: "",
     ownerIds: [],
     logChannel: "",
+    guilds: {
+        main: "",
+        staff: ""
+    },
 
     token: "",
     db: {
