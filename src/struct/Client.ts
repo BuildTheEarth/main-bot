@@ -18,7 +18,7 @@ export default class Client /**/ extends Discord.Client {
             type: "mysql",
             host: this.config.db.host,
             database: this.config.db.name,
-            username: this.config.db.name,
+            username: this.config.db.user,
             password: this.config.db.pass,
             entities: [__dirname + "/../entities/*.js"],
             synchronize: true
