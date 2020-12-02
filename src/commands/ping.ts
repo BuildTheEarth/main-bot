@@ -10,6 +10,8 @@ export default new Command({
     permission: roles.ANY,
     usage: "",
     async run(_client: Client, message: Discord.Message) {
-        message.channel.send(":ping_pong: Pong!")
+        const pinger = await message.channel.send(":ping_pong: Pinging...")
+        const ping = pinger.createdTimestamp - message.createdTimestamp
+        pinger.edit(`:ping_pong: Pong! **${ping.toLocaleString()}ms**.`)
     }
 })
