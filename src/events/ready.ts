@@ -1,49 +1,19 @@
-export default async function (client, message) {
+import Client from "../struct/Client"
+import TimedPunishment from "../entities/TimedPunishment"
+
+export default async function (client: Client) {
     client.user.setActivity(`${client.config.prefix}help`, { type: "PLAYING" })
-    console.log(`Ready | ${client.user.username}`)
 
-    const guild = "571136573253615627"
-
-    client.sql.query(
-        "Select * from Members where MutedUntil IS NOT NULL AND MutedUntil > ?",
-        [Date.now()],
-        (err, res) => {
-            if (err) return console.error(err)
-
-            let mutes = res.filter(r => r.MutedUntil)
-
-            mutes.forEach(r => {
-                const muteRole = client.guilds.cache
-                    .get(guild)
-                    .roles.cache.find(role => role.name === "Muted")
-                if (r.MutedUntil < new Date().getTime()) {
-                    client.guilds
-                        .resolve(guild)
-                        .members.fetch(r.DiscordID)
-                        .then(m => {
-                            m.roles.remove(muteRole)
-                            client.sql.query(
-                                "Update Members set MutedUntil = null where ID = ?",
-                                [r.ID]
-                            )
-                        })
-                        .catch(e => {})
-                }
-
-                setTimeout(async () => {
-                    client.guilds
-                        .resolve(guild)
-                        .members.fetch(r.DiscordID)
-                        .then(m => {
-                            m.roles.remove(muteRole)
-                            client.sql.query(
-                                "Update Members set MutedUntil = null where ID = ?",
-                                [r.ID]
-                            )
-                        })
-                        .catch(e => {})
-                }, r.MutedUntil - Date.now())
-            })
+    const punishments = await TimedPunishment.find()
+    for (const punishment of punishments) {
+        if (punishment.end < Date.now()) {
+            punishment.undo(client)
+        } else {
+            const offset = punishment.end - Date.now()
+            setTimeout(async () => {
+                await punishment.undo(client)
+                await punishment.remove()
+            }, offset)
         }
-    )
+    }
 }
