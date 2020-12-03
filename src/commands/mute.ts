@@ -42,20 +42,27 @@ export default new Command({
             })
         }
 
-        const length = ms(args.split(" ")[0]) || Infinity
+        const length = ms(args.split(" ")[0] || "0") || 0
         const reason = args.split(" ").slice(1).join(" ").trim()
-        const punishment = new TimedPunishment()
-        punishment.user = target.id
-        punishment.type = "mute"
-        punishment.end = Date.now() + length
+        if (!reason) {
+            return message.channel.send({
+                embed: {
+                    color: client.config.colors.error,
+                    description: "You must provide a reason!"
+                }
+            })
+        }
+
+        if (length === 0) {
+            const punishment = new TimedPunishment()
+            punishment.user = target.id
+            punishment.type = "mute"
+            punishment.end = Date.now() + length
+            await punishment.save()
+            punishment.schedule(client)
+        }
 
         await target.mute(reason)
-        await punishment.save()
-        setTimeout(async () => {
-            await punishment.undo(this)
-            await punishment.remove()
-        }, length)
-
         const formattedLength = formatPunishmentTime(length)
 
         message.channel.send({
