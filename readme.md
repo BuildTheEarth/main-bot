@@ -15,7 +15,7 @@ The main official bot for the BuildTheEarth Discord server.
 
 ### Configure the bot
 
-Rename the `config.example.js` file to `config.js` and fill in all of the fields.
+Rename the `_config.yml` file to `config.yml` and fill in all of the fields.
 
 ## Run
 
