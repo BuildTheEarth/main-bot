@@ -2,6 +2,7 @@ import Discord from "discord.js"
 import Client from "../struct/Client"
 import Command from "../struct/Command"
 import Roles from "../util/roles"
+import truncateString from "../util/truncateString"
 
 export default new Command({
     name: "eval",
@@ -13,12 +14,10 @@ export default new Command({
         const code = args.replace(/(^`(``)?(js)?|`(``)?$)/, "")
         try {
             const out = String(await eval(code)) || "\u200B"
-            const truncated = out.length > 1992 ? out.slice(0, 1989) + "..." : out
-            message.channel.send(`\`\`\`js\n${truncated}\n\`\`\``)
+            message.channel.send(`\`\`\`js\n${truncateString(out, 1990)}\n\`\`\``)
         } catch (error) {
-            const msg = error.message || "\u200B"
-            const truncated = msg.length > 1994 ? msg.slice(0, 1991) + "..." : msg
-            message.channel.send(`\`\`\`${truncated}\`\`\``)
+            const err = error.message || "\u200B"
+            message.channel.send(`\`\`\`${truncateString(err, 1994)}\`\`\``)
         }
     }
 })
