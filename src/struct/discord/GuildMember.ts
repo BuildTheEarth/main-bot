@@ -1,6 +1,7 @@
 import Discord from "discord.js"
 import Client from "../Client"
 import Guild from "./Guild"
+import Roles from "../../util/roles"
 
 export default class GuildMember extends Discord.GuildMember {
     client: Client
@@ -9,6 +10,7 @@ export default class GuildMember extends Discord.GuildMember {
     hasStaffPermission(roles: string | string[]) {
         if (roles === "Any") return true
         if (typeof roles === "string") roles = [roles]
+        roles.push(Roles.BOT_DEVELOPER)
         for (const role of roles)
             if (this.roles.cache.find(r => r.name === role)) return true
         return false
