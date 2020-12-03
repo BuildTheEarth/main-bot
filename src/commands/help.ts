@@ -10,7 +10,7 @@ export default new Command({
     description: "Get a list of available commands (or info on one of them).",
     permission: Roles.ANY,
     usage: "[command]",
-    async run(client: Client, message: Discord.Message, args: string) {
+    async run(this: Command, client: Client, message: Discord.Message, args: string) {
         if (args) {
             const command = client.commands.search(args)
             if (!command) {

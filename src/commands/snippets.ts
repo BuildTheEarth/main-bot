@@ -10,7 +10,7 @@ export default new Command({
     description: "List and manage snippets.",
     permission: Roles.ANY,
     usage: "",
-    async run(client: Client, message: Discord.Message, args: string) {
+    async run(this: Command, client: Client, message: Discord.Message, args: string) {
         const subcommand = args.split(" ")[0].toLowerCase().trim()
         args = args.split(" ").slice(1).join(" ").trim()
 

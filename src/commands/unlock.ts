@@ -9,7 +9,7 @@ export default new Command({
     description: "Unlock the channel.",
     permission: Roles.MANAGER,
     usage: "[channel]",
-    async run(client: Client, message: Discord.Message, args: string) {
+    async run(this: Command, client: Client, message: Discord.Message, args: string) {
         const channelID = args.match(/\d{18}/)?.[0]
         const channel = <Discord.TextChannel>(
             (message.guild.channels.cache.get(channelID) || message.channel)

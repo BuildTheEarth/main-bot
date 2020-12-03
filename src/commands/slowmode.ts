@@ -9,7 +9,7 @@ export default new Command({
     description: "Set the slowmode.",
     permission: [Roles.HELPER, Roles.MODERATOR, Roles.MANAGER],
     usage: "<seconds> [channel]",
-    async run(client: Client, message: Discord.Message, args: string) {
+    async run(this: Command, client: Client, message: Discord.Message, args: string) {
         const [inputSlowmode, inputChannel] = args.split(/ +/)
         const slowmode = Math.round(Number(inputSlowmode))
         if (isNaN(slowmode)) {

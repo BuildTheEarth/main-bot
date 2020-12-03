@@ -10,7 +10,7 @@ export default new Command({
     description: "Evaluate JavaScript code.",
     permission: Roles.BOT_DEVELOPER,
     usage: "<code>",
-    async run(_client: Client, message: Discord.Message, args: string) {
+    async run(this: Command, _client: Client, message: Discord.Message, args: string) {
         const code = args.replace(/(^`(``)?(js)?|`(``)?$)/, "")
         try {
             const out = String(await eval(code)) || "\u200B"

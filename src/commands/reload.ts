@@ -10,7 +10,7 @@ export default new Command({
     description: "Reload a command.",
     permission: Roles.BOT_DEVELOPER,
     usage: "<command>",
-    async run(client: Client, message: Discord.Message, args: string) {
+    async run(this: Command, client: Client, message: Discord.Message, args: string) {
         const name = args.split(/ +/)[0]
         const command = client.commands.search(name)
         const handler = client.events.get(name)
