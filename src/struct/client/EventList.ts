@@ -21,7 +21,7 @@ export default class EventList extends Discord.Collection<string, Function> {
 
     unloadOne(name: string) {
         this.delete(name)
-        const path = require.resolve(__dirname + `/../../commands/${name}.js`)
+        const path = require.resolve(__dirname + `/../../events/${name}.js`)
         delete require.cache[path]
     }
 
@@ -31,7 +31,7 @@ export default class EventList extends Discord.Collection<string, Function> {
     }
 
     async loadOne(name: string) {
-        const path = __dirname + `/../../commands/${name}.js`
+        const path = __dirname + `/../../events/${name}.js`
         const command: Function = (await import(path)).default
         this.set(command.name, command)
     }
