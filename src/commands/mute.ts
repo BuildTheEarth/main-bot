@@ -1,11 +1,11 @@
+import ms from "ms"
 import Discord from "discord.js"
 import Client from "../struct/Client"
-import GuildMember from "../struct/discord/GuildMember"
+import Guild from "../struct/discord/Guild"
 import TimedPunishment from "../entities/TimedPunishment"
 import Command from "../struct/Command"
 import Roles from "../util/roles"
 import formatPunishmentTime from "../util/formatPunishmentTime"
-import ms from "ms"
 
 export default new Command({
     name: "mute",
@@ -14,37 +14,30 @@ export default new Command({
     permission: [Roles.HELPER, Roles.MODERATOR],
     usage: "<member> <length> <reason>",
     async run(client: Client, message: Discord.Message, args: string) {
-        const targetTag = args.match(/.{2,32}#\d{4}/)?.[0]
-        const targetID = args.match(/\d{18}/)?.[0]
-        const target = <GuildMember>(
-            (targetID
-                ? await message.guild.members.fetch({ user: targetID, cache: true })
-                : message.guild.members.cache.find(m => m.user.tag === targetTag))
-        )
-        if (targetID) args = args.split(" ").slice(1).join(" ").trim()
-        else args = args.replace(targetTag, "").trim()
+        const result = await (<Guild>message.guild).members.find(args)
+        args = result.args
+        const target = result.member
 
         if (!target) {
             return message.channel.send({
                 embed: {
                     color: client.config.colors.error,
                     description:
-                        targetTag || targetID
-                            ? `Couldn't find user \`${targetTag || targetID}\`.`
+                        target === undefined
+                            ? `Couldn't find user \`${result.input}\`.`
                             : `You must provide a user to mute!`
                 }
             })
         }
 
         if (target.hasStaffPermission(Roles.STAFF)) {
-            const error =
-                target.id === message.author.id
-                    ? "You can't mute yourself..."
-                    : "You can't mute other staff!"
             return message.channel.send({
                 embed: {
                     color: client.config.colors.error,
-                    description: error
+                    description:
+                        target.id === message.author.id
+                            ? "You can't mute yourself..."
+                            : "You can't mute other staff!"
                 }
             })
         }
