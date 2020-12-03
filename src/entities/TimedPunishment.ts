@@ -28,4 +28,11 @@ export default class TimedPunishment extends BaseEntity {
             await guild.members.unban(this.user, "End of punishment").catch(() => null)
         }
     }
+
+    schedule(client: Client): NodeJS.Timeout {
+        return setTimeout(async () => {
+            await this.undo(client)
+            await this.remove()
+        }, this.end - Date.now())
+    }
 }
