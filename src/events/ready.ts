@@ -9,11 +9,7 @@ export default async function ready(this: Client) {
         if (punishment.end < Date.now()) {
             punishment.undo(this)
         } else {
-            const offset = punishment.end - Date.now()
-            setTimeout(async () => {
-                await punishment.undo(this)
-                await punishment.remove()
-            }, offset)
+            punishment.schedule(this)
         }
     }
 }
