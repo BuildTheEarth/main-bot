@@ -5,10 +5,10 @@ import CommandList from "./client/CommandList"
 import ConfigManager from "./client/ConfigManager"
 import createLogger from "@buildtheearth/bot-logger"
 
-export default class Client /**/ extends Discord.Client {
+export default class Client extends Discord.Client {
     db: Connection
     logger = createLogger({ filePath: __dirname + "/../../logs/" })
-    config = new ConfigManager()
+    config = new ConfigManager(this)
     events = new EventList(this)
     commands = new CommandList()
     aliases = new Discord.Collection()
