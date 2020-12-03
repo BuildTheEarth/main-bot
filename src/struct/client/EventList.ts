@@ -18,4 +18,26 @@ export default class EventList extends Discord.Collection<string, Function> {
         // @ts-ignore: a bunch of errors related to event name and handler typings
         this.forEach((handler, name) => this.client.on(name, handler))
     }
+
+    unloadOne(name: string) {
+        this.delete(name)
+        const path = require.resolve(__dirname + `/../../commands/${name}.js`)
+        delete require.cache[path]
+    }
+
+    unregisterOne(name: string) {
+        // @ts-ignore: same as above
+        this.client.off(name, this.get(name))
+    }
+
+    async loadOne(name: string) {
+        const path = __dirname + `/../../commands/${name}.js`
+        const command: Function = (await import(path)).default
+        this.set(command.name, command)
+    }
+
+    registerOne(name: string) {
+        // @ts-ignore: same as above
+        this.client.on(name, this.get(name))
+    }
 }
