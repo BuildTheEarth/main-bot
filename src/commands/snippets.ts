@@ -2,13 +2,13 @@ import Discord from "discord.js"
 import Client from "../struct/Client"
 import Command from "../struct/Command"
 import Snippet from "../entities/Snippet"
-import roles from "../util/roles"
+import Roles from "../util/roles"
 
 export default new Command({
     name: "snippets",
     aliases: ["tags"],
     description: "List and manage snippets.",
-    permission: roles.ANY,
+    permission: Roles.ANY,
     usage: "",
     async run(client: Client, message: Discord.Message, args: string) {
         const subcommand = args.split(" ")[0].toLowerCase().trim()

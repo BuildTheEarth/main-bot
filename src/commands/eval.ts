@@ -1,13 +1,13 @@
 import Discord from "discord.js"
 import Client from "../struct/Client"
 import Command from "../struct/Command"
-import roles from "../util/roles"
+import Roles from "../util/roles"
 
 export default new Command({
     name: "eval",
     aliases: ["run"],
     description: "Evaluate JavaScript code.",
-    permission: roles.BOT_DEVELOPER,
+    permission: Roles.BOT_DEVELOPER,
     usage: "<code>",
     async run(_client: Client, message: Discord.Message, args: string) {
         const code = args.replace(/(^`(``)?(js)?|`(``)?$)/, "")

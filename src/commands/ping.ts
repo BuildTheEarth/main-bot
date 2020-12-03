@@ -1,13 +1,13 @@
 import Discord from "discord.js"
 import Client from "../struct/Client"
 import Command from "../struct/Command"
-import roles from "../util/roles"
+import Roles from "../util/roles"
 
 export default new Command({
     name: "ping",
     aliases: [],
     description: "Ping pong!",
-    permission: roles.ANY,
+    permission: Roles.ANY,
     usage: "",
     async run(_client: Client, message: Discord.Message) {
         const pinger = await message.channel.send(":ping_pong: Pinging...")

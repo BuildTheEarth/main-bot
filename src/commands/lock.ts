@@ -1,13 +1,13 @@
 import Discord from "discord.js"
 import Client from "../struct/Client"
 import Command from "../struct/Command"
-import roles from "../util/roles"
+import Roles from "../util/roles"
 
 export default new Command({
     name: "lock",
     aliases: [],
     description: "Lock the channel.",
-    permission: roles.MANAGER,
+    permission: Roles.MANAGER,
     usage: "[channel]",
     async run(client: Client, message: Discord.Message, args: string) {
         const channelID = args.match(/\d{18}/)?.[0]

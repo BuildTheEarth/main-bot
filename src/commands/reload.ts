@@ -1,13 +1,13 @@
 import Discord from "discord.js"
 import Client from "../struct/Client"
 import Command from "../struct/Command"
-import roles from "../util/roles"
+import Roles from "../util/roles"
 
 export default new Command({
     name: "reload",
     aliases: [],
     description: "Reload a command.",
-    permission: roles.BOT_DEVELOPER,
+    permission: Roles.BOT_DEVELOPER,
     usage: "<command>",
     async run(client: Client, message: Discord.Message, args: string) {
         const commandName = args.split(/ +/)[0]

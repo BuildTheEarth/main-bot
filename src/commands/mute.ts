@@ -3,7 +3,7 @@ import Client from "../struct/Client"
 import GuildMember from "../struct/discord/GuildMember"
 import TimedPunishment from "../entities/TimedPunishment"
 import Command from "../struct/Command"
-import roles from "../util/roles"
+import Roles from "../util/roles"
 import formatPunishmentTime from "../util/formatPunishmentTime"
 import ms from "ms"
 
@@ -11,7 +11,7 @@ export default new Command({
     name: "mute",
     aliases: [],
     description: "Mute a member.",
-    permission: [roles.HELPER, roles.MODERATOR],
+    permission: [Roles.HELPER, Roles.MODERATOR],
     usage: "<member> <length> <reason>",
     async run(client: Client, message: Discord.Message, args: string) {
         const targetTag = args.match(/.{2,32}#\d{4}/)?.[0]
@@ -33,7 +33,7 @@ export default new Command({
             })
         }
 
-        if (target.hasStaffPermission(roles.STAFF)) {
+        if (target.hasStaffPermission(Roles.STAFF)) {
             const error =
                 target.id === message.author.id
                     ? "You can't mute yourself..."

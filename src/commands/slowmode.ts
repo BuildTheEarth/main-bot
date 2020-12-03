@@ -1,13 +1,13 @@
 import Discord from "discord.js"
 import Client from "../struct/Client"
 import Command from "../struct/Command"
-import roles from "../util/roles"
+import Roles from "../util/roles"
 
 export default new Command({
     name: "slowmode",
     aliases: ["cooldown", "ratelimit"],
     description: "Set the slowmode.",
-    permission: [roles.HELPER, roles.MODERATOR, roles.MANAGER],
+    permission: [Roles.HELPER, Roles.MODERATOR, Roles.MANAGER],
     usage: "<seconds> [channel]",
     async run(client: Client, message: Discord.Message, args: string) {
         const [inputSlowmode, inputChannel] = args.split(/ +/)
