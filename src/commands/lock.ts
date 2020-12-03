@@ -7,7 +7,7 @@ export default new Command({
     name: "lock",
     aliases: [],
     description: "Lock the channel.",
-    permission: [roles.MANAGER, roles.BOT_DEVELOPER],
+    permission: roles.MANAGER,
     usage: "[channel]",
     async run(client: Client, message: Discord.Message, args: string) {
         const channelID = args.match(/\d{18}/)?.[0]

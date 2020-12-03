@@ -11,7 +11,7 @@ export default new Command({
     name: "mute",
     aliases: [],
     description: "Mute a member.",
-    permission: [roles.HELPER, roles.MODERATOR, roles.BOT_DEVELOPER],
+    permission: [roles.HELPER, roles.MODERATOR],
     usage: "<member> <length> <reason>",
     async run(client: Client, message: Discord.Message, args: string) {
         const targetTag = args.match(/.{2,32}#\d{4}/)?.[0]

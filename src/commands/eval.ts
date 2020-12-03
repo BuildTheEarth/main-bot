@@ -7,7 +7,7 @@ export default new Command({
     name: "eval",
     aliases: ["run"],
     description: "Evaluate JavaScript code.",
-    permission: [roles.BOT_DEVELOPER],
+    permission: roles.BOT_DEVELOPER,
     usage: "<code>",
     async run(_client: Client, message: Discord.Message, args: string) {
         const code = args.replace(/(^`(``)?(js)?|`(``)?$)/, "")
