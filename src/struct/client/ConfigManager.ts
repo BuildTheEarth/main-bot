@@ -5,12 +5,23 @@ import Client from "../Client"
 
 export default class ConfigManager implements Config {
     client: Client
-    prefix: string
-    logChannel: string
     token: string
-    db: { host: string; name: string; user: string; pass: string }
-    guilds: { main: string; staff: string }
-    colors: { success: string; error: string }
+    prefix: string
+    logs: string
+    guilds: {
+        main: string
+        staff: string
+    }
+    colors: {
+        success: string
+        error: string
+    }
+    database: {
+        host: string
+        name: string
+        user: string
+        pass: string
+    }
 
     constructor(client: Client) {
         this.client = client
@@ -31,8 +42,9 @@ export default class ConfigManager implements Config {
 }
 
 export type Config = {
+    token: string
     prefix: string
-    logChannel: string
+    logs: string
     guilds: {
         main: string
         staff: string
@@ -41,9 +53,7 @@ export type Config = {
         success: string
         error: string
     }
-
-    token: string
-    db: {
+    database: {
         host: string
         name: string
         user: string

@@ -1,13 +1,14 @@
+token: ""
 prefix: ""
-logChannel: ""
+logs: ""
+
 guilds:
     main: ""
     staff: ""
 colors:
     success: ""
     error: ""
-token: ""
-db:
+database:
     host: ""
     name: ""
     user: ""

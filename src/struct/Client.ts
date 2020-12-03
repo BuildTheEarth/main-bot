@@ -14,12 +14,13 @@ export default class Client extends Discord.Client {
     aliases = new Discord.Collection()
 
     async initDatabase() {
+        const db = this.config.database
         this.db = await createConnection({
             type: "mysql",
-            host: this.config.db.host,
-            database: this.config.db.name,
-            username: this.config.db.user,
-            password: this.config.db.pass,
+            host: db.host,
+            database: db.name,
+            username: db.user,
+            password: db.pass,
             entities: [__dirname + "/../entities/*.js"],
             synchronize: true
         })
