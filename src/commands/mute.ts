@@ -28,7 +28,10 @@ export default new Command({
             return message.channel.send({
                 embed: {
                     color: client.config.colors.error,
-                    description: `Couldn't find user \`${targetTag || targetID}\``
+                    description:
+                        targetTag || targetID
+                            ? `Couldn't find user \`${targetTag || targetID}\`.`
+                            : `You must provide a user to mute!`
                 }
             })
         }
