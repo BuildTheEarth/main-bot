@@ -32,8 +32,8 @@ export default class EventList extends Discord.Collection<string, Function> {
 
     async loadOne(name: string) {
         const path = __dirname + `/../../events/${name}.js`
-        const command: Function = (await import(path)).default
-        this.set(command.name, command)
+        const handler: Function = (await import(path)).default
+        this.set(name, handler)
     }
 
     registerOne(name: string) {
