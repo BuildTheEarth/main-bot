@@ -1,6 +1,7 @@
 import { Entity, Column, PrimaryGeneratedColumn, BaseEntity } from "typeorm"
 import Client from "../struct/Client"
 import GuildMember from "../struct/discord/GuildMember"
+import millisecondTransformer from "../util/millisecondTransformer"
 
 @Entity({ name: "timed_punishments" })
 export default class TimedPunishment extends BaseEntity {
@@ -13,7 +14,7 @@ export default class TimedPunishment extends BaseEntity {
     @Column()
     type: "mute" | "ban"
 
-    @Column()
+    @Column({ transformer: millisecondTransformer })
     end: number
 
     async undo(client: Client) {
