@@ -24,7 +24,7 @@ export default class ActionLog extends BaseEntity {
     reason: string
 
     @Column({ nullable: true })
-    length: number
+    length?: number
 
     @CreateDateColumn()
     timestamp: Date
