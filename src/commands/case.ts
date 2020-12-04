@@ -43,7 +43,7 @@ export default new Command({
                 { name: "Member", value: `<@${log.member}>`, inline: true },
                 { name: "Reason", value: log.reason, inline: true },
                 { name: "Moderator", value: `<@${log.executor}>`, inline: true },
-                { name: "Context", value: messageLink, inline: true },
+                { name: "Context", value: `[Link](${messageLink})`, inline: true },
                 { name: "Time", value: timestamp, inline: true }
             ]
         }
