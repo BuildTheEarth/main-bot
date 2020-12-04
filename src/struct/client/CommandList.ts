@@ -1,10 +1,10 @@
 import Discord from "discord.js"
 import Command from "../Command"
 import loadDir from "../../util/loadDir"
+import noop from "../../util/noop"
 
 export default class CommandList extends Discord.Collection<string, Command> {
     async load() {
-        const noop = <T>(cmd: T): T => cmd
         await loadDir<Command>(__dirname + "/../../commands/", noop, this)
     }
 
