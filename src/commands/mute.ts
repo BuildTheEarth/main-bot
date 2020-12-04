@@ -53,7 +53,7 @@ export default new Command({
             })
         }
 
-        if (length === 0) {
+        if (length !== 0) {
             const punishment = new TimedPunishment()
             punishment.user = target.id
             punishment.type = "mute"
