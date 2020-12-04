@@ -55,7 +55,7 @@ export default new Command({
 
         if (length !== 0) {
             const punishment = new TimedPunishment()
-            punishment.user = target.id
+            punishment.member = target.id
             punishment.type = "mute"
             punishment.end = Date.now() + length
             await punishment.save()

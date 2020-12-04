@@ -9,7 +9,7 @@ export default class TimedPunishment extends BaseEntity {
     id: number
 
     @Column({ length: 18 })
-    user: string
+    member: string
 
     @Column()
     type: "mute" | "ban"
@@ -21,12 +21,12 @@ export default class TimedPunishment extends BaseEntity {
         const guild = client.guilds.cache.get(client.config.guilds.main)
         if (this.type === "mute") {
             const member: GuildMember = await guild.members
-                .fetch({ user: this.user, cache: true })
+                .fetch({ user: this.member, cache: true })
                 .catch(() => null)
             if (!member) return
             member.unmute("End of punishment")
         } else if (this.type === "ban") {
-            await guild.members.unban(this.user, "End of punishment").catch(() => null)
+            await guild.members.unban(this.member, "End of punishment").catch(() => null)
         }
     }
 
