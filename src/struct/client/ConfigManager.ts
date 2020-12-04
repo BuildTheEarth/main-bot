@@ -39,6 +39,14 @@ export default class ConfigManager implements Config {
 
         for (const [key, value] of Object.entries(config)) this[key] = value
     }
+
+    unload() {
+        for (const key of Object.keys(this)) {
+            if (key !== "client") {
+                delete this[key]
+            }
+        }
+    }
 }
 
 export type Config = {
