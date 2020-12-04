@@ -37,7 +37,7 @@ export default new Command({
             // prettier-ignore
             const name = `${action[0].toUpperCase() + action.slice(1) + "s"} (${logs.length})`
             // prettier-ignore
-            const value = logs.map(log => `\` ${log.id} \` ${log.reason}`).join("\n") || "\u200B"
+            const value = logs.map(log => `\` ${log.id}. \` ${log.reason}`).join("\n") || "\u200B"
             fields.push({ name, value, inline: true })
         }
 
