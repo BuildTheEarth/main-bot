@@ -14,7 +14,8 @@ export default new Command({
         const name = args.split(/ +/)[0]
         const command = client.commands.search(name)
         const handler = client.events.get(name)
-        if (!command && !handler) {
+        const config = name === "config"
+        if (!command && !handler && !config) {
             const truncated = truncateString(name, 32, "...")
             return message.channel.send({
                 embed: {
@@ -32,13 +33,18 @@ export default new Command({
         } else if (command) {
             client.commands.unloadOne(command.name)
             await client.commands.loadOne(command.name)
+        } else if (config) {
+            client.config.unload()
+            await client.config.load()
         }
 
-        const type = command ? "command" : "event handler"
+        const reloadMessage = config
+            ? `Reloaded config.`
+            : `Reloaded ${command ? "command" : "event handler"} \`${name}\`.`
         message.channel.send({
             embed: {
                 color: client.config.colors.success,
-                description: `Reloaded ${type} \`${name}\`.`
+                description: reloadMessage
             }
         })
     }
