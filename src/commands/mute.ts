@@ -3,6 +3,7 @@ import Discord from "discord.js"
 import Client from "../struct/Client"
 import Guild from "../struct/discord/Guild"
 import TimedPunishment from "../entities/TimedPunishment"
+import ActionLog from "../entities/ActionLog"
 import Command from "../struct/Command"
 import Roles from "../util/roles"
 import formatPunishmentTime from "../util/formatPunishmentTime"
@@ -78,5 +79,16 @@ export default new Command({
                 description: `${message.author} has muted you ${formattedLength}:\n\n*${reason}*`
             }
         })
+
+        const log = new ActionLog()
+        log.action = "mute"
+        log.member = target.id
+        log.executor = message.author.id
+        log.reason = reason
+        log.length = length
+        log.channel = message.channel.id
+        log.message = message.id
+
+        log.save()
     }
 })
