@@ -4,7 +4,7 @@ import GuildMemberManager from "./GuildMemberManager"
 
 export default class Guild extends Discord.Guild {
     client: Client
-    members = new GuildMemberManager(this)
+    members: GuildMemberManager = new GuildMemberManager(this)
 
     get muteRole() {
         this.members
