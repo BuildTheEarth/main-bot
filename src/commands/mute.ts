@@ -6,6 +6,7 @@ import TimedPunishment from "../entities/TimedPunishment"
 import ActionLog from "../entities/ActionLog"
 import Command from "../struct/Command"
 import Roles from "../util/roles"
+import noop from "../util/noop"
 import formatPunishmentTime from "../util/formatPunishmentTime"
 
 export default new Command({
@@ -73,12 +74,13 @@ export default new Command({
             }
         })
 
+        // prettier-ignore
         target.user.send({
             embed: {
                 color: client.config.colors.error,
                 description: `${message.author} has muted you ${formattedLength}:\n\n*${reason}*`
             }
-        })
+        }).catch(noop)
 
         const log = new ActionLog()
         log.action = "mute"
