@@ -11,7 +11,7 @@ export default new Command({
     permission: Roles.BOT_DEVELOPER,
     usage: "<code>",
     async run(this: Command, _client: Client, message: Discord.Message, args: string) {
-        const code = args.replace(/(^`(``)?(js)?|`(``)?$)/, "")
+        const code = args.replace(/^`(``)?(js)?/, "").replace(/`(``)?$/, "")
         try {
             const out = String(await eval(code)) || "\u200B"
             message.channel.send(`\`\`\`js\n${truncateString(out, 1990)}\n\`\`\``)
