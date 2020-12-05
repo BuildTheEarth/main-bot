@@ -11,6 +11,8 @@ export default new Command({
     permission: Roles.ANY,
     usage: "[command]",
     async run(this: Command, client: Client, message: Discord.Message, args: string) {
+        const member = <GuildMember>message.member
+
         if (args) {
             const command = client.commands.search(args)
             if (!command) {
@@ -18,6 +20,15 @@ export default new Command({
                     embed: {
                         color: client.config.colors.error,
                         description: `Unknown command \`${args.slice(0, 32)}\`.`
+                    }
+                })
+            }
+
+            if (!member.hasStaffPermission(command.permission)) {
+                return message.channel.send({
+                    embed: {
+                        color: client.config.colors.error,
+                        description: "You don't have permission to use that command!"
                     }
                 })
             }
@@ -42,7 +53,6 @@ export default new Command({
             return message.channel.send({ embed })
         }
 
-        const member = <GuildMember>message.member
         const allowedCommands = client.commands.filter(command =>
             member.hasStaffPermission(command.permission)
         )
