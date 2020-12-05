@@ -1,10 +1,10 @@
-import Discord from "discord.js"
 import Client from "../struct/Client"
 import GuildMember from "../struct/discord/GuildMember"
+import Message from "../struct/discord/Message"
 import Role from "../struct/discord/Role"
 import Snippet from "../entities/Snippet"
 
-export default async function (this: Client, message: Discord.Message) {
+export default async function (this: Client, message: Message) {
     if (message.author.bot) return
     if (!message.content.startsWith(this.config.prefix)) return
 
