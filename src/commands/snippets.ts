@@ -36,14 +36,24 @@ export default new Command({
                 description: list
             })
         } else if (subcommand === "add") {
-            const name = args.split(" ")[0]
-            const language = args.split(" ")[1]
-            const body = args.split(" ").slice(2).join(" ")
+            if (!message.member.hasStaffPermission(Roles.MANAGER)) return
+
+            const name = args.split(/ +/)[0] || ""
+            const language = args.split(/ +/)[1] || ""
+            const body = args.replace(name, "").replace(language, "").trim()
+
+            if (!name)
+                return message.channel.sendError("You must specify a snippet name.")
+
+            const existingSnippet = await Snippet.findOne({ where: { name, language } })
+            if (existingSnippet)
+                return message.channel.sendError("That snippet already exists!")
 
             if (language.length !== 2)
-                return message.channel.sendError(
-                    "You must specify a valid snippet language."
-                )
+                // prettier-ignore
+                return message.channel.sendError("You must specify a valid snippet language.")
+            if (!body)
+                return message.channel.sendError("You must specify a snippet body.")
 
             const snippet = new Snippet()
             snippet.name = name
