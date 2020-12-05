@@ -1,5 +1,6 @@
-import Discord from "discord.js"
 import Client from "../struct/Client"
+import TextChannel from "../struct/discord/TextChannel"
+import Message from "../struct/discord/Message"
 import Command from "../struct/Command"
 import Roles from "../util/roles"
 
@@ -9,9 +10,9 @@ export default new Command({
     description: "Unlock the channel.",
     permission: Roles.MANAGER,
     usage: "[channel]",
-    async run(this: Command, client: Client, message: Discord.Message, args: string) {
+    async run(this: Command, client: Client, message: Message, args: string) {
         const channelID = args.match(/\d{18}/)?.[0]
-        const channel = <Discord.TextChannel>(
+        const channel = <TextChannel>(
             (message.guild.channels.cache.get(channelID) || message.channel)
         )
         await channel.updateOverwrite(

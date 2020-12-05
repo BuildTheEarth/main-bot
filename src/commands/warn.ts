@@ -1,6 +1,6 @@
-import Discord from "discord.js"
 import Client from "../struct/Client"
 import Guild from "../struct/discord/Guild"
+import Message from "../struct/discord/Message"
 import ActionLog from "../entities/ActionLog"
 import Command from "../struct/Command"
 import Roles from "../util/roles"
@@ -12,7 +12,7 @@ export default new Command({
     description: "Warn a member.",
     permission: [Roles.HELPER, Roles.MODERATOR],
     usage: "<member> <reason>",
-    async run(this: Command, client: Client, message: Discord.Message, args: string) {
+    async run(this: Command, client: Client, message: Message, args: string) {
         const result = await (<Guild>message.guild).members.find(args)
         args = result.args
         const target = result.member

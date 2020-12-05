@@ -1,7 +1,7 @@
 import ms from "ms"
-import Discord from "discord.js"
 import Client from "../struct/Client"
 import Guild from "../struct/discord/Guild"
+import Message from "../struct/discord/Message"
 import TimedPunishment from "../entities/TimedPunishment"
 import ActionLog from "../entities/ActionLog"
 import Command from "../struct/Command"
@@ -15,7 +15,7 @@ export default new Command({
     description: "Mute a member.",
     permission: [Roles.HELPER, Roles.MODERATOR],
     usage: "<member> <length> <reason>",
-    async run(this: Command, client: Client, message: Discord.Message, args: string) {
+    async run(this: Command, client: Client, message: Message, args: string) {
         const result = await (<Guild>message.guild).members.find(args)
         args = result.args
         const target = result.member

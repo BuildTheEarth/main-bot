@@ -1,5 +1,5 @@
-import Discord from "discord.js"
 import Client from "../struct/Client"
+import Message from "../struct/discord/Message"
 import Command from "../struct/Command"
 import GuildMember from "../struct/discord/GuildMember"
 import Roles from "../util/roles"
@@ -10,7 +10,7 @@ export default new Command({
     description: "Get a list of available commands (or info on one of them).",
     permission: Roles.ANY,
     usage: "[command]",
-    async run(this: Command, client: Client, message: Discord.Message, args: string) {
+    async run(this: Command, client: Client, message: Message, args: string) {
         const member = <GuildMember>message.member
 
         if (args) {

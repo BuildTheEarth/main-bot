@@ -1,5 +1,7 @@
 import Discord from "discord.js"
 import Client from "../struct/Client"
+import TextChannel from "../struct/discord/TextChannel"
+import Message from "../struct/discord/Message"
 import Command from "../struct/Command"
 import Roles from "../util/roles"
 
@@ -9,11 +11,11 @@ export default new Command({
     description: "Set the slowmode.",
     permission: [Roles.HELPER, Roles.MODERATOR, Roles.MANAGER],
     usage: "<seconds> [channel]",
-    async run(this: Command, client: Client, message: Discord.Message, args: string) {
+    async run(this: Command, client: Client, message: Message, args: string) {
         const [inputSlowmode, inputChannel] = args.split(/ +/)
         const slowmode = Math.round(Number(inputSlowmode))
         if (isNaN(slowmode)) {
-            const current = (<Discord.TextChannel>message.channel).rateLimitPerUser
+            const current = (<TextChannel>message.channel).rateLimitPerUser
             const s = current === 1 ? "" : "s"
             const formatted = current === 0 ? "disabled" : `${current} second${s}`
             return message.channel.send({

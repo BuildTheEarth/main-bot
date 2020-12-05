@@ -1,5 +1,5 @@
-import Discord from "discord.js"
 import Client from "../struct/Client"
+import Message from "../struct/discord/Message"
 import Guild from "../struct/discord/Guild"
 import Command from "../struct/Command"
 import Roles from "../util/roles"
@@ -11,7 +11,7 @@ export default new Command({
     description: "Check a user's punishment records.",
     permission: [Roles.HELPER, Roles.MODERATOR],
     usage: "<user>",
-    async run(this: Command, client: Client, message: Discord.Message, args: string) {
+    async run(this: Command, client: Client, message: Message, args: string) {
         const { member, input } = await (<Guild>message.guild).members.find(args)
 
         if (!member) {

@@ -1,5 +1,5 @@
-import Discord from "discord.js"
 import Client from "../struct/Client"
+import Message from "../struct/discord/Message"
 import Command from "../struct/Command"
 import Roles from "../util/roles"
 import truncateString from "../util/truncateString"
@@ -10,7 +10,7 @@ export default new Command({
     description: "Reload a command.",
     permission: Roles.BOT_DEVELOPER,
     usage: "<command>",
-    async run(this: Command, client: Client, message: Discord.Message, args: string) {
+    async run(this: Command, client: Client, message: Message, args: string) {
         const name = args.split(/ +/)[0]
         const command = client.commands.search(name)
         const handler = client.events.get(name)

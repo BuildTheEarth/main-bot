@@ -1,5 +1,5 @@
-import Discord from "discord.js"
 import Client from "../struct/Client"
+import Message from "../struct/discord/Message"
 import Command from "../struct/Command"
 import Roles from "../util/roles"
 import truncateString from "../util/truncateString"
@@ -10,7 +10,7 @@ export default new Command({
     description: "Evaluate an SQL query.",
     permission: Roles.BOT_DEVELOPER,
     usage: "<query>",
-    async run(this: Command, client: Client, message: Discord.Message, args: string) {
+    async run(this: Command, client: Client, message: Message, args: string) {
         const query = args.replace(/^`(``)?(sql)?/, "").replace(/`(``)?$/, "")
         try {
             const out = JSON.stringify(await client.db.query(query), null, 2)

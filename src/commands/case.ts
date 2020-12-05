@@ -1,5 +1,5 @@
-import Discord from "discord.js"
 import Client from "../struct/Client"
+import Message from "../struct/discord/Message"
 import Command from "../struct/Command"
 import Roles from "../util/roles"
 import ActionLog from "../entities/ActionLog"
@@ -11,7 +11,7 @@ export default new Command({
     description: "Check specific info on a case.",
     permission: [Roles.HELPER, Roles.MODERATOR],
     usage: "<id>",
-    async run(this: Command, client: Client, message: Discord.Message, args: string) {
+    async run(this: Command, client: Client, message: Message, args: string) {
         const id = Number(args.split(" ")[0])
         if (Number.isNaN(id)) {
             return message.channel.send({

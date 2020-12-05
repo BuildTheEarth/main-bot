@@ -1,4 +1,6 @@
 import Discord from "discord.js"
+import Client from "../struct/Client"
+import Message from "../struct/discord/Message"
 
 export default class Command implements CommandProperties {
     name: string
@@ -6,7 +8,7 @@ export default class Command implements CommandProperties {
     description: string
     permission: string | string[]
     usage: string
-    run: (client: Discord.Client, message: Discord.Message, args: string) => void
+    run: (client: Client, message: Message, args: string) => void
 
     constructor(properties: CommandProperties) {
         this.name = properties.name

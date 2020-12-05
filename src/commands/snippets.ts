@@ -1,5 +1,5 @@
-import Discord from "discord.js"
 import Client from "../struct/Client"
+import Message from "../struct/discord/Message"
 import Command from "../struct/Command"
 import Snippet from "../entities/Snippet"
 import Roles from "../util/roles"
@@ -10,7 +10,7 @@ export default new Command({
     description: "List and manage snippets.",
     permission: Roles.ANY,
     usage: "",
-    async run(this: Command, client: Client, message: Discord.Message, args: string) {
+    async run(this: Command, client: Client, message: Message, args: string) {
         const subcommand = args.split(" ")[0].toLowerCase().trim()
         args = args.split(" ").slice(1).join(" ").trim()
 
