@@ -18,12 +18,7 @@ export default new Command({
             const current = (<TextChannel>message.channel).rateLimitPerUser
             const s = current === 1 ? "" : "s"
             const formatted = current === 0 ? "disabled" : `${current} second${s}`
-            return message.channel.send({
-                embed: {
-                    color: client.config.colors.success,
-                    description: `The slowmode is currently ${formatted}.`
-                }
-            })
+            return message.channel.sendSuccess(`The slowmode is currently ${formatted}.`)
         }
         const channelID = inputChannel.match(/\d{18}/)?.[0]
         const channel = <Discord.TextChannel>(
@@ -35,11 +30,11 @@ export default new Command({
             `By ${message.author.tag} (${message.author.id})`
         )
 
-        const embed: Discord.MessageEmbedOptions = { color: client.config.colors.success }
         const s = slowmode === 1 ? "" : "s"
-        if (slowmode === 0) embed.description = `Disabled slowmode in ${channel}.`
-        else embed.description = `Set slowmode in ${channel} to ${slowmode} second${s}.`
-
-        message.channel.send({ embed })
+        message.channel.sendSuccess(
+            slowmode === 0
+                ? `Disabled slowmode in ${channel}.`
+                : `Set slowmode in ${channel} to ${slowmode} second${s}.`
+        )
     }
 })

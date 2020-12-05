@@ -17,12 +17,9 @@ export default new Command({
         const config = name === "config"
         if (!command && !handler && !config) {
             const truncated = truncateString(name, 32, "...")
-            return message.channel.send({
-                embed: {
-                    color: client.config.colors.error,
-                    description: `Unknown command or event handler \`${truncated}\`.`
-                }
-            })
+            return message.channel.sendError(
+                `Unknown command or event handler \`${truncated}\`.`
+            )
         }
 
         if (handler) {
@@ -38,14 +35,10 @@ export default new Command({
             await client.config.load()
         }
 
-        const reloadMessage = config
-            ? `Reloaded config.`
-            : `Reloaded ${command ? "command" : "event handler"} \`${name}\`.`
-        message.channel.send({
-            embed: {
-                color: client.config.colors.success,
-                description: reloadMessage
-            }
-        })
+        message.channel.sendSuccess(
+            config
+                ? `Reloaded config.`
+                : `Reloaded ${command ? "command" : "event handler"} \`${name}\`.`
+        )
     }
 })

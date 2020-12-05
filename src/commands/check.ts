@@ -14,17 +14,12 @@ export default new Command({
     async run(this: Command, client: Client, message: Message, args: string) {
         const { member, input } = await (<Guild>message.guild).members.find(args)
 
-        if (!member) {
-            return message.channel.send({
-                embed: {
-                    color: client.config.colors.error,
-                    description:
-                        member === undefined
-                            ? `Couldn't find user \`${input}\`.`
-                            : `You must provide a user to check!`
-                }
-            })
-        }
+        if (!member)
+            return message.channel.sendError(
+                member === undefined
+                    ? `Couldn't find user \`${input}\`.`
+                    : `You must provide a user to check!`
+            )
 
         const actionLogs = await ActionLog.find({ where: { member: member.id } })
         const categorizedLogs: {
@@ -41,15 +36,10 @@ export default new Command({
             fields.push({ name, value, inline: true })
         }
 
-        message.channel.send({
-            embed: {
-                color: client.config.colors.success,
-                thumbnail: {
-                    url: member.user.displayAvatarURL({ size: 64, format: "png" })
-                },
-                description: `Punishment logs for ${member}:`,
-                fields
-            }
+        message.channel.sendSuccess({
+            thumbnail: { url: member.user.displayAvatarURL({ size: 64, format: "png" }) },
+            description: `Punishment logs for ${member}:`,
+            fields
         })
     }
 })

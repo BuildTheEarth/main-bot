@@ -14,10 +14,16 @@ export default new Command({
         const query = args.replace(/^`(``)?(sql)?/, "").replace(/`(``)?$/, "")
         try {
             const out = JSON.stringify(await client.db.query(query), null, 2)
-            message.channel.send(`\`\`\`\n${truncateString(out, 1990)}\n\`\`\``)
+            message.channel.sendSuccess({
+                author: { name: "Output" },
+                description: `\`\`\`${truncateString(out, 1994)}\`\`\``
+            })
         } catch (error) {
             const err = error.message || "\u200B"
-            message.channel.send(`\`\`\`${truncateString(err, 1994)}\`\`\``)
+            message.channel.sendError({
+                author: { name: "Error" },
+                description: `\`\`\`${truncateString(err, 1994)}\`\`\``
+            })
         }
     }
 })

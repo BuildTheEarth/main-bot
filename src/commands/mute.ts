@@ -1,6 +1,7 @@
 import ms from "ms"
 import Client from "../struct/Client"
 import Guild from "../struct/discord/Guild"
+import DMChannel from "../struct/discord/DMChannel"
 import Message from "../struct/discord/Message"
 import TimedPunishment from "../entities/TimedPunishment"
 import ActionLog from "../entities/ActionLog"
@@ -20,40 +21,23 @@ export default new Command({
         args = result.args
         const target = result.member
 
-        if (!target) {
-            return message.channel.send({
-                embed: {
-                    color: client.config.colors.error,
-                    description:
-                        target === undefined
-                            ? `Couldn't find user \`${result.input}\`.`
-                            : `You must provide a user to mute!`
-                }
-            })
-        }
+        if (!target)
+            return message.channel.sendError(
+                target === undefined
+                    ? `Couldn't find user \`${result.input}\`.`
+                    : `You must provide a user to mute!`
+            )
 
-        if (target.hasStaffPermission(Roles.STAFF)) {
-            return message.channel.send({
-                embed: {
-                    color: client.config.colors.error,
-                    description:
-                        target.id === message.author.id
-                            ? "You can't mute yourself..."
-                            : "You can't mute other staff!"
-                }
-            })
-        }
+        if (target.hasStaffPermission(Roles.STAFF))
+            return message.channel.sendError(
+                target.id === message.author.id
+                    ? "You can't mute yourself..."
+                    : "You can't mute other staff!"
+            )
 
         const length = ms(args.split(" ")[0] || "0") || 0
         const reason = args.split(" ").slice(1).join(" ").trim()
-        if (!reason) {
-            return message.channel.send({
-                embed: {
-                    color: client.config.colors.error,
-                    description: "You must provide a reason!"
-                }
-            })
-        }
+        if (!reason) return message.channel.sendError("You must provide a reason!")
 
         if (length !== 0) {
             const punishment = new TimedPunishment()
@@ -67,20 +51,12 @@ export default new Command({
         await target.mute(reason)
         const formattedLength = formatPunishmentTime(length)
 
-        message.channel.send({
-            embed: {
-                color: client.config.colors.success,
-                description: `Muted \`${target.user.tag}\` ${formattedLength} • *${reason}*`
-            }
-        })
-
         // prettier-ignore
-        target.user.send({
-            embed: {
-                color: client.config.colors.error,
-                description: `${message.author} has muted you ${formattedLength}:\n\n*${reason}*`
-            }
-        }).catch(noop)
+        message.channel.sendSuccess(`Muted \`${target.user.tag}\` ${formattedLength} • *${reason}*`)
+        const dms = <DMChannel>target.user.dmChannel
+        // prettier-ignore
+        dms.sendError(`${message.author} has muted you ${formattedLength}:\n\n*${reason}*`)
+            .catch(noop)
 
         const log = new ActionLog()
         log.action = "mute"

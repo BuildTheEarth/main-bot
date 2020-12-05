@@ -13,39 +13,25 @@ export default new Command({
     usage: "<id>",
     async run(this: Command, client: Client, message: Message, args: string) {
         const id = Number(args.split(" ")[0])
-        if (Number.isNaN(id)) {
-            return message.channel.send({
-                embed: {
-                    color: client.config.colors.error,
-                    description: "You must provide a case ID!"
-                }
-            })
-        }
+        if (Number.isNaN(id))
+            return message.channel.sendError("You must provide a case ID!")
 
         const log = await ActionLog.findOne(id)
-
-        if (!log) {
-            return message.channel.send({
-                embed: {
-                    color: client.config.colors.error,
-                    description: `Couldn't find case with ID \`${id}\`.`
-                }
-            })
-        }
+        if (!log)
+            return message.channel.sendError(`Couldn't find case with ID \`${id}\`.`)
 
         const messageLink = `https://discord.com/channels/${client.config.guilds.main}/${log.channel}/${log.message}`
         // i'm so sorry
         const timestamp = `${log.timestamp.getUTCDate()}/${log.timestamp.getUTCMonth()}/${log.timestamp.getUTCFullYear()} @ ${log.timestamp.getUTCHours()}:${log.timestamp.getUTCMinutes()}:${log.timestamp.getUTCSeconds()} UTC`
         const embed = {
-            color: client.config.colors.success,
             author: { name: `Case #${log.id} (${log.action})` },
             fields: [
-                { name: "Member", value: `<@${log.member}>`, inline: true },
-                { name: "Reason", value: log.reason, inline: true },
-                { name: "Moderator", value: `<@${log.executor}>`, inline: true },
-                { name: "Context", value: `[Link](${messageLink})`, inline: true },
-                { name: "Time", value: timestamp, inline: true }
-            ]
+                { name: "Member", value: `<@${log.member}>` },
+                { name: "Reason", value: log.reason },
+                { name: "Moderator", value: `<@${log.executor}>` },
+                { name: "Context", value: `[Link](${messageLink})` },
+                { name: "Time", value: timestamp }
+            ].map(f => ({ ...f, inline: true }))
         }
 
         if (log.length)
@@ -55,6 +41,6 @@ export default new Command({
                 inline: true
             })
 
-        message.channel.send({ embed })
+        message.channel.sendSuccess(embed)
     }
 })

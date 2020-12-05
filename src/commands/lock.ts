@@ -20,11 +20,7 @@ export default new Command({
             { SEND_MESSAGES: false },
             `Locked by ${message.author.tag} (${message.author.id})`
         )
-        message.channel.send({
-            embed: {
-                color: client.config.colors.success,
-                description: `Locked ${channel}.`
-            }
-        })
+
+        message.channel.sendSuccess(`Locked ${channel}.`)
     }
 })

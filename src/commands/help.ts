@@ -3,6 +3,7 @@ import Message from "../struct/discord/Message"
 import Command from "../struct/Command"
 import GuildMember from "../struct/discord/GuildMember"
 import Roles from "../util/roles"
+import truncateString from "../util/truncateString"
 
 export default new Command({
     name: "help",
@@ -15,26 +16,16 @@ export default new Command({
 
         if (args) {
             const command = client.commands.search(args)
-            if (!command) {
-                return message.channel.send({
-                    embed: {
-                        color: client.config.colors.error,
-                        description: `Unknown command \`${args.slice(0, 32)}\`.`
-                    }
-                })
-            }
-
-            if (!member.hasStaffPermission(command.permission)) {
-                return message.channel.send({
-                    embed: {
-                        color: client.config.colors.error,
-                        description: "You don't have permission to use that command!"
-                    }
-                })
-            }
+            if (!command)
+                return message.channel.sendError(
+                    `Unknown command \`${truncateString(args, 32, "...")}\`.`
+                )
+            if (!member.hasStaffPermission(command.permission))
+                return message.channel.sendError(
+                    "You don't have permission to use that command!"
+                )
 
             const embed = {
-                color: client.config.colors.success,
                 author: { name: command.name },
                 description: command.description,
                 fields: [
@@ -50,7 +41,7 @@ export default new Command({
                     value: `\`${command.aliases.join("`, `")}\``
                 })
 
-            return message.channel.send({ embed })
+            return message.channel.sendSuccess(embed)
         }
 
         const allowedCommands = client.commands.filter(command =>
@@ -58,12 +49,9 @@ export default new Command({
         )
         const commandNames = allowedCommands.map(command => command.name)
         const commandList = `\`${commandNames.join("`, `")}\``
-        return message.channel.send({
-            embed: {
-                author: { name: "Here are all the commands you have access to:" },
-                color: client.config.colors.success,
-                description: `${commandList}`
-            }
+        return message.channel.sendSuccess({
+            author: { name: "Here are all the commands you have access to:" },
+            description: commandList
         })
     }
 })

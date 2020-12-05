@@ -31,12 +31,9 @@ export default new Command({
                 list += `•   ${snippet} (${languages.join(", ")})`
             }
 
-            message.channel.send({
-                embed: {
-                    color: client.config.colors.success,
-                    author: { name: "Snippet list" },
-                    description: list
-                }
+            message.channel.sendSuccess({
+                author: { name: "Snippet list" },
+                description: list
             })
         } else if (subcommand === "add") {
             const name = args.split(" ")[0]
@@ -44,12 +41,9 @@ export default new Command({
             const body = args.split(" ").slice(2).join(" ")
 
             if (language.length !== 2)
-                return message.channel.send({
-                    embed: {
-                        color: client.config.colors.error,
-                        description: "You must specify a valid snippet language."
-                    }
-                })
+                return message.channel.sendError(
+                    "You must specify a valid snippet language."
+                )
 
             const snippet = new Snippet()
             snippet.name = name
@@ -57,12 +51,9 @@ export default new Command({
             snippet.body = body
             await snippet.save()
 
-            message.channel.send({
-                embed: {
-                    color: client.config.colors.success,
-                    description: `Created \`${name}\` snippet with language \`${language}\`.`
-                }
-            })
+            message.channel.sendSuccess(
+                `Created \`${name}\` snippet with language \`${language}\`.`
+            )
         }
     }
 })

@@ -1,5 +1,6 @@
 import Client from "../struct/Client"
 import Guild from "../struct/discord/Guild"
+import DMChannel from "../struct/discord/DMChannel"
 import Message from "../struct/discord/Message"
 import ActionLog from "../entities/ActionLog"
 import Command from "../struct/Command"
@@ -17,42 +18,19 @@ export default new Command({
         args = result.args
         const target = result.member
 
-        if (!target) {
-            return message.channel.send({
-                embed: {
-                    color: client.config.colors.error,
-                    description:
-                        target === undefined
-                            ? `Couldn't find user \`${result.input}\`.`
-                            : `You must provide a user to warn!`
-                }
-            })
-        }
+        if (!target)
+            return message.channel.sendError(
+                target === undefined
+                    ? `Couldn't find user \`${result.input}\`.`
+                    : `You must provide a user to warn!`
+            )
 
         const reason = args.trim()
-        if (!reason) {
-            return message.channel.send({
-                embed: {
-                    color: client.config.colors.error,
-                    description: "You must provide a reason!"
-                }
-            })
-        }
+        if (!reason) return message.channel.sendError("You must provide a reason!")
+        message.channel.sendSuccess(`Warned ${target.user} • *${reason}*`)
 
-        message.channel.send({
-            embed: {
-                color: client.config.colors.success,
-                description: `Warned ${target.user} • *${reason}*`
-            }
-        })
-
-        // prettier-ignore
-        target.user.send({
-            embed: {
-                color: client.config.colors.error,
-                description: `${message.author} has warned you:\n\n*${reason}*`
-            }
-        }).catch(noop)
+        const dms = <DMChannel>target.user.dmChannel
+        dms.sendError(`${message.author} has warned you:\n\n*${reason}*`).catch(noop)
 
         const log = new ActionLog()
         log.action = "warn"

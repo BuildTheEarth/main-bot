@@ -20,11 +20,7 @@ export default new Command({
             { SEND_MESSAGES: null },
             `Unlocked by ${message.author.tag} (${message.author.id})`
         )
-        message.channel.send({
-            embed: {
-                color: client.config.colors.success,
-                description: `Unlocked ${channel}.`
-            }
-        })
+
+        message.channel.sendSuccess(`Unlocked ${channel}.`)
     }
 })

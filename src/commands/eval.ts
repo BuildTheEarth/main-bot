@@ -14,10 +14,16 @@ export default new Command({
         const code = args.replace(/^`(``)?(js)?/, "").replace(/`(``)?$/, "")
         try {
             const out = String(await eval(code)) || "\u200B"
-            message.channel.send(`\`\`\`js\n${truncateString(out, 1990)}\n\`\`\``)
+            message.channel.sendSuccess({
+                author: { name: "Output" },
+                description: `\`\`\`js\n${truncateString(out, 1990)}\n\`\`\``
+            })
         } catch (error) {
             const err = error.message || "\u200B"
-            message.channel.send(`\`\`\`${truncateString(err, 1994)}\`\`\``)
+            message.channel.sendError({
+                author: { name: "Error" },
+                description: `\`\`\`${truncateString(err, 1994)}\`\`\``
+            })
         }
     }
 })
