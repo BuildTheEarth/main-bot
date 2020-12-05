@@ -1,15 +1,19 @@
 import "reflect-metadata"
 import Discord from "discord.js"
 import Client from "./struct/Client"
+import DMChannel from "./struct/discord/DMChannel"
 import Guild from "./struct/discord/Guild"
 import GuildMember from "./struct/discord/GuildMember"
 import Message from "./struct/discord/Message"
+import NewsChannel from "./struct/discord/NewsChannel"
 import Role from "./struct/discord/Role"
 import TextChannel from "./struct/discord/TextChannel"
 
+Discord.Structures.extend("DMChannel", () => DMChannel)
 Discord.Structures.extend("Guild", () => Guild)
 Discord.Structures.extend("GuildMember", () => GuildMember)
 Discord.Structures.extend("Message", () => Message)
+Discord.Structures.extend("NewsChannel", () => NewsChannel)
 Discord.Structures.extend("Role", () => Role)
 Discord.Structures.extend("TextChannel", () => TextChannel)
 const client = new Client()
