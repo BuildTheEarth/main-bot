@@ -3,6 +3,7 @@ import Message from "../struct/discord/Message"
 import Command from "../struct/Command"
 import Snippet from "../entities/Snippet"
 import Roles from "../util/roles"
+import languages from "iso-639-1"
 
 export default new Command({
     name: "snippets",
@@ -46,7 +47,7 @@ export default new Command({
         } else if (subcommand === "add") {
             if (!message.member.hasStaffPermission(Roles.MANAGER)) return
 
-            const name = args.split(/ +/)[0] || ""
+            const name = (args.split(/ +/)[0] || "").toLowerCase()
             const language = args.split(/ +/)[1] || ""
             const body = args.replace(name, "").replace(language, "").trim()
 
@@ -57,7 +58,8 @@ export default new Command({
             if (existingSnippet)
                 return message.channel.sendError("That snippet already exists!")
 
-            if (language.length !== 2)
+            const languageName = languages.getName(language)
+            if (!languageName)
                 // prettier-ignore
                 return message.channel.sendError("You must specify a valid snippet language.")
             if (!body)
@@ -69,9 +71,7 @@ export default new Command({
             snippet.body = body
             await snippet.save()
 
-            message.channel.sendSuccess(
-                `Created \`${name}\` snippet with language \`${language}\`.`
-            )
+            message.channel.sendSuccess(`Created **${name}** snippet in ${languageName}.`)
         }
     }
 })
