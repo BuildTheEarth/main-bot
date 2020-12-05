@@ -4,10 +4,12 @@ import Client from "./struct/Client"
 import Guild from "./struct/discord/Guild"
 import GuildMember from "./struct/discord/GuildMember"
 import Role from "./struct/discord/Role"
+import TextChannel from "./struct/discord/TextChannel"
 
 Discord.Structures.extend("Guild", () => Guild)
 Discord.Structures.extend("GuildMember", () => GuildMember)
 Discord.Structures.extend("Role", () => Role)
+Discord.Structures.extend("TextChannel", () => TextChannel)
 const client = new Client()
 
 async function main() {
