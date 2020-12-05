@@ -8,6 +8,7 @@ export default class Command implements CommandProperties {
     description: string
     permission: string | string[]
     usage: string
+    subcommands: SubCommandProperties[]
     run: (client: Client, message: Message, args: string) => void
 
     constructor(properties: CommandProperties) {
@@ -16,15 +17,24 @@ export default class Command implements CommandProperties {
         this.description = properties.description
         this.permission = properties.permission
         this.usage = properties.usage
+        this.subcommands = (properties.subcommands || []).map(sub => {
+            if (!sub.permission) sub.permission = properties.permission
+            return sub
+        })
         this.run = properties.run
     }
 }
 
-export type CommandProperties = {
-    name: string
+export interface CommandProperties extends SubCommandProperties {
     aliases: string[]
-    description: string
+    subcommands?: SubCommandProperties[]
     permission: string | string[]
-    usage: string
     run: (client: Discord.Client, message: Discord.Message, args: string) => void
+}
+
+export interface SubCommandProperties {
+    name: string
+    description: string
+    permission?: string | string[]
+    usage: string
 }
