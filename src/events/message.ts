@@ -3,6 +3,7 @@ import GuildMember from "../struct/discord/GuildMember"
 import Message from "../struct/discord/Message"
 import Role from "../struct/discord/Role"
 import Snippet from "../entities/Snippet"
+import languages from "iso-639-1"
 
 export default async function (this: Client, message: Message) {
     if (message.author.bot) return
@@ -15,7 +16,8 @@ export default async function (this: Client, message: Message) {
     const command = this.commands.search(commandName)
     if (!command) {
         const firstArg = (args.split(" ")[0] || "").trim().toLowerCase()
-        const language = firstArg.length === 2 ? firstArg : "en"
+        const languageName = languages.getName(firstArg)
+        const language = languageName ? firstArg.toLowerCase() : "en"
 
         const snippet = await Snippet.findOne({
             where: { name: commandName, language: language }
@@ -25,16 +27,10 @@ export default async function (this: Client, message: Message) {
             const unlocalizedSnippet = await Snippet.findOne({
                 where: { name: commandName }
             })
-
-            if (unlocalizedSnippet) {
-                message.channel.send({
-                    embed: {
-                        color: this.config.colors.error,
-                        description: `The **${commandName}** snippet hasn't been translated to \`${language}\` yet.`
-                    }
-                })
-            }
-
+            if (unlocalizedSnippet)
+                message.channel.sendError(
+                    `The **${commandName}** snippet hasn't been translated to ${languageName} yet.`
+                )
             return
         }
 
