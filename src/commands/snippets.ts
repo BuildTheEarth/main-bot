@@ -10,6 +10,14 @@ export default new Command({
     description: "List and manage snippets.",
     permission: Roles.ANY,
     usage: "",
+    subcommands: [
+        {
+            name: "add",
+            description: "Add a snippet.",
+            permission: Roles.MANAGER,
+            usage: "<name> <language> <body>"
+        }
+    ],
     async run(this: Command, client: Client, message: Message, args: string) {
         const subcommand = args.split(" ")[0].toLowerCase().trim()
         args = args.split(" ").slice(1).join(" ").trim()
