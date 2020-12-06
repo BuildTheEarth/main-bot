@@ -1,4 +1,10 @@
-import { Entity, Column, PrimaryGeneratedColumn, BaseEntity } from "typeorm"
+import {
+    Entity,
+    Column,
+    PrimaryGeneratedColumn,
+    BaseEntity,
+    CreateDateColumn
+} from "typeorm"
 import Client from "../struct/Client"
 import GuildMember from "../struct/discord/GuildMember"
 import millisecondTransformer from "../util/millisecondTransformer"
@@ -15,7 +21,10 @@ export default class TimedPunishment extends BaseEntity {
     type: "mute" | "ban"
 
     @Column({ transformer: millisecondTransformer })
-    end: number
+    length: number
+
+    @CreateDateColumn()
+    createdAt: Date
 
     async undo(client: Client) {
         const guild = client.guilds.cache.get(client.config.guilds.main)
@@ -31,9 +40,10 @@ export default class TimedPunishment extends BaseEntity {
     }
 
     schedule(client: Client): NodeJS.Timeout {
+        if (this.length === 0) return
         return setTimeout(async () => {
             await this.undo(client)
             await this.remove()
-        }, this.end - Date.now())
+        }, this.length)
     }
 }
