@@ -1,6 +1,6 @@
 import Client from "../struct/Client"
 import Message from "../struct/discord/Message"
-import Guild from "../struct/discord/Guild"
+import Args from "../struct/Args"
 import Command from "../struct/Command"
 import Roles from "../util/roles"
 import ActionLog from "../entities/ActionLog"
@@ -11,8 +11,8 @@ export default new Command({
     description: "Check a user's punishment records.",
     permission: [Roles.HELPER, Roles.MODERATOR],
     usage: "<user>",
-    async run(this: Command, client: Client, message: Message, args: string) {
-        const { member, input } = await (<Guild>message.guild).members.find(args)
+    async run(this: Command, client: Client, message: Message, args: Args) {
+        const { member, input } = await message.guild.members.find(args.consumeRest())
 
         if (!member)
             return message.channel.sendError(
