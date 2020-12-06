@@ -14,6 +14,12 @@ export default new Command({
     usage: "<id>",
     subcommands: [
         {
+            name: "edit",
+            description: "Edit a case.",
+            permission: [Roles.HELPER, Roles.MODERATOR],
+            usage: "<id> <reason>"
+        },
+        {
             name: "delete",
             description: "Delete a case.",
             permission: Roles.MODERATOR,
@@ -25,7 +31,7 @@ export default new Command({
         args = args.split(" ").slice(1).join(" ").trim()
 
         const id = ["edit", "delete"].includes(subcommand)
-            ? Number(args.split(" ")[0] || subcommand)
+            ? Number(args.split(" ")[0])
             : Number(subcommand)
         if (Number.isNaN(id))
             return message.channel.sendError("You must provide a case ID!")
@@ -62,6 +68,13 @@ export default new Command({
             deleted
                 ? message.channel.sendError(embed)
                 : message.channel.sendSuccess(embed)
+        } else if (subcommand === "edit") {
+            const reason = args.split(" ").slice(1).join(" ").trim()
+            if (!reason)
+                return message.channel.sendError("You must provide a new reason!")
+            log.reason = reason
+            await log.save()
+            return message.channel.sendSuccess(`Edited case **#${id}**.`)
         } else if (subcommand === "delete") {
             if (!message.member.hasStaffPermission(Roles.MODERATOR)) return
             await log.softRemove()
