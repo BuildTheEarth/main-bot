@@ -55,12 +55,15 @@ export default new Command({
                 ].map(field => ({ ...field, inline: true }))
             }
 
-            if (log.length)
+            if (log.length !== null) {
+                const formatted =
+                    log.length === 0 ? "Permanent" : ms(log.length, { long: true })
                 embed.fields.splice(1, 0, {
                     name: "Length",
-                    value: ms(log.length, { long: true }),
+                    value: formatted,
                     inline: true
                 })
+            }
 
             const deleted = !!log.deletedAt
             if (deleted) embed.description = "*This case has been deleted.*"
