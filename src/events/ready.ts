@@ -6,7 +6,7 @@ export default async function ready(this: Client) {
 
     const punishments = await TimedPunishment.find()
     for (const punishment of punishments) {
-        if (punishment.end < Date.now()) {
+        if (punishment.end <= new Date()) {
             punishment.undo(this)
         } else {
             punishment.schedule(this)
