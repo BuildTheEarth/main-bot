@@ -32,14 +32,12 @@ export default new Command({
         const reason = args.split(" ").slice(1).join(" ").trim()
         if (!reason) return message.channel.sendError("You must provide a reason!")
 
-        if (length !== 0) {
-            const punishment = new TimedPunishment()
-            punishment.member = target.id
-            punishment.type = "mute"
-            punishment.end = Date.now() + length
-            await punishment.save()
-            punishment.schedule(client)
-        }
+        const punishment = new TimedPunishment()
+        punishment.member = target.id
+        punishment.type = "mute"
+        punishment.end = length === 0 ? 0 : Date.now() + length
+        await punishment.save()
+        punishment.schedule(client)
 
         await target.mute(reason)
         const formattedLength = formatPunishmentTime(length)
