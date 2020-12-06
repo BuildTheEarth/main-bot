@@ -35,7 +35,7 @@ export default new Command({
         const punishment = new TimedPunishment()
         punishment.member = target.id
         punishment.type = "mute"
-        punishment.end = length === 0 ? 0 : Date.now() + length
+        punishment.length = length
         await punishment.save()
         punishment.schedule(client)
 
