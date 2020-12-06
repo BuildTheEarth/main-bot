@@ -28,8 +28,9 @@ export default async function (this: Client, message: Message) {
                 where: { name: commandName }
             })
             if (unlocalizedSnippet)
+                // prettier-ignore
                 message.channel.sendError(
-                    `The **${commandName}** snippet hasn't been translated to ${languageName} yet.`
+                    `The **${commandName}** snippet hasn't been translated to ${languageName || "English"} yet.`
                 )
             return
         }
