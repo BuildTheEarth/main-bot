@@ -1,6 +1,7 @@
 import Discord from "discord.js"
 import Client from "../struct/Client"
 import Message from "../struct/discord/Message"
+import Args from "../struct/Args"
 import Command from "../struct/Command"
 import ActionLog from "../entities/ActionLog"
 import formatPunishmentTime from "../util/formatPunishmentTime"
@@ -26,12 +27,11 @@ export default new Command({
             usage: "<id>"
         }
     ],
-    async run(this: Command, client: Client, message: Message, args: string) {
-        const subcommand = args.split(/ +/)[0].toLowerCase()
-        args = args.split(" ").slice(1).join(" ").trim()
+    async run(this: Command, client: Client, message: Message, args: Args) {
+        const subcommand = args.consume().toLowerCase()
 
         const id = ["edit", "delete"].includes(subcommand)
-            ? Number(args.split(" ")[0])
+            ? Number(args.consume())
             : Number(subcommand)
         if (Number.isNaN(id))
             return message.channel.sendError("You must provide a case ID!")
@@ -74,7 +74,7 @@ export default new Command({
 
             message.channel.sendSuccess(embed)
         } else if (subcommand === "edit") {
-            const reason = args.split(" ").slice(1).join(" ").trim()
+            const reason = args.consumeRest()
             if (!reason)
                 return message.channel.sendError("You must provide a new reason!")
             log.reason = reason
