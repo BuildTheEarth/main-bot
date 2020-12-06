@@ -65,6 +65,11 @@ export default new Command({
             const deleted = !!log.deletedAt
             if (deleted) embed.description = "*This case has been deleted.*"
 
+            if (log.punishment && log.punishment.end > new Date()) {
+                const difference = log.punishment.end.getTime() - Date.now()
+                embed.description = `*Ending in ${ms(difference, { long: true })}.*`
+            }
+
             deleted
                 ? message.channel.sendError(embed)
                 : message.channel.sendSuccess(embed)
