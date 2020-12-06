@@ -29,7 +29,7 @@ export default new Command({
         if (!reason) return message.channel.sendError("You must provide a reason!")
         message.channel.sendSuccess(`Warned ${target.user} • *${reason}*`)
 
-        const dms = <DMChannel>target.user.dmChannel
+        const dms = <DMChannel>await target.user.createDM()
         dms.sendError(`${message.author} has warned you:\n\n*${reason}*`).catch(noop)
 
         const log = new ActionLog()
