@@ -1,7 +1,8 @@
 import Client from "../struct/Client"
-import TextChannel from "../struct/discord/TextChannel"
 import Message from "../struct/discord/Message"
+import Args from "../struct/Args"
 import Command from "../struct/Command"
+import TextChannel from "../struct/discord/TextChannel"
 import Roles from "../util/roles"
 
 export default new Command({
@@ -10,11 +11,11 @@ export default new Command({
     description: "Unlock the channel.",
     permission: Roles.MANAGER,
     usage: "[channel]",
-    async run(this: Command, client: Client, message: Message, args: string) {
-        const channelID = args.match(/\d{18}/)?.[0]
-        const channel = <TextChannel>(
-            (message.guild.channels.cache.get(channelID) || message.channel)
-        )
+    async run(this: Command, client: Client, message: Message, args: Args) {
+        const channelID = args.consumeSnowflake()
+        const suppliedChannel = await client.channels.fetch(channelID, true)
+        const channel = <TextChannel>(suppliedChannel || message.channel)
+
         await channel.updateOverwrite(
             message.guild.id,
             { SEND_MESSAGES: null },
