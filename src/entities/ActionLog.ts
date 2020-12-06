@@ -4,8 +4,11 @@ import {
     PrimaryGeneratedColumn,
     CreateDateColumn,
     DeleteDateColumn,
-    BaseEntity
+    BaseEntity,
+    OneToOne,
+    JoinColumn
 } from "typeorm"
+import TimedPunishment from "./TimedPunishment"
 
 @Entity({ name: "action_logs" })
 export default class ActionLog extends BaseEntity {
@@ -38,4 +41,8 @@ export default class ActionLog extends BaseEntity {
 
     @DeleteDateColumn()
     deletedAt: Date
+
+    @OneToOne(() => TimedPunishment)
+    @JoinColumn()
+    punishment: TimedPunishment
 }
