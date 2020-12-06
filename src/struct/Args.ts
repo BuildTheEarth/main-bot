@@ -1,3 +1,5 @@
+import Discord from "discord.js"
+
 export default class Args {
     raw: string
     separator?: string
@@ -45,5 +47,14 @@ export default class Args {
             .replace(/^`(``)?([a-z]+\n)?/i, "")
             .replace(/`(``)?$/, "")
             .trim())
+    }
+
+    consumeSnowflake(anywhere: boolean = true): Discord.Snowflake {
+        const regex = anywhere ? /\d{18}/ : /^\d{18}/
+        const snowflake = this.raw.match(regex)?.[0]
+        if (!snowflake) return null
+
+        this.raw = this.raw.replace(new RegExp(`.+?${snowflake}`), "").trim()
+        return snowflake
     }
 }
