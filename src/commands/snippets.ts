@@ -1,5 +1,6 @@
 import Client from "../struct/Client"
 import Message from "../struct/discord/Message"
+import Args from "../struct/Args"
 import Command from "../struct/Command"
 import Snippet from "../entities/Snippet"
 import Roles from "../util/roles"
@@ -31,9 +32,8 @@ export default new Command({
             usage: "<name> <language>"
         }
     ],
-    async run(this: Command, client: Client, message: Message, args: string) {
-        const subcommand = args.split(" ")[0].toLowerCase().trim()
-        args = args.split(" ").slice(1).join(" ").trim()
+    async run(this: Command, client: Client, message: Message, args: Args) {
+        const subcommand = args.consume().toLowerCase()
 
         if (subcommand === "list" || !subcommand) {
             const snippets = await Snippet.find()
@@ -61,12 +61,12 @@ export default new Command({
             if (!message.member.hasStaffPermission([Roles.MANAGER, Roles.PR_TRANSLATION_TEAM]))
                 return
 
-            const name = (args.split(/ +/)[0] || "").toLowerCase()
-            const language = args.split(/ +/)[1] || ""
-            const body = args.replace(name, "").replace(language, "").trim()
-
+            const name = args.consume().toLowerCase()
+            const language = args.consume().toLowerCase()
+            const body = args.consumeRest()
             if (!name)
                 return message.channel.sendError("You must specify a snippet name.")
+
             const languageName = languages.getName(language)
             if (!languageName)
                 // prettier-ignore
@@ -101,11 +101,11 @@ export default new Command({
         } else if (subcommand === "delete") {
             if (!message.member.hasStaffPermission(Roles.MANAGER)) return
 
-            const name = (args.split(/ +/)[0] || "").toLowerCase()
-            const language = args.split(/ +/)[1] || ""
-
+            const name = args.consume().toLowerCase()
+            const language = args.consume().toLowerCase()
             if (!name)
                 return message.channel.sendError("You must specify a snippet name.")
+
             const languageName = languages.getName(language)
             if (!languageName)
                 // prettier-ignore
