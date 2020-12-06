@@ -55,15 +55,15 @@ export default new Command({
 
             if (!name)
                 return message.channel.sendError("You must specify a snippet name.")
+            const languageName = languages.getName(language)
+            if (!languageName)
+                // prettier-ignore
+                return message.channel.sendError("You must specify a valid snippet language.")
 
             const existingSnippet = await Snippet.findOne({ where: { name, language } })
             if (existingSnippet)
                 return message.channel.sendError("That snippet already exists!")
 
-            const languageName = languages.getName(language)
-            if (!languageName)
-                // prettier-ignore
-                return message.channel.sendError("You must specify a valid snippet language.")
             if (!body)
                 return message.channel.sendError("You must specify a snippet body.")
 
