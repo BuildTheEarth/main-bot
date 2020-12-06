@@ -1,5 +1,6 @@
 import Client from "../struct/Client"
 import Message from "../struct/discord/Message"
+import Args from "../struct/Args"
 import Command from "../struct/Command"
 import Roles from "../util/roles"
 import truncateString from "../util/truncateString"
@@ -10,11 +11,11 @@ export default new Command({
     description: "Reload a command.",
     permission: Roles.BOT_DEVELOPER,
     usage: "<command>",
-    async run(this: Command, client: Client, message: Message, args: string) {
-        const name = args.split(/ +/)[0]
+    async run(this: Command, client: Client, message: Message, args: Args) {
+        const name = args.consume()
         const command = client.commands.search(name)
         const handler = client.events.get(name)
-        const config = name === "config"
+        const config = name.toLowerCase() === "config"
         if (!command && !handler && !config) {
             const truncated = truncateString(name, 32, "...")
             return message.channel.sendError(
@@ -38,7 +39,7 @@ export default new Command({
         message.channel.sendSuccess(
             config
                 ? `Reloaded config.`
-                : `Reloaded ${command ? "command" : "event handler"} \`${name}\`.`
+                : `Reloaded \`${name}\` ${command ? "command" : "event handler"}.`
         )
     }
 })
