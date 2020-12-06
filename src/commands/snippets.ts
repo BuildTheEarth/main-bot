@@ -17,6 +17,12 @@ export default new Command({
             description: "Add a snippet.",
             permission: [Roles.MANAGER, Roles.PR_TRANSLATION_TEAM],
             usage: "<name> <language> <body>"
+        },
+        {
+            name: "edit",
+            description: "Edit a snippet.",
+            permission: [Roles.MANAGER, Roles.PR_TRANSLATION_TEAM],
+            usage: "<name> <language> <body>"
         }
     ],
     async run(this: Command, client: Client, message: Message, args: string) {
@@ -44,7 +50,7 @@ export default new Command({
                 author: { name: "Snippet list" },
                 description: list
             })
-        } else if (subcommand === "add") {
+        } else if (subcommand === "add" || subcommand === "edit") {
             // prettier-ignore
             if (!message.member.hasStaffPermission([Roles.MANAGER, Roles.PR_TRANSLATION_TEAM]))
                 return
@@ -60,20 +66,32 @@ export default new Command({
                 // prettier-ignore
                 return message.channel.sendError("You must specify a valid snippet language.")
 
-            const existingSnippet = await Snippet.findOne({ where: { name, language } })
-            if (existingSnippet)
-                return message.channel.sendError("That snippet already exists!")
+            let snippet: Snippet
+            if (subcommand === "add") {
+                const existingSnippet = await Snippet.findOne({
+                    where: { name, language }
+                })
+                if (existingSnippet)
+                    return message.channel.sendError("That snippet already exists!")
+
+                snippet = new Snippet()
+                snippet.name = name
+                snippet.language = language
+            } else if (subcommand === "edit") {
+                snippet = await Snippet.findOne({ where: { name, language } })
+                if (!snippet)
+                    return message.channel.sendError("That snippet doesn't exist!")
+                if (snippet.body === body)
+                    return message.channel.sendSuccess("Nothing changed.")
+            }
 
             if (!body)
                 return message.channel.sendError("You must specify a snippet body.")
-
-            const snippet = new Snippet()
-            snippet.name = name
-            snippet.language = language
             snippet.body = body
             await snippet.save()
 
-            message.channel.sendSuccess(`Created **${name}** snippet in ${languageName}.`)
+            const past = subcommand === "add" ? "Added" : "Edited"
+            message.channel.sendSuccess(`${past} **${name}** snippet in ${languageName}.`)
         }
     }
 })
