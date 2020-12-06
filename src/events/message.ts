@@ -1,6 +1,7 @@
 import Client from "../struct/Client"
 import GuildMember from "../struct/discord/GuildMember"
 import Message from "../struct/discord/Message"
+import Args from "../struct/Args"
 import Role from "../struct/discord/Role"
 import Snippet from "../entities/Snippet"
 import languages from "iso-639-1"
@@ -9,13 +10,12 @@ export default async function (this: Client, message: Message) {
     if (message.author.bot) return
     if (!message.content.startsWith(this.config.prefix)) return
 
-    const body = message.content.slice(this.config.prefix.length).trim()
-    const args = body.split(" ").slice(1).join(" ").trim()
-    const commandName = body.split(" ")[0].toLowerCase()
+    const args = new Args(message.content.slice(this.config.prefix.length).trim())
+    const commandName = args.consume()
 
     const command = this.commands.search(commandName)
     if (!command) {
-        const firstArg = (args.split(" ")[0] || "").trim().toLowerCase()
+        const firstArg = args.consume().toLowerCase()
         const languageName = languages.getName(firstArg)
         const language = languageName ? firstArg.toLowerCase() : "en"
 
