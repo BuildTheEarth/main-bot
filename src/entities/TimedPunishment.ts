@@ -26,6 +26,10 @@ export default class TimedPunishment extends BaseEntity {
     @CreateDateColumn()
     createdAt: Date
 
+    get end(): Date {
+        return new Date(this.createdAt.getTime() + this.length)
+    }
+
     async undo(client: Client) {
         const guild = client.guilds.cache.get(client.config.guilds.main)
         if (this.type === "mute") {
