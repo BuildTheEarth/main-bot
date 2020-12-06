@@ -2,9 +2,9 @@ import Discord from "discord.js"
 import Client from "../struct/Client"
 import Message from "../struct/discord/Message"
 import Command from "../struct/Command"
-import Roles from "../util/roles"
 import ActionLog from "../entities/ActionLog"
-import ms from "ms"
+import formatPunishmentTime from "../util/formatPunishmentTime"
+import Roles from "../util/roles"
 
 export default new Command({
     name: "case",
@@ -55,27 +55,24 @@ export default new Command({
                 ].map(field => ({ ...field, inline: true }))
             }
 
-            if (log.length !== null) {
-                const formatted =
-                    log.length === 0 ? "Permanent" : ms(log.length, { long: true })
+            if (log.length !== null)
                 embed.fields.splice(1, 0, {
                     name: "Length",
-                    value: formatted,
+                    value: formatPunishmentTime(log.length, true),
                     inline: true
                 })
+
+            if (log.deletedAt) {
+                embed.description = "*This case has been deleted.*"
+                return message.channel.sendError(embed)
             }
 
-            const deleted = !!log.deletedAt
-            if (deleted) embed.description = "*This case has been deleted.*"
-
-            if (log.punishment && log.punishment.end > new Date()) {
-                const difference = log.punishment.end.getTime() - Date.now()
-                embed.description = `*Ending in ${ms(difference, { long: true })}.*`
+            if (log.punishment?.end > new Date()) {
+                const end = log.punishment.end.getTime() - Date.now()
+                embed.description = `*Ending in ${formatPunishmentTime(end, true)}.*`
             }
 
-            deleted
-                ? message.channel.sendError(embed)
-                : message.channel.sendSuccess(embed)
+            message.channel.sendSuccess(embed)
         } else if (subcommand === "edit") {
             const reason = args.split(" ").slice(1).join(" ").trim()
             if (!reason)
