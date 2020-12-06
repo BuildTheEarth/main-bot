@@ -1,9 +1,9 @@
 import Client from "../struct/Client"
-import Guild from "../struct/discord/Guild"
-import DMChannel from "../struct/discord/DMChannel"
 import Message from "../struct/discord/Message"
-import ActionLog from "../entities/ActionLog"
+import Args from "../struct/Args"
 import Command from "../struct/Command"
+import DMChannel from "../struct/discord/DMChannel"
+import ActionLog from "../entities/ActionLog"
 import Roles from "../util/roles"
 import noop from "../util/noop"
 
@@ -13,9 +13,9 @@ export default new Command({
     description: "Warn a member.",
     permission: [Roles.HELPER, Roles.MODERATOR],
     usage: "<member> <reason>",
-    async run(this: Command, client: Client, message: Message, args: string) {
-        const result = await (<Guild>message.guild).members.find(args)
-        args = result.args
+    async run(this: Command, client: Client, message: Message, args: Args) {
+        const result = await message.guild.members.find(args.raw)
+        args.raw = result.args
         const target = result.member
 
         if (!target)
@@ -25,7 +25,7 @@ export default new Command({
                     : `You must provide a user to warn!`
             )
 
-        const reason = args.trim()
+        const reason = args.consumeRest()
         if (!reason) return message.channel.sendError("You must provide a reason!")
 
         const dms = <DMChannel>await target.user.createDM()
