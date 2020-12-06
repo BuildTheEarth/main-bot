@@ -45,7 +45,7 @@ export default class TimedPunishment extends BaseEntity {
 
     schedule(client: Client): NodeJS.Timeout {
         if (this.length === 0) return
-        const timeout = this.end.getDate() - Date.now()
+        const timeout = this.end.getTime() - Date.now()
         return setTimeout(async () => {
             await this.undo(client)
             await this.remove()
