@@ -54,7 +54,7 @@ export default class Args {
         const snowflake = this.raw.match(regex)?.[0]
         if (!snowflake) return null
 
-        this.raw = this.raw.replace(new RegExp(`.+?${snowflake}`), "").trim()
+        this.raw = this.raw.replace(new RegExp(`.+?${snowflake}.+?`), "").trim()
         return snowflake
     }
 }
