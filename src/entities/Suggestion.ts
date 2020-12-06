@@ -17,12 +17,12 @@ export default class Suggestion extends BaseEntity {
     @Column({ length: 2048 })
     body: string
 
-    @CreateDateColumn()
-    timestamp: Date
-
     @Column({ length: 18 })
     message: string
 
     @Column()
     staff: boolean
+
+    @CreateDateColumn()
+    createdAt: Date
 }
