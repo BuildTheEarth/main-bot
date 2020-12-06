@@ -13,8 +13,8 @@ import millisecondTransformer from "../util/millisecondTransformer"
 
 @Entity({ name: "timed_punishments" })
 export default class TimedPunishment extends BaseEntity {
-    @OneToOne(() => ActionLog, { primary: true, eager: true })
-    log: ActionLog
+    @PrimaryGeneratedColumn()
+    id: number
 
     @Column({ length: 18 })
     member: string
@@ -27,6 +27,9 @@ export default class TimedPunishment extends BaseEntity {
 
     @CreateDateColumn()
     createdAt: Date
+
+    @OneToOne(() => ActionLog, { eager: true })
+    log: ActionLog
 
     get end(): Date {
         return new Date(this.createdAt.getTime() + this.length)
