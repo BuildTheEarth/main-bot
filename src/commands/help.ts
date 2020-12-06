@@ -1,7 +1,8 @@
 import Client from "../struct/Client"
 import Message from "../struct/discord/Message"
+import Args from "../struct/Args"
 import Command from "../struct/Command"
-import GuildMember from "../struct/discord/GuildMember"
+
 import Roles from "../util/roles"
 import truncateString from "../util/truncateString"
 
@@ -11,14 +12,15 @@ export default new Command({
     description: "Get a list of available commands (or info on one of them).",
     permission: Roles.ANY,
     usage: "[command]",
-    async run(this: Command, client: Client, message: Message, args: string) {
-        const member = <GuildMember>message.member
+    async run(this: Command, client: Client, message: Message, args: Args) {
+        const member = message.member
 
         if (args) {
-            const command = client.commands.search(args)
+            const commandName = args.consume()
+            const command = client.commands.search(commandName)
             if (!command)
                 return message.channel.sendError(
-                    `Unknown command \`${truncateString(args, 32, "...")}\`.`
+                    `Unknown command \`${truncateString(commandName, 32, "...")}\`.`
                 )
             if (!member.hasStaffPermission(command.permission))
                 return message.channel.sendError(
