@@ -1,7 +1,7 @@
-import Discord from "discord.js"
 import Client from "../struct/Client"
-import TextChannel from "../struct/discord/TextChannel"
 import Message from "../struct/discord/Message"
+import Args from "../struct/Args"
+import TextChannel from "../struct/discord/TextChannel"
 import Command from "../struct/Command"
 import Roles from "../util/roles"
 
@@ -11,8 +11,8 @@ export default new Command({
     description: "Set the slowmode.",
     permission: [Roles.HELPER, Roles.MODERATOR, Roles.MANAGER],
     usage: "<seconds> [channel]",
-    async run(this: Command, client: Client, message: Message, args: string) {
-        const [inputSlowmode, inputChannel] = args.split(/ +/)
+    async run(this: Command, client: Client, message: Message, args: Args) {
+        const [inputSlowmode, inputChannel] = args.consume(2)
         const slowmode = Math.round(Number(inputSlowmode))
         if (isNaN(slowmode)) {
             const current = (<TextChannel>message.channel).rateLimitPerUser
@@ -21,9 +21,8 @@ export default new Command({
             return message.channel.sendSuccess(`The slowmode is currently ${formatted}.`)
         }
         const channelID = inputChannel.match(/\d{18}/)?.[0]
-        const channel = <Discord.TextChannel>(
-            (message.guild.channels.cache.get(channelID) || message.channel)
-        )
+        const suppliedChannel = await client.channels.fetch(channelID, true)
+        const channel = <TextChannel>(suppliedChannel || message.channel)
 
         channel.setRateLimitPerUser(
             Number(slowmode),
