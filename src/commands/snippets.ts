@@ -23,6 +23,12 @@ export default new Command({
             description: "Edit a snippet.",
             permission: [Roles.MANAGER, Roles.PR_TRANSLATION_TEAM],
             usage: "<name> <language> <body>"
+        },
+        {
+            name: "delete",
+            description: "Delete a snippet.",
+            permission: Roles.MANAGER,
+            usage: "<name> <language>"
         }
     ],
     async run(this: Command, client: Client, message: Message, args: string) {
@@ -92,6 +98,24 @@ export default new Command({
 
             const past = subcommand === "add" ? "Added" : "Edited"
             message.channel.sendSuccess(`${past} **${name}** snippet in ${languageName}.`)
+        } else if (subcommand === "delete") {
+            if (!message.member.hasStaffPermission(Roles.MANAGER)) return
+
+            const name = (args.split(/ +/)[0] || "").toLowerCase()
+            const language = args.split(/ +/)[1] || ""
+
+            if (!name)
+                return message.channel.sendError("You must specify a snippet name.")
+            const languageName = languages.getName(language)
+            if (!languageName)
+                // prettier-ignore
+                return message.channel.sendError("You must specify a valid snippet language.")
+
+            const snippet = await Snippet.findOne({ where: { name, language } })
+            if (!snippet) return message.channel.sendError("That snippet doesn't exist!")
+
+            await snippet.remove()
+            message.channel.sendSuccess(`Deleted **${name}** snippet in ${languageName}.`)
         }
     }
 })
