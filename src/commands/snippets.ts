@@ -15,7 +15,7 @@ export default new Command({
         {
             name: "add",
             description: "Add a snippet.",
-            permission: Roles.MANAGER,
+            permission: [Roles.MANAGER, Roles.PR_TRANSLATION_TEAM],
             usage: "<name> <language> <body>"
         }
     ],
@@ -45,7 +45,9 @@ export default new Command({
                 description: list
             })
         } else if (subcommand === "add") {
-            if (!message.member.hasStaffPermission(Roles.MANAGER)) return
+            // prettier-ignore
+            if (!message.member.hasStaffPermission([Roles.MANAGER, Roles.PR_TRANSLATION_TEAM]))
+                return
 
             const name = (args.split(/ +/)[0] || "").toLowerCase()
             const language = args.split(/ +/)[1] || ""
