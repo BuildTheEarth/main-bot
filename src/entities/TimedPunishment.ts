@@ -3,12 +3,10 @@ import {
     Column,
     PrimaryGeneratedColumn,
     BaseEntity,
-    CreateDateColumn,
-    OneToOne
+    CreateDateColumn
 } from "typeorm"
 import Client from "../struct/Client"
 import GuildMember from "../struct/discord/GuildMember"
-import ActionLog from "./ActionLog"
 import millisecondTransformer from "../util/millisecondTransformer"
 
 @Entity({ name: "timed_punishments" })
@@ -27,9 +25,6 @@ export default class TimedPunishment extends BaseEntity {
 
     @CreateDateColumn()
     createdAt: Date
-
-    @OneToOne(() => ActionLog, { eager: true })
-    log: ActionLog
 
     get end(): Date {
         return new Date(this.createdAt.getTime() + this.length)
