@@ -1,8 +1,9 @@
 import ms from "ms"
 import Client from "../struct/Client"
+import Message from "../struct/discord/Message"
+import Args from "../struct/Args"
 import Guild from "../struct/discord/Guild"
 import DMChannel from "../struct/discord/DMChannel"
-import Message from "../struct/discord/Message"
 import TimedPunishment from "../entities/TimedPunishment"
 import ActionLog from "../entities/ActionLog"
 import Command from "../struct/Command"
@@ -16,9 +17,9 @@ export default new Command({
     description: "Mute a member.",
     permission: [Roles.HELPER, Roles.MODERATOR],
     usage: "<member> <length> <reason>",
-    async run(this: Command, client: Client, message: Message, args: string) {
-        const result = await (<Guild>message.guild).members.find(args)
-        args = result.args
+    async run(this: Command, client: Client, message: Message, args: Args) {
+        const result = await message.guild.members.find(args.raw)
+        args.raw = result.args
         const target = result.member
 
         if (!target)
@@ -28,8 +29,8 @@ export default new Command({
                     : `You must provide a user to mute!`
             )
 
-        const length = ms(args.split(" ")[0] || "0") || 0
-        const reason = args.split(" ").slice(1).join(" ").trim()
+        const length = ms(args.consume() || "0") || 0
+        const reason = args.consumeRest()
         if (!reason) return message.channel.sendError("You must provide a reason!")
 
         await target.mute(reason)
