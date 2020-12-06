@@ -18,7 +18,7 @@ export default class Args {
         return this.separator ? this.split : this.raw.split(/\s+/)
     }
 
-    consume(count?: number): string
+    consume(): string
     consume(count: number): string[]
     consume(count?: number): string | string[] {
         let args: string | string[]
@@ -29,10 +29,18 @@ export default class Args {
         return args
     }
 
-    consumeRest(): string {
-        const args = this.raw.trim()
-        this.raw = ""
-        return args
+    consumeRest(): string
+    consumeRest(count: number): string[]
+    consumeRest(count?: number): string | string[] {
+        if (!count) {
+            const args = this.raw.trim()
+            this.raw = ""
+            return args
+        } else {
+            const args = this.consume(count - 1)
+            args.push(this.consumeRest())
+            return args
+        }
     }
 
     remove(count: number = 1): string {
