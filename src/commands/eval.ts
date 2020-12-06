@@ -1,5 +1,6 @@
-import Message from "../struct/discord/Message"
 import Client from "../struct/Client"
+import Message from "../struct/discord/Message"
+import Args from "../struct/Args"
 import Command from "../struct/Command"
 import Roles from "../util/roles"
 import truncateString from "../util/truncateString"
@@ -10,8 +11,9 @@ export default new Command({
     description: "Evaluate JavaScript code.",
     permission: Roles.BOT_DEVELOPER,
     usage: "<code>",
-    async run(this: Command, client: Client, message: Message, args: string) {
-        const code = args.replace(/^`(``)?(js)?/, "").replace(/`(``)?$/, "")
+    async run(this: Command, client: Client, message: Message, args: Args) {
+        const code = args.removeCodeblock()
+
         try {
             const out = String(await eval(code)) || "\u200B"
             message.channel.sendSuccess({
