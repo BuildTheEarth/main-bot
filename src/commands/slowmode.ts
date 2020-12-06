@@ -12,7 +12,7 @@ export default new Command({
     permission: [Roles.HELPER, Roles.MODERATOR, Roles.MANAGER],
     usage: "<seconds> [channel]",
     async run(this: Command, client: Client, message: Message, args: Args) {
-        const [inputSlowmode, inputChannel] = args.consume(2)
+        const inputSlowmode = args.consume()
         const slowmode = Math.round(Number(inputSlowmode))
         if (isNaN(slowmode)) {
             const current = (<TextChannel>message.channel).rateLimitPerUser
@@ -20,7 +20,8 @@ export default new Command({
             const formatted = current === 0 ? "disabled" : `${current} second${s}`
             return message.channel.sendSuccess(`The slowmode is currently ${formatted}.`)
         }
-        const channelID = inputChannel.match(/\d{18}/)?.[0]
+
+        const channelID = args.consumeSnowflake()
         const suppliedChannel = await client.channels.fetch(channelID, true)
         const channel = <TextChannel>(suppliedChannel || message.channel)
 
