@@ -42,7 +42,12 @@ export default class ActionLog extends BaseEntity {
     @DeleteDateColumn()
     deletedAt: Date
 
-    @OneToOne(() => TimedPunishment, { nullable: true, eager: true })
+    @OneToOne(() => TimedPunishment, {
+        nullable: true,
+        eager: true,
+        onDelete: "SET NULL",
+        cascade: ["insert", "update", "remove", "soft-remove", "recover"]
+    })
     @JoinColumn()
     punishment?: TimedPunishment
 }
