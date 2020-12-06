@@ -3,6 +3,7 @@ import {
     Column,
     PrimaryGeneratedColumn,
     CreateDateColumn,
+    DeleteDateColumn,
     BaseEntity
 } from "typeorm"
 
@@ -26,12 +27,15 @@ export default class ActionLog extends BaseEntity {
     @Column({ nullable: true })
     length?: number
 
-    @CreateDateColumn()
-    timestamp: Date
-
     @Column({ length: 18 })
     channel: string
 
     @Column({ length: 18 })
     message: string
+
+    @CreateDateColumn()
+    createdAt: Date
+
+    @DeleteDateColumn()
+    deletedAt: Date
 }
