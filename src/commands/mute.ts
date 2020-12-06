@@ -32,19 +32,19 @@ export default new Command({
         const reason = args.split(" ").slice(1).join(" ").trim()
         if (!reason) return message.channel.sendError("You must provide a reason!")
 
+        await target.mute(reason)
+        const formattedLength = formatPunishmentTime(length)
+        const dms = <DMChannel>await target.user.createDM()
+        dms.sendError(
+            `${message.author} has muted you ${formattedLength}:\n\n*${reason}*`
+        ).catch(noop)
+
         const punishment = new TimedPunishment()
         punishment.member = target.id
         punishment.type = "mute"
         punishment.length = length
         await punishment.save()
         punishment.schedule(client)
-
-        await target.mute(reason)
-        const formattedLength = formatPunishmentTime(length)
-
-        const dms = <DMChannel>await target.user.createDM()
-        // prettier-ignore
-        dms.sendError(`${message.author} has muted you ${formattedLength}:\n\n*${reason}*`).catch(noop)
 
         const log = new ActionLog()
         log.action = "mute"
@@ -54,8 +54,9 @@ export default new Command({
         log.length = length
         log.channel = message.channel.id
         log.message = message.id
-
+        log.punishment = punishment
         await log.save()
+
         // prettier-ignore
         message.channel.sendSuccess(`Muted ${target.user} ${formattedLength} (**#${log.id}**)`)
     }
