@@ -1,13 +1,8 @@
-import { Response } from "node-fetch"
 import Client from "../struct/Client"
 import Message from "../struct/discord/Message"
 import Args from "../struct/Args"
 import Command from "../struct/Command"
-import ModpackImage, {
-    ModpackImageData,
-    ModpackImageKey,
-    VALID_KEYS
-} from "../entities/ModpackImage"
+import ModpackImage, { ModpackImageKey, VALID_KEYS } from "../entities/ModpackImage"
 import Roles from "../util/roles"
 import isURL from "../util/isURL"
 
