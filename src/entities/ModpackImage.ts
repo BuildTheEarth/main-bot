@@ -38,7 +38,7 @@ export default class ModpackImage extends BaseEntity {
         }
     }
 
-    static async fetch(): Promise<Response> {
+    static async fetch(): Promise<{ response: Response; body: ModpackImageSet }> {
         const response: Response = await fetch(this.API_URL)
         const object: ModpackImageSet = await response.json()
 
@@ -53,7 +53,7 @@ export default class ModpackImage extends BaseEntity {
             await image.save()
         }
 
-        return response
+        return { response, body: object }
     }
 
     static async post(token: string): Promise<Response> {
