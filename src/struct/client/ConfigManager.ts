@@ -6,6 +6,7 @@ import Client from "../Client"
 export default class ConfigManager implements Config {
     client: Client
     token: string
+    modpack: string
     prefix: string
     logs: string
     guilds: {
@@ -51,6 +52,7 @@ export default class ConfigManager implements Config {
 
 export type Config = {
     token: string
+    modpack: string
     prefix: string
     logs: string
     guilds: {
