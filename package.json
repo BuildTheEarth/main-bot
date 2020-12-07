@@ -9,6 +9,7 @@
         "iso-639-1": "^2.1.4",
         "ms": "^2.1.2",
         "mysql2": "^2.2.5",
+        "node-fetch": "^2.6.1",
         "reflect-metadata": "^0.1.13",
         "typeorm": "^0.2.29",
         "winston": "^3.3.3",
