@@ -19,4 +19,16 @@ export default class ModpackImage extends BaseEntity {
 
     @Column({ nullable: true })
     credit?: string
+
+    format(compact: boolean = false): string {
+        if (compact) {
+            return this.credit
+                ? `**#${this.key}:** <${this.url}> (${this.credit})`
+                : `**${this.key}:** <${this.url}>`
+        } else {
+            return this.credit
+                ? `• **ID:** ${this.key}\n• **URL:** <${this.url}>\n• **Credit:** ${this.credit}`
+                : `• **Logo**\n• **URL:** <${this.url}>`
+        }
+    }
 }
