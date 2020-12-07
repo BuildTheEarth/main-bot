@@ -23,7 +23,7 @@ export default class TimedPunishment extends BaseEntity {
     @Column({ transformer: millisecondTransformer })
     length: number
 
-    @CreateDateColumn()
+    @CreateDateColumn({ name: "created_at" })
     createdAt: Date
 
     get end(): Date {

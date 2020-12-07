@@ -36,10 +36,10 @@ export default class ActionLog extends BaseEntity {
     @Column({ length: 18 })
     message: string
 
-    @CreateDateColumn()
+    @CreateDateColumn({ name: "created_at" })
     createdAt: Date
 
-    @DeleteDateColumn()
+    @DeleteDateColumn({ name: "deleted_at" })
     deletedAt: Date
 
     @OneToOne(() => TimedPunishment, {

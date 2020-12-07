@@ -23,6 +23,6 @@ export default class Suggestion extends BaseEntity {
     @Column()
     staff: boolean
 
-    @CreateDateColumn()
+    @CreateDateColumn({ name: "created_at" })
     createdAt: Date
 }
