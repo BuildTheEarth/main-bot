@@ -12,16 +12,16 @@ export default new Command({
     permission: [Roles.HELPER, Roles.MODERATOR],
     usage: "<user>",
     async run(this: Command, client: Client, message: Message, args: Args) {
-        const { member, input } = await message.guild.members.find(args.consumeRest())
+        const user = await args.consumeUser()
 
-        if (!member)
+        if (!user)
             return message.channel.sendError(
-                member === undefined
-                    ? `Couldn't find user \`${input}\`.`
-                    : `You must provide a user to check!`
+                user === undefined
+                    ? "You must provide a user to check!"
+                    : "Couldn't find that user."
             )
 
-        const actionLogs = await ActionLog.find({ where: { member: member.id } })
+        const actionLogs = await ActionLog.find({ where: { member: user.id } })
         const categorizedLogs: {
             [key: string]: ActionLog[]
         } = { warn: [], mute: [], kick: [], ban: [], unmute: [], unban: [] }
@@ -37,8 +37,8 @@ export default new Command({
         }
 
         message.channel.sendSuccess({
-            thumbnail: { url: member.user.displayAvatarURL({ size: 64, format: "png" }) },
-            description: `Punishment logs for ${member}:`,
+            thumbnail: { url: user.displayAvatarURL({ size: 64, format: "png" }) },
+            description: `Punishment logs for ${user}:`,
             fields
         })
     }

@@ -2,7 +2,6 @@ import ms from "ms"
 import Client from "../struct/Client"
 import Message from "../struct/discord/Message"
 import Args from "../struct/Args"
-import Guild from "../struct/discord/Guild"
 import DMChannel from "../struct/discord/DMChannel"
 import TimedPunishment from "../entities/TimedPunishment"
 import ActionLog from "../entities/ActionLog"
@@ -18,30 +17,28 @@ export default new Command({
     permission: [Roles.HELPER, Roles.MODERATOR],
     usage: "<member> <length> <reason>",
     async run(this: Command, client: Client, message: Message, args: Args) {
-        const result = await message.guild.members.find(args.raw)
-        args.raw = result.args
-        const target = result.member
+        const user = await args.consumeUser()
 
-        if (!target)
+        if (!user)
             return message.channel.sendError(
-                target === undefined
-                    ? `Couldn't find user \`${result.input}\`.`
-                    : `You must provide a user to mute!`
+                user === undefined
+                    ? "You must provide a user to mute!"
+                    : "Couldn't find that user."
             )
 
         const length = ms(args.consume() || "0") || 0
         const reason = args.consumeRest()
         if (!reason) return message.channel.sendError("You must provide a reason!")
 
-        await target.mute(reason)
+        await message.guild.member(user).mute(reason)
         const formattedLength = formatPunishmentTime(length)
-        const dms = <DMChannel>await target.user.createDM()
+        const dms = <DMChannel>await user.createDM()
         dms.sendError(
             `${message.author} has muted you ${formattedLength}:\n\n*${reason}*`
         ).catch(noop)
 
         const punishment = new TimedPunishment()
-        punishment.member = target.id
+        punishment.member = user.id
         punishment.type = "mute"
         punishment.length = length
         await punishment.save()
@@ -49,7 +46,7 @@ export default new Command({
 
         const log = new ActionLog()
         log.action = "mute"
-        log.member = target.id
+        log.member = user.id
         log.executor = message.author.id
         log.reason = reason
         log.length = length
@@ -58,7 +55,6 @@ export default new Command({
         log.punishment = punishment
         await log.save()
 
-        // prettier-ignore
-        message.channel.sendSuccess(`Muted ${target.user} ${formattedLength} (**#${log.id}**)`)
+        message.channel.sendSuccess(`Muted ${user} ${formattedLength} (**#${log.id}**)`)
     }
 })
