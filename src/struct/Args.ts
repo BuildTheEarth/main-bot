@@ -71,7 +71,7 @@ export default class Args {
 
     async consumeUser(): Promise<Discord.User> {
         const tag = this.raw.match(/^.{2,32}#\d{4}/)?.[0]
-        const id = this.raw.match(/^(<@!?)?(\d{18})>?/)?.[1]
+        const id = this.raw.match(/^(<@!?)?(\d{18})>?/)?.[2]
         const users = this.message.client.users
 
         if (tag) {
