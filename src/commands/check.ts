@@ -5,6 +5,7 @@ import Args from "../struct/Args"
 import Command from "../struct/Command"
 import Roles from "../util/roles"
 import ActionLog from "../entities/ActionLog"
+import TimedPunishment from "../entities/TimedPunishment"
 
 export default new Command({
     name: "check",
@@ -38,7 +39,15 @@ export default new Command({
         if (clean) {
             embed.description = `✨ No punishment logs found for ${user}.`
         } else {
-            embed.description = `Punishment logs for ${user}:`
+            const punishment = await TimedPunishment.findOne({
+                where: { member: user.id }
+            })
+            const adjective = punishment?.type === "mute" ? "muted" : "banned"
+            const log = actionLogs.find(log => log.punishment?.id === punishment.id)
+
+            embed.description = punishment
+                ? `${user} is currently ${adjective} (**#${log.id}**).\nHere are their punishment logs:`
+                : `Punishment logs for ${user}:`
             for (const [action, logs] of Object.entries(categorizedLogs)) {
                 // prettier-ignore
                 const name = `${action[0].toUpperCase() + action.slice(1) + "s"} (${logs.length})`
