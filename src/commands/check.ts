@@ -32,7 +32,9 @@ export default new Command({
         for (const log of actionLogs) categorizedLogs[log.action].push(log)
 
         const embed: Discord.MessageEmbedOptions = {
-            thumbnail: { url: user.displayAvatarURL({ size: 64, format: "png" }) },
+            thumbnail: {
+                url: user.displayAvatarURL({ size: 64, format: "png", dynamic: true })
+            },
             fields: []
         }
 
