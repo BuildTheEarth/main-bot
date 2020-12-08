@@ -1,3 +1,4 @@
+import Discord from "discord.js"
 import Client from "../struct/Client"
 import Message from "../struct/discord/Message"
 import Args from "../struct/Args"
@@ -26,20 +27,27 @@ export default new Command({
             [key: string]: ActionLog[]
         } = { warn: [], mute: [], kick: [], ban: [], unmute: [], unban: [] }
 
-        const fields: { name: string; value: string; inline: boolean }[] = []
+        const clean = !actionLogs.length
         for (const log of actionLogs) categorizedLogs[log.action].push(log)
-        for (const [action, logs] of Object.entries(categorizedLogs)) {
-            // prettier-ignore
-            const name = `${action[0].toUpperCase() + action.slice(1) + "s"} (${logs.length})`
-            // prettier-ignore
-            const value = logs.map(log => `\` ${log.id}. \` ${log.reason}`).join("\n") || "\u200B"
-            fields.push({ name, value, inline: true })
+
+        const embed: Discord.MessageEmbedOptions = {
+            thumbnail: { url: user.displayAvatarURL({ size: 64, format: "png" }) },
+            fields: []
         }
 
-        message.channel.sendSuccess({
-            thumbnail: { url: user.displayAvatarURL({ size: 64, format: "png" }) },
-            description: `Punishment logs for ${user}:`,
-            fields
-        })
+        if (clean) {
+            embed.description = `✨ No punishment logs found for ${user}.`
+        } else {
+            embed.description = `Punishment logs for ${user}:`
+            for (const [action, logs] of Object.entries(categorizedLogs)) {
+                // prettier-ignore
+                const name = `${action[0].toUpperCase() + action.slice(1) + "s"} (${logs.length})`
+                // prettier-ignore
+                const value = logs.map(log => `\` ${log.id}. \` ${log.reason}`).join("\n") || "\u200B"
+                embed.fields.push({ name, value, inline: true })
+            }
+        }
+
+        message.channel.sendSuccess(embed)
     }
 })
