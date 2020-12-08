@@ -4,6 +4,7 @@ import Message from "../struct/discord/Message"
 import Args from "../struct/Args"
 import Command from "../struct/Command"
 import ActionLog from "../entities/ActionLog"
+import fecha from "fecha"
 import formatPunishmentTime from "../util/formatPunishmentTime"
 import Roles from "../util/roles"
 
@@ -41,9 +42,9 @@ export default new Command({
 
         if (!["edit", "delete"].includes(subcommand)) {
             const messageLink = `https://discord.com/channels/${client.config.guilds.main}/${log.channel}/${log.message}`
-            // i'm so sorry
-            const time = log.createdAt
-            const timestamp = `${time.getUTCDate()}/${time.getUTCMonth()}/${time.getUTCFullYear()} @ ${time.getUTCHours()}:${time.getUTCMinutes()}:${time.getUTCSeconds()} UTC`
+            const utcOffset = log.createdAt.getTimezoneOffset() * 60000
+            const utc = new Date(log.createdAt.getTime() + utcOffset)
+            const timestamp = fecha.format(utc, "DD/MM/YY [@] hh:mm:ss UTC")
             const embed: Discord.MessageEmbedOptions = {
                 author: { name: `Case #${log.id} (${log.action})` },
                 fields: [
