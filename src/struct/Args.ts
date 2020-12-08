@@ -68,4 +68,22 @@ export default class Args {
         this.raw = this.raw.replace(new RegExp(`.+?${snowflake}.+?`), "").trim()
         return snowflake
     }
+
+    async consumeUser(): Promise<Discord.User> {
+        const tag = this.raw.match(/^.{2,32}#\d{4}/)?.[0]
+        const id = this.raw.match(/^(<@!?)?(\d{18})>?/)?.[1]
+        const users = this.message.client.users.cache
+
+        if (tag) {
+            this.raw = this.raw.replace(tag, "").trim()
+            const user = users.find(user => user.tag === tag)
+            return user || null
+        } else if (id) {
+            this.consume()
+            const user = users.get(id)
+            return user || null
+        } else if (!tag && !id) {
+            return undefined
+        }
+    }
 }
