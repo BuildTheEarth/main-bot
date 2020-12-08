@@ -55,12 +55,11 @@ export default new Command({
                 ].map(field => ({ ...field, inline: true }))
             }
 
-            if (log.length !== null)
-                embed.fields.splice(1, 0, {
-                    name: "Length",
-                    value: formatPunishmentTime(log.length, true),
-                    inline: true
-                })
+            embed.fields.splice(1, 0, {
+                name: log.length ? "Length" : "\u200B",
+                value: log.length ? formatPunishmentTime(log.length, true) : "\u200B",
+                inline: true
+            })
 
             if (log.deletedAt) {
                 embed.description = "*This case has been deleted.*"
