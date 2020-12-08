@@ -32,6 +32,12 @@ export default new Command({
 
         const member = message.guild.member(user)
         if (!member) return message.channel.sendError("The user is not in the server!")
+
+        const existingMute = await TimedPunishment.findOne({
+            where: { member: user.id, type: "mute" }
+        })
+        if (existingMute) return message.channel.sendError("The user is already muted!")
+
         await member.mute(reason)
         const formattedLength = formatPunishmentTime(length)
         const dms = <DMChannel>await user.createDM()
