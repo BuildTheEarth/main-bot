@@ -3,7 +3,8 @@ import {
     Column,
     PrimaryGeneratedColumn,
     BaseEntity,
-    CreateDateColumn
+    CreateDateColumn,
+    DeleteDateColumn
 } from "typeorm"
 import Client from "../struct/Client"
 import GuildMember from "../struct/discord/GuildMember"
@@ -25,6 +26,9 @@ export default class TimedPunishment extends BaseEntity {
 
     @CreateDateColumn({ name: "created_at" })
     createdAt: Date
+
+    @DeleteDateColumn({ name: "deleted_at" })
+    deletedAt: Date
 
     get end(): Date {
         return new Date(this.createdAt.getTime() + this.length)
