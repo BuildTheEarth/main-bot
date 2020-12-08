@@ -45,22 +45,18 @@ export default new Command({
             const utcOffset = log.createdAt.getTimezoneOffset() * 60000
             const utc = new Date(log.createdAt.getTime() + utcOffset)
             const timestamp = fecha.format(utc, "DD/MM/YY [@] hh:mm:ss UTC")
+            const length = log.length ? formatPunishmentTime(log.length, true) : "\u200B"
             const embed: Discord.MessageEmbedOptions = {
                 author: { name: `Case #${log.id} (${log.action})` },
                 fields: [
                     { name: "Member", value: `<@${log.member}>` },
+                    { name: log.length ? "Length" : "\u200B", value: length },
                     { name: "Reason", value: log.reason },
                     { name: "Moderator", value: `<@${log.executor}>` },
                     { name: "Context", value: `[Link](${messageLink})` },
                     { name: "Time", value: timestamp }
                 ].map(field => ({ ...field, inline: true }))
             }
-
-            embed.fields.splice(1, 0, {
-                name: log.length ? "Length" : "\u200B",
-                value: log.length ? formatPunishmentTime(log.length, true) : "\u200B",
-                inline: true
-            })
 
             if (log.deletedAt) {
                 embed.description = "*This case has been deleted.*"
