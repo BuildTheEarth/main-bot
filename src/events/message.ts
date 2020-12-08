@@ -10,7 +10,8 @@ export default async function (this: Client, message: Message) {
     if (message.author.bot) return
     if (!message.content.startsWith(this.config.prefix)) return
 
-    const args = new Args(message.content.slice(this.config.prefix.length).trim())
+    const body = message.content.slice(this.config.prefix.length).trim()
+    const args = new Args(body, message)
     const commandName = args.consume()
 
     const command = this.commands.search(commandName)

@@ -1,11 +1,14 @@
 import Discord from "discord.js"
+import Message from "./discord/Message"
 
 export default class Args {
     raw: string
     separator?: string
+    message: Message
 
-    constructor(value: string) {
+    constructor(value: string, message: Message) {
         this.raw = value.trim()
+        this.message = message
     }
 
     get split(): string[] {
