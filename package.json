@@ -6,6 +6,7 @@
     "dependencies": {
         "@buildtheearth/bot-logger": "^1.0.3",
         "discord.js": "^12.5.1",
+        "fecha": "^4.2.0",
         "iso-639-1": "^2.1.4",
         "ms": "^2.1.2",
         "mysql2": "^2.2.5",
