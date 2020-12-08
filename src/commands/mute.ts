@@ -38,6 +38,13 @@ export default new Command({
         })
         if (existingMute) return message.channel.sendError("The user is already muted!")
 
+        if (member.hasStaffPermission(Roles.STAFF))
+            return message.channel.sendError(
+                member.id === message.author.id
+                    ? "You can't mute yourself..."
+                    : "You can't mute other staff!"
+            )
+
         await member.mute(reason)
         const formattedLength = formatPunishmentTime(length)
         const dms = <DMChannel>await user.createDM()
