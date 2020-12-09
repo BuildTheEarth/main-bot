@@ -9,6 +9,7 @@ export default class ConfigManager implements Config {
     modpack: string
     prefix: string
     logs: string
+    appeal: string
     guilds: {
         main: string
         staff: string
@@ -55,6 +56,7 @@ export type Config = {
     modpack: string
     prefix: string
     logs: string
+    appeal: string
     guilds: {
         main: string
         staff: string
