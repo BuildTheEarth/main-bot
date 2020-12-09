@@ -22,7 +22,7 @@ export default class Command implements CommandProperties {
             if (!sub.permission) sub.permission = properties.permission
             return sub
         })
-        this.run = properties.run
+        this.run = properties.run.bind(this)
     }
 }
 
