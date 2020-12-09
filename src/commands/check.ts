@@ -43,17 +43,17 @@ export default new Command({
         }
 
         if (clean) {
-            embed.description = `✨ No punishment logs found for ${user}.`
+            embed.description = `✨ No punishment logs found for ${user} (${user.tag}).`
         } else {
             const punishment = await TimedPunishment.findOne({
                 where: { member: user.id }
             })
             const adjective = punishment?.type === "mute" ? "muted" : "banned"
-            const log = actionLogs.find(log => log.punishment?.id === punishment.id)
+            const log = actionLogs.find(log => log.punishment?.id === punishment?.id)
 
             embed.description = punishment
-                ? `${user} is currently ${adjective} (**#${log.id}**).\nHere are their punishment logs:`
-                : `Punishment logs for ${user}:`
+                ? `${user} (${user.tag}) is currently ${adjective} (**#${log.id}**). Here are their punishment logs:`
+                : `Punishment logs for ${user} (${user.tag}):`
             for (const [action, logs] of Object.entries(categorizedLogs)) {
                 const actionTitle = action[0].toUpperCase() + action.slice(1) + "s"
                 const nonDeletedLogs = logs.filter(log => !log.deletedAt)
