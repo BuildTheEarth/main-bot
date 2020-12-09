@@ -41,6 +41,6 @@ export default new Command({
         log.message = message.id
 
         await log.save()
-        message.channel.sendSuccess(`Kicked ${user} (**#${log.id}**)`)
+        message.channel.sendSuccess(`Kicked ${user} (**#${log.id}**).`)
     }
 })

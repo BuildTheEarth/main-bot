@@ -70,6 +70,6 @@ export default new Command({
         log.punishment = punishment
         await log.save()
 
-        message.channel.sendSuccess(`Muted ${user} ${formattedLength} (**#${log.id}**)`)
+        message.channel.sendSuccess(`Muted ${user} ${formattedLength} (**#${log.id}**).`)
     }
 })
