@@ -26,7 +26,8 @@ export default new Command({
                     : "Couldn't find that user."
             )
 
-        const length = ms(args.consume() || "0") || 0
+        const length = args.consumeLength()
+        if (!length) return message.channel.sendError("You must provide a length!")
         const reason = args.consumeRest()
         if (!reason) return message.channel.sendError("You must provide a reason!")
 
