@@ -63,7 +63,8 @@ export default class Args {
 
     consumeLength(): number {
         try {
-            return ms(this.consume()) || null
+            const parsed = ms(this.consume())
+            return parsed === undefined ? null : parsed
         } catch {
             return null
         }
