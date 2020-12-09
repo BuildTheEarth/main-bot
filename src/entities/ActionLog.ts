@@ -10,13 +10,15 @@ import {
 } from "typeorm"
 import TimedPunishment from "./TimedPunishment"
 
+export type Action = "warn" | "mute" | "kick" | "ban" | "unmute" | "unban"
+
 @Entity({ name: "action_logs" })
 export default class ActionLog extends BaseEntity {
     @PrimaryGeneratedColumn()
     id: number
 
     @Column()
-    action: "warn" | "mute" | "kick" | "ban" | "unmute" | "unban"
+    action: Action
 
     @Column({ length: 18 })
     member: string
@@ -46,7 +48,7 @@ export default class ActionLog extends BaseEntity {
         nullable: true,
         eager: true,
         onDelete: "SET NULL",
-        cascade: ["insert", "update", "remove", "soft-remove", "recover"]
+        cascade: true
     })
     @JoinColumn()
     punishment?: TimedPunishment
