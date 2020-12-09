@@ -1,11 +1,9 @@
-import Discord from "discord.js"
 import Client from "../struct/Client"
 import Message from "../struct/discord/Message"
 import Args from "../struct/Args"
 import Command from "../struct/Command"
+import TextChannel from "../struct/discord/TextChannel"
 import ActionLog from "../entities/ActionLog"
-import fecha from "fecha"
-import formatPunishmentTime from "../util/formatPunishmentTime"
 import Roles from "../util/roles"
 
 export default new Command({
@@ -41,34 +39,7 @@ export default new Command({
         if (!log) return message.channel.sendError(`Couldn't find case **#${id}**.`)
 
         if (!["edit", "delete"].includes(subcommand)) {
-            const messageLink = `https://discord.com/channels/${client.config.guilds.main}/${log.channel}/${log.message}`
-            const utcOffset = log.createdAt.getTimezoneOffset() * 60000
-            const utc = new Date(log.createdAt.getTime() + utcOffset)
-            const timestamp = fecha.format(utc, "DD/MM/YY [@] hh:mm:ss UTC")
-            const length = log.length ? formatPunishmentTime(log.length, true) : "\u200B"
-            const embed: Discord.MessageEmbedOptions = {
-                author: { name: `Case #${log.id} (${log.action})` },
-                fields: [
-                    { name: "Member", value: `<@${log.member}>` },
-                    { name: log.length ? "Length" : "\u200B", value: length },
-                    { name: "Reason", value: log.reason },
-                    { name: "Moderator", value: `<@${log.executor}>` },
-                    { name: "Context", value: `[Link](${messageLink})` },
-                    { name: "Time", value: timestamp }
-                ].map(field => ({ ...field, inline: true }))
-            }
-
-            if (log.deletedAt) {
-                embed.description = "*This case has been deleted.*"
-                return message.channel.sendError(embed)
-            }
-
-            if (log.punishment?.end > new Date()) {
-                const end = log.punishment.end.getTime() - Date.now()
-                embed.description = `*Ending in ${formatPunishmentTime(end, true)}.*`
-            }
-
-            message.channel.sendSuccess(embed)
+            await log.send(<TextChannel>message.channel)
         } else if (subcommand === "edit") {
             const reason = args.consumeRest()
             if (!reason)
