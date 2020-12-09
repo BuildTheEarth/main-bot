@@ -1,9 +1,12 @@
 import { Connection, createConnection } from "typeorm"
 import Discord from "discord.js"
+import TextChannel from "./discord/TextChannel"
 import EventList from "./client/EventList"
 import CommandList from "./client/CommandList"
 import ConfigManager from "./client/ConfigManager"
 import createLogger from "@buildtheearth/bot-logger"
+import ActionLog from "../entities/ActionLog"
+import Args from "./Args"
 
 export default class Client extends Discord.Client {
     db: Connection
@@ -28,5 +31,13 @@ export default class Client extends Discord.Client {
 
     login(): Promise<string> {
         return super.login(this.config.token)
+    }
+
+    async log(log: ActionLog | Args) {
+        const channel = <TextChannel>await this.channels.fetch(this.config.logs, true)
+
+        if (log instanceof ActionLog) {
+            await log.send(channel)
+        }
     }
 }
