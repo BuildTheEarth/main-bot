@@ -1,3 +1,4 @@
+import ms from "ms"
 import Discord from "discord.js"
 import Message from "./discord/Message"
 
@@ -58,6 +59,14 @@ export default class Args {
             .replace(/^`(``)?([a-z]+\n)?/i, "")
             .replace(/`(``)?$/, "")
             .trim())
+    }
+
+    consumeLength(): number {
+        try {
+            return ms(this.consume()) || null
+        } catch {
+            return null
+        }
     }
 
     consumeSnowflake(anywhere: boolean = true): Discord.Snowflake {
