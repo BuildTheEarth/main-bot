@@ -34,7 +34,10 @@ export default class TimedPunishment extends BaseEntity {
         return new Date(this.createdAt.getTime() + this.length)
     }
 
+    undoTimeout: NodeJS.Timeout
+
     async undo(client: Client) {
+        clearTimeout(this.undoTimeout)
         const guild = client.guilds.cache.get(client.config.guilds.main)
         if (this.type === "mute") {
             const member: GuildMember = await guild.members
@@ -47,10 +50,10 @@ export default class TimedPunishment extends BaseEntity {
         }
     }
 
-    schedule(client: Client): NodeJS.Timeout {
+    schedule(client: Client) {
         if (this.length === 0) return
         const timeout = this.end.getTime() - Date.now()
-        return setTimeout(async () => {
+        this.undoTimeout = setTimeout(async () => {
             await this.undo(client)
             await this.remove()
         }, timeout)
