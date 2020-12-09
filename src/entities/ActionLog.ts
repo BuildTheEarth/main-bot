@@ -52,4 +52,10 @@ export default class ActionLog extends BaseEntity {
     })
     @JoinColumn()
     punishment?: TimedPunishment
+
+    format(): string {
+        let formatted = `\` ${this.id}. \` ${this.reason}`
+        if (this.deletedAt) formatted = `~~${formatted}~~`
+        return formatted
+    }
 }
