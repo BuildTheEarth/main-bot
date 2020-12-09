@@ -4,7 +4,7 @@ import Message from "../struct/discord/Message"
 import Args from "../struct/Args"
 import Command from "../struct/Command"
 import Roles from "../util/roles"
-import ActionLog from "../entities/ActionLog"
+import ActionLog, { Action } from "../entities/ActionLog"
 import TimedPunishment from "../entities/TimedPunishment"
 
 export default new Command({
@@ -12,9 +12,10 @@ export default new Command({
     aliases: ["history", "logs", "records"],
     description: "Check a user's punishment records.",
     permission: [Roles.HELPER, Roles.MODERATOR],
-    usage: "<user>",
+    usage: "<user> [deleted]",
     async run(this: Command, client: Client, message: Message, args: Args) {
         const user = await args.consumeUser()
+        const showDeleted = args.consume().toLowerCase() === "deleted"
 
         if (!user)
             return message.channel.sendError(
@@ -23,10 +24,13 @@ export default new Command({
                     : "Couldn't find that user."
             )
 
-        const actionLogs = await ActionLog.find({ where: { member: user.id } })
-        const categorizedLogs: {
-            [key: string]: ActionLog[]
-        } = { warn: [], mute: [], kick: [], ban: [], unmute: [], unban: [] }
+        const actionLogs = await ActionLog.find({
+            where: { member: user.id },
+            withDeleted: showDeleted
+        })
+        // prettier-ignore
+        const categorizedLogs: Record<Action, ActionLog[]> =
+            { warn: [], mute: [], kick: [], ban: [], unmute: [], unban: [] }
 
         const clean = !actionLogs.length
         for (const log of actionLogs) categorizedLogs[log.action].push(log)
@@ -51,10 +55,10 @@ export default new Command({
                 ? `${user} is currently ${adjective} (**#${log.id}**).\nHere are their punishment logs:`
                 : `Punishment logs for ${user}:`
             for (const [action, logs] of Object.entries(categorizedLogs)) {
-                // prettier-ignore
-                const name = `${action[0].toUpperCase() + action.slice(1) + "s"} (${logs.length})`
-                // prettier-ignore
-                const value = logs.map(log => `\` ${log.id}. \` ${log.reason}`).join("\n") || "\u200B"
+                const actionTitle = action[0].toUpperCase() + action.slice(1) + "s"
+                const nonDeletedLogs = logs.filter(log => !log.deletedAt)
+                const name = `${actionTitle} (${nonDeletedLogs.length})`
+                const value = logs.map(log => log.format()).join("\n") || "\u200B"
                 embed.fields.push({ name, value, inline: true })
             }
         }
