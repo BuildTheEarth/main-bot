@@ -45,6 +45,7 @@ export default new Command({
         log.message = message.id
         await log.save()
 
-        message.channel.sendSuccess(`Unmuted ${user} (**#${log.id}**).`)
+        await message.channel.sendSuccess(`Unmuted ${user} (**#${log.id}**).`)
+        await client.log(log)
     }
 })

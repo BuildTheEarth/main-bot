@@ -70,6 +70,8 @@ export default new Command({
         log.punishment = punishment
         await log.save()
 
-        message.channel.sendSuccess(`Muted ${user} ${formattedLength} (**#${log.id}**).`)
+        // prettier-ignore
+        await message.channel.sendSuccess(`Muted ${user} ${formattedLength} (**#${log.id}**).`)
+        await client.log(log)
     }
 })

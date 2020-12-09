@@ -38,8 +38,9 @@ export default new Command({
         log.reason = reason
         log.channel = message.channel.id
         log.message = message.id
-
         await log.save()
-        message.channel.sendSuccess(`Warned ${user} (**#${log.id}**).`)
+
+        await message.channel.sendSuccess(`Warned ${user} (**#${log.id}**).`)
+        await client.log(log)
     }
 })
