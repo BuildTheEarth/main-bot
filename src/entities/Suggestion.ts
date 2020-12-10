@@ -21,6 +21,9 @@ export default class Suggestion extends BaseEntity {
     message: string
 
     @Column()
+    status: "approved" | "rejected" | "forwarded" | "in-progress" | "information"
+
+    @Column()
     staff: boolean
 
     @CreateDateColumn({ name: "created_at" })
