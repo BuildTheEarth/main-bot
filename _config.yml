@@ -7,6 +7,9 @@ appeal: ""
 guilds:
     main: ""
     staff: ""
+suggestions:
+    main: ""
+    staff: ""
 colors:
     success: ""
     error: ""
