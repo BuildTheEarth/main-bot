@@ -27,13 +27,14 @@ export default new Command({
                     "You don't have permission to use that command!"
                 )
 
+            const usage = command.usage ? ` ${command.usage}` : ""
             const embed = {
                 author: { name: command.name },
                 description: command.description,
                 fields: [
                     {
                         name: "Usage",
-                        value: `\`${client.config.prefix}${command.name} ${command.usage}\``
+                        value: `\`${client.config.prefix}${command.name}${usage}\``
                     }
                 ]
             }
