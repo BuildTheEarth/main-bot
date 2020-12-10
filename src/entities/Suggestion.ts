@@ -9,6 +9,8 @@ import SnowflakeColumn from "./decorators/SnowflakeColumn"
 
 @Entity({ name: "suggestions" })
 export default class Suggestion extends BaseEntity {
+    static ALPHABET = "abcdefghijklmnopqrstuvwxyz"
+
     @PrimaryGeneratedColumn()
     id: number
 
@@ -38,4 +40,14 @@ export default class Suggestion extends BaseEntity {
 
     @CreateDateColumn({ name: "created_at" })
     createdAt: Date
+
+    async getDisplayNumber(): Promise<string> {
+        if (!this.extends) {
+            return this.number.toString()
+        } else {
+            const extenders = await Suggestion.find({ where: { extends: this.extends } })
+            const letter = Suggestion.ALPHABET[extenders.length]
+            return this.extends + letter
+        }
+    }
 }
