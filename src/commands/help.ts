@@ -15,7 +15,7 @@ export default new Command({
     async run(this: Command, client: Client, message: Message, args: Args) {
         const member = message.member
 
-        if (args) {
+        if (args.raw) {
             const commandName = args.consume()
             const command = client.commands.search(commandName)
             if (!command)
