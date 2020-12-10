@@ -5,10 +5,10 @@ import {
     BaseEntity,
     CreateDateColumn
 } from "typeorm"
+import SnowflakeColumn from "./decorators/SnowflakeColumn"
 import Client from "../struct/Client"
 import GuildMember from "../struct/discord/GuildMember"
-import millisecondTransformer from "../util/millisecondTransformer"
-import SnowflakeColumn from "./decorators/SnowflakeColumn"
+import milliseconds from "./transformers/milliseconds"
 
 @Entity({ name: "timed_punishments" })
 export default class TimedPunishment extends BaseEntity {
@@ -21,7 +21,7 @@ export default class TimedPunishment extends BaseEntity {
     @Column()
     type: "mute" | "ban"
 
-    @Column({ transformer: millisecondTransformer })
+    @Column({ transformer: milliseconds })
     length: number
 
     @CreateDateColumn({ name: "created_at" })
