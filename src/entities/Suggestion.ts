@@ -3,7 +3,8 @@ import {
     Column,
     PrimaryGeneratedColumn,
     CreateDateColumn,
-    BaseEntity
+    BaseEntity,
+    LessThan
 } from "typeorm"
 import SnowflakeColumn from "./decorators/SnowflakeColumn"
 
@@ -45,7 +46,12 @@ export default class Suggestion extends BaseEntity {
         if (!this.extends) {
             return this.number.toString()
         } else {
-            const extenders = await Suggestion.find({ where: { extends: this.extends } })
+            const extenders = await Suggestion.find({
+                where: {
+                    extends: this.extends,
+                    createdAt: LessThan(new Date())
+                }
+            })
             const letter = Suggestion.ALPHABET[extenders.length]
             return this.extends + letter
         }
