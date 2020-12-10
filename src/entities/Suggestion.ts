@@ -5,19 +5,20 @@ import {
     CreateDateColumn,
     BaseEntity
 } from "typeorm"
+import SnowflakeColumn from "./decorators/SnowflakeColumn"
 
 @Entity({ name: "suggestions" })
 export default class Suggestion extends BaseEntity {
     @PrimaryGeneratedColumn()
     id: number
 
-    @Column({ length: 18 })
+    @SnowflakeColumn()
     author: string
 
     @Column({ length: 2048 })
     body: string
 
-    @Column({ length: 18 })
+    @SnowflakeColumn()
     message: string
 
     @Column()

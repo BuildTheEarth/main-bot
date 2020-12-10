@@ -3,19 +3,19 @@ import {
     Column,
     PrimaryGeneratedColumn,
     BaseEntity,
-    CreateDateColumn,
-    DeleteDateColumn
+    CreateDateColumn
 } from "typeorm"
 import Client from "../struct/Client"
 import GuildMember from "../struct/discord/GuildMember"
 import millisecondTransformer from "../util/millisecondTransformer"
+import SnowflakeColumn from "./decorators/SnowflakeColumn"
 
 @Entity({ name: "timed_punishments" })
 export default class TimedPunishment extends BaseEntity {
     @PrimaryGeneratedColumn()
     id: number
 
-    @Column({ length: 18 })
+    @SnowflakeColumn()
     member: string
 
     @Column()

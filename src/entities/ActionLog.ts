@@ -8,6 +8,7 @@ import {
     OneToOne,
     JoinColumn
 } from "typeorm"
+import SnowflakeColumn from "./decorators/SnowflakeColumn"
 import fecha from "fecha"
 import Discord from "discord.js"
 import TextChannel from "../struct/discord/TextChannel"
@@ -24,10 +25,10 @@ export default class ActionLog extends BaseEntity {
     @Column()
     action: Action
 
-    @Column({ length: 18 })
+    @SnowflakeColumn()
     member: string
 
-    @Column({ length: 18 })
+    @SnowflakeColumn()
     executor: string
 
     @Column({ length: 500 })
@@ -36,10 +37,10 @@ export default class ActionLog extends BaseEntity {
     @Column({ nullable: true })
     length?: number
 
-    @Column({ length: 18 })
+    @SnowflakeColumn()
     channel: string
 
-    @Column({ length: 18 })
+    @SnowflakeColumn()
     message: string
 
     @CreateDateColumn({ name: "created_at" })
