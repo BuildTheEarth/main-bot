@@ -18,11 +18,14 @@ export default class Suggestion extends BaseEntity {
     @Column({ length: 2048 })
     body: string
 
-    @SnowflakeColumn()
-    message: string
+    @Column()
+    teams: string
 
     @Column()
     status: "approved" | "rejected" | "forwarded" | "in-progress" | "information"
+
+    @SnowflakeColumn()
+    message: string
 
     @Column()
     staff: boolean
