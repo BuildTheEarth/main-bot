@@ -58,6 +58,12 @@ export default class ActionLog extends BaseEntity {
     @JoinColumn()
     punishment?: TimedPunishment
 
+    get old(): boolean {
+        const difference = this.createdAt.getTime() - Date.now()
+        const threeMonths = 3 * 30 * 24 * 60 * 60 * 1000
+        return difference > threeMonths
+    }
+
     format(): string {
         let formatted = `\` ${this.id}. \` ${this.reason}`
         if (this.deletedAt) formatted = `~~${formatted}~~`
