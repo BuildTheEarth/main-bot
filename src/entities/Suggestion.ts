@@ -12,6 +12,12 @@ export default class Suggestion extends BaseEntity {
     @PrimaryGeneratedColumn()
     id: number
 
+    @Column({ nullable: true })
+    number?: number
+
+    @Column({ nullable: true })
+    extends?: number
+
     @SnowflakeColumn()
     author: string
 
