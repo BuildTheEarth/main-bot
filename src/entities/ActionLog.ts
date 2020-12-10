@@ -66,7 +66,7 @@ export default class ActionLog extends BaseEntity {
 
     format(): string {
         let formatted = `\` ${this.id}. \` ${this.reason}`
-        if (this.deletedAt) formatted = `~~${formatted}~~`
+        if (this.old) formatted = `\\📜 ${formatted}`
         return formatted
     }
 
