@@ -13,14 +13,14 @@ import Client from "../struct/Client"
 
 export const VALID_STATUSES = [
     "approved",
-    "rejected",
+    "denied",
     "forwarded",
     "in-progress",
     "information"
 ]
 export type SuggestionStatus =
     | "approved"
-    | "rejected"
+    | "denied"
     | "forwarded"
     | "in-progress"
     | "information"
