@@ -24,7 +24,7 @@ export default new Command({
             message.member.hasStaffPermission(sub.permission || this.permission)
         )
         const availableSubcommandNames = availableSubcommands.map(sub => sub.name)
-        const allSubcommandNames = availableSubcommands.map(sub => sub.name)
+        const allSubcommandNames = this.subcommands.map(sub => sub.name)
         if (!allSubcommandNames.includes(subcommand))
             // prettier-ignore
             return message.channel.sendError(
