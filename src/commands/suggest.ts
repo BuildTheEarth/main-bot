@@ -1,4 +1,3 @@
-import Discord from "discord.js"
 import Client from "../struct/Client"
 import Message from "../struct/discord/Message"
 import Args from "../struct/Args"
@@ -11,7 +10,7 @@ export default new Command({
     aliases: [],
     description: "Make a suggestion.",
     permission: Roles.ANY,
-    usage: "[anon] <title> | <body> | [team/s]",
+    usage: "['anon'] <title> | <body> | [team/s]",
     async run(this: Command, client: Client, message: Message, args: Args) {
         const anon = args.consumeIf(a => ["anon", "anonymous"].includes(a.toLowerCase()))
         const staff = message.guild.id === client.config.guilds.staff
