@@ -15,11 +15,11 @@ colors:
     error: "#ED5439"
 assets:
     suggestions:
-        approved: https://i.imgur.com/Lxl9xRM.png
-        denied: https://i.imgur.com/91sLvQ5.png
-        forwarded: https://i.imgur.com/4lGHQCi.png
-        in-progress: https://i.imgur.com/PVGv7JT.png
-        information: https://i.imgur.com/JtJPDsu.png
+        approved: https://i.imgur.com/e3n6AoG.png
+        denied: https://i.imgur.com/gcIL6v7.png
+        forwarded: https://i.imgur.com/DmhWhck.png
+        in-progress: https://i.imgur.com/FOfXfuD.png
+        information: https://i.imgur.com/vRYLHQq.png
 
 database:
     host: ""
