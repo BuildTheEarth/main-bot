@@ -51,6 +51,12 @@ export default class Suggestion extends BaseEntity {
     status?: keyof typeof SuggestionStatuses
 
     @SnowflakeColumn()
+    statusUpdater?: string
+
+    @Column({ length: 2048 })
+    statusReason?: string
+
+    @SnowflakeColumn()
     message: string
 
     @Column()
