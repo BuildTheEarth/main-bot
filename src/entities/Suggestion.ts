@@ -49,6 +49,9 @@ export default class Suggestion extends BaseEntity {
     @DeleteDateColumn({ name: "deleted_at" })
     deletedAt: Date
 
+    @SnowflakeColumn({ nullable: true })
+    deleter?: string
+
     async getDisplayNumber(): Promise<string> {
         if (!this.extends) {
             return this.number.toString()
