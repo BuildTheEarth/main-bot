@@ -11,8 +11,9 @@ export default new Command({
     aliases: [],
     description: "Make a suggestion.",
     permission: Roles.ANY,
-    usage: "<title> | <body> | [team/s]",
+    usage: "[anon] <title> | <body> | [team/s]",
     async run(this: Command, client: Client, message: Message, args: Args) {
+        const anon = args.consumeIf(a => ["anon", "anonymous"].includes(a.toLowerCase()))
         const staff = message.guild.id === client.config.guilds.main
         const suggestionsChannel = client.config.suggestions[staff ? "staff" : "main"]
         if (message.channel.id !== suggestionsChannel)
@@ -29,6 +30,7 @@ export default new Command({
         const suggestion = new Suggestion()
         suggestion.number = await Suggestion.findNumber(staff)
         suggestion.author = message.author.id
+        suggestion.anonymous = Boolean(anon)
         suggestion.title = title
         suggestion.body = body
         suggestion.teams = teams || null
@@ -38,19 +40,23 @@ export default new Command({
         const embed: Discord.MessageEmbedOptions = {
             color: "#999999",
             author: { name: `#${displayNumber} — ${title}` },
-            thumbnail: {
+            description: body,
+            fields: []
+        }
+
+        if (!suggestion.anonymous) {
+            embed.fields.push({ name: "Author", value: `<@${suggestion.author}>` })
+            embed.thumbnail = {
                 url: message.author.displayAvatarURL({
                     size: 128,
                     format: "png",
                     dynamic: true
                 })
-            },
-            description: body,
-            fields: [{ name: "Author", value: `<@${suggestion.author}>` }]
+            }
         }
-
-        if (suggestion.teams)
-            embed.fields.splice(0, 0, { name: "Team/s", value: suggestion.teams })
+        if (suggestion.teams) {
+            embed.fields.push({ name: "Team/s", value: suggestion.teams })
+        }
 
         const suggestionMessage = await message.channel.send({ embed })
         suggestion.message = suggestionMessage.id
