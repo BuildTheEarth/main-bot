@@ -58,7 +58,7 @@ export default class Suggestion extends BaseEntity {
     deleter?: string
 
     static async findNumber(staff: boolean) {
-        const existing = await this.count({ where: { staff } })
+        const existing = await this.count({ where: { staff }, withDeleted: true })
         return existing + 1
     }
 
