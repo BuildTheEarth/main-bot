@@ -28,8 +28,8 @@ export default class Suggestion extends BaseEntity {
     @Column({ length: 2048 })
     body: string
 
-    @Column()
-    teams: string
+    @Column({ nullable: true })
+    teams?: string
 
     @Column({ nullable: true })
     status?: "approved" | "rejected" | "forwarded" | "in-progress" | "information"
