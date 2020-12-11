@@ -50,10 +50,10 @@ export default class Suggestion extends BaseEntity {
     @Column({ nullable: true })
     status?: keyof typeof SuggestionStatuses
 
-    @SnowflakeColumn()
+    @SnowflakeColumn({ nullable: true, name: "status_updater" })
     statusUpdater?: string
 
-    @Column({ length: 2048 })
+    @Column({ nullable: true, length: 2048, name: "status_reason" })
     statusReason?: string
 
     @SnowflakeColumn()
