@@ -18,6 +18,12 @@ export const VALID_STATUSES = [
     "in-progress",
     "information"
 ]
+export type SuggestionStatus =
+    | "approved"
+    | "rejected"
+    | "forwarded"
+    | "in-progress"
+    | "information"
 
 @Entity({ name: "suggestions" })
 export default class Suggestion extends BaseEntity {
@@ -48,7 +54,7 @@ export default class Suggestion extends BaseEntity {
     teams?: string
 
     @Column({ nullable: true })
-    status?: "approved" | "rejected" | "forwarded" | "in-progress" | "information"
+    status?: SuggestionStatus
 
     @SnowflakeColumn()
     message: string
