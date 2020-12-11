@@ -65,8 +65,12 @@ export default class Suggestion extends BaseEntity {
     }
 
     static async findNumber(staff: boolean) {
-        const last = await this.findOne({ where: { staff } })
-        if (!last) return 1
-        return last.number + 1
+        const { max }: { max: number } = await this.getRepository()
+            .createQueryBuilder("suggestion")
+            .select("MAX(suggestion.number)", "max")
+            .where({ staff })
+            .getRawOne()
+        if (!max) return 1
+        return max + 1
     }
 }
