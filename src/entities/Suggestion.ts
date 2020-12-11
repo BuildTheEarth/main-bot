@@ -25,6 +25,9 @@ export default class Suggestion extends BaseEntity {
     @SnowflakeColumn()
     author: string
 
+    @Column()
+    title: string
+
     @Column({ length: 2048 })
     body: string
 
