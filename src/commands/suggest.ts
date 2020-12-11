@@ -26,7 +26,9 @@ export default new Command({
         if (!title) return message.channel.sendError("You must specify a title!")
         if (title.length > 99) return message.channel.sendError("That title is too long!")
         if (!body) return message.channel.sendError("You must specify a suggestion body!")
-        await message.react("👌")
+        // delete message asap if suggestion is anon
+        if (anon) await message.delete()
+        else message.react("👌")
 
         const suggestion = new Suggestion()
         suggestion.number = await Suggestion.findNumber(staff)
@@ -65,6 +67,6 @@ export default new Command({
 
         await suggestionMessage.react("👍")
         await suggestionMessage.react("👎")
-        await message.delete()
+        if (!anon) await message.delete()
     }
 })
