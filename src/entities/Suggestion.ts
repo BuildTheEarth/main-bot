@@ -26,6 +26,9 @@ export default class Suggestion extends BaseEntity {
     author: string
 
     @Column()
+    anonymous: boolean
+
+    @Column()
     title: string
 
     @Column({ length: 2048 })
