@@ -11,19 +11,13 @@ import SnowflakeColumn from "./decorators/SnowflakeColumn"
 import Discord from "discord.js"
 import Client from "../struct/Client"
 
-export const VALID_STATUSES = [
-    "approved",
-    "denied",
-    "forwarded",
-    "in-progress",
-    "information"
-]
-export type SuggestionStatus =
-    | "approved"
-    | "denied"
-    | "forwarded"
-    | "in-progress"
-    | "information"
+export enum SuggestionStatuses {
+    "approved" = "#4B53EB",
+    "denied" = "#EB4364",
+    "forwarded" = "#D25424",
+    "information" = "#62D18A",
+    "in-progress" = "#E5B823"
+}
 
 @Entity({ name: "suggestions" })
 export default class Suggestion extends BaseEntity {
@@ -54,7 +48,7 @@ export default class Suggestion extends BaseEntity {
     teams?: string
 
     @Column({ nullable: true })
-    status?: SuggestionStatus
+    status?: keyof typeof SuggestionStatuses
 
     @SnowflakeColumn()
     message: string
