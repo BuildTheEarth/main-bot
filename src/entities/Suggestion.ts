@@ -11,6 +11,14 @@ import SnowflakeColumn from "./decorators/SnowflakeColumn"
 import Discord from "discord.js"
 import Client from "../struct/Client"
 
+export const VALID_STATUSES = [
+    "approved",
+    "rejected",
+    "forwarded",
+    "in-progress",
+    "information"
+]
+
 @Entity({ name: "suggestions" })
 export default class Suggestion extends BaseEntity {
     static ALPHABET = "abcdefghijklmnopqrstuvwxyz"
