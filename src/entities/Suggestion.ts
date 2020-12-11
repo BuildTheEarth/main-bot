@@ -58,13 +58,8 @@ export default class Suggestion extends BaseEntity {
     deleter?: string
 
     static async findNumber(staff: boolean) {
-        const { max }: { max: number } = await this.getRepository()
-            .createQueryBuilder("suggestion")
-            .select("MAX(suggestion.number)", "max")
-            .where({ staff })
-            .getRawOne()
-        if (!max) return 1
-        return max + 1
+        const existing = await this.count({ where: { staff } })
+        return existing + 1
     }
 
     async getDisplayNumber(): Promise<string> {
