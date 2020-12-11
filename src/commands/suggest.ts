@@ -39,29 +39,9 @@ export default new Command({
         suggestion.teams = teams || null
         suggestion.staff = staff
 
-        const displayNumber = await suggestion.getDisplayNumber()
-        const embed: Discord.MessageEmbedOptions = {
-            color: "#999999",
-            author: { name: `#${displayNumber} — ${title}` },
-            description: body,
-            fields: []
-        }
-
-        if (!suggestion.anonymous) {
-            embed.fields.push({ name: "Author", value: `<@${suggestion.author}>` })
-            embed.thumbnail = {
-                url: message.author.displayAvatarURL({
-                    size: 128,
-                    format: "png",
-                    dynamic: true
-                })
-            }
-        }
-        if (suggestion.teams) {
-            embed.fields.push({ name: "Team/s", value: suggestion.teams })
-        }
-
-        const suggestionMessage = await message.channel.send({ embed })
+        const suggestionMessage = await message.channel.send({
+            embed: await suggestion.displayEmbed(message.author)
+        })
         suggestion.message = suggestionMessage.id
         await suggestion.save()
 

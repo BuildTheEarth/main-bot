@@ -8,6 +8,7 @@ import {
     LessThan
 } from "typeorm"
 import SnowflakeColumn from "./decorators/SnowflakeColumn"
+import Discord from "discord.js"
 
 @Entity({ name: "suggestions" })
 export default class Suggestion extends BaseEntity {
@@ -55,6 +56,16 @@ export default class Suggestion extends BaseEntity {
     @SnowflakeColumn({ nullable: true })
     deleter?: string
 
+    static async findNumber(staff: boolean) {
+        const { max }: { max: number } = await this.getRepository()
+            .createQueryBuilder("suggestion")
+            .select("MAX(suggestion.number)", "max")
+            .where({ staff })
+            .getRawOne()
+        if (!max) return 1
+        return max + 1
+    }
+
     async getDisplayNumber(): Promise<string> {
         if (!this.extends) {
             return this.number.toString()
@@ -70,13 +81,29 @@ export default class Suggestion extends BaseEntity {
         }
     }
 
-    static async findNumber(staff: boolean) {
-        const { max }: { max: number } = await this.getRepository()
-            .createQueryBuilder("suggestion")
-            .select("MAX(suggestion.number)", "max")
-            .where({ staff })
-            .getRawOne()
-        if (!max) return 1
-        return max + 1
+    async displayEmbed(author: Discord.User): Promise<Discord.MessageEmbedOptions> {
+        const displayNumber = await this.getDisplayNumber()
+        const embed: Discord.MessageEmbedOptions = {
+            color: "#999999",
+            author: { name: `#${displayNumber} — ${this.title}` },
+            description: this.body,
+            fields: []
+        }
+
+        if (!this.anonymous) {
+            embed.fields.push({ name: "Author", value: `<@${this.author}>` })
+            embed.thumbnail = {
+                url: author.displayAvatarURL({
+                    size: 128,
+                    format: "png",
+                    dynamic: true
+                })
+            }
+        }
+        if (this.teams) {
+            embed.fields.push({ name: "Team/s", value: this.teams })
+        }
+
+        return embed
     }
 }
