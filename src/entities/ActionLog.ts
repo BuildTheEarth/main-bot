@@ -55,7 +55,7 @@ export default class ActionLog extends BaseEntity {
         onDelete: "SET NULL",
         cascade: true
     })
-    @JoinColumn()
+    @JoinColumn({ name: "punishment_id" })
     punishment?: TimedPunishment
 
     get old(): boolean {
