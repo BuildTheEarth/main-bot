@@ -14,7 +14,7 @@ export default new Command({
     usage: "[anon] <title> | <body> | [team/s]",
     async run(this: Command, client: Client, message: Message, args: Args) {
         const anon = args.consumeIf(a => ["anon", "anonymous"].includes(a.toLowerCase()))
-        const staff = message.guild.id === client.config.guilds.main
+        const staff = message.guild.id === client.config.guilds.staff
         const suggestionsChannel = client.config.suggestions[staff ? "staff" : "main"]
         if (message.channel.id !== suggestionsChannel)
             return message.channel.sendError(
