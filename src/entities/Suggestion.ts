@@ -56,4 +56,10 @@ export default class Suggestion extends BaseEntity {
             return this.extends + letter
         }
     }
+
+    static async findNumber(staff: boolean) {
+        const last = await this.findOne({ where: { staff } })
+        if (!last) return 1
+        return last.number + 1
+    }
 }
