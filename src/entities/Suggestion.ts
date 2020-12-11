@@ -3,6 +3,7 @@ import {
     Column,
     PrimaryGeneratedColumn,
     CreateDateColumn,
+    DeleteDateColumn,
     BaseEntity,
     LessThan
 } from "typeorm"
@@ -41,6 +42,9 @@ export default class Suggestion extends BaseEntity {
 
     @CreateDateColumn({ name: "created_at" })
     createdAt: Date
+
+    @DeleteDateColumn({ name: "deleted_at" })
+    deletedAt: Date
 
     async getDisplayNumber(): Promise<string> {
         if (!this.extends) {
