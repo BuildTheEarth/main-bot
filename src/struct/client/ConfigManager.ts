@@ -13,6 +13,15 @@ export default class ConfigManager implements Config {
     guilds: { main: string; staff: string }
     suggestions: { main: string; staff: string }
     colors: { success: string; error: string }
+    assets: {
+        suggestions: {
+            "approved": string
+            "denied": string
+            "forwarded": string
+            "in-progress": string
+            "information": string
+        }
+    }
     database: { host: string; name: string; user: string; pass: string }
 
     constructor(client: Client) {
@@ -50,5 +59,14 @@ export type Config = {
     guilds: { main: string; staff: string }
     suggestions: { main: string; staff: string }
     colors: { success: string; error: string }
+    assets: {
+        suggestions: {
+            "approved": string
+            "denied": string
+            "forwarded": string
+            "in-progress": string
+            "information": string
+        }
+    }
     database: { host: string; name: string; user: string; pass: string }
 }

@@ -11,8 +11,16 @@ suggestions:
     main: ""
     staff: ""
 colors:
-    success: ""
-    error: ""
+    success: "#1EAD2F"
+    error: "#ED5439"
+assets:
+    suggestions:
+        approved: https://i.imgur.com/Lxl9xRM.png
+        denied: https://i.imgur.com/91sLvQ5.png
+        forwarded: https://i.imgur.com/4lGHQCi.png
+        in-progress: https://i.imgur.com/PVGv7JT.png
+        information: https://i.imgur.com/JtJPDsu.png
+
 database:
     host: ""
     name: ""
