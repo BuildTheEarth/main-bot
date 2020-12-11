@@ -24,7 +24,7 @@ export default new Command({
         args.separator = "|"
         const [title, body, teams] = args.consume(3)
         if (!title) return message.channel.sendError("You must specify a title!")
-        if (title.length > 250) return message.channel.sendError("The title is too long!")
+        if (title.length > 99) return message.channel.sendError("That title is too long!")
         if (!body) return message.channel.sendError("You must specify a suggestion body!")
         await message.react("👌")
 
