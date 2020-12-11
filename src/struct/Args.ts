@@ -36,6 +36,16 @@ export default class Args {
         return args
     }
 
+    consumeIf(equals: string | Function): string {
+        const arg = this.get()
+        if (typeof equals === "string" ? equals === arg : equals(arg)) {
+            this.remove()
+            return arg
+        } else {
+            return null
+        }
+    }
+
     consumeRest(): string
     consumeRest(count: number): string[]
     consumeRest(count?: number): string | string[] {
