@@ -3,7 +3,7 @@ import Message from "../struct/discord/Message"
 import Args from "../struct/Args"
 import Command from "../struct/Command"
 import TextChannel from "../struct/discord/TextChannel"
-import Suggestion from "../entities/Suggestion"
+import Suggestion, { SuggestionStatuses } from "../entities/Suggestion"
 import Roles from "../util/roles"
 
 export default new Command({
@@ -22,6 +22,18 @@ export default new Command({
             name: "edit",
             description: "Edit a suggestion.",
             usage: "<number> ['title'] <text>"
+        },
+        {
+            name: "delete",
+            description: "Delete a suggestion.",
+            permission: Roles.ANY,
+            usage: "<number>"
+        },
+        {
+            name: "status",
+            description: "Change the status of a suggestion.",
+            permission: [Roles.SUGGESTION_TEAM, Roles.MANAGER],
+            usage: "<number> <status> [reason]"
         }
     ],
     async run(this: Command, client: Client, message: Message, args: Args) {
@@ -38,10 +50,8 @@ export default new Command({
             )
 
         const staff = message.guild.id === client.config.guilds.staff
-        const suggestionsChannelID = client.config.suggestions[staff ? "staff" : "main"]
-        const suggestionsChannel = <TextChannel>(
-            await client.channels.fetch(suggestionsChannelID, true)
-        )
+        const suggestionsID = client.config.suggestions[staff ? "staff" : "main"]
+        const suggestions = <TextChannel>await client.channels.fetch(suggestionsID, true)
 
         const number = Number(args.consume().match(/\d+/)?.[0])
         if (Number.isNaN(number))
@@ -50,10 +60,18 @@ export default new Command({
         const suggestion = await Suggestion.findOne({ where: { number, staff } })
         if (!suggestion)
             return message.channel.sendError("Hmm... That suggestion doesn't exist.")
-        const displayNumber = await suggestion.getDisplayNumber()
+        const suggestionMessage = await suggestions.messages.fetch(suggestion.message)
+        if (!suggestionMessage)
+            return message.channel.sendError("Can't find the suggestion's message!")
+
+        const canManage = message.member.hasStaffPermission([
+            Roles.SUGGESTION_TEAM,
+            Roles.MANAGER
+        ])
 
         if (subcommand === "link") {
-            const url = `https://discord.com/channels/${message.guild.id}/${suggestionsChannelID}/${suggestion.message}`
+            const displayNumber = await suggestion.getDisplayNumber()
+            const url = suggestionMessage.url
             if (suggestion.deletedAt) {
                 return message.channel.sendSuccess(
                     `Looks like suggestion **#${displayNumber}** was deleted, but here it is: [*Deleted*](${url})`
@@ -76,14 +94,46 @@ export default new Command({
             suggestion[title ? "title" : "body"] = edited
             await suggestion.save()
             const embed = await suggestion.displayEmbed(message.author)
-            // prettier-ignore
-            const suggestionMessage = await suggestionsChannel.messages.fetch(suggestion.message, true)
-            if (!suggestionMessage)
-                return message.channel.sendError("I can't find the suggestion's message!")
             await suggestionMessage.edit({ embed })
 
             const possessive = title ? "'s title" : ""
             return message.channel.sendSuccess(`Edited your suggestion${possessive}!`)
+        } else if (subcommand === "delete") {
+            if (suggestion.author !== message.author.id && !canManage)
+                return message.channel.sendError(
+                    "You can't delete other people's suggestions!"
+                )
+
+            // BaseEntity#softRemove() doesn't save the deletion date to the object itself
+            // and we need it to be saved because Suggestion#displayEmbed() uses it
+            suggestion.deleter = message.author.id
+            suggestion.deletedAt = new Date()
+            await suggestion.save()
+
+            const embed = await suggestion.displayEmbed(message.author)
+            await suggestionMessage.edit({ embed })
+
+            message.channel.sendSuccess("Deleted the suggestion!")
+        } else if (subcommand === "status") {
+            if (!canManage) return
+            const status = args.consume().toLowerCase()
+            const reason = args.consumeRest()
+            if (!(status in SuggestionStatuses)) {
+                const formatted = Object.keys(SuggestionStatuses).join("`, `")
+                return message.channel.sendError(
+                    `You must specify a new suggestion status! (\`${formatted}\`).`
+                )
+            }
+
+            suggestion.status = status as keyof typeof SuggestionStatuses
+            suggestion.statusUpdater = message.author.id
+            suggestion.statusReason = reason || null
+
+            await suggestion.save()
+            const embed = await suggestion.displayEmbed(message.author)
+            await suggestionMessage.edit({ embed })
+
+            return message.channel.sendSuccess("Updated the suggestion!")
         }
     }
 })

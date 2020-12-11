@@ -19,6 +19,13 @@ export enum SuggestionStatuses {
     "information" = "#62D18A",
     "in-progress" = "#E5B823"
 }
+export const SuggestionStatusActions = {
+    "approved": "Approved",
+    "denied": "Denied",
+    "forwarded": "Forwarded to the respective team",
+    "information": "Narked as needing information",
+    "in-progress": "Marked as in progress"
+}
 
 @Entity({ name: "suggestions" })
 export default class Suggestion extends BaseEntity {
@@ -106,22 +113,33 @@ export default class Suggestion extends BaseEntity {
         const embed: Discord.MessageEmbedOptions = {
             color: "#999999",
             author: { name: `#${displayNumber} — ${this.title}` },
+            thumbnail: { url: null },
             description: this.body,
             fields: []
         }
 
         if (!this.anonymous) {
             embed.fields.push({ name: "Author", value: `<@${this.author}>` })
-            embed.thumbnail = {
-                url: author.displayAvatarURL({
+            if (!this.status) {
+                embed.thumbnail.url = author.displayAvatarURL({
                     size: 128,
                     format: "png",
                     dynamic: true
                 })
             }
         }
-        if (this.teams) {
-            embed.fields.push({ name: "Team/s", value: this.teams })
+        if (this.teams) embed.fields.push({ name: "Team/s", value: this.teams })
+
+        if (this.status) {
+            const action = SuggestionStatusActions[this.status]
+            const reason = this.statusReason ? `\n\n${this.statusReason}` : ""
+            const assets = (<Client>author.client).config.assets.suggestions
+            embed.color = SuggestionStatuses[this.status]
+            embed.thumbnail.url = assets[this.status]
+            embed.fields.push({
+                name: "Status",
+                value: `*${action} by <@${this.statusUpdater}>.*${reason}`
+            })
         }
 
         return embed
