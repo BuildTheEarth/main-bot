@@ -9,6 +9,7 @@ import {
 } from "typeorm"
 import SnowflakeColumn from "./decorators/SnowflakeColumn"
 import Discord from "discord.js"
+import Client from "../struct/Client"
 
 @Entity({ name: "suggestions" })
 export default class Suggestion extends BaseEntity {
@@ -82,6 +83,15 @@ export default class Suggestion extends BaseEntity {
     }
 
     async displayEmbed(author: Discord.User): Promise<Discord.MessageEmbedOptions> {
+        if (this.deletedAt) {
+            let deleter =
+                this.deleter === this.author ? "the author" : `<@${this.deleter}>`
+            return {
+                color: (<Client>author.client).config.colors.error,
+                description: `The suggestion has been deleted by ${deleter}.`
+            }
+        }
+
         const displayNumber = await this.getDisplayNumber()
         const embed: Discord.MessageEmbedOptions = {
             color: "#999999",
