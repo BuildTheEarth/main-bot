@@ -36,7 +36,7 @@ export default class Args {
         return args
     }
 
-    consumeIf(equals: string | Function): string {
+    consumeIf(equals: string | ((arg: string) => boolean)): string {
         const arg = this.get()
         if (typeof equals === "string" ? equals === arg : equals(arg)) {
             this.remove()
