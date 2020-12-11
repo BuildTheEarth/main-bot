@@ -10,20 +10,10 @@ export default class ConfigManager implements Config {
     prefix: string
     logs: string
     appeal: string
-    guilds: {
-        main: string
-        staff: string
-    }
-    colors: {
-        success: string
-        error: string
-    }
-    database: {
-        host: string
-        name: string
-        user: string
-        pass: string
-    }
+    guilds: { main: string; staff: string }
+    suggestions: { main: string; staff: string }
+    colors: { success: string; error: string }
+    database: { host: string; name: string; user: string; pass: string }
 
     constructor(client: Client) {
         this.client = client
@@ -57,18 +47,8 @@ export type Config = {
     prefix: string
     logs: string
     appeal: string
-    guilds: {
-        main: string
-        staff: string
-    }
-    colors: {
-        success: string
-        error: string
-    }
-    database: {
-        host: string
-        name: string
-        user: string
-        pass: string
-    }
+    guilds: { main: string; staff: string }
+    suggestions: { main: string; staff: string }
+    colors: { success: string; error: string }
+    database: { host: string; name: string; user: string; pass: string }
 }

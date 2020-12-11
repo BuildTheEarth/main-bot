@@ -22,15 +22,28 @@ export default class Args {
         return this.separator ? this.split : this.raw.split(/\s+/)
     }
 
+    get(): string
+    get(count: number): string[]
+    get(count?: number): string | string[] {
+        return count ? this.splitMultiple.slice(0, count) : this.split[0]
+    }
+
     consume(): string
     consume(count: number): string[]
     consume(count?: number): string | string[] {
-        let args: string | string[]
-        if (!count) args = this.split[0]
-        else args = this.splitMultiple.slice(0, count)
-
+        const args = this.get(count)
         this.remove(count)
         return args
+    }
+
+    consumeIf(equals: string | ((arg: string) => boolean)): string {
+        const arg = this.get()
+        if (typeof equals === "string" ? equals === arg : equals(arg)) {
+            this.remove()
+            return arg
+        } else {
+            return null
+        }
     }
 
     consumeRest(): string

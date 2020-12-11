@@ -15,7 +15,7 @@ export default new Command({
     async run(this: Command, client: Client, message: Message, args: Args) {
         const member = message.member
 
-        if (args) {
+        if (args.raw) {
             const commandName = args.consume()
             const command = client.commands.search(commandName)
             if (!command)
@@ -27,13 +27,14 @@ export default new Command({
                     "You don't have permission to use that command!"
                 )
 
+            const usage = command.usage ? ` ${command.usage}` : ""
             const embed = {
                 author: { name: command.name },
                 description: command.description,
                 fields: [
                     {
                         name: "Usage",
-                        value: `\`${client.config.prefix}${command.name} ${command.usage}\``
+                        value: `\`${client.config.prefix}${command.name}${usage}\``
                     }
                 ]
             }
