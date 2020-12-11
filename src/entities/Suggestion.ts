@@ -31,8 +31,8 @@ export default class Suggestion extends BaseEntity {
     @Column()
     teams: string
 
-    @Column()
-    status: "approved" | "rejected" | "forwarded" | "in-progress" | "information"
+    @Column({ nullable: true })
+    status?: "approved" | "rejected" | "forwarded" | "in-progress" | "information"
 
     @SnowflakeColumn()
     message: string
