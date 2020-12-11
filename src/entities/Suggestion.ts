@@ -91,7 +91,7 @@ export default class Suggestion extends BaseEntity {
         }
     }
 
-    async displayEmbed(author: Discord.User): Promise<Discord.MessageEmbedOptions> {
+    async displayEmbed(author?: Discord.User): Promise<Discord.MessageEmbedOptions> {
         if (this.deletedAt) {
             let deleter =
                 this.deleter === this.author ? "the author" : `<@${this.deleter}>`
