@@ -11,6 +11,7 @@ import SnowflakeColumn from "./decorators/SnowflakeColumn"
 import Discord from "discord.js"
 import Client from "../struct/Client"
 
+export type SuggestionStatus = keyof typeof SuggestionStatuses
 export enum SuggestionStatuses {
     "approved" = "#4B53EB",
     "denied" = "#EB4364",
@@ -48,7 +49,7 @@ export default class Suggestion extends BaseEntity {
     teams?: string
 
     @Column({ nullable: true })
-    status?: keyof typeof SuggestionStatuses
+    status?: SuggestionStatus
 
     @SnowflakeColumn({ nullable: true, name: "status_updater" })
     statusUpdater?: string
