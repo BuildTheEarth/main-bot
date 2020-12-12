@@ -11,7 +11,7 @@ import {
 import SnowflakeColumn from "./decorators/SnowflakeColumn"
 import fecha from "fecha"
 import Discord from "discord.js"
-import TextChannel from "../struct/discord/TextChannel"
+import Client from "../struct/Client"
 import TimedPunishment from "./TimedPunishment"
 import formatPunishmentTime from "../util/formatPunishmentTime"
 
@@ -70,13 +70,14 @@ export default class ActionLog extends BaseEntity {
         return formatted
     }
 
-    async send(channel: TextChannel): Promise<Discord.Message> {
-        const messageLink = `https://discord.com/channels/${channel.client.config.guilds.main}/${this.channel}/${this.message}`
+    displayEmbed(client: Client): Discord.MessageEmbedOptions {
+        const messageLink = `https://discord.com/channels/${client.config.guilds.main}/${this.channel}/${this.message}`
         const utcOffset = this.createdAt.getTimezoneOffset() * 60000
         const utc = new Date(this.createdAt.getTime() + utcOffset)
         const timestamp = fecha.format(utc, "DD/MM/YY [@] hh:mm:ss UTC")
         const length = this.length ? formatPunishmentTime(this.length, true) : "\u200B"
         const embed: Discord.MessageEmbedOptions = {
+            color: client.config.colors.success,
             author: { name: `Case #${this.id} (${this.action})` },
             fields: [
                 { name: "Member", value: `<@${this.member}>` },
@@ -90,7 +91,7 @@ export default class ActionLog extends BaseEntity {
 
         if (this.deletedAt) {
             embed.description = "*This case has been deleted.*"
-            return await channel.sendError(embed)
+            embed.color = client.config.colors.error
         }
 
         if (this.punishment?.end > new Date()) {
@@ -98,6 +99,6 @@ export default class ActionLog extends BaseEntity {
             embed.description = `*Ending in ${formatPunishmentTime(end, true)}.*`
         }
 
-        return await channel.sendSuccess(embed)
+        return embed
     }
 }
