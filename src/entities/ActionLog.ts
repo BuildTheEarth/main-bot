@@ -79,6 +79,7 @@ export default class ActionLog extends BaseEntity {
         const embed: Discord.MessageEmbedOptions = {
             color: client.config.colors.success,
             author: { name: `Case #${this.id} (${this.action})` },
+            thumbnail: { url: client.config.assets.cases[this.action] },
             fields: [
                 { name: "Member", value: `<@${this.member}>` },
                 { name: this.length ? "Length" : "\u200B", value: length },
