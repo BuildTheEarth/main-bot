@@ -7,7 +7,8 @@ export default async function messageReactionAdd(
     reaction: Discord.MessageReaction,
     user: Discord.User
 ) {
-    const role = this.config.reactionRoles?.[reaction.message.id]?.[reaction.emoji.name]
+    const channel = this.config.reactionRoles?.[reaction.message.channel.id]
+    const role = channel?.[reaction.message.id]?.[reaction.emoji.name]
     const guild = reaction.message.guild
     const member = guild.member(user)
     await member.roles.add(role).catch(noop)
