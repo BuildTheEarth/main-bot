@@ -19,6 +19,8 @@ export type Action = "warn" | "mute" | "kick" | "ban" | "unmute" | "unban"
 
 @Entity({ name: "action_logs" })
 export default class ActionLog extends BaseEntity {
+    static REASON_IMAGE_REGEX = /https?:\/\/.+?\.(gif|jpg|png)/
+
     @PrimaryGeneratedColumn()
     id: number
 
@@ -65,7 +67,8 @@ export default class ActionLog extends BaseEntity {
     }
 
     format(): string {
-        let formatted = `\` ${this.id}. \` ${this.reason}`
+        let formatted = this.reason.replace(ActionLog.REASON_IMAGE_REGEX, "")
+        formatted = `\` ${this.id}. \` ${formatted}`
         if (this.old) formatted = `\\📜 ${formatted}`
         return formatted
     }
@@ -88,6 +91,12 @@ export default class ActionLog extends BaseEntity {
                 { name: "Context", value: `[Link](${messageLink})` },
                 { name: "Time", value: timestamp }
             ].map(field => ({ ...field, inline: true }))
+        }
+
+        const reasonImage = this.reason.match(ActionLog.REASON_IMAGE_REGEX)?.[0]
+        if (reasonImage) {
+            embed.fields[2].value = this.reason.replace(reasonImage, "")
+            embed.image = { url: reasonImage }
         }
 
         if (this.deletedAt) {
