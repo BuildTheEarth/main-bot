@@ -99,12 +99,12 @@ export default class Suggestion extends BaseEntity {
         }
     }
 
-    async displayEmbed(author?: Discord.User): Promise<Discord.MessageEmbedOptions> {
+    async displayEmbed(client: Client): Promise<Discord.MessageEmbedOptions> {
         if (this.deletedAt) {
             let deleter =
                 this.deleter === this.author ? "the author" : `<@${this.deleter}>`
             return {
-                color: (<Client>author.client).config.colors.error,
+                color: client.config.colors.error,
                 description: `**#${this.number}**: The suggestion has been deleted by ${deleter}.`
             }
         }
@@ -121,11 +121,14 @@ export default class Suggestion extends BaseEntity {
         if (!this.anonymous) {
             embed.fields.push({ name: "Author", value: `<@${this.author}>` })
             if (!this.status) {
-                embed.thumbnail.url = author.displayAvatarURL({
-                    size: 128,
-                    format: "png",
-                    dynamic: true
-                })
+                const author = client.users.cache.get(this.author)
+                if (author) {
+                    embed.thumbnail.url = author.displayAvatarURL({
+                        size: 128,
+                        format: "png",
+                        dynamic: true
+                    })
+                }
             }
         }
         if (this.teams) embed.fields.push({ name: "Team/s", value: this.teams })
@@ -133,7 +136,7 @@ export default class Suggestion extends BaseEntity {
         if (this.status) {
             const action = SuggestionStatusActions[this.status]
             const reason = this.statusReason ? `\n\n${this.statusReason}` : ""
-            const assets = (<Client>author.client).config.assets.suggestions
+            const assets = client.config.assets.suggestions
             embed.color = SuggestionStatuses[this.status]
             embed.thumbnail.url = assets[this.status]
             embed.fields.push({
