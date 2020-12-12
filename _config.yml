@@ -10,6 +10,10 @@ guilds:
 suggestions:
     main: ""
     staff: ""
+reactionRoles:
+    (message ID):
+        (guild emoji ID or unicode emoji): (role ID)
+
 colors:
     success: "#1EAD2F"
     error: "#ED5439"
