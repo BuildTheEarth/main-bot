@@ -13,18 +13,11 @@ import Client from "../struct/Client"
 
 export type SuggestionStatus = keyof typeof SuggestionStatuses
 export enum SuggestionStatuses {
-    "approved" = "#4B53EB",
-    "denied" = "#EB4364",
-    "forwarded" = "#D25424",
-    "information" = "#62D18A",
-    "in-progress" = "#E5B823"
-}
-export const SuggestionStatusActions = {
-    "approved": "Approved",
-    "denied": "Denied",
-    "forwarded": "Forwarded to the respective team",
-    "information": "Marked as needing more information",
-    "in-progress": "Marked as in progress"
+    "approved" = "Approved",
+    "denied" = "Denied",
+    "forwarded" = "Forwarded to the respective team",
+    "information" = "Marked as needing more information",
+    "in-progress" = "Marked as in progress"
 }
 
 @Entity({ name: "suggestions" })
@@ -134,10 +127,10 @@ export default class Suggestion extends BaseEntity {
         if (this.teams) embed.fields.push({ name: "Team/s", value: this.teams })
 
         if (this.status) {
-            const action = SuggestionStatusActions[this.status]
+            const action = SuggestionStatuses[this.status]
             const reason = this.statusReason ? `\n\n${this.statusReason}` : ""
             const assets = client.config.assets.suggestions
-            embed.color = SuggestionStatuses[this.status]
+            embed.color = client.config.colors.suggestions[this.status]
             embed.thumbnail.url = assets[this.status]
             embed.fields.push({
                 name: "Status",

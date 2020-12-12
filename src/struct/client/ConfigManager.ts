@@ -2,17 +2,14 @@ import path from "path"
 import YAML from "yaml"
 import fs from "fs"
 import Client from "../Client"
-import { SuggestionStatuses } from "../../entities/Suggestion"
+import { SuggestionStatus } from "../../entities/Suggestion"
+import { Action } from "../../entities/ActionLog"
 
 export type GuildCategories = { main: string; staff: string }
+export type SuggestionCategories = Record<SuggestionStatus, string>
+export type ActionLogCategories = Record<Action, string>
 export type ColorPalette = { success: string; error: string }
-export type SuggestionAssets = Record<keyof typeof SuggestionStatuses, string>
-export type DatabaseCredentials = {
-    host: string
-    name: string
-    user: string
-    pass: string
-}
+export type DatabaseInfo = { host: string; name: string; user: string; pass: string }
 
 export default class ConfigManager implements Config {
     client: Client
@@ -23,9 +20,9 @@ export default class ConfigManager implements Config {
     appeal: string
     guilds: GuildCategories
     suggestions: GuildCategories
-    colors: ColorPalette
-    assets: { suggestions: SuggestionAssets }
-    database: DatabaseCredentials
+    colors: ColorPalette & { suggestions: SuggestionCategories }
+    assets: { suggestions: SuggestionCategories }
+    database: DatabaseInfo
 
     constructor(client: Client) {
         this.client = client
@@ -61,7 +58,7 @@ export type Config = {
     appeal: string
     guilds: GuildCategories
     suggestions: GuildCategories
-    colors: ColorPalette
-    assets: { suggestions: SuggestionAssets }
-    database: DatabaseCredentials
+    colors: ColorPalette & { suggestions: SuggestionCategories }
+    assets: { suggestions: SuggestionCategories }
+    database: DatabaseInfo
 }
