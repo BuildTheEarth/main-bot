@@ -36,6 +36,9 @@ export default class ActionLog extends BaseEntity {
     @Column({ length: 500 })
     reason: string
 
+    @Column({ nullable: true, name: "reason_image" })
+    reasonImage?: string
+
     @Column({ nullable: true })
     length?: number
 
@@ -93,10 +96,8 @@ export default class ActionLog extends BaseEntity {
             ].map(field => ({ ...field, inline: true }))
         }
 
-        const reasonImage = this.reason.match(ActionLog.REASON_IMAGE_REGEX)?.[0]
-        if (reasonImage) {
-            embed.fields[2].value = this.reason.replace(reasonImage, "")
-            embed.image = { url: reasonImage }
+        if (this.reasonImage) {
+            embed.image = { url: this.reasonImage }
         }
 
         if (this.deletedAt) {
