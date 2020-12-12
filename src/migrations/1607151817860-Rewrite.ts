@@ -38,6 +38,11 @@ some wonderfully cryptic things about the old bot to know if you're reading this
 
 export class Rewrite1607149857197 implements MigrationInterface {
     public async up(queryRunner: QueryRunner): Promise<void> {
+        const config = await queryRunner.hasTable("Config")
+        const server = await queryRunner.hasTable("Server")
+        const modpack = await queryRunner.hasTable("modpack_images")
+        if (!config || !server || modpack) return
+
         // prettier-ignore
         console.log(chalk.red.bold(`
             /////////////////////////////////////////////////////////////////////////////////////////////
