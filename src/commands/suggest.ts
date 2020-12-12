@@ -39,7 +39,7 @@ export default new Command({
         suggestion.staff = staff
 
         const suggestionMessage = await message.channel.send({
-            embed: await suggestion.displayEmbed(message.author)
+            embed: await suggestion.displayEmbed(client)
         })
         suggestion.message = suggestionMessage.id
         await suggestion.save()

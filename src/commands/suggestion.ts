@@ -93,7 +93,7 @@ export default new Command({
 
             suggestion[title ? "title" : "body"] = edited
             await suggestion.save()
-            const embed = await suggestion.displayEmbed(message.author)
+            const embed = await suggestion.displayEmbed(client)
             await suggestionMessage.edit({ embed })
 
             const possessive = title ? "'s title" : ""
@@ -110,7 +110,7 @@ export default new Command({
             suggestion.deletedAt = new Date()
             await suggestion.save()
 
-            const embed = await suggestion.displayEmbed(message.author)
+            const embed = await suggestion.displayEmbed(client)
             await suggestionMessage.edit({ embed })
 
             message.channel.sendSuccess("Deleted the suggestion!")
@@ -130,7 +130,7 @@ export default new Command({
             suggestion.statusReason = reason || null
 
             await suggestion.save()
-            const embed = await suggestion.displayEmbed(message.author)
+            const embed = await suggestion.displayEmbed(client)
             await suggestionMessage.edit({ embed })
 
             return message.channel.sendSuccess("Updated the suggestion!")
