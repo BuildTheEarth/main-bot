@@ -39,7 +39,8 @@ export default new Command({
         if (!log) return message.channel.sendError(`Couldn't find case **#${id}**.`)
 
         if (!["edit", "delete"].includes(subcommand)) {
-            await log.send(<TextChannel>message.channel)
+            const embed = log.displayEmbed(client)
+            await message.channel.send({ embed })
         } else if (subcommand === "edit") {
             const reason = args.consumeRest()
             if (!reason)
