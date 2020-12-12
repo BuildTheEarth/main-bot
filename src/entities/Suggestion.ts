@@ -23,7 +23,7 @@ export const SuggestionStatusActions = {
     "approved": "Approved",
     "denied": "Denied",
     "forwarded": "Forwarded to the respective team",
-    "information": "Narked as needing information",
+    "information": "Marked as needing more information",
     "in-progress": "Marked as in progress"
 }
 
