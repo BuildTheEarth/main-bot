@@ -43,17 +43,22 @@ export default new Command({
         }
 
         if (clean) {
-            embed.description = `✨ No punishment logs found for ${user} (${user.tag}).`
+            embed.description = `✨ No cases found for ${user} (${user.tag}).`
         } else {
             const punishment = await TimedPunishment.findOne({
                 where: { member: user.id }
             })
             const adjective = punishment?.type === "mute" ? "muted" : "banned"
             const log = actionLogs.find(log => log.punishment?.id === punishment?.id)
+            const hasOld = actionLogs.some(log => log.old)
 
             embed.description = punishment
-                ? `${user} (${user.tag}) is currently ${adjective} (**#${log.id}**). Here are their punishment logs:`
-                : `Punishment logs for ${user} (${user.tag}):`
+                ? `${user} (${user.tag}) is currently ${adjective} (**#${log.id}**). Here are their cases:`
+                : `Cases for ${user} (${user.tag}):`
+
+            if (hasOld)
+                embed.description += "\n(Cases older than 3 months are marked with \\📜)."
+
             for (const [action, logs] of Object.entries(categorizedLogs)) {
                 const actionTitle = action[0].toUpperCase() + action.slice(1) + "s"
                 const nonDeletedLogs = logs.filter(log => !log.deletedAt)
