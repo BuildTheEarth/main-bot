@@ -4,6 +4,16 @@ import fs from "fs"
 import Client from "../Client"
 import { SuggestionStatuses } from "../../entities/Suggestion"
 
+export type GuildCategories = { main: string; staff: string }
+export type ColorPalette = { success: string; error: string }
+export type SuggestionAssets = Record<keyof typeof SuggestionStatuses, string>
+export type DatabaseCredentials = {
+    host: string
+    name: string
+    user: string
+    pass: string
+}
+
 export default class ConfigManager implements Config {
     client: Client
     token: string
@@ -11,11 +21,11 @@ export default class ConfigManager implements Config {
     prefix: string
     logs: string
     appeal: string
-    guilds: { main: string; staff: string }
-    suggestions: { main: string; staff: string }
-    colors: { success: string; error: string }
-    assets: { suggestions: Record<keyof typeof SuggestionStatuses, string> }
-    database: { host: string; name: string; user: string; pass: string }
+    guilds: GuildCategories
+    suggestions: GuildCategories
+    colors: ColorPalette
+    assets: { suggestions: SuggestionAssets }
+    database: DatabaseCredentials
 
     constructor(client: Client) {
         this.client = client
@@ -49,9 +59,9 @@ export type Config = {
     prefix: string
     logs: string
     appeal: string
-    guilds: { main: string; staff: string }
-    suggestions: { main: string; staff: string }
-    colors: { success: string; error: string }
-    assets: { suggestions: Record<keyof typeof SuggestionStatuses, string> }
-    database: { host: string; name: string; user: string; pass: string }
+    guilds: GuildCategories
+    suggestions: GuildCategories
+    colors: ColorPalette
+    assets: { suggestions: SuggestionAssets }
+    database: DatabaseCredentials
 }
