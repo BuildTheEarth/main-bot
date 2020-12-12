@@ -32,6 +32,13 @@ assets:
         forwarded: https://i.imgur.com/DmhWhck.png
         in-progress: https://i.imgur.com/FOfXfuD.png
         information: https://i.imgur.com/vRYLHQq.png
+    cases:
+        warn: https://i.imgur.com/aarJx0Q.png
+        mute: https://i.imgur.com/TuxmLjf.png
+        kick: https://i.imgur.com/LRKYWx4.png
+        ban: https://i.imgur.com/UY7MpIp.png
+        unmute:
+        unban:
 
 database:
     host: ""

@@ -23,7 +23,7 @@ export default class ConfigManager implements Config {
     suggestions: GuildCategories
     reactionRoles: ReactionRole
     colors: ColorPalette & { suggestions: SuggestionCategories }
-    assets: { suggestions: SuggestionCategories }
+    assets: { suggestions: SuggestionCategories; cases: ActionLogCategories }
     database: DatabaseInfo
 
     constructor(client: Client) {
@@ -62,6 +62,6 @@ export type Config = {
     suggestions: GuildCategories
     reactionRoles: ReactionRole
     colors: ColorPalette & { suggestions: SuggestionCategories }
-    assets: { suggestions: SuggestionCategories }
+    assets: { suggestions: SuggestionCategories; cases: ActionLogCategories }
     database: DatabaseInfo
 }
