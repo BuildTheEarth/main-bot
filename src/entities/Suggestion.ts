@@ -8,6 +8,24 @@ import {
     LessThan
 } from "typeorm"
 import SnowflakeColumn from "./decorators/SnowflakeColumn"
+import Discord from "discord.js"
+import Client from "../struct/Client"
+
+export type SuggestionStatus = keyof typeof SuggestionStatuses
+export enum SuggestionStatuses {
+    "approved" = "#4B53EB",
+    "denied" = "#EB4364",
+    "forwarded" = "#D25424",
+    "information" = "#62D18A",
+    "in-progress" = "#E5B823"
+}
+export const SuggestionStatusActions = {
+    "approved": "Approved",
+    "denied": "Denied",
+    "forwarded": "Forwarded to the respective team",
+    "information": "Narked as needing information",
+    "in-progress": "Marked as in progress"
+}
 
 @Entity({ name: "suggestions" })
 export default class Suggestion extends BaseEntity {
@@ -38,7 +56,13 @@ export default class Suggestion extends BaseEntity {
     teams?: string
 
     @Column({ nullable: true })
-    status?: "approved" | "rejected" | "forwarded" | "in-progress" | "information"
+    status?: SuggestionStatus
+
+    @SnowflakeColumn({ nullable: true, name: "status_updater" })
+    statusUpdater?: string
+
+    @Column({ nullable: true, length: 2048, name: "status_reason" })
+    statusReason?: string
 
     @SnowflakeColumn()
     message: string
@@ -55,6 +79,11 @@ export default class Suggestion extends BaseEntity {
     @SnowflakeColumn({ nullable: true })
     deleter?: string
 
+    static async findNumber(staff: boolean) {
+        const existing = await this.count({ where: { staff }, withDeleted: true })
+        return existing + 1
+    }
+
     async getDisplayNumber(): Promise<string> {
         if (!this.extends) {
             return this.number.toString()
@@ -70,13 +99,49 @@ export default class Suggestion extends BaseEntity {
         }
     }
 
-    static async findNumber(staff: boolean) {
-        const { max }: { max: number } = await this.getRepository()
-            .createQueryBuilder("suggestion")
-            .select("MAX(suggestion.number)", "max")
-            .where({ staff })
-            .getRawOne()
-        if (!max) return 1
-        return max + 1
+    async displayEmbed(author?: Discord.User): Promise<Discord.MessageEmbedOptions> {
+        if (this.deletedAt) {
+            let deleter =
+                this.deleter === this.author ? "the author" : `<@${this.deleter}>`
+            return {
+                color: (<Client>author.client).config.colors.error,
+                description: `**#${this.number}**: The suggestion has been deleted by ${deleter}.`
+            }
+        }
+
+        const displayNumber = await this.getDisplayNumber()
+        const embed: Discord.MessageEmbedOptions = {
+            color: "#999999",
+            author: { name: `#${displayNumber} — ${this.title}` },
+            thumbnail: { url: null },
+            description: this.body,
+            fields: []
+        }
+
+        if (!this.anonymous) {
+            embed.fields.push({ name: "Author", value: `<@${this.author}>` })
+            if (!this.status) {
+                embed.thumbnail.url = author.displayAvatarURL({
+                    size: 128,
+                    format: "png",
+                    dynamic: true
+                })
+            }
+        }
+        if (this.teams) embed.fields.push({ name: "Team/s", value: this.teams })
+
+        if (this.status) {
+            const action = SuggestionStatusActions[this.status]
+            const reason = this.statusReason ? `\n\n${this.statusReason}` : ""
+            const assets = (<Client>author.client).config.assets.suggestions
+            embed.color = SuggestionStatuses[this.status]
+            embed.thumbnail.url = assets[this.status]
+            embed.fields.push({
+                name: "Status",
+                value: `*${action} by <@${this.statusUpdater}>.*${reason}`
+            })
+        }
+
+        return embed
     }
 }

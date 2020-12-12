@@ -2,6 +2,7 @@ import path from "path"
 import YAML from "yaml"
 import fs from "fs"
 import Client from "../Client"
+import { SuggestionStatuses } from "../../entities/Suggestion"
 
 export default class ConfigManager implements Config {
     client: Client
@@ -13,6 +14,7 @@ export default class ConfigManager implements Config {
     guilds: { main: string; staff: string }
     suggestions: { main: string; staff: string }
     colors: { success: string; error: string }
+    assets: { suggestions: Record<keyof typeof SuggestionStatuses, string> }
     database: { host: string; name: string; user: string; pass: string }
 
     constructor(client: Client) {
@@ -50,5 +52,6 @@ export type Config = {
     guilds: { main: string; staff: string }
     suggestions: { main: string; staff: string }
     colors: { success: string; error: string }
+    assets: { suggestions: Record<keyof typeof SuggestionStatuses, string> }
     database: { host: string; name: string; user: string; pass: string }
 }

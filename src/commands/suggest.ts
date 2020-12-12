@@ -1,4 +1,3 @@
-import Discord from "discord.js"
 import Client from "../struct/Client"
 import Message from "../struct/discord/Message"
 import Args from "../struct/Args"
@@ -11,10 +10,10 @@ export default new Command({
     aliases: [],
     description: "Make a suggestion.",
     permission: Roles.ANY,
-    usage: "[anon] <title> | <body> | [team/s]",
+    usage: "['anon'] <title> | <body> | [team/s]",
     async run(this: Command, client: Client, message: Message, args: Args) {
         const anon = args.consumeIf(a => ["anon", "anonymous"].includes(a.toLowerCase()))
-        const staff = message.guild.id === client.config.guilds.main
+        const staff = message.guild.id === client.config.guilds.staff
         const suggestionsChannel = client.config.suggestions[staff ? "staff" : "main"]
         if (message.channel.id !== suggestionsChannel)
             return message.channel.sendError(
@@ -39,29 +38,9 @@ export default new Command({
         suggestion.teams = teams || null
         suggestion.staff = staff
 
-        const displayNumber = await suggestion.getDisplayNumber()
-        const embed: Discord.MessageEmbedOptions = {
-            color: "#999999",
-            author: { name: `#${displayNumber} — ${title}` },
-            description: body,
-            fields: []
-        }
-
-        if (!suggestion.anonymous) {
-            embed.fields.push({ name: "Author", value: `<@${suggestion.author}>` })
-            embed.thumbnail = {
-                url: message.author.displayAvatarURL({
-                    size: 128,
-                    format: "png",
-                    dynamic: true
-                })
-            }
-        }
-        if (suggestion.teams) {
-            embed.fields.push({ name: "Team/s", value: suggestion.teams })
-        }
-
-        const suggestionMessage = await message.channel.send({ embed })
+        const suggestionMessage = await message.channel.send({
+            embed: await suggestion.displayEmbed(message.author)
+        })
         suggestion.message = suggestionMessage.id
         await suggestion.save()
 
