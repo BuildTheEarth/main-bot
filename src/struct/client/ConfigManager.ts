@@ -8,7 +8,7 @@ import { Action } from "../../entities/ActionLog"
 export type GuildCategories = { main: string; staff: string }
 export type SuggestionCategories = Record<SuggestionStatus, string>
 export type ActionLogCategories = Record<Action, string>
-export type ReactionRoles = { [key: string]: { [key: string]: string } }
+export type ReactionRole = { [key: string]: { [key: string]: { [key: string]: string } } }
 export type ColorPalette = { success: string; error: string }
 export type DatabaseInfo = { host: string; name: string; user: string; pass: string }
 
@@ -21,7 +21,7 @@ export default class ConfigManager implements Config {
     appeal: string
     guilds: GuildCategories
     suggestions: GuildCategories
-    reactionRoles: ReactionRoles
+    reactionRoles: ReactionRole
     colors: ColorPalette & { suggestions: SuggestionCategories }
     assets: { suggestions: SuggestionCategories }
     database: DatabaseInfo
@@ -60,7 +60,7 @@ export type Config = {
     appeal: string
     guilds: GuildCategories
     suggestions: GuildCategories
-    reactionRoles: ReactionRoles
+    reactionRoles: ReactionRole
     colors: ColorPalette & { suggestions: SuggestionCategories }
     assets: { suggestions: SuggestionCategories }
     database: DatabaseInfo
