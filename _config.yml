@@ -13,6 +13,13 @@ suggestions:
 colors:
     success: "#1EAD2F"
     error: "#ED5439"
+    suggestions:
+        approved: "#4B53EB"
+        denied: "#EB4364"
+        forwarded: "#D25424"
+        information: "#62D18A"
+        in-progress: "#E5B823"
+
 assets:
     suggestions:
         approved: https://i.imgur.com/e3n6AoG.png
