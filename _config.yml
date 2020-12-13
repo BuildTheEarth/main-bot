@@ -27,18 +27,18 @@ colors:
 
 assets:
     suggestions:
-        approved: https://i.imgur.com/e3n6AoG.png
-        denied: https://i.imgur.com/gcIL6v7.png
-        forwarded: https://i.imgur.com/DmhWhck.png
-        in-progress: https://i.imgur.com/FOfXfuD.png
-        information: https://i.imgur.com/vRYLHQq.png
+        approved: https://i.imgur.com/DMqmOUC.png
+        denied: https://i.imgur.com/OooVxhe.png
+        forwarded: https://i.imgur.com/cLAYfWU.png
+        in-progress: https://i.imgur.com/fnVz4pT.png
+        information: https://i.imgur.com/RJS2LQ3.png
     cases:
-        warn: https://i.imgur.com/aarJx0Q.png
-        mute: https://i.imgur.com/TuxmLjf.png
-        kick: https://i.imgur.com/LRKYWx4.png
-        ban: https://i.imgur.com/UY7MpIp.png
-        unmute:
-        unban:
+        warn: https://i.imgur.com/HvFuorQ.png
+        mute: https://i.imgur.com/32AebCX.png
+        kick: https://i.imgur.com/KJuo0kL.png
+        ban: https://i.imgur.com/6WpHhM5.png
+        unmute: https://i.imgur.com/ZC0qrC9.png
+        unban: https://i.imgur.com/PfrLhuO.png
 
 database:
     host: ""
