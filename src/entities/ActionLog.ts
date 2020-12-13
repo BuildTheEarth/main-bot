@@ -9,6 +9,7 @@ import {
     JoinColumn
 } from "typeorm"
 import SnowflakeColumn from "./decorators/SnowflakeColumn"
+import ms from "ms"
 import fecha from "fecha"
 import Discord from "discord.js"
 import Client from "../struct/Client"
@@ -71,6 +72,7 @@ export default class ActionLog extends BaseEntity {
 
     format(): string {
         let formatted = this.reason.replace(ActionLog.REASON_IMAGE_REGEX, "")
+        if (this.length) formatted = `(**${ms(this.length)}**) ` + formatted
         formatted = `\` ${this.id}. \` ${formatted}`
         if (this.old) formatted = `\\📜 ${formatted}`
         return formatted
