@@ -13,11 +13,8 @@ export default new Command({
     usage: "[channel]",
     async run(this: Command, client: Client, message: Message, args: Args) {
         const channel = (await args.consumeChannel()) || <TextChannel>message.channel
-        await channel.updateOverwrite(
-            message.guild.id,
-            { SEND_MESSAGES: false },
-            `Locked by ${message.author.tag} (${message.author.id})`
-        )
+        const reason = `Locked by ${message.author.tag} (${message.author.id})`
+        await channel.updateOverwrite(message.guild.id, { SEND_MESSAGES: false }, reason)
 
         message.channel.sendSuccess(`Locked ${channel}.`)
     }

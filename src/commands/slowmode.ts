@@ -29,10 +29,8 @@ export default new Command({
         else if (slowmode > 6 * 60 * 60)
             return message.channel.sendError("That is a lot of seconds!")
 
-        channel.setRateLimitPerUser(
-            Number(slowmode),
-            `By ${message.author.tag} (${message.author.id})`
-        )
+        const reason = `By ${message.author.tag} (${message.author.id})`
+        channel.setRateLimitPerUser(slowmode, reason)
 
         const s = slowmode === 1 ? "" : "s"
         message.channel.sendSuccess(
