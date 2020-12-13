@@ -20,8 +20,6 @@ export type Action = "warn" | "mute" | "kick" | "ban" | "unmute" | "unban"
 
 @Entity({ name: "action_logs" })
 export default class ActionLog extends BaseEntity {
-    static REASON_IMAGE_REGEX = /https?:\/\/.+?\.(gif|jpg|png)/
-
     @PrimaryGeneratedColumn()
     id: number
 
@@ -71,7 +69,7 @@ export default class ActionLog extends BaseEntity {
     }
 
     format(): string {
-        let formatted = this.reason.replace(ActionLog.REASON_IMAGE_REGEX, "")
+        let formatted = this.reason
         if (this.length) formatted = `(**${ms(this.length)}**) ` + formatted
         formatted = `\` ${this.id}. \` ${formatted}`
         if (this.old) formatted = `\\📜 ${formatted}`
