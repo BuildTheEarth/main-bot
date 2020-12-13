@@ -32,19 +32,15 @@ export default new Command({
         if (!reason) return message.channel.sendError("You must provide a reason!")
 
         const member = message.guild.member(user)
-        if (!member) return message.channel.sendError("The user is not in the server!")
+        if (!member) return message.channel.sendError("That user is not in the server!")
 
         const existingMute = await TimedPunishment.findOne({
             where: { member: user.id, type: "mute" }
         })
-        if (existingMute) return message.channel.sendError("The user is already muted!")
+        if (existingMute) return message.channel.sendError("That user is already muted!")
 
-        if (member.hasStaffPermission(Roles.STAFF))
-            return message.channel.sendError(
-                member.id === message.author.id
-                    ? "You can't mute yourself..."
-                    : "You can't mute other staff!"
-            )
+        if (member.hasStaffPermission(Roles.STAFF) && member.id !== message.author.id)
+            return message.channel.sendError("You can't mute other staff!")
 
         await member.mute(reason)
         const formattedLength = formatPunishmentTime(length)
@@ -71,8 +67,9 @@ export default new Command({
         log.punishment = punishment
         await log.save()
 
+        const formattedUser = user.id === message.author.id ? "*you*" : user.toString()
         // prettier-ignore
-        await message.channel.sendSuccess(`Muted ${user} ${formattedLength} (**#${log.id}**).`)
+        await message.channel.sendSuccess(`Muted ${formattedUser} ${formattedLength} (**#${log.id}**).`)
         await client.log(log)
     }
 })

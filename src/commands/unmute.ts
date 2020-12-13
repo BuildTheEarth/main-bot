@@ -26,12 +26,12 @@ export default new Command({
         if (!reason) return message.channel.sendError("You must provide a reason!")
 
         const member = message.guild.member(user)
-        if (!member) return message.channel.sendError("The user is not in the server!")
+        if (!member) return message.channel.sendError("That user is not in the server!")
 
         const mute = await TimedPunishment.findOne({
             where: { member: user.id, type: "mute" }
         })
-        if (!mute) return message.channel.sendError("The user is not muted!")
+        if (!mute) return message.channel.sendError("That user is not muted!")
 
         await mute.undo(client)
         await mute.remove()
@@ -45,7 +45,8 @@ export default new Command({
         log.message = message.id
         await log.save()
 
-        await message.channel.sendSuccess(`Unmuted ${user} (**#${log.id}**).`)
+        const formattedUser = user.id === message.author.id ? "*you*" : user.toString()
+        await message.channel.sendSuccess(`Unmuted ${formattedUser} (**#${log.id}**).`)
         await client.log(log)
     }
 })
