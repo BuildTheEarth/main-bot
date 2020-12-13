@@ -44,6 +44,23 @@ export default new Command({
                     value: `\`${command.aliases.join("`, `")}\``
                 })
 
+            if (command.subcommands) {
+                const member = message.member
+                const allowedSubcommands = command.subcommands.filter(sub =>
+                    member.hasStaffPermission(sub.permission || command.permission)
+                )
+
+                const formattedSubcommands = allowedSubcommands.map(sub => {
+                    const usage = sub.usage ? ` ${sub.usage}` : ""
+                    return `• **${sub.name}:** ${sub.description}\n  \`${client.config.prefix}${command.name} ${sub.name}${usage}\``
+                })
+
+                embed.fields.push({
+                    name: "Subcommands",
+                    value: formattedSubcommands.join("\n\n")
+                })
+            }
+
             return message.channel.sendSuccess(embed)
         }
 
