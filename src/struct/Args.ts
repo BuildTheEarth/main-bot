@@ -43,8 +43,11 @@ export default class Args {
         if (typeof equals === "string") valid = equals.toLowerCase() === arg.toLowerCase()
         else if (Array.isArray(equals)) valid = equals.includes(arg)
         else if (typeof equals === "function") valid = equals(arg)
+        if (!valid) return null
 
-        return valid ? this.consume() : null
+        return typeof equals === "function"
+            ? this.consume()
+            : this.consume().toLowerCase()
     }
 
     consumeRest(): string
