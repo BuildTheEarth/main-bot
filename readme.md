@@ -22,7 +22,7 @@ You shouldn't use this bot on your own servers as it's heavily customized for ou
 
 -   The bot is written in **[TypeScript](https://www.typescriptlang.org/)**, a statically-typed superset of JavaScript;
 -   It uses **[discord.js](http://discord.js.org/)** for interacting with Discord's API;
--   **[TypeORM](https://typeorm.io/)** for Object–Relational mapping;
+-   **[TypeORM](https://typeorm.io/)** for object–relational mapping;
 -   And it follows object-oriented and modularization principles.
 -   For version control, it follows a superset of the **[Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/)** specification.
 
@@ -51,9 +51,9 @@ Rename the `_config.yml` file to `config.yml` and fill in all of the fields:
     -   **main**
     -   **staff**
 -   **reactionRoles**: A map of the reaction roles.
-    -   **<channel ID>**
-        -   **<message ID>**
-            -   **<emoji name>**: A role ID (enclosed in quotes).
+    -   **\<channel ID>**
+        -   **\<message ID>**
+            -   **\<emoji name>**: A role ID (enclosed in quotes).
 -   **colors**: The color palette for message embeds.
     -   **success**
     -   **error**
@@ -63,7 +63,7 @@ Rename the `_config.yml` file to `config.yml` and fill in all of the fields:
         -   **forwarded**
         -   **information**
         -   **in-progress**
--   **assets**: URLs pointing to the asset images (from [`/assets/`](https://github.com/BuildTheEarth/main-bot/tree/main/assets)). This is required as attachments are **(a)** a burden to work with **(b)** not editable.
+-   **assets**: URLs pointing to the asset images (from [`/assets/`](https://github.com/BuildTheEarth/main-bot/tree/main/assets)). This is required as attachments are **(a)** a burden to work with and **(b)** not editable.
     -   **suggestions**
         -   **approved**
         -   **denied**
