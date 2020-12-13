@@ -24,7 +24,7 @@ some wonderfully cryptic things about the old bot to know if you're reading this
 - yes, column and table names use PascalCase
 - the 'Logs.Length' column is stored as a string (eg '24h') instead of a number (eg, 86400 seconds)
     - this isn't that bad because the value is just shown to humans, but it still sounds ugly
-- the 'Logs' table has a useless 'Value' column of type int(NULL)
+- the 'Logs' table has a useless 'Value' column of type int
 - the 'Members' table stores every. single. member. that. has. ever. joined. the. server!
     - the 'MutedUntil' column is for... you guessed it! storing end-of-mute timestamps
     - the 'tempBeta' column is for... you didn't guess it! storing end-of-ban timestamps
@@ -130,7 +130,11 @@ export class Rewrite1607149857197 implements MigrationInterface {
         await queryRunner.changeColumn("Logs", "MessageID", new Snowflake("message"))
         const createdAt = new TableColumn({ name: "created_at", type: "datetime" })
         await queryRunner.addColumn("Logs", createdAt)
-        const deletedAt = new TableColumn({ name: "deleted_at", type: "datetime" })
+        const deletedAt = new TableColumn({
+            name: "deleted_at",
+            type: "datetime",
+            isNullable: true
+        })
         await queryRunner.addColumn("Logs", deletedAt)
         const punishmentID = new TableColumn({
             name: "punishment_id",
@@ -146,13 +150,17 @@ export class Rewrite1607149857197 implements MigrationInterface {
         })
         await queryRunner.createForeignKey("Logs", punishmentFK)
 
-        type Log = { id: number; length: string }
-        const logs: Log[] = await queryRunner.query("SELECT id, length FROM Logs")
-
+        type Log = { id: number; length: string; message: string }
+        // prettier-ignore
+        const logs: Log[] = await queryRunner.query("SELECT id, length, message FROM Logs")
         for (const log of logs) {
+            const deconstructed = Discord.SnowflakeUtil.deconstruct(log.message)
+            const simulatedCreationDate = new Date(deconstructed.timestamp)
             const milliseconds = log.length === null ? null : ms(log.length)
-            // prettier-ignore
-            await queryRunner.query("UPDATE Logs SET length = ? WHERE id = ?", [milliseconds, log.id])
+            await queryRunner.query(
+                "UPDATE Logs SET length = ? , created_at = ? WHERE id = ?",
+                [milliseconds / 1000, simulatedCreationDate, log.id]
+            )
         }
 
         await queryRunner.renameTable("Logs", "action_logs")
