@@ -24,6 +24,10 @@ export default new Command({
 
         if (slowmode < 0)
             return message.channel.sendError("How would that even work? Time travel?")
+        else if (slowmode === 6 * 60 * 60)
+            return message.channel.sendError("Please, not this again.")
+        else if (slowmode > 6 * 60 * 60)
+            return message.channel.sendError("That is a lot of seconds!")
 
         channel.setRateLimitPerUser(
             Number(slowmode),
