@@ -28,6 +28,13 @@ export default new Command({
 
         const member = message.guild.member(user)
         if (!member) return message.channel.sendError("The user is not in the server!")
+        if (member.hasStaffPermission(Roles.STAFF))
+            return message.channel.sendError(
+                member.id === message.author.id
+                    ? "Okay, sadist, you can't kick yourself."
+                    : "Rude! You can't kick other staff."
+            )
+
         const dms = <DMChannel>await user.createDM()
         dms.sendError(`${message.author} has kicked you:\n\n*${reason}*`).catch(noop)
         await member.kick()
