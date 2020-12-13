@@ -21,7 +21,7 @@ export default new Command({
         {
             name: "edit",
             description: "Edit a suggestion.",
-            usage: "<number> ['title'] <text>"
+            usage: "<number> ['title' | 'body' | 'teams'] <text>"
         },
         {
             name: "delete",
@@ -82,22 +82,22 @@ export default new Command({
                 )
             }
         } else if (subcommand === "edit") {
+            // prettier-ignore
             if (suggestion.author !== message.author.id)
-                return message.channel.sendError(
-                    "You can't edit other people's suggestions!"
-                )
-            const title = !!args.consumeIf(arg => arg.toLowerCase() === "title")
-            const edited = args.consumeRest()
-            if (title && edited.length > 99)
-                return message.channel.sendError("That title is too long!")
+                return message.channel.sendError("You can't edit other people's suggestions!")
 
-            suggestion[title ? "title" : "body"] = edited
+            const field = args.consumeIf(["title", "body", "teams"]) || "body"
+            const edited = args.consumeRest()
+            if (field.toLowerCase() === "title" && edited.length > 99)
+                return message.channel.sendError("That title is too long!")
+            if (field.toLowerCase() === "teams" && edited.length > 255)
+                return message.channel.sendError("That team is too long!")
+
+            suggestion[field.toLowerCase()] = edited
             await suggestion.save()
             const embed = await suggestion.displayEmbed(client)
             await suggestionMessage.edit({ embed })
-
-            const possessive = title ? "'s title" : ""
-            return message.channel.sendSuccess(`Edited your suggestion${possessive}!`)
+            return message.channel.sendSuccess("Edited your suggestion!")
         } else if (subcommand === "delete") {
             if (suggestion.author !== message.author.id && !canManage)
                 return message.channel.sendError(
