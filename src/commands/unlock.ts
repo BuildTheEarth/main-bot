@@ -16,6 +16,6 @@ export default new Command({
         const reason = `By ${message.author.tag} (${message.author.id})`
         await channel.updateOverwrite(message.guild.id, { SEND_MESSAGES: null }, reason)
 
-        message.channel.sendSuccess(`Unlocked ${channel}.`)
+        await message.channel.sendSuccess(`Unlocked ${channel}.`)
     }
 })

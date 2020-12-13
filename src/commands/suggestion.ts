@@ -41,6 +41,7 @@ export default new Command({
         const availableSubcommands = this.subcommands.filter(sub =>
             message.member.hasStaffPermission(sub.permission || this.permission)
         )
+
         const availableSubcommandNames = availableSubcommands.map(sub => sub.name)
         const allSubcommandNames = this.subcommands.map(sub => sub.name)
         if (!allSubcommandNames.includes(subcommand))
@@ -60,6 +61,7 @@ export default new Command({
         const suggestion = await Suggestion.findOne({ where: { number, staff } })
         if (!suggestion)
             return message.channel.sendError("Hmm... That suggestion doesn't exist.")
+
         const suggestionMessage = await suggestions.messages.fetch(suggestion.message)
         if (!suggestionMessage)
             return message.channel.sendError("Can't find the suggestion's message!")
@@ -117,6 +119,7 @@ export default new Command({
             message.channel.sendSuccess("Deleted the suggestion!")
         } else if (subcommand === "status") {
             if (!canManage) return
+
             const status = args.consume().toLowerCase()
             const reason = args.consumeRest()
             if (!(status in SuggestionStatuses)) {

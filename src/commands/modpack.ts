@@ -51,31 +51,29 @@ export default new Command({
             return message.channel.sendError("You must specify a subcommand.")
 
         if (subcommand === "list") {
-            const images = (await ModpackImage.find()).sort((a, b) =>
+            const sort = (a: ModpackImage, b: ModpackImage) =>
                 a.key === "logo" ? -1 : Number(a.key) - Number(b.key)
-            )
-            let queue = ""
-            let store = ""
+            const images = (await ModpackImage.find()).sort(sort)
+            const format = (set: "queue" | "store") =>
+                images
+                    .filter(image => image.set === set)
+                    .map(image => image.format(true))
+                    .join("\n")
 
-            for (const image of images) {
-                const formatted = image.format(true)
-                image.set === "queue"
-                    ? (queue += "\n" + formatted)
-                    : (store += "\n" + formatted)
-            }
+            const queue = format("queue")
+            const store = format("store")
 
             message.channel.sendSuccess({
                 author: { name: "Image list" },
                 fields: [
-                    { name: "Queue", value: queue || "*Empty.*" },
-                    { name: "Store", value: store || "*Empty.*" }
+                    { name: "Queue", value: queue },
+                    { name: "Store", value: store }
                 ]
             })
         } else if (subcommand === "set") {
             const [key, url, credit] = args.consumeRest(3)
             if (!key || !VALID_KEYS.includes(key))
-                // prettier-ignore
-                return message.channel.sendError("You must specify a valid key! (`1`—`5` or `queue`).")
+                return message.channel.sendError("You must specify a valid key!")
             if (!url || !isURL(url))
                 return message.channel.sendError("You must specify a valid URL!")
             if (!credit && key !== "logo")
@@ -93,8 +91,7 @@ export default new Command({
         } else if (subcommand === "delete") {
             const key = args.consume()
             if (!key || !VALID_KEYS.includes(key))
-                // prettier-ignore
-                return message.channel.sendError("You must specify a valid key! (`1`—`5` or `queue`).")
+                return message.channel.sendError("You must specify a valid key!")
 
             const image = await ModpackImage.findOne({ where: { key } })
             if (!image) return message.channel.sendError("Couldn't find that image!")
@@ -103,10 +100,8 @@ export default new Command({
             message.channel.sendSuccess("Deleted image.")
         } else if (subcommand === "fetch") {
             const { body } = await ModpackImage.fetch()
-            const codeblock = `\`\`\`${JSON.stringify(body, null, 2)}\`\`\``
-            message.channel.sendSuccess(
-                `Updated data locally! This was the raw JSON response:\n\n${codeblock}`
-            )
+            const code = `\`\`\`${JSON.stringify(body, null, 2)}\`\`\``
+            message.channel.sendSuccess(`Updated data! Raw JSON response:\n\n${code}`)
         } else if (subcommand === "push") {
             const queue = await ModpackImage.find({ where: { set: "queue" } })
             const store = await ModpackImage.find({ where: { set: "store" } })

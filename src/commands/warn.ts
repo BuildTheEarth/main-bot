@@ -28,6 +28,7 @@ export default new Command({
 
         const member = message.guild.member(user)
         if (!member) return message.channel.sendError("The user is not in the server!")
+
         const dms = <DMChannel>await user.createDM()
         dms.sendError(`${message.author} has warned you:\n\n*${reason}*`).catch(noop)
 

@@ -15,7 +15,6 @@ export default new Command({
     usage: "<member> <reason>",
     async run(this: Command, client: Client, message: Message, args: Args) {
         const user = await args.consumeUser()
-
         if (!user)
             return message.channel.sendError(
                 user === undefined

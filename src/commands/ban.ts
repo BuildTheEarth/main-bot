@@ -30,10 +30,10 @@ export default new Command({
         const reason = args.consumeRest()
         if (!reason) return message.channel.sendError("You must provide a reason!")
 
-        const existingBan = await TimedPunishment.findOne({
+        const ban = await TimedPunishment.findOne({
             where: { member: user.id, type: "ban" }
         })
-        if (existingBan) return message.channel.sendError("The user is already banned!")
+        if (ban) return message.channel.sendError("The user is already banned!")
 
         const member = message.guild.member(user)
         if (member && member.hasStaffPermission(Roles.STAFF))
@@ -71,8 +71,9 @@ export default new Command({
         log.punishment = punishment
         await log.save()
 
-        // prettier-ignore
-        await message.channel.sendSuccess(`Banned ${user} ${formattedLength} (**#${log.id}**).`)
+        await message.channel.sendSuccess(
+            `Banned ${user} ${formattedLength} (**#${log.id}**).`
+        )
         await client.log(log)
     }
 })

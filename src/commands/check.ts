@@ -61,8 +61,8 @@ export default new Command({
 
             for (const [action, logs] of Object.entries(categorizedLogs)) {
                 const actionTitle = action[0].toUpperCase() + action.slice(1) + "s"
-                const nonDeletedLogs = logs.filter(log => !log.deletedAt)
-                const name = `${actionTitle} (${nonDeletedLogs.length})`
+                const nonDeleted = logs.filter(log => !log.deletedAt)
+                const name = `${actionTitle} (${nonDeleted.length})`
                 const value = logs.map(log => log.format()).join("\n") || "\u200B"
                 embed.fields.push({ name, value, inline: true })
             }

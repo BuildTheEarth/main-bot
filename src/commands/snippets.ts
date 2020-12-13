@@ -69,8 +69,9 @@ export default new Command({
 
             const languageName = languages.getName(language)
             if (!languageName)
-                // prettier-ignore
-                return message.channel.sendError("You must specify a valid snippet language.")
+                return message.channel.sendError(
+                    "You must specify a valid snippet language."
+                )
 
             let snippet: Snippet
             if (subcommand === "add") {

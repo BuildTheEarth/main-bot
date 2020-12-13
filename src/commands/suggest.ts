@@ -14,6 +14,7 @@ export default new Command({
     async run(this: Command, client: Client, message: Message, args: Args) {
         const anon = args.consumeIf(a => ["anon", "anonymous"].includes(a.toLowerCase()))
         const staff = message.guild.id === client.config.guilds.staff
+
         const suggestionsChannel = client.config.suggestions[staff ? "staff" : "main"]
         if (message.channel.id !== suggestionsChannel)
             return message.channel.sendError(
@@ -25,7 +26,8 @@ export default new Command({
         if (!title) return message.channel.sendError("You must specify a title!")
         if (title.length > 99) return message.channel.sendError("That title is too long!")
         if (!body) return message.channel.sendError("You must specify a suggestion body!")
-        // delete message asap if suggestion is anon
+
+        // delete message asap if suggestion is anonymous
         if (anon) await message.delete()
         else message.react("👌")
 
