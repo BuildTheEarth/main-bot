@@ -22,6 +22,9 @@ export default new Command({
             return message.channel.sendSuccess(`The slowmode is currently ${formatted}.`)
         }
 
+        if (slowmode < 0)
+            return message.channel.sendError("How would that even work? Time travel?")
+
         channel.setRateLimitPerUser(
             Number(slowmode),
             `By ${message.author.tag} (${message.author.id})`
