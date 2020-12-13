@@ -88,13 +88,14 @@ export default new Command({
 
             const field = args.consumeIf(["title", "body", "teams"]) || "body"
             const edited = args.consumeRest()
-            if (field.toLowerCase() === "title" && edited.length > 99)
+            if (field === "title" && edited.length > 99)
                 return message.channel.sendError("That title is too long!")
-            if (field.toLowerCase() === "teams" && edited.length > 255)
+            if (field === "teams" && edited.length > 255)
                 return message.channel.sendError("That team is too long!")
 
-            suggestion[field.toLowerCase()] = edited
+            suggestion[field] = edited
             await suggestion.save()
+
             const embed = await suggestion.displayEmbed(client)
             await suggestionMessage.edit({ embed })
             return message.channel.sendSuccess("Edited your suggestion!")
