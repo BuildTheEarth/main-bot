@@ -8,6 +8,14 @@ _The main bot for the BuildTheEarth Discord server._
 
 </div>
 
+-   [BuildTheEarth](#BuildTheEarth)
+-   [Bot](#Bot)
+-   [Development](#Development)
+    -   [Cloning](#Cloning)
+    -   [Dependency setup](#Dependency-setup)
+    -   [Configuration](#Configuration)
+    -   [Scripts](#Scripts)
+
 ## BuildTheEarth
 
 Join us in this massive project as we recreate the Earth in Minecraft, in 1:1 scale, one block at a time. [**Discord Server**](https://discord.gg/QEkPmBy)
