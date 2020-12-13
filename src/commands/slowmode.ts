@@ -21,10 +21,7 @@ export default new Command({
             return message.channel.sendSuccess(`The slowmode is currently ${formatted}.`)
         }
 
-        const channelID = args.consumeSnowflake()
-        const suppliedChannel = await client.channels.fetch(channelID, true)
-        const channel = <TextChannel>(suppliedChannel || message.channel)
-
+        const channel = (await args.consumeChannel()) || <TextChannel>message.channel
         channel.setRateLimitPerUser(
             Number(slowmode),
             `By ${message.author.tag} (${message.author.id})`

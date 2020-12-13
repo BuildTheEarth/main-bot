@@ -12,10 +12,7 @@ export default new Command({
     permission: Roles.MANAGER,
     usage: "[channel]",
     async run(this: Command, client: Client, message: Message, args: Args) {
-        const channelID = args.consumeSnowflake()
-        const suppliedChannel = await client.channels.fetch(channelID, true)
-        const channel = <TextChannel>(suppliedChannel || message.channel)
-
+        const channel = (await args.consumeChannel()) || <TextChannel>message.channel
         await channel.updateOverwrite(
             message.guild.id,
             { SEND_MESSAGES: false },
