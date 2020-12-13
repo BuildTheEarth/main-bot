@@ -26,7 +26,7 @@ export default new Command({
             )
 
         const length = args.consumeLength()
-        if (!length) return message.channel.sendError("You must provide a length!")
+        if (length == null) return message.channel.sendError("You must provide a length!")
         const reason = args.consumeRest()
         if (!reason) return message.channel.sendError("You must provide a reason!")
 
