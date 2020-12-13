@@ -40,7 +40,8 @@ export default new Command({
         log.message = message.id
         await log.save()
 
-        await message.channel.sendSuccess(`Warned ${user} (**#${log.id}**).`)
+        const formattedUser = user.id === message.author.id ? "*you*" : user.toString()
+        await message.channel.sendSuccess(`Warned ${formattedUser} (**#${log.id}**).`)
         await client.log(log)
     }
 })
