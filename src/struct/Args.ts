@@ -83,13 +83,13 @@ export default class Args {
         }
     }
 
-    consumeSnowflake(anywhere: boolean = true): Discord.Snowflake {
-        const regex = anywhere ? /\d{18}/ : /^\d{18}/
-        const snowflake = this.raw.match(regex)?.[0]
-        if (!snowflake) return null
-
-        this.raw = this.raw.replace(new RegExp(`.+?${snowflake}.+?`), "").trim()
-        return snowflake
+    async consumeChannel(): Promise<Discord.TextChannel> {
+        const id = this.raw.match(/^(<#)?(\d{18})>?/)?.[2]
+        if (!id) return null
+        const channel = await this.message.client.channels
+            .fetch(id, true)
+            .catch(() => null)
+        return channel
     }
 
     async consumeUser(): Promise<Discord.User> {
