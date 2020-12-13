@@ -10,7 +10,7 @@ _The main bot for the BuildTheEarth Discord server._
 
 ## BuildTheEarth
 
-Join us in this massive project as we recreate Earth in Minecraft, in 1:1 scale, one block at a time. [**Discord Server**](https://discord.gg/QEkPmBy)
+Join us in this massive project as we recreate the Earth in Minecraft, in 1:1 scale, one block at a time. [**Discord Server**](https://discord.gg/QEkPmBy)
 
 ## Bot
 
