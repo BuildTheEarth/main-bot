@@ -11,9 +11,9 @@ suggestions:
     main: ""
     staff: ""
 reactionRoles:
-    (channel ID):
-        (message ID):
-            (guild emoji ID or unicode emoji): (role ID)
+    "(channel ID)":
+        "(message ID)":
+            "(guild emoji ID or unicode emoji)": (role ID)
 
 colors:
     success: "#1EAD2F"
