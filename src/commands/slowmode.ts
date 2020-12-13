@@ -10,18 +10,18 @@ export default new Command({
     aliases: ["cooldown", "ratelimit"],
     description: "Set the slowmode.",
     permission: [Roles.HELPER, Roles.MODERATOR, Roles.MANAGER],
-    usage: "<seconds> [channel]",
+    usage: "[seconds | 'show'] [channel]",
     async run(this: Command, client: Client, message: Message, args: Args) {
-        const inputSlowmode = args.consume()
-        const slowmode = Math.round(Number(inputSlowmode))
-        if (isNaN(slowmode)) {
-            const current = (<TextChannel>message.channel).rateLimitPerUser
+        const firstArg = args.consumeIf(a => a.toLowerCase() === "show") || args.consume()
+        const slowmode = Math.round(Number(firstArg))
+        const channel = (await args.consumeChannel()) || <TextChannel>message.channel
+        if (firstArg.toLowerCase() === "show" || isNaN(slowmode) || !firstArg) {
+            const current = channel.rateLimitPerUser
             const s = current === 1 ? "" : "s"
             const formatted = current === 0 ? "disabled" : `${current} second${s}`
             return message.channel.sendSuccess(`The slowmode is currently ${formatted}.`)
         }
 
-        const channel = (await args.consumeChannel()) || <TextChannel>message.channel
         channel.setRateLimitPerUser(
             Number(slowmode),
             `By ${message.author.tag} (${message.author.id})`
