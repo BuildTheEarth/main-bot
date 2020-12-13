@@ -12,10 +12,10 @@ export default new Command({
     permission: [Roles.HELPER, Roles.MODERATOR, Roles.MANAGER],
     usage: "[seconds | 'show'] [channel]",
     async run(this: Command, client: Client, message: Message, args: Args) {
-        const firstArg = args.consumeIf(a => a.toLowerCase() === "show") || args.consume()
+        const firstArg = args.consume()
         const slowmode = Math.round(Number(firstArg))
         const channel = (await args.consumeChannel()) || <TextChannel>message.channel
-        if (firstArg.toLowerCase() === "show" || isNaN(slowmode) || !firstArg) {
+        if (isNaN(slowmode)) {
             const current = channel.rateLimitPerUser
             const s = current === 1 ? "" : "s"
             const formatted = current === 0 ? "disabled" : `${current} second${s}`
