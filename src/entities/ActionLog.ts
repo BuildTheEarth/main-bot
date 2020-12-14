@@ -10,11 +10,11 @@ import {
 } from "typeorm"
 import SnowflakeColumn from "./decorators/SnowflakeColumn"
 import ms from "ms"
-import fecha from "fecha"
 import Discord from "discord.js"
 import Client from "../struct/Client"
 import TimedPunishment from "./TimedPunishment"
 import formatPunishmentTime from "../util/formatPunishmentTime"
+import formatUTCDate from "../util/formatUTCDate"
 
 export type Action = "warn" | "mute" | "kick" | "ban" | "unmute" | "unban"
 
@@ -84,9 +84,6 @@ export default class ActionLog extends BaseEntity {
 
     displayEmbed(client: Client): Discord.MessageEmbedOptions {
         const messageLink = `https://discord.com/channels/${client.config.guilds.main}/${this.channel}/${this.message}`
-        const utcOffset = this.createdAt.getTimezoneOffset() * 60000
-        const utc = new Date(this.createdAt.getTime() + utcOffset)
-        const timestamp = fecha.format(utc, "DD/MM/YY [@] HH:mm:ss UTC")
         const length = this.length ? formatPunishmentTime(this.length, true) : "\u200B"
         const embed: Discord.MessageEmbedOptions = {
             color: client.config.colors.success,
@@ -98,7 +95,7 @@ export default class ActionLog extends BaseEntity {
                 { name: "Reason", value: this.reason },
                 { name: "Moderator", value: `<@${this.executor}>` },
                 { name: "Context", value: `[Link](${messageLink})` },
-                { name: "Time", value: timestamp }
+                { name: "Time", value: formatUTCDate(this.createdAt) }
             ].map(field => ({ ...field, inline: true }))
         }
 
@@ -107,8 +104,14 @@ export default class ActionLog extends BaseEntity {
         }
 
         if (this.deletedAt) {
+            const formattedTimestamp = formatUTCDate(this.deletedAt)
             embed.description = "*This case has been deleted.*"
             embed.color = client.config.colors.error
+            embed.fields.push(
+                { name: "Deleter", value: `<@${this.deleter}>`, inline: true },
+                { name: "Deletion reason", value: this.deleteReason, inline: true },
+                { name: "Deletion time", value: formattedTimestamp, inline: true }
+            )
         }
 
         if (this.punishment?.end > new Date()) {
