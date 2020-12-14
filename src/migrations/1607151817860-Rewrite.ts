@@ -136,6 +136,14 @@ export class Rewrite1607149857197 implements MigrationInterface {
             isNullable: true
         })
         await queryRunner.addColumn("Logs", deletedAt)
+        await queryRunner.addColumn("Logs", new Snowflake("deleter"))
+        const deleteReason = new TableColumn({
+            name: "delete_reason",
+            type: "varchar",
+            length: "1024",
+            isNullable: true
+        })
+        await queryRunner.addColumn("Logs", deleteReason)
         const punishmentID = new TableColumn({
             name: "punishment_id",
             type: "int",
