@@ -2,7 +2,6 @@ import Client from "../struct/Client"
 import Message from "../struct/discord/Message"
 import Args from "../struct/Args"
 import Command from "../struct/Command"
-import TextChannel from "../struct/discord/TextChannel"
 import ActionLog from "../entities/ActionLog"
 import Roles from "../util/roles"
 
@@ -17,13 +16,13 @@ export default new Command({
             name: "edit",
             description: "Edit a case.",
             permission: [Roles.HELPER, Roles.MODERATOR],
-            usage: "<id> <reason>"
+            usage: "<id> <new reason>"
         },
         {
             name: "delete",
             description: "Delete a case.",
             permission: Roles.MODERATOR,
-            usage: "<id>"
+            usage: "<id> <reason>"
         }
     ],
     async run(this: Command, client: Client, message: Message, args: Args) {
@@ -51,7 +50,12 @@ export default new Command({
             return message.channel.sendSuccess(`Edited case **#${id}**.`)
         } else if (subcommand === "delete") {
             if (!message.member.hasStaffPermission(Roles.MODERATOR)) return
+            const reason = args.consumeRest()
+            if (!reason)
+                return message.channel.sendError("You must provide a deletion reason!")
 
+            log.deleter = message.author.id
+            log.deleteReason = reason
             await log.softRemove()
             await message.channel.sendSuccess(`Deleted case **#${id}**.`)
         }
