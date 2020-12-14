@@ -58,7 +58,7 @@ export default new Command({
             const current = await TimedPunishment.findOne({ where: { member: user.id } })
             const currentLog = actionLogs.find(log => log.punishment?.id === current?.id)
             const adjective = current?.type === "mute" ? "muted" : "banned"
-            const cases = showDeleted ? "Cases" : "Deleted cases"
+            const cases = showDeleted ? "Deleted cases" : "Cases"
             const attribute = showDeleted ? " deleted " : ""
 
             embed.description = current
