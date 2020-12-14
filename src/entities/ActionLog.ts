@@ -32,7 +32,7 @@ export default class ActionLog extends BaseEntity {
     @SnowflakeColumn()
     executor: string
 
-    @Column({ length: 2048 })
+    @Column({ length: 1024 })
     reason: string
 
     @Column({ nullable: true, name: "reason_image" })
