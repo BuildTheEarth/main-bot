@@ -86,7 +86,7 @@ export default class ActionLog extends BaseEntity {
         const messageLink = `https://discord.com/channels/${client.config.guilds.main}/${this.channel}/${this.message}`
         const utcOffset = this.createdAt.getTimezoneOffset() * 60000
         const utc = new Date(this.createdAt.getTime() + utcOffset)
-        const timestamp = fecha.format(utc, "DD/MM/YY [@] hh:mm:ss UTC")
+        const timestamp = fecha.format(utc, "DD/MM/YY [@] HH:mm:ss UTC")
         const length = this.length ? formatPunishmentTime(this.length, true) : "\u200B"
         const embed: Discord.MessageEmbedOptions = {
             color: client.config.colors.success,
