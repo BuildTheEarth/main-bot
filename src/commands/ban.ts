@@ -14,7 +14,7 @@ export default new Command({
     aliases: [],
     description: "Ban a member.",
     permission: Roles.MODERATOR,
-    usage: "<member> <length> <reason>",
+    usage: "<member> <length> <image URL | attachment> <reason>",
     async run(this: Command, client: Client, message: Message, args: Args) {
         const user = await args.consumeUser()
 
@@ -27,6 +27,8 @@ export default new Command({
 
         const length = args.consumeLength()
         if (length == null) return message.channel.sendError("You must provide a length!")
+        const image = args.consumeImage()
+        if (!image) return message.channel.sendError("You must provide a reason image!")
         const reason = args.consumeRest()
         if (!reason) return message.channel.sendError("You must provide a reason!")
 
@@ -65,6 +67,7 @@ export default new Command({
         log.member = user.id
         log.executor = message.author.id
         log.reason = reason
+        log.reasonImage = image
         log.length = length
         log.channel = message.channel.id
         log.message = message.id

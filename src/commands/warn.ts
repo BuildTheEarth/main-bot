@@ -12,7 +12,7 @@ export default new Command({
     aliases: [],
     description: "Warn a member.",
     permission: [Roles.HELPER, Roles.MODERATOR],
-    usage: "<member> <reason>",
+    usage: "<member> [image URL | attachment] <reason>",
     async run(this: Command, client: Client, message: Message, args: Args) {
         const user = await args.consumeUser()
 
@@ -23,9 +23,9 @@ export default new Command({
                     : "Couldn't find that user."
             )
 
+        const image = args.consumeImage()
         const reason = args.consumeRest()
         if (!reason) return message.channel.sendError("You must provide a reason!")
-
         const member = message.guild.member(user)
         if (!member) return message.channel.sendError("The user is not in the server!")
 
@@ -37,6 +37,7 @@ export default new Command({
         log.member = user.id
         log.executor = message.author.id
         log.reason = reason
+        log.reasonImage = image
         log.channel = message.channel.id
         log.message = message.id
         await log.save()
