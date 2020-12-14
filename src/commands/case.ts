@@ -56,6 +56,7 @@ export default new Command({
 
             log.deleter = message.author.id
             log.deleteReason = reason
+            await log.save()
             await log.softRemove()
             await message.channel.sendSuccess(`Deleted case **#${id}**.`)
         }
