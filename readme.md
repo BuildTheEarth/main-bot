@@ -51,6 +51,7 @@ As the old code was entirely unmaintainable and riddled with bugs, we decided th
 
 <!-- markdownlint-enable -->
 <!-- prettier-ignore-end -->
+
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 <!-- prettier-ignore-end -->
 
@@ -95,6 +96,7 @@ Rename the `_config.yml` file to `config.yml` and fill in all of the fields:
 -   **colors**: The color palette for message embeds.
     -   **success**
     -   **error**
+    -   **info**
     -   **suggestions**
         -   **approved**
         -   **denied**
