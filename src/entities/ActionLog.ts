@@ -56,7 +56,7 @@ export default class ActionLog extends BaseEntity {
     @SnowflakeColumn({ nullable: true })
     deleter?: string
 
-    @Column({ name: "delete_reason", nullable: true })
+    @Column({ name: "delete_reason", length: 1024, nullable: true })
     deleteReason?: string
 
     @OneToOne(() => TimedPunishment, {
