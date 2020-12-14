@@ -9,7 +9,7 @@ export type GuildCategories = { main: string; staff: string }
 export type SuggestionCategories = Record<SuggestionStatus, string>
 export type ActionLogCategories = Record<Action, string>
 export type ReactionRole = { [key: string]: { [key: string]: { [key: string]: string } } }
-export type ColorPalette = { success: string; error: string }
+export type ColorPalette = { success: string; error: string; info: string }
 export type DatabaseInfo = { host: string; name: string; user: string; pass: string }
 
 export default class ConfigManager implements Config {
