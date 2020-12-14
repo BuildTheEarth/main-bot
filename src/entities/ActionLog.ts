@@ -13,6 +13,7 @@ import ms from "ms"
 import Discord from "discord.js"
 import Client from "../struct/Client"
 import TimedPunishment from "./TimedPunishment"
+import truncateSting from "../util/truncateString"
 import formatPunishmentTime from "../util/formatPunishmentTime"
 import formatUTCDate from "../util/formatUTCDate"
 
@@ -75,7 +76,7 @@ export default class ActionLog extends BaseEntity {
     }
 
     format(): string {
-        let formatted = this.reason
+        let formatted = truncateSting(this.reason, 64, "...")
         if (this.length) formatted = `(**${ms(this.length)}**) ` + formatted
         formatted = `\` ${this.id}. \` ${formatted}`
         if (this.old) formatted = `\\📜 ${formatted}`
