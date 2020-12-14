@@ -11,6 +11,7 @@ _The main bot for the BuildTheEarth Discord server._
 -   [BuildTheEarth](#BuildTheEarth)
 -   [Bot](#Bot)
 -   [Rewrite](#Rewrite)
+-   [Contributors](#Contributors)
 -   [Development](#Development)
     -   [Cloning](#Cloning)
     -   [Dependency setup](#Dependency-setup)
@@ -32,6 +33,16 @@ You shouldn't use this bot on your own servers as it's heavily customized for ou
 This project originated as a complete rewrite of our old bot, an extension of the **[AlphaConsole bot](https://github.com/AlphaConsole/AlphaConsoleBot/)**.
 
 As the old code was entirely unmaintainable and riddled with bugs, we decided that a whole rewrite was the best option.
+
+## Contributors
+
+<!-- prettier-ignore-start -->
+<!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
+
+<!-- ALL-CONTRIBUTORS-LIST:END -->
+<!-- prettier-ignore-end -->
+
+This project follows the [all-contributors](https://allcontributors.org) specification. Contributions of any kind are welcome!
 
 ## Development
 
