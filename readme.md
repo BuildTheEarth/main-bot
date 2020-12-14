@@ -43,6 +43,7 @@ As the old code was entirely unmaintainable and riddled with bugs, we decided th
 <table>
   <tr>
     <td align="center"><a href="https://github.com/cAttte"><img src="https://avatars0.githubusercontent.com/u/26514199?v=4" width="100px;" alt=""/><br /><sub><b>cAttte</b></sub></a><br /><a href="https://github.com/BuildTheEarth/main-bot/commits?author=cAttte" title="Code">💻</a></td>
+    <td align="center"><a href="https://github.com/vicrobex"><img src="https://avatars1.githubusercontent.com/u/56770982?v=4" width="100px;" alt=""/><br /><sub><b>vicrobex</b></sub></a><br /><a href="#design-vicrobex" title="Design">🎨</a></td>
   </tr>
 </table>
 
