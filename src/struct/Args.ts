@@ -114,4 +114,12 @@ export default class Args {
             return undefined
         }
     }
+
+    consumeAttachment(
+        check?: (attachment: Discord.MessageAttachment) => boolean
+    ): Discord.MessageAttachment {
+        return check
+            ? this.message.attachments.find(check) || null
+            : this.message.attachments.first() || null
+    }
 }
