@@ -44,7 +44,7 @@ export default new Command({
                     value: `\`${command.aliases.join("`, `")}\``
                 })
 
-            if (command.subcommands) {
+            if (command.subcommands && command.subcommands.length) {
                 const member = message.member
                 const allowedSubcommands = command.subcommands.filter(sub =>
                     member.hasStaffPermission(sub.permission || command.permission)
