@@ -36,16 +36,17 @@ export default class Args {
         return args
     }
 
-    consumeIf(equals: string | string[] | ((arg: string) => boolean)): string {
+    consumeIf(equals: string | string[] | RegExp | ((arg: string) => boolean)): string {
         let valid = false
         const arg = this.get()
 
         if (typeof equals === "string") valid = equals.toLowerCase() === arg.toLowerCase()
         else if (Array.isArray(equals)) valid = equals.includes(arg)
+        else if (equals instanceof RegExp) valid = equals.test(arg)
         else if (typeof equals === "function") valid = equals(arg)
         if (!valid) return null
 
-        return typeof equals === "function"
+        return typeof equals === "function" || equals instanceof RegExp
             ? this.consume()
             : this.consume().toLowerCase()
     }
