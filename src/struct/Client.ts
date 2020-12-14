@@ -38,6 +38,12 @@ export default class Client extends Discord.Client {
 
         if (log instanceof ActionLog) {
             const embed = log.displayEmbed(this)
+            if (embed.color === this.config.colors.error) {
+                delete embed.description
+                embed.author.name += " deleted"
+            } else if (embed.color === this.config.colors.success) {
+                embed.color = this.config.colors.info
+            }
             await channel.send({ embed })
         }
     }
