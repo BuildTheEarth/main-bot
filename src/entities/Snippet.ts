@@ -11,6 +11,6 @@ export default class Snippet extends BaseEntity {
     @Column({ length: 2 })
     language: string
 
-    @Column({ length: 2048 })
+    @Column({ length: 2000 })
     body: string
 }
