@@ -54,7 +54,7 @@ export default class Suggestion extends BaseEntity {
     @SnowflakeColumn({ nullable: true, name: "status_updater" })
     statusUpdater?: string
 
-    @Column({ nullable: true, length: 2048, name: "status_reason" })
+    @Column({ nullable: true, length: 1024, name: "status_reason" })
     statusReason?: string
 
     @SnowflakeColumn()
