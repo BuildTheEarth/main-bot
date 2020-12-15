@@ -44,6 +44,8 @@ export default new Command({
             const reason = args.consumeRest()
             if (!reason)
                 return message.channel.sendError("You must provide a new reason!")
+            if (reason === log.reason)
+                return message.channel.sendError("Nothing changed.")
 
             log.reason = reason
             await log.save()
