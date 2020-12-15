@@ -9,7 +9,8 @@
       "avatar_url": "https://avatars0.githubusercontent.com/u/26514199?v=4",
       "profile": "https://github.com/cAttte",
       "contributions": [
-        "code"
+        "code",
+        "projectManagement"
       ]
     },
     {
@@ -37,6 +38,15 @@
       "profile": "http://sky.shiiyu.moe",
       "contributions": [
         "code"
+      ]
+    },
+    {
+      "login": "noahhusby",
+      "name": "Noah Husby",
+      "avatar_url": "https://avatars3.githubusercontent.com/u/32528627?v=4",
+      "profile": "http://noahhusby.com",
+      "contributions": [
+        "projectManagement"
       ]
     }
   ],
