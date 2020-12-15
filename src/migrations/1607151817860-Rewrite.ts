@@ -287,7 +287,7 @@ export class Rewrite1607149857197 implements MigrationInterface {
 
             const number = oldSuggestion.id
             const _extends = null
-            const author = message.author
+            const author = message.author.id
             const anonymous = false
             const title = description.match(/\*\*(.+)\*\*\n/)?.[1]
             const body = description.split("\n").slice(1).join("\n")
