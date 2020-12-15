@@ -47,7 +47,8 @@ export default new Command({
 
             log.reason = reason
             await log.save()
-            return message.channel.sendSuccess(`Edited case **#${id}**.`)
+            await message.channel.sendSuccess(`Edited case **#${id}**.`)
+            await client.log(log)
         } else if (subcommand === "delete") {
             if (!message.member.hasStaffPermission(Roles.MODERATOR)) return
             const reason = args.consumeRest()
@@ -59,6 +60,7 @@ export default new Command({
             await log.save()
             await log.softRemove()
             await message.channel.sendSuccess(`Deleted case **#${id}**.`)
+            await client.log(log)
         }
     }
 })
