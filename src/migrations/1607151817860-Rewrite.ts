@@ -153,6 +153,8 @@ export class Rewrite1607149857197 implements MigrationInterface {
         await queryRunner.renameColumn("Logs", "Action", "temp_action")
         await queryRunner.renameColumn("Logs", "temp_action", "action")
         await alterColumn(queryRunner, "Logs", "Member", "varchar(18)")
+        await queryRunner.renameColumn("Logs", "Member", "temp_member")
+        await queryRunner.renameColumn("Logs", "temp_member", "member")
         await alterColumn(queryRunner, "Logs", "Moderator", "varchar(18)")
         await queryRunner.renameColumn("Logs", "Moderator", "executor")
         await queryRunner.dropColumn("Logs", "Value")
