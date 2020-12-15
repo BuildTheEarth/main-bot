@@ -16,6 +16,7 @@ import TimedPunishment from "./TimedPunishment"
 import truncateSting from "../util/truncateString"
 import formatPunishmentTime from "../util/formatPunishmentTime"
 import formatUTCDate from "../util/formatUTCDate"
+import milliseconds from "./transformers/milliseconds"
 
 export type Action = "warn" | "mute" | "kick" | "ban" | "unmute" | "unban"
 
@@ -39,7 +40,7 @@ export default class ActionLog extends BaseEntity {
     @Column({ nullable: true, name: "reason_image" })
     reasonImage?: string
 
-    @Column({ nullable: true })
+    @Column({ nullable: true, transformer: milliseconds })
     length?: number
 
     @SnowflakeColumn()
