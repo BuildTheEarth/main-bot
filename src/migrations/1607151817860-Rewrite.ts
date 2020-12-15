@@ -197,7 +197,7 @@ export class Rewrite1607149857197 implements MigrationInterface {
             if (!log.message) continue
             const deconstructed = Discord.SnowflakeUtil.deconstruct(log.message)
             const simulatedCreationDate = new Date(deconstructed.timestamp)
-            const milliseconds = log.length === null ? null : ms(log.length)
+            const milliseconds = log.length === null ? 0 : ms(log.length) || 0
             await queryRunner.query(
                 "UPDATE Logs SET length = ? , created_at = ? WHERE id = ?",
                 [milliseconds / 1000, simulatedCreationDate, log.id]
