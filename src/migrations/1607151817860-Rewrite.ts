@@ -10,7 +10,6 @@ import Client from "../struct/Client"
 import ms from "ms"
 import chalk from "chalk"
 import { promisify } from "util"
-import { Language } from "klasa"
 
 const wait = promisify(setTimeout)
 
@@ -27,7 +26,7 @@ function alterColumn(
     column: string,
     type: string
 ) {
-    return queryRunner.query(`ALTER TABLE ${table} ALTER COLUMN ${column} ${type}`)
+    return queryRunner.query(`ALTER TABLE ${table} MODIFY COLUMN ${column} ${type}`)
 }
 
 /*
