@@ -325,6 +325,7 @@ export class Rewrite1607149857197 implements MigrationInterface {
         await queryRunner.renameColumn("snippets", "Command", "name")
         await alterColumn(queryRunner, "snippets", "Response", "varchar(2000)")
         await queryRunner.renameColumn("snippets", "Response", "body")
+        await queryRunner.query("DELETE FROM snippets WHERE LENGTH(Language) > 2")
         await alterColumn(queryRunner, "snippets", "Language", "varchar(2)")
         await queryRunner.renameColumn("snippets", "Language", "temp_language")
         await queryRunner.renameColumn("snippets", "temp_language", "language")
