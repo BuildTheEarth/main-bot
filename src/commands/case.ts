@@ -54,11 +54,13 @@ export default new Command({
             const reason = args.consumeRest()
             if (!reason)
                 return message.channel.sendError("You must provide a deletion reason!")
+            if (log.deletedAt)
+                return message.channel.sendError("That case is already deleted!")
 
+            log.deletedAt = new Date()
             log.deleter = message.author.id
             log.deleteReason = reason
             await log.save()
-            await log.softRemove()
             await message.channel.sendSuccess(`Deleted case **#${id}**.`)
             await client.log(log)
         }
