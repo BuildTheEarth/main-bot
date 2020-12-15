@@ -10,6 +10,7 @@ import Client from "../struct/Client"
 import ms from "ms"
 import chalk from "chalk"
 import { promisify } from "util"
+import { Language } from "klasa"
 
 const wait = promisify(setTimeout)
 
@@ -17,6 +18,16 @@ class Snowflake extends TableColumn {
     constructor(name: string) {
         super({ name, type: "varchar", length: "18" })
     }
+}
+
+// QueryRunner#changeColumn() DROPs and ADDs instead of ALTERing, resulting in data loss...
+function alterColumn(
+    queryRunner: QueryRunner,
+    table: string,
+    column: string,
+    type: string
+) {
+    return queryRunner.query(`ALTER TABLE ${table} ALTER COLUMN ${column} ${type}`)
 }
 
 /*
@@ -133,16 +144,23 @@ export class Rewrite1607149857197 implements MigrationInterface {
 
         // Logs -> action_logs (entities/ActionLog)
 
-        await queryRunner.renameColumn("Logs", "ID", "id")
-        const action = new TableColumn({ name: "action", type: "varchar", length: "255" })
-        await queryRunner.changeColumn("Logs", "Action", action)
-        await queryRunner.changeColumn("Logs", "Member", new Snowflake("member"))
-        await queryRunner.changeColumn("Logs", "Moderator", new Snowflake("executor"))
+        await queryRunner.renameColumn("Logs", "ID", "temp_id")
+        await queryRunner.renameColumn("Logs", "temp_id", "id")
+        await alterColumn(queryRunner, "Logs", "Action", "varchar(255)")
+        await queryRunner.renameColumn("Logs", "Action", "temp_action")
+        await queryRunner.renameColumn("Logs", "temp_action", "action")
+        await alterColumn(queryRunner, "Logs", "Member", "varchar(18)")
+        await alterColumn(queryRunner, "Logs", "Moderator", "varchar(18)")
+        await queryRunner.renameColumn("Logs", "Moderator", "executor")
         await queryRunner.dropColumn("Logs", "Value")
-        await queryRunner.renameColumn("Logs", "Reason", "reason")
-        await queryRunner.renameColumn("Logs", "Length", "length")
-        await queryRunner.changeColumn("Logs", "ChannelID", new Snowflake("channel"))
-        await queryRunner.changeColumn("Logs", "MessageID", new Snowflake("message"))
+        await queryRunner.renameColumn("Logs", "Reason", "temp_reason")
+        await queryRunner.renameColumn("Logs", "temp_reason", "reason")
+        await queryRunner.renameColumn("Logs", "Length", "temp_length")
+        await queryRunner.renameColumn("Logs", "temp_length", "length")
+        await alterColumn(queryRunner, "Logs", "ChannelID", "varchar(18)")
+        await queryRunner.renameColumn("Logs", "ChannelID", "channel")
+        await alterColumn(queryRunner, "Logs", "MessageID", "varchar(18)")
+        await queryRunner.renameColumn("Logs", "MessageID", "message")
         const createdAt = new TableColumn({ name: "created_at", type: "datetime" })
         await queryRunner.addColumn("Logs", createdAt)
         const deletedAt = new TableColumn({
@@ -299,14 +317,15 @@ export class Rewrite1607149857197 implements MigrationInterface {
         await queryRunner.renameTable("Snippets", "temp_snippets")
         await queryRunner.renameTable("temp_snippets", "snippets")
 
-        await queryRunner.renameColumn("snippets", "ID", "id")
-        const name = new TableColumn({ name: "name", type: "varchar", length: "32" })
-        await queryRunner.changeColumn("snippets", "Command", name)
-        const body = new TableColumn({ name: "body", type: "varchar", length: "2048" })
-        await queryRunner.changeColumn("snippets", "Response", body)
-        // prettier-ignore
-        const language = new TableColumn({ name: "language", type: "varchar", length: "2" })
-        await queryRunner.changeColumn("snippets", "Language", language)
+        await queryRunner.renameColumn("snippets", "ID", "temp_id")
+        await queryRunner.renameColumn("snippets", "temp_id", "id")
+        await alterColumn(queryRunner, "snippets", "Command", "varchar(32)")
+        await queryRunner.renameColumn("snippets", "Command", "name")
+        await alterColumn(queryRunner, "snippets", "Response", "varchar(2000)")
+        await queryRunner.renameColumn("snippets", "Response", "body")
+        await alterColumn(queryRunner, "snippets", "Language", "varchar(2)")
+        await queryRunner.renameColumn("snippets", "Language", "temp_language")
+        await queryRunner.renameColumn("snippets", "temp_language", "language")
     }
 
     public async down(): Promise<void> {
