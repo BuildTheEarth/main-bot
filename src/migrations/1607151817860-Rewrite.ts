@@ -194,6 +194,7 @@ export class Rewrite1607149857197 implements MigrationInterface {
         // prettier-ignore
         const logs: Log[] = await queryRunner.query("SELECT id, length, message FROM Logs")
         for (const log of logs) {
+            if (!log.message) continue
             const deconstructed = Discord.SnowflakeUtil.deconstruct(log.message)
             const simulatedCreationDate = new Date(deconstructed.timestamp)
             const milliseconds = log.length === null ? null : ms(log.length)
