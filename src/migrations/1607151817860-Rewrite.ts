@@ -36,6 +36,8 @@ some wonderfully cryptic things about the old bot to know if you're reading this
 - for tables that already have IDs per se (for example, Members, which have DiscordIDs), there's still an additional incremental 'id' column
 */
 
+const MAX_INT = 2147483647
+
 export class Rewrite1607149857197 implements MigrationInterface {
     public async up(queryRunner: QueryRunner): Promise<void> {
         const config = await queryRunner.hasTable("Config")
@@ -118,11 +120,12 @@ export class Rewrite1607149857197 implements MigrationInterface {
             if (Number(member.MutedUntil) < now && Number(member.tempBeta) < now) continue
             // punishments didn't store start dates or lengths, just end dates
             const simulatedLength = Number(member.MutedUntil || member.tempBeta)
+            if (simulatedLength / 1000 > MAX_INT) continue
             const simulatedCreationDate = new Date(Date.now() - simulatedLength)
             const type = member.MutedUntil ? "mute" : "ban"
             await queryRunner.query(
                 "INSERT INTO timed_punishments (member, type, length, created_at) VALUES (?, ?, ?, ?)",
-                [member.DiscordID, type, simulatedLength, simulatedCreationDate]
+                [member.DiscordID, type, simulatedLength / 1000, simulatedCreationDate]
             )
         }
 
