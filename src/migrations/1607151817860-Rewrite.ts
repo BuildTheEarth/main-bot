@@ -114,6 +114,7 @@ export class Rewrite1607149857197 implements MigrationInterface {
                     {
                         name: "created_at",
                         type: "datetime",
+                        length: "6",
                         default: "CURRENT_TIMESTAMP(6)"
                     }
                 ]
@@ -170,12 +171,14 @@ export class Rewrite1607149857197 implements MigrationInterface {
         const createdAt = new TableColumn({
             name: "created_at",
             type: "datetime",
+            length: "6",
             default: "CURRENT_TIMESTAMP(6)"
         })
         await queryRunner.addColumn("Logs", createdAt)
         const deletedAt = new TableColumn({
             name: "deleted_at",
             type: "datetime",
+            length: "6",
             isNullable: true
         })
         await queryRunner.addColumn("Logs", deletedAt)
@@ -238,9 +241,15 @@ export class Rewrite1607149857197 implements MigrationInterface {
                     {
                         name: "created_at",
                         type: "datetime",
+                        length: "6",
                         default: "CURRENT_TIMESTAMP(6)"
                     },
-                    { name: "deleted_at", type: "datetime", isNullable: true },
+                    {
+                        name: "deleted_at",
+                        type: "datetime",
+                        length: "6",
+                        isNullable: true
+                    },
                     { name: "deleter", type: "varchar", length: "18", isNullable: true },
                     { name: "extends", type: "int", isNullable: true },
                     { name: "message", type: "varchar", length: "18" },
