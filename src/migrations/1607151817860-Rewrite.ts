@@ -225,7 +225,7 @@ export class Rewrite1607149857197 implements MigrationInterface {
                     { name: "author", type: "varchar", length: "18" },
                     { name: "body", type: "varchar", length: "2048" },
                     { name: "created_at", type: "datetime" },
-                    { name: "deleted_at", type: "datetime" },
+                    { name: "deleted_at", type: "datetime", isNullable: true },
                     { name: "deleter", type: "varchar", length: "18", isNullable: true },
                     { name: "extends", type: "int", isNullable: true },
                     { name: "message", type: "varchar", length: "18" },
