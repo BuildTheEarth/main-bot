@@ -62,7 +62,9 @@ export default new Command({
         if (!suggestion)
             return message.channel.sendError("Hmm... That suggestion doesn't exist.")
 
-        const suggestionMessage = await suggestions.messages.fetch(suggestion.message)
+        const suggestionMessage: Message = await suggestions.messages
+            .fetch(suggestion.message)
+            .catch(() => null)
         if (!suggestionMessage)
             return message.channel.sendError("Can't find the suggestion's message!")
 

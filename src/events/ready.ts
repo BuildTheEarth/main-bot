@@ -11,10 +11,12 @@ export default async function ready(this: Client) {
 
     // cache reaction role messages
     for (const channelID of Object.keys(this.config.reactionRoles)) {
-        const channel = await this.channels.fetch(channelID).catch(() => null)
+        const channel: TextChannel = await this.channels
+            .fetch(channelID)
+            .catch(() => null)
         if (channel) {
             for (const messageID of Object.keys(this.config.reactionRoles[channelID])) {
-                await (<TextChannel>channel).messages.fetch(messageID).catch(() => null)
+                await channel.messages.fetch(messageID).catch(() => null)
             }
         }
     }

@@ -34,7 +34,10 @@ export default class Client extends Discord.Client {
     }
 
     async log(log: ActionLog | Args) {
-        const channel = <TextChannel>await this.channels.fetch(this.config.logs, true)
+        const channel: TextChannel = await this.channels
+            .fetch(this.config.logs, true)
+            .catch(() => null)
+        if (!channel) return
 
         if (log instanceof ActionLog) {
             const embed = log.displayEmbed(this)

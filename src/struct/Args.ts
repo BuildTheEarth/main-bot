@@ -108,7 +108,7 @@ export default class Args {
             return user || null
         } else if (id) {
             this.consume()
-            const user = await users.fetch(id, true)
+            const user: Discord.User = await users.fetch(id, true).catch(() => null)
             return user || null
         } else if (!tag && !id) {
             return undefined
