@@ -40,6 +40,7 @@ export default new Command({
         log.reasonImage = image
         log.channel = message.channel.id
         log.message = message.id
+        log.length = null
         await log.save()
 
         const formattedUser = user.id === message.author.id ? "*you*" : user.toString()

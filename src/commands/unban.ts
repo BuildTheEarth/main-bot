@@ -39,6 +39,7 @@ export default new Command({
         log.reason = reason
         log.channel = message.channel.id
         log.message = message.id
+        log.length = null
         await log.save()
 
         await message.channel.sendSuccess(`Unbanned ${user} (**#${log.id}**).`)
