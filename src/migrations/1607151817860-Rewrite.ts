@@ -133,9 +133,10 @@ export class Rewrite1607149857197 implements MigrationInterface {
             // filter out expired punishments
             if (Number(member.MutedUntil) < now && Number(member.tempBeta) < now) continue
             // punishments didn't store start dates or lengths, just end dates
-            const simulatedLength = Number(member.MutedUntil || member.tempBeta)
+            const end = Number(member.MutedUntil || member.tempBeta)
+            const simulatedCreationDate = new Date()
+            const simulatedLength = end - simulatedCreationDate.getTime()
             if (simulatedLength / 1000 > MAX_INT) continue
-            const simulatedCreationDate = new Date(Date.now() - simulatedLength)
             const type = member.MutedUntil ? "mute" : "ban"
             await queryRunner.query(
                 "INSERT INTO timed_punishments (member, type, length, created_at) VALUES (?, ?, ?, ?)",
