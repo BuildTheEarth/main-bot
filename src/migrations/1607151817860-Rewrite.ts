@@ -200,7 +200,7 @@ export class Rewrite1607149857197 implements MigrationInterface {
             const milliseconds = log.length === null ? 0 : ms(log.length) || 0
             await queryRunner.query(
                 "UPDATE Logs SET length = ? , created_at = ? WHERE id = ?",
-                [milliseconds / 1000, simulatedCreationDate, log.id]
+                [milliseconds, simulatedCreationDate, log.id]
             )
         }
 
