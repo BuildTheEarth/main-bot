@@ -304,7 +304,7 @@ export class Rewrite1607149857197 implements MigrationInterface {
             // prettier-ignore
             queryRunner.query(
                 `INSERT INTO suggestions(number, extends, author, anonymous, title, body, teams, status_updater, status_reason, message, staff, created_at, deleted_at, deleter)
-                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
                  [number, _extends, author, anonymous, title, body, teams, statusUpdater, statusReason, _message, staff, createdAt, deletedAt, deleter]
             )
         }
