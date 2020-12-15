@@ -25,7 +25,7 @@ export default class Client extends Discord.Client {
             username: db.user,
             password: db.pass,
             entities: [__dirname + "/../entities/*.js"],
-            synchronize: true
+            synchronize: process.env.NODE_ENV !== "production"
         })
     }
 
