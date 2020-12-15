@@ -311,7 +311,7 @@ export class Rewrite1607149857197 implements MigrationInterface {
             )
         }
 
-        await queryRunner.dropTable("old_suggestions")
+        await queryRunner.query("DROP TABLE old_suggestions")
 
         // Snippets (formerly Commands) -> snippets (entities/Snippet)
 
