@@ -15,7 +15,7 @@ const wait = promisify(setTimeout)
 
 class Snowflake extends TableColumn {
     constructor(name: string) {
-        super({ name, type: "string", length: "18" })
+        super({ name, type: "varchar", length: "18" })
     }
 }
 
