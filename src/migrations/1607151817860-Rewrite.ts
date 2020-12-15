@@ -167,7 +167,11 @@ export class Rewrite1607149857197 implements MigrationInterface {
         await queryRunner.renameColumn("Logs", "ChannelID", "channel")
         await alterColumn(queryRunner, "Logs", "MessageID", "varchar(18)")
         await queryRunner.renameColumn("Logs", "MessageID", "message")
-        const createdAt = new TableColumn({ name: "created_at", type: "datetime" })
+        const createdAt = new TableColumn({
+            name: "created_at",
+            type: "datetime",
+            default: "CURRENT_TIMESTAMP(6)"
+        })
         await queryRunner.addColumn("Logs", createdAt)
         const deletedAt = new TableColumn({
             name: "deleted_at",
@@ -197,20 +201,20 @@ export class Rewrite1607149857197 implements MigrationInterface {
         })
         await queryRunner.createForeignKey("Logs", punishmentFK)
 
-        type Log = { id: number; length: string; message: string }
+        type Log = { id: number; length: string; Time: string; message: string }
         // prettier-ignore
-        const logs: Log[] = await queryRunner.query("SELECT id, length, message FROM Logs")
+        const logs: Log[] = await queryRunner.query("SELECT id, length, Time, message FROM Logs")
         for (const log of logs) {
             if (!log.message) continue
-            const deconstructed = Discord.SnowflakeUtil.deconstruct(log.message)
-            const simulatedCreationDate = new Date(deconstructed.timestamp)
+            const creationDate = new Date(Number(log.Time))
             const milliseconds = log.length === null ? 0 : ms(log.length) || 0
             await queryRunner.query(
                 "UPDATE Logs SET length = ? , created_at = ? WHERE id = ?",
-                [milliseconds, simulatedCreationDate, log.id]
+                [milliseconds, creationDate, log.id]
             )
         }
 
+        await queryRunner.dropColumn("Logs", "Time")
         await queryRunner.renameTable("Logs", "action_logs")
 
         // Suggestions -> suggestions (entities/Suggestion)
