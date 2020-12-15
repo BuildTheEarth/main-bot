@@ -111,7 +111,11 @@ export class Rewrite1607149857197 implements MigrationInterface {
                     { name: "member", type: "varchar", length: "18" },
                     { name: "type", type: "varchar", length: "255" },
                     { name: "length", type: "int" },
-                    { name: "created_at", type: "datetime" }
+                    {
+                        name: "created_at",
+                        type: "datetime",
+                        default: "CURRENT_TIMESTAMP(6)"
+                    }
                 ]
             })
         )
@@ -224,7 +228,11 @@ export class Rewrite1607149857197 implements MigrationInterface {
                     { name: "anonymous", type: "tinyint" },
                     { name: "author", type: "varchar", length: "18" },
                     { name: "body", type: "varchar", length: "2048" },
-                    { name: "created_at", type: "datetime" },
+                    {
+                        name: "created_at",
+                        type: "datetime",
+                        default: "CURRENT_TIMESTAMP(6)"
+                    },
                     { name: "deleted_at", type: "datetime", isNullable: true },
                     { name: "deleter", type: "varchar", length: "18", isNullable: true },
                     { name: "extends", type: "int", isNullable: true },
