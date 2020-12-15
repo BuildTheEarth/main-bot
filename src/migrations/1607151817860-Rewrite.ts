@@ -68,7 +68,13 @@ export class Rewrite1607149857197 implements MigrationInterface {
             new Table({
                 name: "modpack_images",
                 columns: [
-                    { name: "id", type: "int", isGenerated: true },
+                    {
+                        name: "id",
+                        type: "int",
+                        isPrimary: true,
+                        isGenerated: true,
+                        generationStrategy: "increment"
+                    },
                     { name: "key", type: "varchar", length: "255" },
                     { name: "set", type: "varchar", length: "255" },
                     { name: "url", type: "varchar", length: "255" },
@@ -83,7 +89,13 @@ export class Rewrite1607149857197 implements MigrationInterface {
             new Table({
                 name: "timed_punishments",
                 columns: [
-                    { name: "id", type: "int", isGenerated: true },
+                    {
+                        name: "id",
+                        type: "int",
+                        isPrimary: true,
+                        isGenerated: true,
+                        generationStrategy: "increment"
+                    },
                     { name: "member", type: "varchar", length: "18" },
                     { name: "type", type: "varchar", length: "255" },
                     { name: "length", type: "int" },
@@ -181,6 +193,13 @@ export class Rewrite1607149857197 implements MigrationInterface {
             new Table({
                 name: "suggestions",
                 columns: [
+                    {
+                        name: "id",
+                        type: "int",
+                        isPrimary: true,
+                        isGenerated: true,
+                        generationStrategy: "increment"
+                    },
                     { name: "anonymous", type: "tinyint" },
                     { name: "author", type: "varchar", length: "18" },
                     { name: "body", type: "varchar", length: "2048" },
@@ -188,7 +207,6 @@ export class Rewrite1607149857197 implements MigrationInterface {
                     { name: "deleted_at", type: "datetime" },
                     { name: "deleter", type: "varchar", length: "18", isNullable: true },
                     { name: "extends", type: "int", isNullable: true },
-                    { name: "id", type: "int", isGenerated: true },
                     { name: "message", type: "varchar", length: "18" },
                     { name: "number", type: "int", isNullable: true },
                     { name: "staff", type: "tinyint" },
