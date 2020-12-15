@@ -273,7 +273,9 @@ export class Rewrite1607149857197 implements MigrationInterface {
             // test suggestions
             if (oldSuggestion.id < 342) continue
             const { messageID } = oldSuggestion
-            const message = await suggestionsChannel.messages.fetch(messageID, true)
+            const message = await suggestionsChannel.messages
+                .fetch(messageID, true)
+                .catch(() => null)
             if (!message) continue
 
             let status = oldSuggestion.status && oldSuggestion.status.toLowerCase()
