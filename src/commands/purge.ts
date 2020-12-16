@@ -18,5 +18,10 @@ export default new Command({
 
         const purged = await (<TextChannel>message.channel).bulkDelete(amount, true)
         await message.channel.sendSuccess(`Purged ${purged.size} messages.`)
+        await client.log({
+            color: client.config.colors.info,
+            author: { name: "Purge" },
+            description: `${purged.size} messages purged by ${message.author} in ${message.channel}.`
+        })
     }
 })
