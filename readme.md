@@ -45,12 +45,12 @@ This project originated as a complete rewrite of our old bot, an extension of th
     <td align="center"><a href="https://github.com/arc25275"><img src="https://avatars2.githubusercontent.com/u/55003876?v=4" width="100px;" alt=""/><br /><sub><b>arc25275</b></sub></a><br /><a href="#ideas-arc25275" title="Ideas, Planning, & Feedback">🤔</a></td>
     <td align="center"><a href="http://sky.shiiyu.moe"><img src="https://avatars0.githubusercontent.com/u/43897385?v=4" width="100px;" alt=""/><br /><sub><b>metalcupcake5</b></sub></a><br /><a href="https://github.com/BuildTheEarth/main-bot/commits?author=metalcupcake5" title="Code">💻</a></td>
     <td align="center"><a href="http://noahhusby.com"><img src="https://avatars3.githubusercontent.com/u/32528627?v=4" width="100px;" alt=""/><br /><sub><b>Noah Husby</b></sub></a><br /><a href="#projectManagement-noahhusby" title="Project Management">📆</a></td>
+    <td align="center"><a href="https://github.com/olivephio"><img src="https://avatars1.githubusercontent.com/u/76128526?v=4" width="100px;" alt=""/><br /><sub><b>olivephio</b></sub></a><br /><a href="#ideas-olivephio" title="Ideas, Planning, & Feedback">🤔</a></td>
   </tr>
 </table>
 
 <!-- markdownlint-enable -->
 <!-- prettier-ignore-end -->
-
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
 This project follows the [All Contributors][] specification. Contributions of any kind are welcome!
