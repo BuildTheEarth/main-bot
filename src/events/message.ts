@@ -6,7 +6,7 @@ import Role from "../struct/discord/Role"
 import Snippet from "../entities/Snippet"
 import languages from "iso-639-1"
 
-export default async function (this: Client, message: Message) {
+export default async function (this: Client, message: Message): Promise<unknown> {
     if (message.author.bot) return
     if (!message.content.startsWith(this.config.prefix)) return
 
@@ -36,6 +36,7 @@ export default async function (this: Client, message: Message) {
             return
         }
 
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
         return message.channel.send(snippet.body).catch(() => {})
     }
 

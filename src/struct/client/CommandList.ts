@@ -4,7 +4,7 @@ import loadDir from "../../util/loadDir"
 import noop from "../../util/noop"
 
 export default class CommandList extends Discord.Collection<string, Command> {
-    async load() {
+    async load(): Promise<void> {
         await loadDir<Command>(__dirname + "/../../commands/", noop, this)
     }
 
@@ -14,13 +14,13 @@ export default class CommandList extends Discord.Collection<string, Command> {
         })
     }
 
-    unloadOne(name: string) {
+    unloadOne(name: string): void {
         this.delete(name)
         const path = require.resolve(__dirname + `/../../commands/${name}.js`)
         delete require.cache[path]
     }
 
-    async loadOne(name: string) {
+    async loadOne(name: string): Promise<void> {
         const path = __dirname + `/../../commands/${name}.js`
         const command: Command = (await import(path)).default
         this.set(command.name, command)

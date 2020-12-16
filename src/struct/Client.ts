@@ -16,7 +16,7 @@ export default class Client extends Discord.Client {
     commands = new CommandList()
     aliases = new Discord.Collection()
 
-    async initDatabase() {
+    async initDatabase(): Promise<void> {
         const db = this.config.database
         this.db = await createConnection({
             type: "mysql",
@@ -37,7 +37,7 @@ export default class Client extends Discord.Client {
         log: ActionLog | Snippet | Discord.MessageEmbedOptions,
         action?: "add" | "edit" | "delete",
         executor?: Discord.User
-    ) {
+    ): Promise<void> {
         const channel: TextChannel = await this.channels
             .fetch(this.config.logs, true)
             .catch(() => null)

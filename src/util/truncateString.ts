@@ -1,7 +1,7 @@
 export default function truncateString(
     string: string,
     length: number,
-    ellipsis = "…"
+    ellipsis: string = "…"
 ): string {
     const exceeds = string.length > length
     const truncatedLength = exceeds ? length - ellipsis.length : length

@@ -30,7 +30,7 @@ export default class ConfigManager implements Config {
         this.client = client
     }
 
-    async load() {
+    async load(): Promise<void> {
         const configPath = path.join(__dirname, "../../../config.yml")
         const config: Config = await fs.promises
             .readFile(configPath, "utf-8")
@@ -43,7 +43,7 @@ export default class ConfigManager implements Config {
         for (const [key, value] of Object.entries(config)) this[key] = value
     }
 
-    unload() {
+    unload(): void {
         for (const key of Object.keys(this)) {
             if (key !== "client") {
                 delete this[key]

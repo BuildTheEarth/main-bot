@@ -6,7 +6,7 @@ export default async function messageReactionAdd(
     this: Client,
     reaction: Discord.MessageReaction,
     user: Discord.User
-) {
+): Promise<void> {
     const channel = this.config.reactionRoles?.[reaction.message.channel.id]
     const role = channel?.[reaction.message.id]?.[reaction.emoji.name]
     const guild = reaction.message.guild

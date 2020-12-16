@@ -1,4 +1,3 @@
-import ms from "ms"
 import Client from "../struct/Client"
 import Message from "../struct/discord/Message"
 import Args from "../struct/Args"

@@ -2,7 +2,7 @@ import TimedPunishment from "../entities/TimedPunishment"
 import Client from "../struct/Client"
 import TextChannel from "../struct/discord/TextChannel"
 
-export default async function ready(this: Client) {
+export default async function ready(this: Client): Promise<void> {
     const main = this.guilds.cache.get(this.config.guilds.main)
     this.user.setActivity(`with ${main.memberCount} users`, { type: "PLAYING" })
 

@@ -72,7 +72,7 @@ export default class Suggestion extends BaseEntity {
     @SnowflakeColumn({ nullable: true })
     deleter?: string
 
-    static async findNumber(staff: boolean) {
+    static async findNumber(staff: boolean): Promise<number> {
         const existing = await this.count({ where: { staff }, withDeleted: true })
         return existing + 1
     }
@@ -94,7 +94,7 @@ export default class Suggestion extends BaseEntity {
 
     async displayEmbed(client: Client): Promise<Discord.MessageEmbedOptions> {
         if (this.deletedAt) {
-            let deleter =
+            const deleter =
                 this.deleter === this.author ? "the author" : `<@${this.deleter}>`
             return {
                 color: client.config.colors.error,

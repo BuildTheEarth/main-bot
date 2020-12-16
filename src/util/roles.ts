@@ -1,6 +1,6 @@
 const knownAcronyms = ["PR", "BOTW", "DJ"]
 
-function get(_target: any, key: string): string {
+function get(target: unknown, key: string): string {
     const words = key.split("_")
     const capital = words.map(word =>
         knownAcronyms.includes(word)
