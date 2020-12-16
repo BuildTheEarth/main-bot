@@ -1,4 +1,7 @@
 import { Entity, Column, PrimaryGeneratedColumn, BaseEntity } from "typeorm"
+import Discord from "discord.js"
+import Client from "../struct/Client"
+import languages from "iso-639-1"
 
 @Entity({ name: "snippets" })
 export default class Snippet extends BaseEntity {
@@ -13,4 +16,13 @@ export default class Snippet extends BaseEntity {
 
     @Column({ length: 2000 })
     body: string
+
+    displayEmbed(client: Client): Discord.MessageEmbedOptions {
+        const language = languages.getName(this.language)
+        return {
+            color: client.config.colors.success,
+            author: { name: `${this.name} snippet in ${language}` },
+            description: this.body
+        }
+    }
 }
