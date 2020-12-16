@@ -6,3 +6,4 @@ apps:
           NODE_ENV: "development"
       env_production:
           NODE_ENV: "production"
+      node_args: --unhandled-rejections=strict
