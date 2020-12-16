@@ -21,7 +21,7 @@ _The main bot for the BuildTheEarth Discord server._
 
 ## BuildTheEarth
 
-Join us in this massive project as we recreate the Earth in Minecraft, in 1:1 scale, one block at a time. [**Discord Server**](https://discord.gg/QEkPmBy)
+Join us in this massive project as we recreate the Earth in Minecraft, in 1:1 scale, one block at a time. [**Discord Server**][invite]
 
 ## Bot
 
@@ -31,13 +31,10 @@ You shouldn't use this bot on your own servers as it's heavily customized for ou
 
 ## Rewrite
 
-This project originated as a complete rewrite of our old bot, an extension of the **[AlphaConsole bot](https://github.com/AlphaConsole/AlphaConsoleBot/)**.
-
-As the old code was entirely unmaintainable and riddled with bugs, we decided that a whole rewrite was the best option.
+This project originated as a complete rewrite of our old bot, an extension of the **[AlphaConsole bot][]**. As the old code was unmaintainable and riddled with bugs, we decided that a whole rewrite was the best option.
 
 ## Contributors
 
-<!-- prettier-ignore-start -->
 <!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
 <!-- prettier-ignore-start -->
 <!-- markdownlint-disable -->
@@ -55,15 +52,14 @@ As the old code was entirely unmaintainable and riddled with bugs, we decided th
 <!-- prettier-ignore-end -->
 
 <!-- ALL-CONTRIBUTORS-LIST:END -->
-<!-- prettier-ignore-end -->
 
-This project follows the [all-contributors](https://allcontributors.org) specification. Contributions of any kind are welcome!
+This project follows the [All Contributors][] specification. Contributions of any kind are welcome!
 
 ## Development
 
--   The bot is written in **[TypeScript](https://www.typescriptlang.org/)**, a statically-typed superset of JavaScript;
--   It uses **[discord.js](http://discord.js.org/)** for interacting with Discord's API;
--   **[TypeORM](https://typeorm.io/)** for object–relational mapping;
+-   The bot is written in **[TypeScript][]**, a statically-typed superset of JavaScript;
+-   It uses **[discord.js][]** for interacting with Discord's API;
+-   **[TypeORM][]** for object–relational mapping;
 -   And it follows object-oriented and modularization principles.
 -   For version control, it follows a superset of the **[Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/)** specification.
 
@@ -105,7 +101,7 @@ Rename the `_config.yml` file to `config.yml` and fill in all of the fields:
         -   **forwarded**
         -   **information**
         -   **in-progress**
--   **assets**: URLs pointing to the asset images (from [`/assets/`](https://github.com/BuildTheEarth/main-bot/tree/main/assets)). This is required as attachments are **(a)** a burden to work with and **(b)** not editable.
+-   **assets**: URLs pointing to the asset images (from [`/assets/`](assets)). This is required as attachments are **(a)** a burden to work with and **(b)** not editable.
     -   **suggestions**
         -   **approved**
         -   **denied**
@@ -141,16 +137,28 @@ Start the bot, from the compiled `dist/` folder.
 
 #### start:production
 
-Start the bot for production with [PM2](https://pm2.io/), which sets the environment variable `NODE_ENV` to `production` (see [`ecosystem.yml`](ecosystem.yml)).
+Start the bot for production with [PM2][], which sets the environment variable `NODE_ENV` to `production` (see [`ecosystem.yml`](ecosystem.yml)).
 
 #### format
 
-Format the codebase with [Prettier](https://prettier.io/).
+Format the codebase with [Prettier][].
 
 #### lint
 
-Lint the codebase with [ESLint](https://eslint.org/).
+Lint the codebase with [ESLint][].
 
 ## License
 
 All of our bots are licensed under the [MIT License](license).
+
+<!-- References -->
+
+[invite]: https://discord.gg/QEkPmBy
+[all contributors]: https://allcontributors.org
+[alphaconsole bot]: https://github.com/AlphaConsole/AlphaConsoleBot/
+[typescript]: https://www.typescriptlang.org/
+[discord.js]: http://discord.js.org/
+[typeorm]: https://typeorm.io/
+[pm2]: https://pm2.io/
+[prettier]: https://prettier.io/
+[eslint]: https://eslint.org/
