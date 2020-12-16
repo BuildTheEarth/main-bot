@@ -64,5 +64,5 @@
   "repoType": "github",
   "repoHost": "https://github.com",
   "skipCi": true,
-  "contributorsPerLine": 7
+  "contributorsPerLine": 6
 }
