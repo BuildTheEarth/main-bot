@@ -17,6 +17,7 @@ _The main bot for the BuildTheEarth Discord server._
     -   [Dependency setup](#Dependency-setup)
     -   [Configuration](#Configuration)
     -   [Scripts](#Scripts)
+-   [License](#License)
 
 ## BuildTheEarth
 
@@ -149,3 +150,7 @@ Format the codebase with [Prettier](https://prettier.io/).
 #### Lint
 
 Lint the codebase with [ESLint](https://eslint.org/).
+
+### License
+
+All of our bots are licensed under the [MIT License](license).
