@@ -6,7 +6,7 @@ import CommandList from "./client/CommandList"
 import ConfigManager from "./client/ConfigManager"
 import createLogger from "@buildtheearth/bot-logger"
 import ActionLog from "../entities/ActionLog"
-import Args from "./Args"
+import Snippet from "../entities/Snippet"
 
 export default class Client extends Discord.Client {
     db: Connection
@@ -33,7 +33,11 @@ export default class Client extends Discord.Client {
         return super.login(this.config.token)
     }
 
-    async log(log: ActionLog | Args) {
+    async log(
+        log: ActionLog | Snippet,
+        action?: "add" | "edit" | "delete",
+        executor?: Discord.User
+    ) {
         const channel: TextChannel = await this.channels
             .fetch(this.config.logs, true)
             .catch(() => null)
@@ -46,6 +50,27 @@ export default class Client extends Discord.Client {
                 embed.author.name += " deleted"
             } else if (embed.color === this.config.colors.success) {
                 embed.color = this.config.colors.info
+            }
+
+            await channel.send({ embed })
+        } else if (log instanceof Snippet) {
+            const embed = log.displayEmbed(this)
+            embed.thumbnail = {
+                url: executor.displayAvatarURL({ format: "png", dynamic: true, size: 64 })
+            }
+
+            switch (action) {
+                case "add":
+                    embed.author.name += " created"
+                    break
+                case "edit":
+                    embed.author.name += " edited"
+                    embed.color = this.config.colors.info
+                    break
+                case "delete":
+                    embed.author.name += " deleted"
+                    embed.color = this.config.colors.error
+                    break
             }
             await channel.send({ embed })
         }
