@@ -130,22 +130,22 @@ Rename the `_config.yml` file to `config.yml` and fill in all of the fields:
 
 Compile the TypeScript code into pure JavaScript.
 
-    $ npm run build
-
 #### watch
 
 Watch for file changes and compile the code.
-
-    $ npm run watch
 
 #### start
 
 Start the bot, from the compiled `dist/` folder.
 
-    $ npm start
-
 #### start:production
 
 Start the bot for production with `pm2`, which sets the environment variable `NODE_ENV` to `production` (see [`ecosystem.yml`](ecosystem.yml)).
 
-    $ npm start:production
+#### format
+
+Format the codebase with [Prettier](https://prettier.io/).
+
+#### Lint
+
+Lint the codebase with [ESLint](https://eslint.org/).
