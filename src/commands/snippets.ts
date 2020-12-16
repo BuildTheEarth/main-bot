@@ -97,7 +97,9 @@ export default new Command({
             await snippet.save()
 
             const past = subcommand === "add" ? "Added" : "Edited"
-            message.channel.sendSuccess(`${past} **${name}** snippet in ${languageName}.`)
+            // prettier-ignore
+            await message.channel.sendSuccess(`${past} **${name}** snippet in ${languageName}.`)
+            await client.log(snippet, subcommand, message.author)
         } else if (subcommand === "delete") {
             if (!message.member.hasStaffPermission(Roles.MANAGER)) return
 
@@ -115,7 +117,9 @@ export default new Command({
             if (!snippet) return message.channel.sendError("That snippet doesn't exist!")
 
             await snippet.remove()
-            message.channel.sendSuccess(`Deleted **${name}** snippet in ${languageName}.`)
+            // prettier-ignore
+            await message.channel.sendSuccess(`Deleted **${name}** snippet in ${languageName}.`)
+            await client.log(snippet, "delete", message.author)
         }
     }
 })
