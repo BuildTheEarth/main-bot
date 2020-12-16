@@ -48,9 +48,8 @@ export default new Command({
             }
 
             let list = ""
-            for (const [snippet, languages] of Object.entries(snippetLanguages)) {
-                list += `•   ${snippet} (${languages.join(", ")})`
-            }
+            for (const [snippet, languages] of Object.entries(snippetLanguages))
+                list += `• \u200B \u200B ${snippet} (${languages.join(", ")})\n`
 
             message.channel.sendSuccess({
                 author: { name: "Snippet list" },
