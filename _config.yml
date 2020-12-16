@@ -10,6 +10,9 @@ guilds:
 suggestions:
     main: ""
     staff: ""
+    discussion:
+        main: ""
+        staff: ""
 reactionRoles:
     <channel ID>:
         <message ID>:

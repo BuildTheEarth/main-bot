@@ -20,7 +20,7 @@ export default class ConfigManager implements Config {
     logs: string
     appeal: string
     guilds: GuildCategories
-    suggestions: GuildCategories
+    suggestions: GuildCategories & { discussion: GuildCategories }
     reactionRoles: ReactionRole
     colors: ColorPalette & { suggestions: SuggestionCategories }
     assets: { suggestions: SuggestionCategories; cases: ActionLogCategories }
@@ -59,7 +59,7 @@ export type Config = {
     logs: string
     appeal: string
     guilds: GuildCategories
-    suggestions: GuildCategories
+    suggestions: GuildCategories & { discussion: GuildCategories }
     reactionRoles: ReactionRole
     colors: ColorPalette & { suggestions: SuggestionCategories }
     assets: { suggestions: SuggestionCategories; cases: ActionLogCategories }
