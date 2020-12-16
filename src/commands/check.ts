@@ -61,7 +61,7 @@ export default new Command({
             const cases = showDeleted ? "Deleted cases" : "Cases"
             const attribute = showDeleted ? " deleted " : ""
 
-            embed.description = current
+            embed.description = currentLog
                 ? `${user} (${user.tag}) is currently ${adjective} (**#${currentLog.id}**). Here are their${attribute}cases:`
                 : `${cases} for ${user} (${user.tag}):`
             if (actionLogs.some(log => log.old))
