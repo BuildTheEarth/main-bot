@@ -50,8 +50,8 @@ export class Rewrite1608069541176 implements MigrationInterface {
 
         // Config, Server ->
 
-        await queryRunner.query("DROP TABLE Config")
-        await queryRunner.query("DROP TABLE Server")
+        await queryRunner.query("DROP TABLE IF EXISTS Config")
+        await queryRunner.query("DROP TABLE IF EXISTS Server")
 
         // Logs, Members -> action_logs, timed_punishments
 
@@ -63,7 +63,7 @@ CREATE TABLE \`timed_punishments\` (
     \`length\` int NOT NULL,
     \`created_at\` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
     PRIMARY KEY (\`id\`)
-) ENGINE=InnoDB AUTO_INCREMENT=1028 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+) ENGINE=InnoDB AUTO_INCREMENT=1028 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci
         `)
 
         await queryRunner.query(`
@@ -85,7 +85,7 @@ CREATE TABLE \`action_logs\` (
     PRIMARY KEY (\`id\`),
     UNIQUE KEY \`REL_TIMED_PUNISHMENT\` (\`punishment_id\`),
     CONSTRAINT \`FK_PUNISHMENT_ID\` FOREIGN KEY (\`punishment_id\`) REFERENCES \`timed_punishments\` (\`id\`) ON DELETE SET NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci
         `)
 
         await queryRunner.query("ALTER TABLE Logs DROP COLUMN Value")
@@ -163,7 +163,7 @@ CREATE TABLE \`modpack_images\` (
     \`url\` varchar(255) NOT NULL,
     \`credit\` varchar(255) DEFAULT NULL,
     PRIMARY KEY (\`id\`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci
         `)
 
         // Snippets -> snippets
@@ -176,7 +176,7 @@ CREATE TABLE \`snippets\` (
     \`language\` varchar(2) NOT NULL,
     \`body\` varchar(2000) NOT NULL,
     PRIMARY KEY (\`id\`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci
         `)
 
         // prettier-ignore
@@ -228,7 +228,7 @@ CREATE TABLE \`suggestions\` (
     \`status_updater\` varchar(18) DEFAULT NULL,
     \`status_reason\` varchar(1024) DEFAULT NULL,
     PRIMARY KEY (\`id\`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci
         `)
 
         for (const oldSuggestion of oldSuggestions) {
