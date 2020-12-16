@@ -51,32 +51,34 @@ export default new Command({
             for (const [snippet, languages] of Object.entries(snippetLanguages))
                 list += `• \u200B \u200B ${snippet} (${languages.join(", ")})\n`
 
-            message.channel.sendSuccess({
+            return message.channel.sendSuccess({
                 author: { name: "Snippet list" },
                 description: list
             })
-        } else if (subcommand === "add" || subcommand === "edit") {
-            // prettier-ignore
-            if (!message.member.hasStaffPermission([Roles.MANAGER, Roles.PR_TRANSLATION_TEAM]))
-                return
+        }
 
-            const name = args.consume().toLowerCase()
-            const language = args.consume().toLowerCase()
+        const editPermissions = [Roles.MANAGER, Roles.PR_TRANSLATION_TEAM]
+        const deletePermissions = Roles.MANAGER
+        if (!message.member.hasStaffPermission(editPermissions)) return
+        const canDelete = message.member.hasStaffPermission(deletePermissions)
+        if (subcommand === "delete" && !canDelete) return
+
+        const name = args.consume().toLowerCase()
+        const language = args.consume().toLowerCase()
+        const languageName = languages.getName(language)
+        if (!name) return message.channel.sendError("You must specify a snippet name.")
+        if (!languageName)
+            return message.channel.sendError("You must specify a valid snippet language.")
+
+        const existingSnippet = await Snippet.findOne({ where: { name, language } })
+
+        if (subcommand === "add" || subcommand === "edit") {
             const body = args.consumeRest()
-            if (!name)
-                return message.channel.sendError("You must specify a snippet name.")
-
-            const languageName = languages.getName(language)
-            if (!languageName)
-                return message.channel.sendError(
-                    "You must specify a valid snippet language."
-                )
-
             let snippet: Snippet
+            if (!body)
+                return message.channel.sendError("You must specify a snippet body.")
+
             if (subcommand === "add") {
-                const existingSnippet = await Snippet.findOne({
-                    where: { name, language }
-                })
                 if (existingSnippet)
                     return message.channel.sendError("That snippet already exists!")
 
@@ -84,42 +86,27 @@ export default new Command({
                 snippet.name = name
                 snippet.language = language
             } else if (subcommand === "edit") {
-                snippet = await Snippet.findOne({ where: { name, language } })
-                if (!snippet)
+                snippet = existingSnippet
+                if (!existingSnippet)
                     return message.channel.sendError("That snippet doesn't exist!")
-                if (snippet.body === body)
+                if (existingSnippet.body === body)
                     return message.channel.sendSuccess("Nothing changed.")
             }
 
-            if (!body)
-                return message.channel.sendError("You must specify a snippet body.")
             snippet.body = body
             await snippet.save()
-
             const past = subcommand === "add" ? "Added" : "Edited"
             // prettier-ignore
             await message.channel.sendSuccess(`${past} **${name}** snippet in ${languageName}.`)
             await client.log(snippet, subcommand, message.author)
         } else if (subcommand === "delete") {
-            if (!message.member.hasStaffPermission(Roles.MANAGER)) return
+            if (!existingSnippet)
+                return message.channel.sendError("That snippet doesn't exist!")
 
-            const name = args.consume().toLowerCase()
-            const language = args.consume().toLowerCase()
-            if (!name)
-                return message.channel.sendError("You must specify a snippet name.")
-
-            const languageName = languages.getName(language)
-            if (!languageName)
-                // prettier-ignore
-                return message.channel.sendError("You must specify a valid snippet language.")
-
-            const snippet = await Snippet.findOne({ where: { name, language } })
-            if (!snippet) return message.channel.sendError("That snippet doesn't exist!")
-
-            await snippet.remove()
+            await existingSnippet.remove()
             // prettier-ignore
             await message.channel.sendSuccess(`Deleted **${name}** snippet in ${languageName}.`)
-            await client.log(snippet, "delete", message.author)
+            await client.log(existingSnippet, "delete", message.author)
         }
     }
 })
