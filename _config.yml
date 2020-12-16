@@ -28,11 +28,11 @@ colors:
 
 assets:
     suggestions:
-        approved: https://i.imgur.com/DMqmOUC.png
-        denied: https://i.imgur.com/OooVxhe.png
-        forwarded: https://i.imgur.com/cLAYfWU.png
-        in-progress: https://i.imgur.com/fnVz4pT.png
-        information: https://i.imgur.com/RJS2LQ3.png
+        approved: https://i.imgur.com/ttZm92O.png
+        denied: https://i.imgur.com/3RjU2cu.png
+        forwarded: https://i.imgur.com/21Xcn53.png
+        in-progress: https://i.imgur.com/hJt4Cjs.png
+        information: https://i.imgur.com/JToVhw7.png
     cases:
         warn: https://i.imgur.com/HvFuorQ.png
         mute: https://i.imgur.com/32AebCX.png
