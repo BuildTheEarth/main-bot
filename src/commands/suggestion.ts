@@ -37,6 +37,18 @@ export default new Command({
         }
     ],
     async run(this: Command, client: Client, message: Message, args: Args) {
+        const staff = message.guild.id === client.config.guilds.staff
+        const category = staff ? "staff" : "main"
+        const discussionID = client.config.suggestions.discussion[category]
+        const canManage = message.member.hasStaffPermission([
+            Roles.SUGGESTION_TEAM,
+            Roles.MANAGER
+        ])
+
+        if (message.channel.id !== discussionID && !canManage)
+            // prettier-ignore
+            return message.channel.sendError(`Please run this command in <#${discussionID}>!`)
+
         const subcommand = args.consume()
         const availableSubcommands = this.subcommands.filter(sub =>
             message.member.hasStaffPermission(sub.permission || this.permission)
@@ -50,8 +62,7 @@ export default new Command({
                 `You must specify a subcommand (\`${availableSubcommandNames.join("`, `")}\`).`
             )
 
-        const staff = message.guild.id === client.config.guilds.staff
-        const suggestionsID = client.config.suggestions[staff ? "staff" : "main"]
+        const suggestionsID = client.config.suggestions[category]
         const suggestions = <TextChannel>await client.channels.fetch(suggestionsID, true)
 
         const number = Number(args.consume().match(/\d+/)?.[0])
@@ -67,11 +78,6 @@ export default new Command({
             .catch(() => null)
         if (!suggestionMessage)
             return message.channel.sendError("Can't find the suggestion's message!")
-
-        const canManage = message.member.hasStaffPermission([
-            Roles.SUGGESTION_TEAM,
-            Roles.MANAGER
-        ])
 
         if (subcommand === "link") {
             const displayNumber = await suggestion.getDisplayNumber()
