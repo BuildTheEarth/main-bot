@@ -32,7 +32,7 @@
         "start:production": "pm2 start ecosystem.yml --env production",
         "build": "tsc",
         "watch": "tsc --watch",
-        "typeorm": "typeorm",
+        "format": "prettier --write src/",
         "lint": "eslint . --ext .ts"
     },
     "repository": "BuildTheEarth/main-bot",
