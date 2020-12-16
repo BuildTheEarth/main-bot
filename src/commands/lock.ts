@@ -16,6 +16,6 @@ export default new Command({
         const reason = `Locked by ${message.author.tag} (${message.author.id})`
         await channel.updateOverwrite(message.guild.id, { SEND_MESSAGES: false }, reason)
 
-        message.channel.sendSuccess(`Locked ${channel}.`)
+        await message.channel.sendSuccess(`Locked ${channel}.`)
     }
 })
