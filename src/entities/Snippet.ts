@@ -21,7 +21,7 @@ export default class Snippet extends BaseEntity {
         const language = languages.getName(this.language)
         return {
             color: client.config.colors.success,
-            author: { name: `${this.name} snippet in ${language}` },
+            author: { name: `'${this.name}' snippet in ${language}` },
             description: this.body
         }
     }
