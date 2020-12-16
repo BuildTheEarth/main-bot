@@ -147,10 +147,10 @@ Start the bot for production with `pm2`, which sets the environment variable `NO
 
 Format the codebase with [Prettier](https://prettier.io/).
 
-#### Lint
+#### lint
 
 Lint the codebase with [ESLint](https://eslint.org/).
 
-### License
+## License
 
 All of our bots are licensed under the [MIT License](license).
