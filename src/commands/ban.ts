@@ -49,8 +49,8 @@ export default new Command({
         if (member) {
             const dms = <DMChannel>await user.createDM()
             dms.sendError({
-                description: `${message.author} has banned you ${formattedLength}:\n\n*${reason}*`,
-                footer: { text: client.config.appeal }
+                description: `${message.author} has banned you ${formattedLength}:\n\n*${reason}*\n\u200B`,
+                fields: [{ name: "Appealing", value: client.config.appeal }]
             }).catch(noop)
         }
         await message.guild.members.ban(user, { reason })
