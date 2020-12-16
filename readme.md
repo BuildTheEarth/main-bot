@@ -2,7 +2,7 @@
 
 <img width="128" src="https://buildtheearth.net/assets/img/site-logo-animated.gif" />
 
-# main-bot
+# main bot
 
 _The main bot for the BuildTheEarth Discord server._
 
