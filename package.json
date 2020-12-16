@@ -25,7 +25,7 @@
     },
     "scripts": {
         "start": "node dist/index.js",
-        "start:production": "pm2 ecosystem.yml --env production",
+        "start:production": "pm2 start ecosystem.yml --env production",
         "build": "tsc",
         "watch": "tsc --watch",
         "typeorm": "typeorm"
