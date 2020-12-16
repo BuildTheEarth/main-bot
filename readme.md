@@ -141,7 +141,7 @@ Start the bot, from the compiled `dist/` folder.
 
 #### start:production
 
-Start the bot for production with `pm2`, which sets the environment variable `NODE_ENV` to `production` (see [`ecosystem.yml`](ecosystem.yml)).
+Start the bot for production with [PM2](https://pm2.io/), which sets the environment variable `NODE_ENV` to `production` (see [`ecosystem.yml`](ecosystem.yml)).
 
 #### format
 
