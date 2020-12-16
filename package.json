@@ -32,7 +32,7 @@
         "build": "tsc",
         "watch": "tsc --watch",
         "typeorm": "typeorm",
-        "eslint": "eslint"
+        "lint": "eslint . --ext .ts"
     },
     "repository": "BuildTheEarth/main-bot",
     "author": "BuildTheEarth",
