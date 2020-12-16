@@ -34,7 +34,7 @@ export default class Client extends Discord.Client {
     }
 
     async log(
-        log: ActionLog | Snippet,
+        log: ActionLog | Snippet | Discord.MessageEmbedOptions,
         action?: "add" | "edit" | "delete",
         executor?: Discord.User
     ) {
@@ -73,6 +73,8 @@ export default class Client extends Discord.Client {
                     break
             }
             await channel.send({ embed })
+        } else {
+            await channel.send({ embed: log })
         }
     }
 }
