@@ -17,5 +17,10 @@ export default new Command({
         await channel.updateOverwrite(message.guild.id, { SEND_MESSAGES: null }, reason)
 
         await message.channel.sendSuccess(`Unlocked ${channel}.`)
+        await client.log({
+            color: client.config.colors.success,
+            author: { name: "Unlocked" },
+            description: `Channel ${channel} unlocked by ${message.author}.`
+        })
     }
 })
