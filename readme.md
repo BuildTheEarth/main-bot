@@ -52,6 +52,7 @@ As the old code was entirely unmaintainable and riddled with bugs, we decided th
 
 <!-- markdownlint-enable -->
 <!-- prettier-ignore-end -->
+
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 <!-- prettier-ignore-end -->
 
@@ -142,3 +143,9 @@ Watch for file changes and compile the code.
 Start the bot, from the compiled `dist/` folder.
 
     $ npm start
+
+#### start:production
+
+Start the bot for production. Sets the environment variable `NODE_ENV` to `production`.
+
+    $ npm start:production
