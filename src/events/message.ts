@@ -46,7 +46,6 @@ export default async function (this: Client, message: Message): Promise<unknown>
         this.logger.info(
             `${highestRole.format()} ${member.user.tag} ran '${commandName}' command.`
         )
-
         return
     }
 
@@ -58,5 +57,9 @@ export default async function (this: Client, message: Message): Promise<unknown>
 
         await message.delete({ timeout: 30000 })
         await error.delete({ timeout: 30000 })
+        return
     }
+
+    if (message.content === "donde es server")
+        return message.channel.send("no hay server!")
 }
