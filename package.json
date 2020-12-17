@@ -1,6 +1,6 @@
 {
     "name": "main-bot",
-    "version": "0.0.0",
+    "version": "1.0.0",
     "description": "The main official bot for the BuildTheEarth Discord server.",
     "main": "src/index.js",
     "dependencies": {
