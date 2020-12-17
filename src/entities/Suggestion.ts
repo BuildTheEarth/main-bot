@@ -74,7 +74,8 @@ export default class Suggestion extends BaseEntity {
 
     static async findNumber(staff: boolean): Promise<number> {
         const existing = await this.count({ where: { staff }, withDeleted: true })
-        return existing + 1
+        if (staff) return existing + 352
+        else if (!staff) return existing + 1000
     }
 
     async getDisplayNumber(): Promise<string> {
