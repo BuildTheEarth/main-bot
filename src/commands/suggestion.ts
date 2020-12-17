@@ -45,9 +45,16 @@ export default new Command({
             Roles.MANAGER
         ])
 
-        if (message.channel.id !== discussionID && !canManage)
-            // prettier-ignore
-            return message.channel.sendError(`Please run this command in <#${discussionID}>!`)
+        if (message.channel.id !== discussionID && !canManage) {
+            const errorMessage = await message.channel.sendError(
+                `Please run this command in <#${discussionID}>!`
+            )
+            if (message.channel.id === client.config.suggestions[category]) {
+                await message.delete()
+                await errorMessage.delete({ timeout: 10000 })
+            }
+            return
+        }
 
         const subcommand = args.consume()
         const availableSubcommands = this.subcommands.filter(sub =>
