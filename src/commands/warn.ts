@@ -26,7 +26,7 @@ export default new Command({
         const image = args.consumeImage()
         const reason = args.consumeRest()
         if (!reason) return message.channel.sendError("You must provide a reason!")
-        const member = message.guild.member(user)
+        const member = await message.guild.members.fetch({ user, cache: true })
         if (!member) return message.channel.sendError("The user is not in the server!")
 
         const dms = <DMChannel>await user.createDM()

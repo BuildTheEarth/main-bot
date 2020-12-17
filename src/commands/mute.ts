@@ -30,7 +30,7 @@ export default new Command({
         const image = args.consumeImage()
         const reason = args.consumeRest()
         if (!reason) return message.channel.sendError("You must provide a reason!")
-        const member = message.guild.member(user)
+        const member = await message.guild.members.fetch({ user, cache: true })
         if (!member) return message.channel.sendError("That user is not in the server!")
 
         const existingMute = await TimedPunishment.findOne({
