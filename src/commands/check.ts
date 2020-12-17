@@ -6,7 +6,7 @@ import Command from "../struct/Command"
 import Roles from "../util/roles"
 import ActionLog, { Action } from "../entities/ActionLog"
 import TimedPunishment from "../entities/TimedPunishment"
-import { FindManyOptions, Not } from "typeorm"
+import { FindManyOptions, Not, IsNull } from "typeorm"
 
 export default new Command({
     name: "check",
@@ -28,7 +28,7 @@ export default new Command({
         const criteria: FindManyOptions = { where: { member: user.id } }
         if (showDeleted) {
             // @ts-ignore: Property 'deletedAt' does not exist on type 'string'.
-            criteria.where.deletedAt = Not(null)
+            criteria.where.deletedAt = Not(IsNull())
             criteria.withDeleted = true
         }
 
@@ -59,11 +59,12 @@ export default new Command({
             const currentLog = actionLogs.find(log => log.punishment?.id === current?.id)
             const adjective = current?.type === "mute" ? "muted" : "banned"
             const cases = showDeleted ? "Deleted cases" : "Cases"
-            const attribute = showDeleted ? " deleted " : ""
+            const attribute = showDeleted ? " deleted " : " "
 
-            embed.description = currentLog
-                ? `${user} (${user.tag}) is currently ${adjective} (**#${currentLog.id}**). Here are their${attribute}cases:`
-                : `${cases} for ${user} (${user.tag}):`
+            embed.description =
+                current && currentLog
+                    ? `${user} (${user.tag}) is currently ${adjective} (**#${currentLog.id}**). Here are their${attribute}cases:`
+                    : `${cases} for ${user} (${user.tag}):`
             if (actionLogs.some(log => log.old))
                 embed.description += "\n(Cases older than 3 months are marked with \\📜)."
 
