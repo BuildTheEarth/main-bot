@@ -4,7 +4,7 @@
 
 # main bot
 
-_The main bot for the BuildTheEarth Discord server._
+_The main bot for the BuildTheEarth Discord servers._
 
 </div>
 
