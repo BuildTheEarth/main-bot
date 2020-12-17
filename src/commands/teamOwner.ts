@@ -6,10 +6,10 @@ import Roles from "../util/roles"
 
 export default new Command({
     name: "teamowner",
-    aliases: ["bto", "to", "promote"],
+    aliases: ["bto", "to"],
     description: "Make a member Team Owner.",
     permission: Roles.REGIONAL_BUILD_TEAM_LEAD,
-    usage: "<member>",
+    usage: "<member> ['demote']",
     async run(this: Command, client: Client, message: Message, args: Args) {
         const user = await args.consumeUser()
         if (!user)
@@ -21,8 +21,14 @@ export default new Command({
         const member = message.guild.member(user)
         if (!member) return message.channel.sendError("The user is not in the server!")
 
+        const demote = !!args.consumeIf("demote")
+        const method = demote ? "remove" : "add"
+        const past = demote ? "Demoted" : "Promoted"
+        const preposition = demote ? "from" : "to"
         const role = message.guild.roles.cache.find(r => r.name === Roles.TEAM_OWNER)
-        await member.roles.add(role)
-        await message.channel.sendSuccess(`Made <@${user.id}> Team Owner!`)
+        await member.roles[method](role)
+        await message.channel.sendSuccess(
+            `${past} <@${user.id}> ${preposition} Team Owner!`
+        )
     }
 })
