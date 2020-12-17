@@ -1,3 +1,7 @@
+## [v1.1.1][] <sub><sup><sub>17/12/20</sub></sup></sub>
+
+-   Started deleting erroring commands (and error message themselves) in `#suggestions`.
+
 ## [v1.1.0][] <sub><sup><sub>17/12/20</sub></sup></sub>
 
 -   Created `language` command.
