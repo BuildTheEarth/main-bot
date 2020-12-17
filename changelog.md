@@ -1,3 +1,7 @@
+## [v1.1.0][] <sub><sup><sub>17/12/20</sub></sup></sub>
+
+-   Created `language` command.
+
 ## [v1.0.0][] <sub><sup><sub>17/12/20</sub></sup></sub>
 
 This is the initial release for the rewrite of our main bot, which means all _changes_ are not actually changes, but rather _recreations_. Here are some of them:
