@@ -12,7 +12,7 @@ export default new Command({
     aliases: ["delmsg", "removemessage", "removemsg"],
     description: "Deletes a message",
     permission: Roles.MANAGER,
-    usage: "<channelID> <messageID>",
+    usage: "<channel> <messageID>",
     async run(this: Command, client: Client, message: Message, args: Args) {
       const channel = await args.consumeChannel()
       const messageID = await args.consumeRest().split(" ", 2)[1];
