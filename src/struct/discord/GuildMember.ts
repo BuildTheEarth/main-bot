@@ -20,6 +20,11 @@ export default class GuildMember extends Discord.GuildMember {
         await this.roles.add(this.guild.muteRole, reason)
         return this
     }
+                                        
+    async addRole(rolename: string, reason: string): Promise<this> {
+        await this.roles.add(this.guild.Role(rolename), reason)
+        return this
+    }                                        
 
     async unmute(reason: string): Promise<this> {
         await this.roles.remove(this.guild.muteRole, reason)
