@@ -1,3 +1,8 @@
+## [v1.2.0][] <sub><sup><sub>17/12/20</sub></sup></sub>
+
+-   Created `teamOwner` command.
+-   Created `emojis` (`emojis.upvote` & `emojis.downvote`) fields in config, started using them in `suggest` command.
+
 ## [v1.1.2][] <sub><sup><sub>17/12/20</sub></sup></sub>
 
 -   Also delete user's message when erroring in `#suggestions`.
