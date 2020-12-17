@@ -30,6 +30,7 @@ export default new Command({
         if (!body) error = "You must specify a suggestion body!"
 
         if (error) {
+            await message.delete()
             const errorMessage = await message.channel.sendError(error)
             return await errorMessage.delete({ timeout: 10000 })
         }
