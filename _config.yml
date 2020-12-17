@@ -18,6 +18,9 @@ reactionRoles:
         <message ID>:
             <guild emoji ID or unicode emoji>: "<role ID>"
 
+emojis:
+    upvote: 👍
+    downvote: 👎
 colors:
     success: "#1EAD2F"
     error: "#ED5439"
