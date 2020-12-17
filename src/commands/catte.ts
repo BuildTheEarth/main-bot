@@ -5,7 +5,7 @@ import Roles from "../util/roles"
 
 export default new Command({
     name: "catte",
-    aliases: ["cAtte_"],
+    aliases: ["cAtte_","noah","arc"],
     description: "cAtte_ is the best",
     permission: Roles.ANY,
     usage: "",
