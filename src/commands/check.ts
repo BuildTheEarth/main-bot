@@ -59,11 +59,12 @@ export default new Command({
             const currentLog = actionLogs.find(log => log.punishment?.id === current?.id)
             const adjective = current?.type === "mute" ? "muted" : "banned"
             const cases = showDeleted ? "Deleted cases" : "Cases"
-            const attribute = showDeleted ? " deleted " : ""
+            const attribute = showDeleted ? " deleted " : " "
 
-            embed.description = currentLog
-                ? `${user} (${user.tag}) is currently ${adjective} (**#${currentLog.id}**). Here are their${attribute}cases:`
-                : `${cases} for ${user} (${user.tag}):`
+            embed.description =
+                current && currentLog
+                    ? `${user} (${user.tag}) is currently ${adjective} (**#${currentLog.id}**). Here are their${attribute}cases:`
+                    : `${cases} for ${user} (${user.tag}):`
             if (actionLogs.some(log => log.old))
                 embed.description += "\n(Cases older than 3 months are marked with \\📜)."
 
