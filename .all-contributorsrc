@@ -57,6 +57,15 @@
       "contributions": [
         "ideas"
       ]
+    },
+    {
+      "login": "XboxBedrock",
+      "name": "XboxBedrock",
+      "avatar_url": "https://avatars2.githubusercontent.com/u/68715625?v=4",
+      "profile": "https://github.com/XboxBedrock",
+      "contributions": [
+        "code"
+      ]
     }
   ],
   "projectName": "main-bot",
