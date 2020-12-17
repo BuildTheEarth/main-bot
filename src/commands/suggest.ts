@@ -23,9 +23,16 @@ export default new Command({
 
         args.separator = "|"
         const [title, body, teams] = args.consume(3)
-        if (!title) return message.channel.sendError("You must specify a title!")
-        if (title.length > 99) return message.channel.sendError("That title is too long!")
-        if (!body) return message.channel.sendError("You must specify a suggestion body!")
+
+        let error: string
+        if (!title) error = "You must specify a title!"
+        if (title.length > 99) error = "That title is too long!"
+        if (!body) error = "You must specify a suggestion body!"
+
+        if (error) {
+            const errorMessage = await message.channel.sendError(error)
+            return await errorMessage.delete({ timeout: 10000 })
+        }
 
         // delete message asap if suggestion is anonymous
         if (anon) await message.delete()
