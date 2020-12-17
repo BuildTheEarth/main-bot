@@ -17,6 +17,7 @@ _The main bot for the BuildTheEarth Discord server._
     -   [Dependency setup](#Dependency-setup)
     -   [Configuration](#Configuration)
     -   [Scripts](#Scripts)
+-   [Changelog](#Changelog)
 -   [License](#License)
 
 ## BuildTheEarth
@@ -54,6 +55,7 @@ This project originated as a complete rewrite of our old bot, an extension of th
 
 <!-- markdownlint-enable -->
 <!-- prettier-ignore-end -->
+
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
 This project follows the [All Contributors][] specification. Contributions of any kind are welcome!
@@ -149,6 +151,10 @@ Format the codebase with [Prettier][].
 #### lint
 
 Lint the codebase with [ESLint][].
+
+## Changelog
+
+To follow all of the changes made to the bot since its first release, check the [Changelog](changelog.md).
 
 ## License
 
