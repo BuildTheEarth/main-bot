@@ -9,6 +9,11 @@ export default class Guild extends Discord.Guild {
         this.members
         return this.roles.cache.find(role => role.name.toLowerCase() === "muted")
     }
+    
+    get Role(rolename: string): Discord.Role {
+        this.members
+        return this.roles.cache.find(role => role.name.toLowerCase() === rolename.toLowerCase())
+    }
 
     member(user: Discord.UserResolvable): GuildMember {
         return <GuildMember>super.member(user)
