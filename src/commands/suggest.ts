@@ -54,8 +54,8 @@ export default new Command({
         suggestion.message = suggestionMessage.id
         await suggestion.save()
 
-        await suggestionMessage.react("👍")
-        await suggestionMessage.react("👎")
+        await suggestionMessage.react(client.config.emojis.upvote)
+        await suggestionMessage.react(client.config.emojis.downvote)
         if (!anon) await message.delete()
     }
 })
