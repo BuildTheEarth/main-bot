@@ -47,6 +47,9 @@ This project originated as a complete rewrite of our old bot, an extension of th
     <td align="center"><a href="http://noahhusby.com"><img src="https://avatars3.githubusercontent.com/u/32528627?v=4" width="100px;" alt=""/><br /><sub><b>Noah Husby</b></sub></a><br /><a href="#projectManagement-noahhusby" title="Project Management">📆</a></td>
     <td align="center"><a href="https://github.com/olivephio"><img src="https://avatars1.githubusercontent.com/u/76128526?v=4" width="100px;" alt=""/><br /><sub><b>olivephio</b></sub></a><br /><a href="#ideas-olivephio" title="Ideas, Planning, & Feedback">🤔</a></td>
   </tr>
+  <tr>
+    <td align="center"><a href="https://github.com/XboxBedrock"><img src="https://avatars2.githubusercontent.com/u/68715625?v=4" width="100px;" alt=""/><br /><sub><b>XboxBedrock</b></sub></a><br /><a href="https://github.com/BuildTheEarth/main-bot/commits?author=XboxBedrock" title="Code">💻</a></td>
+  </tr>
 </table>
 
 <!-- markdownlint-enable -->
