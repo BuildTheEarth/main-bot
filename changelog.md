@@ -1,3 +1,7 @@
+## [v1.1.2][] <sub><sup><sub>17/12/20</sub></sup></sub>
+
+-   Also delete user's message when erroring in `#suggestions`.
+
 ## [v1.1.1][] <sub><sup><sub>17/12/20</sub></sup></sub>
 
 -   Started deleting erroring commands (and error message themselves) in `#suggestions`.
