@@ -47,4 +47,7 @@ This is the initial release for the rewrite of our main bot, which means all _ch
 
 <!-- References -->
 
+[v1.1.2]: https://github.com/cAttte/cop/releases/tag/v1.1.2
+[v1.1.1]: https://github.com/cAttte/cop/releases/tag/v1.1.1
+[v1.1.0]: https://github.com/cAttte/cop/releases/tag/v1.1.0
 [v1.0.0]: https://github.com/cAttte/cop/releases/tag/v1.0.0
