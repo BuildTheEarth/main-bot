@@ -91,6 +91,7 @@ export default class Args {
     async consumeChannel(): Promise<Discord.TextChannel> {
         const id = this.raw.match(/^(<#)?(\d{18})>?/)?.[2]
         if (!id) return null
+        this.remove()
         const channel = await this.message.client.channels
             .fetch(id, true)
             .catch(() => null)
