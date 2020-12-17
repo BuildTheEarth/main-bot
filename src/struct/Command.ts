@@ -1,4 +1,3 @@
-import Discord from "discord.js"
 import Client from "../struct/Client"
 import Message from "../struct/discord/Message"
 import Args from "./Args"
@@ -30,7 +29,7 @@ export interface CommandProperties extends SubCommandProperties {
     aliases: string[]
     subcommands?: SubCommandProperties[]
     permission: string | string[]
-    run: (client: Discord.Client, message: Discord.Message, args: Args) => void
+    run: (client: Client, message: Message, args: Args) => void
 }
 
 export interface SubCommandProperties {
