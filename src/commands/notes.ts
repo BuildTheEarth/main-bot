@@ -85,6 +85,11 @@ export default new Command({
                     return message.channel.sendError(
                         `Appending to this note would exceed the character limit!${tip}`
                     )
+                if (!note.updaters.includes(message.author.id))
+                    note.updaters
+                        ? note.updaters.push(message.author.id)
+                        : (note.updaters = [message.author.id])
+
                 await note.save()
                 await message.channel.sendSuccess(`Updated ${user}'s notes!`)
             } else {
@@ -102,6 +107,11 @@ export default new Command({
                 )
             }
             note.body = body
+            if (!note.updaters.includes(message.author.id))
+                note.updaters
+                    ? note.updaters.push(message.author.id)
+                    : (note.updaters = [message.author.id])
+
             await note.save()
             await message.channel.sendSuccess(`Updated ${user}'s notes!`)
         } else if (subcommand === "clear") {
