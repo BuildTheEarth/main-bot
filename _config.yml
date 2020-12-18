@@ -1,0 +1,54 @@
+token: ""
+modpack: ""
+prefix: ""
+logs: ""
+appeal: ""
+
+guilds:
+    main: ""
+    staff: ""
+suggestions:
+    main: ""
+    staff: ""
+    discussion:
+        main: ""
+        staff: ""
+reactionRoles:
+    <channel ID>:
+        <message ID>:
+            <guild emoji ID or unicode emoji>: "<role ID>"
+
+emojis:
+    upvote: 👍
+    downvote: 👎
+colors:
+    success: "#1EAD2F"
+    error: "#ED5439"
+    info: "#28338C"
+    suggestions:
+        approved: "#4B53EB"
+        denied: "#EB4364"
+        forwarded: "#D25424"
+        information: "#62D18A"
+        in-progress: "#E5B823"
+
+assets:
+    suggestions:
+        approved: https://i.imgur.com/ttZm92O.png
+        denied: https://i.imgur.com/3RjU2cu.png
+        forwarded: https://i.imgur.com/21Xcn53.png
+        in-progress: https://i.imgur.com/hJt4Cjs.png
+        information: https://i.imgur.com/JToVhw7.png
+    cases:
+        warn: https://i.imgur.com/HvFuorQ.png
+        mute: https://i.imgur.com/32AebCX.png
+        kick: https://i.imgur.com/KJuo0kL.png
+        ban: https://i.imgur.com/6WpHhM5.png
+        unmute: https://i.imgur.com/ZC0qrC9.png
+        unban: https://i.imgur.com/PfrLhuO.png
+
+database:
+    host: ""
+    name: ""
+    user: ""
+    pass: ""
