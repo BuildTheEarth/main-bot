@@ -10,7 +10,7 @@ export default new Command({
     name: "unmute",
     aliases: [],
     description: "Unmute a member.",
-    permission: [Roles.HELPER, Roles.MODERATOR],
+    permission: [Roles.HELPER, Roles.MODERATOR, Roles.MANAGER],
     usage: "<member> <reason>",
     async run(this: Command, client: Client, message: Message, args: Args) {
         const user = await args.consumeUser()

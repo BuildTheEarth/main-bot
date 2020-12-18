@@ -11,7 +11,7 @@ export default new Command({
     name: "warn",
     aliases: [],
     description: "Warn a member.",
-    permission: [Roles.HELPER, Roles.MODERATOR],
+    permission: [Roles.HELPER, Roles.MODERATOR, Roles.MANAGER],
     usage: "<member> [image URL | attachment] <reason>",
     async run(this: Command, client: Client, message: Message, args: Args) {
         const user = await args.consumeUser()

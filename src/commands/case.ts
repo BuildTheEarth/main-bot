@@ -9,19 +9,19 @@ export default new Command({
     name: "case",
     aliases: ["log", "record"],
     description: "Check specific info on a case.",
-    permission: [Roles.HELPER, Roles.MODERATOR],
+    permission: [Roles.HELPER, Roles.MODERATOR, Roles.MANAGER],
     usage: "<id>",
     subcommands: [
         {
             name: "edit",
             description: "Edit a case.",
-            permission: [Roles.HELPER, Roles.MODERATOR],
+            permission: [Roles.HELPER, Roles.MODERATOR, Roles.MANAGER],
             usage: "<id> <new reason>"
         },
         {
             name: "delete",
             description: "Delete a case.",
-            permission: Roles.MODERATOR,
+            permission: [Roles.MODERATOR, Roles.MANAGER],
             usage: "<id> <reason>"
         }
     ],

@@ -10,7 +10,7 @@ export default new Command({
     name: "unban",
     aliases: [],
     description: "Unban a member.",
-    permission: Roles.MODERATOR,
+    permission: [Roles.MODERATOR, Roles.MANAGER],
     usage: "<member> <reason>",
     async run(this: Command, client: Client, message: Message, args: Args) {
         const user = await args.consumeUser()

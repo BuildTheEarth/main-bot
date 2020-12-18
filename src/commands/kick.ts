@@ -11,7 +11,7 @@ export default new Command({
     name: "kick",
     aliases: ["boot"],
     description: "Kick a member.",
-    permission: Roles.MODERATOR,
+    permission: [Roles.MODERATOR, Roles.MANAGER],
     usage: "<member> [image URL | attachment] <reason>",
     async run(this: Command, client: Client, message: Message, args: Args) {
         const user = await args.consumeUser()

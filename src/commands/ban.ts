@@ -13,7 +13,7 @@ export default new Command({
     name: "ban",
     aliases: [],
     description: "Ban a member.",
-    permission: Roles.MODERATOR,
+    permission: [Roles.MODERATOR, Roles.MANAGER],
     usage: "<member> <length> <image URL | attachment> <reason>",
     async run(this: Command, client: Client, message: Message, args: Args) {
         const user = await args.consumeUser()

@@ -13,7 +13,7 @@ export default new Command({
     name: "mute",
     aliases: [],
     description: "Mute a member.",
-    permission: [Roles.HELPER, Roles.MODERATOR],
+    permission: [Roles.HELPER, Roles.MODERATOR, Roles.MANAGER],
     usage: "<member> <length> [image URL | attachment] <reason>",
     async run(this: Command, client: Client, message: Message, args: Args) {
         const user = await args.consumeUser()
