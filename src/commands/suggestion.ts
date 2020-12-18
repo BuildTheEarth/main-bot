@@ -37,7 +37,7 @@ export default new Command({
         }
     ],
     async run(this: Command, client: Client, message: Message, args: Args) {
-        const staff = message.guild.id === client.config.guilds.staff
+        const staff = message?.guild.id === client.config.guilds.staff
         const category = staff ? "staff" : "main"
         const discussionID = client.config.suggestions.discussion[category]
         const canManage = message.member.hasStaffPermission([
@@ -45,7 +45,11 @@ export default new Command({
             Roles.MANAGER
         ])
 
-        if (message.channel.id !== discussionID && !canManage) {
+        if (
+            message.channel.id !== discussionID &&
+            !canManage &&
+            message.channel.type !== "dm"
+        ) {
             const errorMessage = await message.channel.sendError(
                 `Please run this command in <#${discussionID}>!`
             )
