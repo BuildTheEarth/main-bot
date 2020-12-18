@@ -18,7 +18,9 @@ export default new Command({
                     ? "You must provide a user to make Team Owner!"
                     : "Couldn't find that user."
             )
-        const member = await message.guild.members.fetch({ user, cache: true })
+        const member = await message.guild.members
+            .fetch({ user, cache: true })
+            .catch(() => null)
         if (!member) return message.channel.sendError("The user is not in the server!")
 
         const demote = !!args.consumeIf("demote")

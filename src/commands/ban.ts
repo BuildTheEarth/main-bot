@@ -37,7 +37,9 @@ export default new Command({
         })
         if (ban) return message.channel.sendError("The user is already banned!")
 
-        const member = await message.guild.members.fetch({ user, cache: true })
+        const member = await message.guild.members
+            .fetch({ user, cache: true })
+            .catch(() => null)
         if (member && member.hasStaffPermission(Roles.STAFF))
             return message.channel.sendError(
                 member.id === message.author.id

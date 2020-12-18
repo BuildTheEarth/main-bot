@@ -25,7 +25,9 @@ export default new Command({
         const reason = args.consumeRest()
         if (!reason) return message.channel.sendError("You must provide a reason!")
 
-        const member = await message.guild.members.fetch({ user, cache: true })
+        const member = await message.guild.members
+            .fetch({ user, cache: true })
+            .catch(() => null)
         if (!member) return message.channel.sendError("That user is not in the server!")
 
         const mute = await TimedPunishment.findOne({

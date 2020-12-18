@@ -31,7 +31,9 @@ export default new Command({
                     : "Couldn't find that user."
             )
 
-        const member = await message.guild.members.fetch({ user, cache: true })
+        const member = await message.guild.members
+            .fetch({ user, cache: true })
+            .catch(() => null)
         if (!member) return message.channel.sendError("The user is not in the server!")
 
         const languageInput = args.consume().toLowerCase()
