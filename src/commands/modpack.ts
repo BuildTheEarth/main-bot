@@ -58,7 +58,7 @@ export default new Command({
                 images
                     .filter(image => image.set === set)
                     .map(image => image.format(true))
-                    .join("\n")
+                    .join("\n") || "*Empty.*"
 
             const queue = format("queue")
             const store = format("store")
