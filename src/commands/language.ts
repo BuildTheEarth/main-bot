@@ -6,14 +6,32 @@ import Roles from "../util/roles"
 
 const LANGUAGE_ROLES = {
     english: "English",
+    en: "English",
     espanol: "Español",
+    español: "Español",
+    spanish: "Español",
+    es: "Español",
     francais: "Français",
+    français: "Français",
+    french: "Français",
+    fr: "Français",
     deutsch: "Deutsch",
+    german: "Deutsch",
+    de: "Deutsch",
     russian: "Pусский",
+    pусский: "Pусский",
+    ru: "Pусский",
     portuguese: "Português",
+    português: "Português",
+    pt: "Português",
     italian: "Italiana",
+    italiana: "Italiana",
+    it: "Italiana",
     international: "Ø",
-    chinese: "中文"
+    chinese: "中文",
+    中文: "中文",
+    zh: "中文",
+    cn: "中文"
 }
 
 export default new Command({
