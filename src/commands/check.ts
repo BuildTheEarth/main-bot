@@ -6,6 +6,7 @@ import Command from "../struct/Command"
 import Roles from "../util/roles"
 import ActionLog, { Action } from "../entities/ActionLog"
 import TimedPunishment from "../entities/TimedPunishment"
+import ModerationNote from "../entities/ModerationNote"
 import { FindManyOptions, Not, IsNull } from "typeorm"
 
 export default new Command({
@@ -76,6 +77,9 @@ export default new Command({
             }
         }
 
-        message.channel.sendSuccess(embed)
+        const notes = await ModerationNote.findOne({ where: { member: user.id } })
+        if (notes) embed.fields.push({ name: "Notes", value: notes.body, inline: true })
+
+        await message.channel.sendSuccess(embed)
     }
 })
