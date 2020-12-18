@@ -88,7 +88,7 @@ export default class Suggestion extends BaseEntity {
                     createdAt: LessThan(new Date())
                 }
             })
-            const letter = Suggestion.ALPHABET[extenders.length]
+            const letter = Suggestion.ALPHABET[extenders.length + 1]
             return this.extends + letter
         }
     }
