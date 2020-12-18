@@ -5,6 +5,7 @@ import Args from "../struct/Args"
 import Role from "../struct/discord/Role"
 import Snippet from "../entities/Snippet"
 import languages from "iso-639-1"
+import Roles from "../util/roles"
 import chalk from "chalk"
 
 export default async function (this: Client, message: Message): Promise<unknown> {
@@ -40,14 +41,15 @@ export default async function (this: Client, message: Message): Promise<unknown>
         }
 
         const member = <GuildMember>message.member
+        const hasPermission = member && member.hasStaffPermission(command.permission)
         if (!member && !["suggest", "suggestion"].includes(command.name)) return
-        if (!member.hasStaffPermission(command.permission)) return
+        if (command.permission !== Roles.ANY && !hasPermission) return
 
         command.run(this, message, args)
         const tag = member
             ? (<Role>member.roles.highest).format()
             : chalk.blueBright("DMs")
-        this.logger.info(`${tag} ${member.user.tag} ran '${commandName}' command.`)
+        this.logger.info(`${tag} ${message.author.tag} ran '${commandName}' command.`)
         return
     }
 

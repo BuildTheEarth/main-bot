@@ -37,13 +37,12 @@ export default new Command({
         }
     ],
     async run(this: Command, client: Client, message: Message, args: Args) {
-        const staff = message?.guild.id === client.config.guilds.staff
+        const staff = message.guild?.id === client.config.guilds.staff
         const category = staff ? "staff" : "main"
         const discussionID = client.config.suggestions.discussion[category]
-        const canManage = message.member.hasStaffPermission([
-            Roles.SUGGESTION_TEAM,
-            Roles.MANAGER
-        ])
+        const canManage = message.member
+            ? message.member.hasStaffPermission([Roles.SUGGESTION_TEAM, Roles.MANAGER])
+            : false
 
         if (
             message.channel.id !== discussionID &&
@@ -62,7 +61,9 @@ export default new Command({
 
         const subcommand = args.consume()
         const availableSubcommands = this.subcommands.filter(sub =>
-            message.member.hasStaffPermission(sub.permission || this.permission)
+            message.member
+                ? message.member.hasStaffPermission(sub.permission || this.permission)
+                : false
         )
 
         const availableSubcommandNames = availableSubcommands.map(sub => sub.name)

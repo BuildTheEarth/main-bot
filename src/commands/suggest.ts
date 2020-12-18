@@ -14,10 +14,10 @@ export default new Command({
     usage: "['anon'] <title> | <body> | [team/s]",
     async run(this: Command, client: Client, message: Message, args: Args) {
         const anon = args.consumeIf(["anon", "anonymous"])
-        const staff = message?.guild.id === client.config.guilds.staff
+        const staff = message.guild?.id === client.config.guilds.staff
 
         const suggestionsChannel = client.config.suggestions[staff ? "staff" : "main"]
-        if (message.channel.id !== suggestionsChannel && message.channel.type !== "dm")
+        if (message.channel?.id !== suggestionsChannel && message.channel.type !== "dm")
             return message.channel.sendError(
                 `Please run this command in <#${suggestionsChannel}>!`
             )
