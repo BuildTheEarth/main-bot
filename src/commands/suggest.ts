@@ -5,6 +5,7 @@ import Command from "../struct/Command"
 import Suggestion from "../entities/Suggestion"
 import Roles from "../util/roles"
 import TextChannel from "../struct/discord/TextChannel"
+import { config } from "winston"
 
 export default new Command({
     name: "suggest",
@@ -66,7 +67,13 @@ export default new Command({
         suggestion.body = body
         suggestion.teams = teams || null
         suggestion.staff = staff
-        const sugChannel = client.guilds.cache.get(client.config.guilds.main).channels.cache.get(suggestionsChannel)
+        var sugChannel
+        if(message.channel.id === client.config.suggestions.staff) {
+            sugChannel = client.guilds.cache.get(client.config.guilds.staff).channels.cache.get(suggestionsChannel)
+        } else {
+            sugChannel = client.guilds.cache.get(client.config.guilds.main).channels.cache.get(suggestionsChannel)
+        }
+        
 
         const suggestionMessage = await (sugChannel as TextChannel).send({
             embed: await suggestion.displayEmbed(client)
