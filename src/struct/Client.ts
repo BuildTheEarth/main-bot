@@ -15,7 +15,7 @@ export default class Client extends Discord.Client {
     events = new EventList(this)
     commands = new CommandList()
     aliases = new Discord.Collection()
-
+    timeouts = new Array()
     async initDatabase(): Promise<void> {
         const db = this.config.database
         this.db = await createConnection({
