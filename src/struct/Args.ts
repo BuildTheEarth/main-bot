@@ -66,9 +66,13 @@ export default class Args {
     }
 
     remove(count: number = 1): string {
-        // matches any character multiple times until a space is found or the string ends, 1 to [count] times
-        const regex = new RegExp(`^([^\\s]+(\\s+|$)){1,${count}}`)
-        this.raw = this.raw.replace(regex, "")
+        if (this.separator) {
+            this.raw = this.raw.split(this.separator).slice(1).join(this.separator).trim()
+        } else {
+            const regex = new RegExp(`^([^\\s]+(\\s+|$)){1,${count}}`)
+            this.raw = this.raw.replace(regex, "")
+        }
+
         return this.raw
     }
 
