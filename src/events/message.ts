@@ -5,6 +5,8 @@ import Args from "../struct/Args"
 import Role from "../struct/discord/Role"
 import Snippet from "../entities/Snippet"
 import languages from "iso-639-1"
+import { cpuUsage } from "process"
+import roles from "../util/roles"
 
 export default async function (this: Client, message: Message): Promise<unknown> {
     if (message.author.bot) return
@@ -39,13 +41,25 @@ export default async function (this: Client, message: Message): Promise<unknown>
         }
 
         const member = <GuildMember>message.member
-        if (!member.hasStaffPermission(command.permission)) return
+        if(!member) {
+            if(command.name != "suggest" && command.name != "suggestion") {
+                return
+            }
+        } else {
+            if (!member.hasStaffPermission(command.permission)) return
+        }
         command.run(this, message, args)
-
-        const highestRole = <Role>member.roles.highest
-        this.logger.info(
-            `${highestRole.format()} ${member.user.tag} ran '${commandName}' command.`
-        )
+        if(member) {
+            const highestRole = <Role>member.roles.highest
+            this.logger.info(
+                `${highestRole.format()} ${member.user.tag} ran '${commandName}' command.`
+            )
+        } else {
+            this.logger.info(
+                `${message.author.tag} ran '${commandName}' command.`
+            )
+        }
+        
         return
     }
 

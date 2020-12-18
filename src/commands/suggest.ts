@@ -4,6 +4,7 @@ import Args from "../struct/Args"
 import Command from "../struct/Command"
 import Suggestion from "../entities/Suggestion"
 import Roles from "../util/roles"
+import TextChannel from "../struct/discord/TextChannel"
 
 export default new Command({
     name: "suggest",
@@ -12,11 +13,11 @@ export default new Command({
     permission: Roles.ANY,
     usage: "['anon'] <title> | <body> | [team/s]",
     async run(this: Command, client: Client, message: Message, args: Args) {
-        const anon = args.consumeIf(a => ["anon", "anonymous"].includes(a.toLowerCase()))
-        const staff = message.guild.id === client.config.guilds.staff
+        const anon = args.consumeIf(["anon", "anonymous"])
+        const staff = message?.guild.id === client.config.guilds.staff
 
         const suggestionsChannel = client.config.suggestions[staff ? "staff" : "main"]
-        if (message.channel.id !== suggestionsChannel)
+        if (message.channel.id !== suggestionsChannel && message.channel.type !== "dm")
             return message.channel.sendError(
                 `Please run this command in <#${suggestionsChannel}>!`
             )
@@ -30,13 +31,13 @@ export default new Command({
         if (!body) error = "You must specify a suggestion body!"
 
         if (error) {
-            await message.delete()
+            if (message.channel.type !== "dm") await message.delete()
             const errorMessage = await message.channel.sendError(error)
             return await errorMessage.delete({ timeout: 10000 })
         }
 
         // delete message asap if suggestion is anonymous
-        if (anon) await message.delete()
+        if (anon && message.channel.type !== "dm") await message.delete()
         else message.react("👌")
 
         const suggestion = new Suggestion()
@@ -48,14 +49,17 @@ export default new Command({
         suggestion.teams = teams || null
         suggestion.staff = staff
 
-        const suggestionMessage = await message.channel.send({
-            embed: await suggestion.displayEmbed(client)
-        })
+        const category = staff ? "staff" : "main"
+        const suggestionsID = client.config.suggestions[category]
+        const suggestions = <TextChannel>await client.channels.fetch(suggestionsID, true)
+
+        const embed = await suggestion.displayEmbed(client)
+        const suggestionMessage = await suggestions.send({ embed })
         suggestion.message = suggestionMessage.id
         await suggestion.save()
 
         await suggestionMessage.react(client.config.emojis.upvote)
         await suggestionMessage.react(client.config.emojis.downvote)
-        if (!anon) await message.delete()
+        if (!anon && message.channel.type !== "dm") await message.delete()
     }
 })
