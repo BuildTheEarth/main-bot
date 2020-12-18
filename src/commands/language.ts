@@ -2,6 +2,7 @@ import Client from "../struct/Client"
 import Message from "../struct/discord/Message"
 import Args from "../struct/Args"
 import Command from "../struct/Command"
+import GuildMember from "../struct/discord/GuildMember"
 import Roles from "../util/roles"
 
 const LANGUAGE_ROLES = {
@@ -49,7 +50,7 @@ export default new Command({
                     : "Couldn't find that user."
             )
 
-        const member = await message.guild.members
+        const member: GuildMember = await message.guild.members
             .fetch({ user, cache: true })
             .catch(() => null)
         if (!member) return message.channel.sendError("The user is not in the server!")

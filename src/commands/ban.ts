@@ -5,6 +5,7 @@ import DMChannel from "../struct/discord/DMChannel"
 import TimedPunishment from "../entities/TimedPunishment"
 import ActionLog from "../entities/ActionLog"
 import Command from "../struct/Command"
+import GuildMember from "../struct/discord/GuildMember"
 import Roles from "../util/roles"
 import noop from "../util/noop"
 import formatPunishmentTime from "../util/formatPunishmentTime"
@@ -37,7 +38,7 @@ export default new Command({
         })
         if (ban) return message.channel.sendError("The user is already banned!")
 
-        const member = await message.guild.members
+        const member: GuildMember = await message.guild.members
             .fetch({ user, cache: true })
             .catch(() => null)
         if (member && member.hasStaffPermission(Roles.STAFF))

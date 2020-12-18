@@ -2,6 +2,7 @@ import Client from "../struct/Client"
 import Message from "../struct/discord/Message"
 import Args from "../struct/Args"
 import Command from "../struct/Command"
+import GuildMember from "../struct/discord/GuildMember"
 import DMChannel from "../struct/discord/DMChannel"
 import ActionLog from "../entities/ActionLog"
 import Roles from "../util/roles"
@@ -26,7 +27,7 @@ export default new Command({
         const image = args.consumeImage()
         const reason = args.consumeRest()
         if (!reason) return message.channel.sendError("You must provide a reason!")
-        const member = await message.guild.members
+        const member: GuildMember = await message.guild.members
             .fetch({ user, cache: true })
             .catch(() => null)
         if (!member) return message.channel.sendError("The user is not in the server!")

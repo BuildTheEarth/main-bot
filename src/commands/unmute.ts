@@ -4,6 +4,7 @@ import Args from "../struct/Args"
 import TimedPunishment from "../entities/TimedPunishment"
 import ActionLog from "../entities/ActionLog"
 import Command from "../struct/Command"
+import GuildMember from "../struct/discord/GuildMember"
 import Roles from "../util/roles"
 
 export default new Command({
@@ -25,7 +26,7 @@ export default new Command({
         const reason = args.consumeRest()
         if (!reason) return message.channel.sendError("You must provide a reason!")
 
-        const member = await message.guild.members
+        const member: GuildMember = await message.guild.members
             .fetch({ user, cache: true })
             .catch(() => null)
         if (!member) return message.channel.sendError("That user is not in the server!")
