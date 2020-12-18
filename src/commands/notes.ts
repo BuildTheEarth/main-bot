@@ -79,11 +79,11 @@ export default new Command({
                 return message.channel.sendError("You must specify the note's body!")
 
             if (note) {
-                const tip = body.length <= 1024 ? " (Overwrite it with `note edit`)" : ""
+                const tip = body.length <= 1024 ? " (Overwrite it with `note edit`)." : ""
                 note.body += `\n${body}`
                 if (note.body.length > 1024)
                     return message.channel.sendError(
-                        `Appending to this note would exceed the character limit!${tip}.`
+                        `Appending to this note would exceed the character limit!${tip}`
                     )
                 await note.save()
                 await message.channel.sendSuccess(`Updated ${user}'s notes!`)
@@ -98,7 +98,7 @@ export default new Command({
         } else if (subcommand === "edit") {
             if (!note) {
                 return message.channel.sendError(
-                    `${user} doesn't have any notes! (Add them with \`${client.config.prefix} note add\`)`
+                    `${user} doesn't have any notes! (Add them with \`${client.config.prefix}note add\`)`
                 )
             }
             note.body = body
