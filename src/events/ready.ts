@@ -23,10 +23,14 @@ export default async function ready(this: Client): Promise<void> {
         }
     }
 
-    const currentVanity = await main.fetchVanityData()
-    const outdated = currentVanity?.code !== this.config.vanity
-    if (outdated && main.features.includes("VANITY_URL")) {
-        await main.setVanityCode(this.config.vanity)
-        this.logger.info(`Set vanity code to ${chalk.hex("#FF73FA")(this.config.vanity)}`)
+    if (main.features.includes("VANITY_URL")) {
+        const current = await main.fetchVanityData()
+        const outdated = current?.code !== this.config.vanity
+        if (outdated) {
+            await main.setVanityCode(this.config.vanity)
+            this.logger.info(
+                `Set vanity code to ${chalk.hex("#FF73FA")(this.config.vanity)}`
+            )
+        }
     }
 }
