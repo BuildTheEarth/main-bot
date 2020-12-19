@@ -14,4 +14,12 @@ export default class Guild extends Discord.Guild {
     member(user: Discord.UserResolvable): GuildMember {
         return <GuildMember>super.member(user)
     }
+
+    async setVanityCode(code: string): Promise<void> {
+        // @ts-ignore
+        await this.client.api
+            // @ts-ignore
+            .guilds(this.id, "vanity-url")
+            .patch({ data: { code }, reason: "Reached level 3 boosting" })
+    }
 }
