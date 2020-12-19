@@ -1,3 +1,24 @@
+## [v1.4.0] <sub><sup><sub>19/12/20</sub></sup></sub>
+
+**Internal changes:**
+
+-   Started fetching members when necessary, instead of relying on cache.
+-   Started actually consuming the first argument in `Args#consumeChannel()`.
+
+**Features:**
+
+-   Moderation notes:
+    -   Created `notes` command.
+    -   Started displaying notes in `check` command.
+-   Started allowing DM suggestions.
+-   Started allowing suggestion extensions.
+-   Created `user` command.
+-   Started allowing special arguments (`me`, `you`, `someone`) in `check`, `notes`, and `user` commands.
+
+**Bug fixes:**
+
+-   Gave moderation permissions to managers.
+
 ## [v1.3.0] <sub><sup><sub>17/12/20</sub></sup></sub>
 
 -   Created `demote` subcommand under `teamOwner` command.
@@ -56,6 +77,7 @@ This is the initial release for the rewrite of our main bot, which means all _ch
 
 <!-- References -->
 
+[v1.4.0]: https://github.com/cAttte/cop/releases/tag/v1.4.0
 [v1.3.0]: https://github.com/cAttte/cop/releases/tag/v1.3.0
 [v1.2.0]: https://github.com/cAttte/cop/releases/tag/v1.2.0
 [v1.1.2]: https://github.com/cAttte/cop/releases/tag/v1.1.2
