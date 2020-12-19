@@ -17,7 +17,7 @@ export default new Command({
     permission: Roles.ANY,
     usage: "<user>",
     async run(this: Command, client: Client, message: Message, args: Args) {
-        const user = await args.consumeUser()
+        const user = await args.consumeUser(true)
         if (!user)
             return message.channel.sendError(
                 user === undefined
