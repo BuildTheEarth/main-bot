@@ -57,6 +57,7 @@ This project originated as a complete rewrite of our old bot, an extension of th
 
 <!-- markdownlint-enable -->
 <!-- prettier-ignore-end -->
+
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
 This project follows the [All Contributors][] specification. Contributions of any kind are welcome!
@@ -87,6 +88,7 @@ Rename the `_config.yml` file to `config.yml` and fill in all of the fields:
 -   **prefix**: The command prefix.
 -   **logs**: The logs channel ID (enclosed in quotes).
 -   **appeal**: The ban appeal message.
+-   **vanity**: The vanity invite code to use when level 3 boosting is reached.
 -   **guilds**: The guild IDs for the main and staff servers:
     -   **main**
     -   **staff**

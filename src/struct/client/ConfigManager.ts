@@ -21,6 +21,7 @@ export default class ConfigManager implements Config {
     prefix: string
     logs: string
     appeal: string
+    vanity: string
     guilds: GuildCategories
     suggestions: GuildCategories & { discussion: GuildCategories }
     reactionRoles: ReactionRole
@@ -64,6 +65,7 @@ export type Config = {
     prefix: string
     logs: string
     appeal: string
+    vanity: string
     guilds: GuildCategories
     suggestions: GuildCategories & { discussion: GuildCategories }
     reactionRoles: ReactionRole
