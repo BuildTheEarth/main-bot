@@ -31,7 +31,7 @@ export default new Command({
     ],
     async run(this: Command, client: Client, message: Message, args: Args) {
         const subcommand = args.consumeIf(["add", "edit", "clear"])
-        const user = await args.consumeUser()
+        const user = await args.consumeUser(true)
         if (!user)
             return message.channel.sendError(
                 user === undefined
