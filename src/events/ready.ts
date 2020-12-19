@@ -1,9 +1,11 @@
+import chalk from "chalk"
 import TimedPunishment from "../entities/TimedPunishment"
 import Client from "../struct/Client"
+import Guild from "../struct/discord/Guild"
 import TextChannel from "../struct/discord/TextChannel"
 
 export default async function ready(this: Client): Promise<void> {
-    const main = this.guilds.cache.get(this.config.guilds.main)
+    const main = this.guilds.cache.get(this.config.guilds.main) as Guild
     this.user.setActivity(`with ${main.memberCount} users`, { type: "PLAYING" })
 
     const punishments = await TimedPunishment.find()
@@ -19,5 +21,12 @@ export default async function ready(this: Client): Promise<void> {
                 await channel.messages.fetch(messageID).catch(() => null)
             }
         }
+    }
+
+    const currentVanity = await main.fetchVanityData()
+    const outdated = currentVanity?.code !== this.config.vanity
+    if (outdated && main.features.includes("VANITY_URL")) {
+        await main.setVanityCode(this.config.vanity)
+        this.logger.info(`Set vanity code to ${chalk.hex("#FF73FA")(this.config.vanity)}`)
     }
 }
