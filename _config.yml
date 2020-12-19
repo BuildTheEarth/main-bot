@@ -3,6 +3,7 @@ modpack: ""
 prefix: ""
 logs: ""
 appeal: ""
+vanity: ""
 
 guilds:
     main: ""
