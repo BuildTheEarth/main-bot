@@ -102,7 +102,23 @@ export default class Args {
         return channel
     }
 
-    async consumeUser(): Promise<Discord.User> {
+    async consumeUser(allowSpecial: boolean = false): Promise<Discord.User> {
+        if (allowSpecial) {
+            const special = this.consumeIf(["me", "you", "yourself", "someone"])
+            if (special) {
+                const users = this.message.client.users.cache
+                switch (special) {
+                    case "me":
+                        return this.message.author
+                    case "you":
+                    case "yourself":
+                        return this.message.client.user
+                    case "someone":
+                        return users.array()[Math.floor(Math.random() * users.size)]
+                }
+            }
+        }
+
         const tag = this.raw.match(/^.{2,32}#\d{4}/)?.[0]
         const id = this.raw.match(/^(<@!?)?(\d{18})>?/)?.[2]
         const users = this.message.client.users
