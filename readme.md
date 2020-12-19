@@ -100,6 +100,10 @@ Rename the `_config.yml` file to `config.yml` and fill in all of the fields:
 -   **emojis**: The emojis to use for certain occasions. They can be Unicode emojis, or custom emoji IDs.
     -   **upvote**
     -   **downvote**
+    -   **online**
+    -   **idle**
+    -   **dnd**
+    -   **offline**
 -   **colors**: The color palette for message embeds.
     -   **success**
     -   **error**
