@@ -17,6 +17,7 @@ import truncateSting from "../util/truncateString"
 import formatPunishmentTime from "../util/formatPunishmentTime"
 import formatUTCDate from "../util/formatUTCDate"
 import milliseconds from "./transformers/milliseconds"
+import past from "../util/pastTense"
 
 export type Action = "warn" | "mute" | "kick" | "ban" | "unmute" | "unban"
 
@@ -122,5 +123,14 @@ export default class ActionLog extends BaseEntity {
         }
 
         return embed
+    }
+
+    displayUserEmbed(client: Client): Discord.MessageEmbedOptions {
+        const actioned = past(this.action)
+        return {
+            color: client.config.colors.error,
+            description: `*<@${this.executor}> has ${actioned} you:\n\n${this.reason}`,
+            image: this.reasonImage ? { url: this.reasonImage } : null
+        }
     }
 }
