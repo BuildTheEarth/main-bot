@@ -32,9 +32,7 @@ export default new Command({
             .catch(() => null)
         if (!member) return message.channel.sendError("That user is not in the server!")
 
-        const mute = await TimedPunishment.findOne({
-            where: { member: user.id, type: "mute" }
-        })
+        const mute = await TimedPunishment.findOne({ member: user.id, type: "mute" })
         if (!mute) return message.channel.sendError("That user is not muted!")
 
         await mute.undo(client)

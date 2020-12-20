@@ -83,10 +83,8 @@ export default class Suggestion extends BaseEntity {
             return this.number.toString()
         } else {
             const extenders = await Suggestion.find({
-                where: {
-                    extends: this.extends,
-                    createdAt: LessThan(new Date())
-                }
+                extends: this.extends,
+                createdAt: LessThan(new Date())
             })
             const letter = Suggestion.ALPHABET[extenders.length + 1]
             return this.extends + letter

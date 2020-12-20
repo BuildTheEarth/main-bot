@@ -32,9 +32,7 @@ export default new Command({
         const reason = args.consumeRest()
         if (!reason) return message.channel.sendError("You must provide a reason!")
 
-        const ban = await TimedPunishment.findOne({
-            where: { member: user.id, type: "ban" }
-        })
+        const ban = await TimedPunishment.findOne({ member: user.id, type: "ban" })
         if (ban) return message.channel.sendError("The user is already banned!")
 
         const member: GuildMember = await message.guild.members

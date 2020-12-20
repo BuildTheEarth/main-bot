@@ -48,7 +48,7 @@ export default new Command({
                 )
         }
 
-        const note = await ModerationNote.findOne({ where: { member: user.id } })
+        const note = await ModerationNote.findOne(user.id)
 
         if (!subcommand && !body) {
             const embed = {

@@ -81,7 +81,7 @@ export default new Command({
         if (Number.isNaN(number))
             return message.channel.sendError("You must specify a suggestion number!")
 
-        const suggestion = await Suggestion.findOne({ where: { number, staff } })
+        const suggestion = await Suggestion.findOne({ number, staff })
         if (!suggestion)
             return message.channel.sendError("Hmm... That suggestion doesn't exist.")
 

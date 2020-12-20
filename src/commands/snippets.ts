@@ -70,7 +70,7 @@ export default new Command({
         if (!languageName)
             return message.channel.sendError("You must specify a valid snippet language.")
 
-        const existingSnippet = await Snippet.findOne({ where: { name, language } })
+        const existingSnippet = await Snippet.findOne({ name, language })
 
         if (subcommand === "add" || subcommand === "edit") {
             const body = args.consumeRest()

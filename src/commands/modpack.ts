@@ -93,7 +93,7 @@ export default new Command({
             if (!key || !VALID_KEYS.includes(key))
                 return message.channel.sendError("You must specify a valid key!")
 
-            const image = await ModpackImage.findOne({ where: { key } })
+            const image = await ModpackImage.findOne({ key: key as ModpackImageKey })
             if (!image) return message.channel.sendError("Couldn't find that image!")
 
             await image.remove()
@@ -103,8 +103,8 @@ export default new Command({
             const code = `\`\`\`${JSON.stringify(body, null, 2)}\`\`\``
             message.channel.sendSuccess(`Updated data! Raw JSON response:\n\n${code}`)
         } else if (subcommand === "push") {
-            const queue = await ModpackImage.find({ where: { set: "queue" } })
-            const store = await ModpackImage.find({ where: { set: "store" } })
+            const queue = await ModpackImage.find({ set: "queue" })
+            const store = await ModpackImage.find({ set: "store" })
 
             for (const image of store) {
                 const inQueue = queue.find(queueImage => queueImage.key === image.key)

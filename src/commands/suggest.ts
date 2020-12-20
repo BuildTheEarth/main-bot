@@ -29,16 +29,11 @@ export default new Command({
 
         let error: string
         const extend = title.match(EXTENSION_REGEX)?.[1]
-        if (extend) {
-            const criterion = { where: { number: Number(extend) } }
-            const extendSuggestion = await Suggestion.findOne(criterion)
-            if (!extendSuggestion)
-                error = `The suggestion you're trying to extend (**#${extend}**) doesn't exist!`
-        }
-
+        if (extend && !(await Suggestion.findOne({ number: Number(extend) })))
+            error = `The suggestion you're trying to extend (**#${extend}**) doesn't exist!`
+        if (!body) error = "You must specify a suggestion body!"
         if (!title) error = "You must specify a title!"
         if (title?.length > 99) error = "That title is too long!"
-        if (!body) error = "You must specify a suggestion body!"
 
         if (error) {
             if (message.channel.type !== "dm") await message.delete()

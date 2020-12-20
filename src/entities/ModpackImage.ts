@@ -39,7 +39,7 @@ export default class ModpackImage extends BaseEntity {
     }
 
     static async fetch(): Promise<{ response: Response; body: ModpackImageSet }> {
-        const images = await this.find({ where: { set: "store" } })
+        const images = await this.find({ set: "store" })
         const response: Response = await fetch(this.API_URL)
         const object: ModpackImageSet = await response.json()
 
@@ -62,7 +62,7 @@ export default class ModpackImage extends BaseEntity {
     }
 
     static async post(token: string): Promise<Response> {
-        const images = await this.find({ where: { set: "store" } })
+        const images = await this.find({ set: "store" })
         const object: ModpackImageSet = {}
 
         for (const image of images) {
