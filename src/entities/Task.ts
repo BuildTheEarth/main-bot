@@ -17,6 +17,6 @@ export default class Task extends BaseEntity {
     @Column("simple-array")
     assignees: string[]
 
-    @Column()
-    status: TaskStatus
+    @Column({ nullable: true })
+    status?: TaskStatus
 }
