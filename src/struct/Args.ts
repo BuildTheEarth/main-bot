@@ -67,7 +67,11 @@ export default class Args {
 
     remove(count: number = 1): string {
         if (this.separator) {
-            this.raw = this.raw.split(this.separator).slice(1).join(this.separator).trim()
+            this.raw = this.raw
+                .split(this.separator)
+                .slice(count)
+                .join(this.separator)
+                .trim()
         } else {
             const regex = new RegExp(`^([^\\s]+(\\s+|$)){1,${count}}`)
             this.raw = this.raw.replace(regex, "")
