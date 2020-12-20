@@ -126,10 +126,11 @@ export default class ActionLog extends BaseEntity {
     }
 
     displayUserEmbed(client: Client): Discord.MessageEmbedOptions {
+        const length = this.length ? " " + formatPunishmentTime(this.length) : ""
         const actioned = past(this.action)
         return {
             color: client.config.colors.error,
-            description: `*<@${this.executor}> has ${actioned} you:\n\n${this.reason}`,
+            description: `*<@${this.executor}> has ${actioned} you${length}:\n\n${this.reason}`,
             image: this.reasonImage ? { url: this.reasonImage } : null
         }
     }
