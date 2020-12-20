@@ -26,11 +26,8 @@ export default new Command({
         }
     ],
     async run(this: Command, client: Client, message: Message, args: Args) {
-        const subcommand = args.consume().toLowerCase()
-
-        const id = ["edit", "delete"].includes(subcommand)
-            ? Number(args.consume())
-            : Number(subcommand)
+        const subcommand = args.consumeIf(["edit", "delete"])
+        const id = Number(args.consume())
         if (Number.isNaN(id))
             return message.channel.sendError("You must provide a case ID!")
 
