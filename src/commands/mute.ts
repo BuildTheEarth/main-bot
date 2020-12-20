@@ -1,7 +1,6 @@
 import Client from "../struct/Client"
 import Message from "../struct/discord/Message"
 import Args from "../struct/Args"
-import DMChannel from "../struct/discord/DMChannel"
 import TimedPunishment from "../entities/TimedPunishment"
 import ActionLog from "../entities/ActionLog"
 import Command from "../struct/Command"
@@ -45,11 +44,6 @@ export default new Command({
             return message.channel.sendError("You can't mute other staff!")
 
         await member.mute(reason)
-        const formattedLength = formatPunishmentTime(length)
-        const dms = <DMChannel>await user.createDM()
-        dms.sendError(
-            `${message.author} has muted you ${formattedLength}:\n\n*${reason}*`
-        ).catch(noop)
 
         const punishment = new TimedPunishment()
         punishment.member = user.id
@@ -70,9 +64,14 @@ export default new Command({
         log.punishment = punishment
         await log.save()
 
+        const formattedLength = formatPunishmentTime(length)
+        const dms = await user.createDM()
+        dms.send({ embed: log.displayUserEmbed(client) }).catch(noop)
+
         const formattedUser = user.id === message.author.id ? "*you*" : user.toString()
-        // prettier-ignore
-        await message.channel.sendSuccess(`Muted ${formattedUser} ${formattedLength} (**#${log.id}**).`)
+        await message.channel.sendSuccess(
+            `Muted ${formattedUser} ${formattedLength} (**#${log.id}**).`
+        )
         await client.log(log)
     }
 })

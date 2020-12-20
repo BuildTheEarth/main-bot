@@ -6,6 +6,7 @@ import ActionLog from "../entities/ActionLog"
 import Command from "../struct/Command"
 import GuildMember from "../struct/discord/GuildMember"
 import Roles from "../util/roles"
+import noop from "../util/noop"
 
 export default new Command({
     name: "unmute",
@@ -48,6 +49,9 @@ export default new Command({
         log.message = message.id
         log.length = null
         await log.save()
+
+        const dms = await user.createDM()
+        dms.send({ embed: log.displayUserEmbed(client) }).catch(noop)
 
         const formattedUser = user.id === message.author.id ? "*you*" : user.toString()
         await message.channel.sendSuccess(`Unmuted ${formattedUser} (**#${log.id}**).`)

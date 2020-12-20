@@ -3,7 +3,6 @@ import Message from "../struct/discord/Message"
 import Args from "../struct/Args"
 import Command from "../struct/Command"
 import GuildMember from "../struct/discord/GuildMember"
-import DMChannel from "../struct/discord/DMChannel"
 import ActionLog from "../entities/ActionLog"
 import Roles from "../util/roles"
 import noop from "../util/noop"
@@ -38,10 +37,6 @@ export default new Command({
                     : "Rude! You can't kick other staff."
             )
 
-        const dms = <DMChannel>await user.createDM()
-        dms.sendError(`${message.author} has kicked you:\n\n*${reason}*`).catch(noop)
-        await member.kick()
-
         const log = new ActionLog()
         log.action = "kick"
         log.member = user.id
@@ -52,6 +47,10 @@ export default new Command({
         log.message = message.id
         log.length = null
         await log.save()
+
+        const dms = await user.createDM()
+        await dms.send({ embed: log.displayUserEmbed(client) }).catch(noop)
+        await message.guild.members.ban(user, { reason })
 
         await message.channel.sendSuccess(`Kicked ${user} (**#${log.id}**).`)
         await client.log(log)

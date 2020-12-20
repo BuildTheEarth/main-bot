@@ -3,7 +3,6 @@ import Message from "../struct/discord/Message"
 import Args from "../struct/Args"
 import Command from "../struct/Command"
 import GuildMember from "../struct/discord/GuildMember"
-import DMChannel from "../struct/discord/DMChannel"
 import ActionLog from "../entities/ActionLog"
 import Roles from "../util/roles"
 import noop from "../util/noop"
@@ -32,9 +31,6 @@ export default new Command({
             .catch(() => null)
         if (!member) return message.channel.sendError("The user is not in the server!")
 
-        const dms = <DMChannel>await user.createDM()
-        dms.sendError(`${message.author} has warned you:\n\n*${reason}*`).catch(noop)
-
         const log = new ActionLog()
         log.action = "warn"
         log.member = user.id
@@ -45,6 +41,9 @@ export default new Command({
         log.message = message.id
         log.length = null
         await log.save()
+
+        const dms = await user.createDM()
+        dms.send({ embed: log.displayUserEmbed(client) }).catch(noop)
 
         const formattedUser = user.id === message.author.id ? "*you*" : user.toString()
         await message.channel.sendSuccess(`Warned ${formattedUser} (**#${log.id}**).`)

@@ -1,7 +1,6 @@
 import Client from "../struct/Client"
 import Message from "../struct/discord/Message"
 import Args from "../struct/Args"
-import DMChannel from "../struct/discord/DMChannel"
 import TimedPunishment from "../entities/TimedPunishment"
 import ActionLog from "../entities/ActionLog"
 import Command from "../struct/Command"
@@ -48,16 +47,6 @@ export default new Command({
                     : "Alrighty, revolutionist, you can't ban other staff!"
             )
 
-        const formattedLength = formatPunishmentTime(length)
-        if (member) {
-            const dms = <DMChannel>await user.createDM()
-            dms.sendError({
-                description: `${message.author} has banned you ${formattedLength}:\n\n*${reason}*\n\u200B`,
-                fields: [{ name: "Appealing", value: client.config.appeal }]
-            }).catch(noop)
-        }
-        await message.guild.members.ban(user, { reason })
-
         const punishment = new TimedPunishment()
         punishment.member = user.id
         punishment.type = "ban"
@@ -76,6 +65,11 @@ export default new Command({
         log.message = message.id
         log.punishment = punishment
         await log.save()
+
+        const formattedLength = formatPunishmentTime(length)
+        const dms = await user.createDM()
+        await dms.send({ embed: log.displayUserEmbed(client) }).catch(noop)
+        await message.guild.members.ban(user, { reason })
 
         await message.channel.sendSuccess(
             `Banned ${user} ${formattedLength} (**#${log.id}**).`
