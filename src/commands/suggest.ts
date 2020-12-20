@@ -37,7 +37,7 @@ export default new Command({
         }
 
         if (!title) error = "You must specify a title!"
-        if (title.length > 99) error = "That title is too long!"
+        if (title?.length > 99) error = "That title is too long!"
         if (!body) error = "You must specify a suggestion body!"
 
         if (error) {
