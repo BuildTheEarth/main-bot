@@ -107,7 +107,10 @@ export default new Command({
             }
 
             const single = tasks.every(task => task.creator === tasks[0].creator)
-            const assignedBy = single ? ` (All assigned by <@${tasks[0].creator}>): ` : ""
+            const assigner = tasks[0].creator
+            const formattedAssigner =
+                assigner === message.author.id ? "*yourself*" : `<@${assigner}>`
+            const assignedBy = single ? ` (All assigned by ${formattedAssigner}): ` : ""
             return message.channel.send({
                 embed: {
                     color: client.config.colors.info,
