@@ -1,3 +1,4 @@
+import { Not, Like, IsNull } from "typeorm"
 import Discord from "discord.js"
 import Client from "../struct/Client"
 import Message from "../struct/discord/Message"
@@ -24,10 +25,15 @@ export default new Command({
             name: "status",
             description: "Change the status of a task.",
             usage: "<task> <status>"
+        },
+        {
+            name: "list",
+            description: "List all your active tasks.",
+            usage: ""
         }
     ],
     async run(client: Client, message: Message, args: Args) {
-        const subcommand = args.consumeIf(["add", "status"])
+        const subcommand = args.consumeIf(["add", "status", "list"])
 
         if (subcommand === "add" || !subcommand) {
             args.separator = "|"
@@ -47,6 +53,7 @@ export default new Command({
             const task = new Task()
             task.title = title
             task.description = description
+            task.creator = message.author.id
             task.assignees = Array.from(assignees || [message.author.id])
             task.status = status as TaskStatus
             await task.save()
@@ -69,6 +76,34 @@ export default new Command({
             await task.save()
 
             await message.channel.sendSuccess(`Updated task **#${task.id}**!`)
+        } else if (subcommand === "list") {
+            const assignees = Like("%" + message.author.id + "%")
+            // 'OR IS NULL' is required because 'NULL != "reported"' will never match
+            const tasks = await Task.find({
+                where: [
+                    { assignees, status: Not("reported") },
+                    { assignees, status: IsNull() }
+                ]
+            })
+
+            if (!tasks.length) {
+                const all = await Task.find({ where: { assignees } })
+                const goodJob = all.length ? " Good job!" : ""
+                return message.channel.sendSuccess(`You have no pending tasks.${goodJob}`)
+            }
+
+            const single = tasks.every(task => task.creator === tasks[0].creator)
+            const assignedBy = single ? ` (All assigned by <@${tasks[0].creator}>): ` : ""
+            return message.channel.send({
+                embed: {
+                    color: client.config.colors.info,
+                    description: `Here are your active tasks!${assignedBy}`,
+                    fields: tasks.map(task => ({
+                        name: `${task.title} (${task.status || "open"})`,
+                        value: task.description
+                    }))
+                }
+            })
         }
     }
 })
