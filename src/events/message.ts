@@ -11,7 +11,7 @@ import chalk from "chalk"
 export default async function (this: Client, message: Message): Promise<unknown> {
     if (message.author.bot) return
 
-    const main = message.guild.id === this.config.guilds.main
+    const main = message.guild?.id === this.config.guilds.main
     if (main && message.type === "USER_PREMIUM_GUILD_SUBSCRIPTION_TIER_3") {
         await message.guild.setVanityCode(this.config.vanity)
         this.logger.info(`Set vanity code to ${chalk.hex("#FF73FA")(this.config.vanity)}`)
