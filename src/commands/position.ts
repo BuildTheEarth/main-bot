@@ -1,0 +1,54 @@
+import Client from "../struct/Client"
+import Message from "../struct/discord/Message"
+import Args from "../struct/Args"
+import Command from "../struct/Command"
+import GuildMember from "../struct/discord/GuildMember"
+import Roles from "../util/roles"
+import pseudoteamPositions from "../data/pseudoteamPositions"
+
+export default new Command({
+    name: "position",
+    aliases: ["promote", "demote", "vcc", "vs", "bto"],
+    description: "Promote/demote a member from your team.",
+    permission: [Roles.PR_SUBTEAM_LEADS, Roles.REGIONAL_BUILD_TEAM_LEAD],
+    usage: "<member> ['bto' | 'vcc' | 'vs'] ['promote' | 'demote']",
+    async run(this: Command, client: Client, message: Message, args: Args) {
+        const user = await args.consumeUser()
+        if (!user)
+            return message.channel.sendError(
+                user === undefined
+                    ? "You must provide a user to manage!"
+                    : "Couldn't find that user."
+            )
+
+        let position = args.consumeIf(["bto", "vcc", "vs"])
+        if (!position)
+            for (const [team, lead] of Object.entries(pseudoteamPositions.leads))
+                if (message.member.hasStaffPermission(lead)) position = team
+        if (!position) return
+
+        const lead = pseudoteamPositions.leads[position]
+        const expanded = pseudoteamPositions.expansions[position]
+
+        if (!message.member.hasStaffPermission(lead))
+            return message.channel.sendError(
+                `You can't manage members in the **${expanded}** team!`
+            )
+        const main = client.guilds.cache.get(client.config.guilds.main)
+        const role = main.roles.cache.find(role => role.name === expanded)
+
+        const member: GuildMember = await main.members
+            .fetch({ user, cache: true })
+            .catch(() => null)
+        if (!member) return message.channel.sendError("The user is not in the server!")
+
+        const demote = !!args.consumeIf("demote")
+        const method = demote ? "remove" : "add"
+        const past = demote ? "Demoted" : "Promoted"
+        const preposition = demote ? "from" : "to"
+        await member.roles[method](role)
+        await message.channel.sendSuccess(
+            `${past} <@${user.id}> ${preposition} **${expanded}**!`
+        )
+    }
+})
