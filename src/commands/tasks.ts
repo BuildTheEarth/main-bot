@@ -85,14 +85,15 @@ export default new Command({
 
             await message.channel.sendSuccess(`Updated task **#${task.id}**!`)
         } else if (subcommand === "list") {
+            const not = ["done", "reported"]
+            if (message.guild) not.push("hidden")
             // 'OR ... IS NULL' is required because 'NULL != "reported"' will never match
             const tasks = await Tasks.createQueryBuilder("task")
                 .where(`task.assignees LIKE '%${message.author.id}%'`)
                 .andWhere(
                     new Brackets(query =>
                         query
-                            .where("task.status != :status", { status: "reported" })
-                            .andWhere("task.status != :status", { status: "done" })
+                            .where("task.status NOT IN (:not)", { not })
                             .orWhere("task.status IS NULL")
                     )
                 )
