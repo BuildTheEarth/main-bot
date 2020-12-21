@@ -1,4 +1,5 @@
-import { Not, Like, IsNull } from "typeorm"
+// TODO: stop using repositories whenever TypeORM adds And() and Or() operators...
+import Includes from "../entities/operators/Includes"
 import Discord from "discord.js"
 import Client from "../struct/Client"
 import Message from "../struct/discord/Message"
@@ -33,6 +34,7 @@ export default new Command({
         }
     ],
     async run(client: Client, message: Message, args: Args) {
+        const Tasks = client.db.getRepository(Task)
         const subcommand = args.consumeIf(["add", "status", "list"])
 
         if (subcommand === "add" || !subcommand) {
@@ -77,16 +79,16 @@ export default new Command({
 
             await message.channel.sendSuccess(`Updated task **#${task.id}**!`)
         } else if (subcommand === "list") {
-            const assignees = Like("%" + message.author.id + "%")
-            // 'OR IS NULL' is required because 'NULL != "reported"' will never match
-            const tasks = await Task.find({
-                where: [
-                    { assignees, status: Not("reported") },
-                    { assignees, status: IsNull() }
-                ]
-            })
+            // 'OR ... IS NULL' is required because 'NULL != "reported"' will never match
+            const tasks = await Tasks.createQueryBuilder("task")
+                .where(`task.assignees LIKE '%${message.author.id}%'`)
+                .andWhere("task.status != :status", { status: "reported" })
+                .andWhere("task.status != :status", { status: "done" })
+                .orWhere("task.status IS NULL")
+                .getMany()
 
             if (!tasks.length) {
+                const assignees = Includes(message.author.id)
                 const all = await Task.find({ where: { assignees } })
                 const goodJob = all.length ? " Good job!" : ""
                 return message.channel.sendSuccess(`You have no pending tasks.${goodJob}`)
@@ -99,7 +101,7 @@ export default new Command({
                     color: client.config.colors.info,
                     description: `Here are your active tasks!${assignedBy}`,
                     fields: tasks.map(task => ({
-                        name: `${task.title} (${task.status || "open"})`,
+                        name: `#${task.id}: ${task.title} (${task.status || "open"})`,
                         value: task.description
                     }))
                 }
