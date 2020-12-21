@@ -42,9 +42,9 @@ export default async function (this: Client, message: Message): Promise<unknown>
             return message.channel.send(snippet.body).catch(() => {})
         }
 
-        const member = <GuildMember>message.member
+        const member = message.member as GuildMember
         const hasPermission = member && member.hasStaffPermission(command.permission)
-        if (!member && !["suggest", "suggestion"].includes(command.name)) return
+        if (!member && !command.dms) return
         if (command.permission !== Roles.ANY && !hasPermission) return
 
         command.run(this, message, args)
