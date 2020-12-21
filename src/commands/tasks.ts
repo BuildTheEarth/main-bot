@@ -31,11 +31,16 @@ export default new Command({
             name: "list",
             description: "List all your active tasks.",
             usage: ""
+        },
+        {
+            name: "report",
+            description: "List all done tasks.",
+            usage: "[channel]"
         }
     ],
-    async run(client: Client, message: Message, args: Args) {
+    async run(this: Command, client: Client, message: Message, args: Args) {
         const Tasks = client.db.getRepository(Task)
-        const subcommand = args.consumeIf(["add", "status", "list"])
+        const subcommand = args.consumeIf(this.subcommands.map(sub => sub.name))
 
         if (subcommand === "add" || !subcommand) {
             args.separator = "|"
@@ -106,6 +111,25 @@ export default new Command({
                     }))
                 }
             })
+        } else if (subcommand === "report") {
+            const channel = (await args.consumeChannel()) || message.channel
+            const tasks = await Tasks.createQueryBuilder("task")
+                .where(`task.assignees LIKE '%${message.author.id}%'`)
+                .andWhere("task.status = :status", { status: "done" })
+                .getMany()
+            if (!tasks.length)
+                return message.channel.sendError("Your done task list is empty!")
+
+            const report = tasks.map(task => `•   ${task.title}`).join("\n")
+            await channel.send(`Task report by <@${message.author.id}>:\n\n${report}`)
+
+            for (const task of tasks) {
+                task.status = "reported"
+                await task.save()
+            }
+
+            if (channel.id !== message.channel.id)
+                await message.channel.sendSuccess(`Sent your task report to ${channel}!`)
         }
     }
 })
