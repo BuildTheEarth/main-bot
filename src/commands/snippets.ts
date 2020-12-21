@@ -30,6 +30,12 @@ export default new Command({
             description: "Delete a snippet.",
             permission: Roles.MANAGER,
             usage: "<name> <language>"
+        },
+        {
+            name: " Source",
+            description: "Get the source response of a specific snippet.",
+            permission: Roles.ANY,
+            usage: "<name> <language>"
         }
     ],
     async run(this: Command, client: Client, message: Message, args: Args) {
@@ -81,16 +87,15 @@ export default new Command({
             if (subcommand === "add") {
                 if (existingSnippet)
                     return message.channel.sendError("That snippet already exists!")
-
                 snippet = new Snippet()
                 snippet.name = name
                 snippet.language = language
             } else if (subcommand === "edit") {
-                snippet = existingSnippet
                 if (!existingSnippet)
                     return message.channel.sendError("That snippet doesn't exist!")
                 if (existingSnippet.body === body)
                     return message.channel.sendSuccess("Nothing changed.")
+                snippet = existingSnippet
             }
 
             snippet.body = body
@@ -107,6 +112,16 @@ export default new Command({
             // prettier-ignore
             await message.channel.sendSuccess(`Deleted **${name}** snippet in ${languageName}.`)
             await client.log(existingSnippet, "delete", message.author)
+        } else if (subcommand === "source") {
+            await message.channel.send({
+                embed: {
+                    color: client.config.colors.info,
+                    description:
+                        `The \`${existingSnippet.name}\` snippet responds with ` +
+                        `the following text in **${languageName}**:` +
+                        `\n\`\`\`${existingSnippet.body}\`\`\``
+                }
+            })
         }
     }
 })
