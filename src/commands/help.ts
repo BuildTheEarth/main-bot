@@ -2,7 +2,7 @@ import Client from "../struct/Client"
 import Message from "../struct/discord/Message"
 import Args from "../struct/Args"
 import Command from "../struct/Command"
-
+import GuildMember from "../struct/discord/GuildMember"
 import Roles from "../util/roles"
 import truncateString from "../util/truncateString"
 
@@ -12,8 +12,14 @@ export default new Command({
     description: "Get a list of available commands (or info on one of them).",
     permission: Roles.ANY,
     usage: "[command]",
+    dms: true,
     async run(this: Command, client: Client, message: Message, args: Args) {
-        const member = message.member
+        const main = client.guilds.cache.get(client.config.guilds.main)
+        const member = (message.guild
+            ? message.member
+            : await main.members
+                  .fetch({ user: message.author, cache: true })
+                  .catch(() => null)) as GuildMember
 
         if (args.raw) {
             const commandName = args.consume()
@@ -45,9 +51,8 @@ export default new Command({
                 })
 
             if (command.subcommands && command.subcommands.length) {
-                const member = message.member
                 const allowedSubcommands = command.subcommands.filter(sub =>
-                    member.hasStaffPermission(sub.permission || command.permission)
+                    member.hasStaffPermission(sub.permission)
                 )
 
                 const formattedSubcommands = allowedSubcommands.map(sub => {
