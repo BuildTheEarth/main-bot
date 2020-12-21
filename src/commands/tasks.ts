@@ -8,8 +8,6 @@ import Command from "../struct/Command"
 import Task, { TaskStatus, VALID_STATUSES } from "../entities/Task"
 import Roles from "../util/roles"
 
-const ID_REGEX = /\d{18}/g
-
 export default new Command({
     name: "tasks",
     aliases: ["task"],
@@ -44,7 +42,8 @@ export default new Command({
 
         if (subcommand === "add" || !subcommand) {
             args.separator = "|"
-            const assignees = (args.consumeIf(ID_REGEX) || "").match(ID_REGEX)
+            const regex = /\d{18}/g
+            const assignees = (args.consumeIf(regex) || "").match(regex)
             const [title, description] = args.consume(2)
             const status = args.consume().toLowerCase() || null
 
