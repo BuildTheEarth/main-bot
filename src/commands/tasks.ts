@@ -122,6 +122,7 @@ export default new Command({
             const tasks = await Tasks.createQueryBuilder("task")
                 .where(`task.assignees LIKE '%${message.author.id}%'`)
                 .andWhere("task.status = :status", { status: "done" })
+                .andWhere("task.status != :status", { status: "reported" })
                 .getMany()
             if (!tasks.length)
                 return message.channel.sendError("Your done task list is empty!")
