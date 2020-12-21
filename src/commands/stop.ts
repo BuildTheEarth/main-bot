@@ -10,7 +10,7 @@ export default new Command({
     description: "Stop the bot.",
     permission: Roles.BOT_DEVELOPER,
     usage: "['bye']",
-    async run(client: Client, message: Message, args: Args) {
+    async run(this: Command, client: Client, message: Message, args: Args) {
         if (!args.consumeIf("bye")) await message.react("👋").catch(() => null)
         process.exit(0)
     }
