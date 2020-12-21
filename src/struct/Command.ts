@@ -8,6 +8,7 @@ export default class Command implements CommandProperties {
     description: string
     permission: string | string[]
     usage: string
+    dms: boolean
     subcommands: SubCommandProperties[]
     run: (client: Client, message: Message, args: Args) => void
 
@@ -17,6 +18,7 @@ export default class Command implements CommandProperties {
         this.description = properties.description
         this.permission = properties.permission
         this.usage = properties.usage
+        this.dms = properties.dms || false
         this.subcommands = (properties.subcommands || []).map(sub => {
             if (!sub.permission) sub.permission = properties.permission
             return sub
@@ -29,6 +31,7 @@ export interface CommandProperties extends SubCommandProperties {
     aliases: string[]
     subcommands?: SubCommandProperties[]
     permission: string | string[]
+    dms?: boolean
     run: (client: Client, message: Message, args: Args) => void
 }
 
