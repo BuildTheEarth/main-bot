@@ -27,7 +27,7 @@ export default async function ready(this: Client): Promise<void> {
         const current = await main.fetchVanityData()
         const outdated = current?.code !== this.config.vanity
         if (outdated) {
-            await main.setVanityCode(this.config.vanity)
+            await main.setVanityCode(this.config.vanity, "Reached level 3 boosting")
             this.logger.info(
                 `Set vanity code to ${chalk.hex("#FF73FA")(this.config.vanity)}`
             )

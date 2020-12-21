@@ -15,11 +15,11 @@ export default class Guild extends Discord.Guild {
         return <GuildMember>super.member(user)
     }
 
-    async setVanityCode(code: string): Promise<void> {
+    async setVanityCode(code: string, reason?: string): Promise<void> {
         // @ts-ignore
         await this.client.api
             // @ts-ignore
             .guilds(this.id, "vanity-url")
-            .patch({ data: { code }, reason: "Reached level 3 boosting" })
+            .patch({ data: { code }, reason })
     }
 }

@@ -14,7 +14,7 @@ export default async function (this: Client, message: Message): Promise<unknown>
     const mainGuild = this.guilds.cache.get(this.config.guilds.main)
     const main = mainGuild.id === message.guild?.id
     if (main && message.type === "USER_PREMIUM_GUILD_SUBSCRIPTION_TIER_3") {
-        await message.guild.setVanityCode(this.config.vanity)
+        await message.guild.setVanityCode(this.config.vanity, "Reached level 3 boosting")
         this.logger.info(`Set vanity code to ${chalk.hex("#FF73FA")(this.config.vanity)}`)
         return
     }
