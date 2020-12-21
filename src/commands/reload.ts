@@ -7,39 +7,57 @@ import truncateString from "../util/truncateString"
 
 export default new Command({
     name: "reload",
-    aliases: [],
-    description: "Reload a command.",
+    aliases: ["re"],
+    description: "Reload a command/an event handler/the config/a module/all modules.",
     permission: Roles.BOT_DEVELOPER,
-    usage: "<command>",
+    usage: "<command | event | 'config' | filename | 'all'>",
     async run(this: Command, client: Client, message: Message, args: Args) {
         const name = args.consume()
         const command = client.commands.search(name)
         const handler = client.events.get(name)
         const config = name.toLowerCase() === "config"
-        if (!command && !handler && !config) {
+        let file: string
+        try {
+            file = require.resolve(name)
+        } catch {
+            file = null
+        }
+        const all = name.toLowerCase() === "all"
+
+        if (!command && !handler && !config && !file && !all) {
             const truncated = truncateString(name, 32, "...")
             return message.channel.sendError(
-                `Unknown command or event handler \`${truncated}\`.`
+                `Unknown command, event handler, or module \`${truncated}\`.`
             )
         }
 
-        if (handler) {
+        let fullname: string
+        if (command) {
+            fullname = `\`${command.name}\` command`
+            client.commands.unloadOne(command.name)
+            await client.commands.loadOne(command.name)
+        } else if (handler) {
+            fullname = `\`${name}\` event handler`
             client.events.unregisterOne(name)
             client.events.unloadOne(name)
             await client.events.loadOne(name)
             client.events.registerOne(name)
-        } else if (command) {
-            client.commands.unloadOne(command.name)
-            await client.commands.loadOne(command.name)
         } else if (config) {
+            fullname = "config"
             client.config.unload()
             await client.config.load()
+        } else if (file) {
+            fullname = `\`${name}\` module`
+            delete require.cache[file]
+            await import(file)
+        } else if (all) {
+            fullname = "all modules"
+            for (const filename of Object.keys(require.cache)) {
+                delete require.cache[filename]
+                await import(filename)
+            }
         }
 
-        message.channel.sendSuccess(
-            config
-                ? `Reloaded config.`
-                : `Reloaded \`${name}\` ${command ? "command" : "event handler"}.`
-        )
+        message.channel.sendSuccess(`Reloaded ${fullname}.`)
     }
 })
