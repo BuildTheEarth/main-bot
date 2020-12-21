@@ -32,7 +32,7 @@ export default new Command({
             usage: "<name> <language>"
         },
         {
-            name: " Source",
+            name: "source",
             description: "Get the source response of a specific snippet.",
             permission: Roles.ANY,
             usage: "<name> <language>"
