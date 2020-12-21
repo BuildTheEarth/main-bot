@@ -11,7 +11,8 @@ import chalk from "chalk"
 export default async function (this: Client, message: Message): Promise<unknown> {
     if (message.author.bot) return
 
-    const main = message.guild?.id === this.config.guilds.main
+    const mainGuild = this.guilds.cache.get(this.config.guilds.main)
+    const main = mainGuild.id === message.guild?.id
     if (main && message.type === "USER_PREMIUM_GUILD_SUBSCRIPTION_TIER_3") {
         await message.guild.setVanityCode(this.config.vanity)
         this.logger.info(`Set vanity code to ${chalk.hex("#FF73FA")(this.config.vanity)}`)
@@ -42,7 +43,12 @@ export default async function (this: Client, message: Message): Promise<unknown>
             return message.channel.send(snippet.body).catch(() => {})
         }
 
-        const member = message.member as GuildMember
+        const member = (message.guild
+            ? message.member
+            : await mainGuild.members
+                  .fetch({ user: message.author, cache: true })
+                  .catch(() => null)) as GuildMember
+
         const hasPermission = member && member.hasStaffPermission(command.permission)
         if (!member && !command.dms) return
         if (command.permission !== Roles.ANY && !hasPermission) return
