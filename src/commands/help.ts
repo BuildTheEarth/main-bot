@@ -5,6 +5,7 @@ import Command from "../struct/Command"
 import GuildMember from "../struct/discord/GuildMember"
 import Roles from "../util/roles"
 import truncateString from "../util/truncateString"
+import humanizeArray from "../util/humanizeArray"
 
 export default new Command({
     name: "help",
@@ -47,7 +48,7 @@ export default new Command({
             if (command.aliases.length)
                 embed.fields.push({
                     name: "Aliases",
-                    value: `\`${command.aliases.join("`, `")}\``
+                    value: humanizeArray(command.aliases, true, "")
                 })
 
             if (command.subcommands && command.subcommands.length) {
@@ -73,10 +74,9 @@ export default new Command({
             member.hasStaffPermission(command.permission)
         )
         const commandNames = allowedCommands.map(command => command.name)
-        const commandList = `\`${commandNames.join("`, `")}\``
         return message.channel.sendSuccess({
             author: { name: "Here are all the commands you have access to:" },
-            description: commandList
+            description: humanizeArray(commandNames, true, "")
         })
     }
 })

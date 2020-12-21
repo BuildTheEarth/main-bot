@@ -7,6 +7,7 @@ import Args from "../struct/Args"
 import Command from "../struct/Command"
 import Task, { TaskStatus, VALID_STATUSES } from "../entities/Task"
 import Roles from "../util/roles"
+import humanizeArray from "../util/humanizeArray"
 import { Brackets } from "typeorm"
 
 export default new Command({
@@ -55,7 +56,7 @@ export default new Command({
             if (!title || !description)
                 error = "You must provide a title and a description!"
             if (status && !VALID_STATUSES.includes(status))
-                error = `That's not a valid status! (\`${VALID_STATUSES.join("`, `")}\`).`
+                error = `That's not a valid status! (${humanizeArray(VALID_STATUSES)}).`
             if (error) return message.channel.sendError(error)
 
             const task = new Task()
@@ -76,7 +77,7 @@ export default new Command({
             const status = args.consume().toLowerCase()
             if (!VALID_STATUSES.includes(status))
                 return message.channel.sendError(
-                    `That's not a valid status! (\`${VALID_STATUSES.join("`, `")}\`).`
+                    `That's not a valid status! (${humanizeArray(VALID_STATUSES)}).`
                 )
 
             const task = await Task.findOne(id)

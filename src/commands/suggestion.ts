@@ -5,6 +5,7 @@ import Command from "../struct/Command"
 import TextChannel from "../struct/discord/TextChannel"
 import Suggestion, { SuggestionStatuses } from "../entities/Suggestion"
 import Roles from "../util/roles"
+import humanizeArray from "../util/humanizeArray"
 
 export default new Command({
     name: "suggestion",
@@ -72,7 +73,7 @@ export default new Command({
         if (!allSubcommandNames.includes(subcommand))
             // prettier-ignore
             return message.channel.sendError(
-                `You must specify a subcommand (\`${availableSubcommandNames.join("`, `")}\`).`
+                `You must specify a subcommand! (${humanizeArray(availableSubcommandNames)}).`
             )
 
         const suggestionsID = client.config.suggestions[category]
@@ -144,9 +145,9 @@ export default new Command({
             const status = args.consume().toLowerCase()
             const reason = args.consumeRest()
             if (!(status in SuggestionStatuses)) {
-                const formatted = Object.keys(SuggestionStatuses).join("`, `")
+                const formatted = humanizeArray(Object.keys(SuggestionStatuses))
                 return message.channel.sendError(
-                    `You must specify a new suggestion status! (\`${formatted}\`).`
+                    `You must specify a new suggestion status! (${formatted}).`
                 )
             }
 

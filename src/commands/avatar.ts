@@ -4,6 +4,7 @@ import Message from "../struct/discord/Message"
 import Args from "../struct/Args"
 import Command from "../struct/Command"
 import Roles from "../util/roles"
+import humanizeArray from "../util/humanizeArray"
 
 const VALID_IMAGE_SIZES = [16, 32, 64, 128, 256, 512, 1024, 2048, 4096]
 
@@ -23,12 +24,10 @@ export default new Command({
                     ? "You must provide a user to check!"
                     : "Couldn't find that user."
             )
-        if (!VALID_IMAGE_SIZES.includes(size)) {
-            const formatted = VALID_IMAGE_SIZES.join("`, `")
+        if (!VALID_IMAGE_SIZES.includes(size))
             return message.channel.sendError(
-                `The avatar size must be one of: \`${formatted}\`.`
+                `The avatar size must be one of ${humanizeArray(VALID_IMAGE_SIZES)}.`
             )
-        }
 
         const url = user.displayAvatarURL({
             size: size as Discord.ImageSize,
