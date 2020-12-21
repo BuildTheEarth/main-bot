@@ -7,6 +7,7 @@ import Args from "../struct/Args"
 import Command from "../struct/Command"
 import Task, { TaskStatus, VALID_STATUSES } from "../entities/Task"
 import Roles from "../util/roles"
+import { Brackets } from "typeorm"
 
 export default new Command({
     name: "tasks",
@@ -87,9 +88,14 @@ export default new Command({
             // 'OR ... IS NULL' is required because 'NULL != "reported"' will never match
             const tasks = await Tasks.createQueryBuilder("task")
                 .where(`task.assignees LIKE '%${message.author.id}%'`)
-                .andWhere("task.status != :status", { status: "reported" })
-                .andWhere("task.status != :status", { status: "done" })
-                .orWhere("task.status IS NULL")
+                .andWhere(
+                    new Brackets(query =>
+                        query
+                            .where("task.status != :status", { status: "reported" })
+                            .andWhere("task.status != :status", { status: "done" })
+                            .orWhere("task.status IS NULL")
+                    )
+                )
                 .getMany()
 
             if (!tasks.length) {
