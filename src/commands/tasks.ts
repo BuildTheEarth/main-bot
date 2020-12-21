@@ -14,6 +14,7 @@ export default new Command({
     description: "Read and manage tasks.",
     permission: Roles.STAFF,
     usage: "",
+    dms: true,
     subcommands: [
         {
             name: "add",

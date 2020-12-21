@@ -12,6 +12,7 @@ export default new Command({
     description: "Manage suggestions.",
     permission: Roles.ANY,
     usage: "",
+    dms: true,
     subcommands: [
         {
             name: "link",

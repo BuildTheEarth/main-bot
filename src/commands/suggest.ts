@@ -14,6 +14,7 @@ export default new Command({
     description: "Make a suggestion.",
     permission: Roles.ANY,
     usage: "['anon'] <title> | <body> | [team/s]",
+    dms: true,
     async run(this: Command, client: Client, message: Message, args: Args) {
         const anon = !!args.consumeIf(["anon", "anonymous"])
         const staff = message.guild?.id === client.config.guilds.staff
