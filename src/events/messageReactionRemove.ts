@@ -12,6 +12,6 @@ export default async function messageReactionAdd(
     const guild = reaction.message.guild
     if (guild) {
         const member = await guild.members.fetch({ user, cache: true }).catch(() => null)
-        if (member) await member.roles.remove(role).catch(noop)
+        if (member && role) await member.roles.remove(role).catch(noop)
     }
 }
