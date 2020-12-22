@@ -106,11 +106,15 @@ export default new Command({
                 )
             }
         } else if (subcommand === "edit") {
-            // prettier-ignore
-            if (suggestion.author !== message.author.id)
-                return message.channel.sendError("You can't edit other people's suggestions!")
-
             const field = args.consumeIf(["title", "body", "teams"]) || "body"
+            if (
+                suggestion.author !== message.author.id &&
+                (field === "body" || !canManage)
+            )
+                return message.channel.sendError(
+                    "You can't edit other people's suggestions!"
+                )
+
             const edited = args.consumeRest()
             if (field === "title" && edited.length > 99)
                 return message.channel.sendError("That title is too long!")
@@ -122,7 +126,7 @@ export default new Command({
 
             const embed = await suggestion.displayEmbed(client)
             await suggestionMessage.edit({ embed })
-            return message.channel.sendSuccess("Edited your suggestion!")
+            return message.channel.sendSuccess("Edited the suggestion!")
         } else if (subcommand === "delete") {
             if (suggestion.author !== message.author.id && !canManage)
                 return message.channel.sendError(
