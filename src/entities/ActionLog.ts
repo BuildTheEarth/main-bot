@@ -130,12 +130,12 @@ export default class ActionLog extends BaseEntity {
         const actioned = past(this.action)
         const embed = {
             color: client.config.colors.error,
-            description: `*<@${this.executor}> has ${actioned} you${length}:\n\n${this.reason}`,
+            description: `*<@${this.executor}> has ${actioned} you${length}:*\n\n${this.reason}`,
             image: this.reasonImage ? { url: this.reasonImage } : null,
             fields: []
         }
         if (this.action === "ban") {
-            embed.description += `\n\u200B`
+            embed.description += "\n\u200B"
             embed.fields.push({ name: "Appealing", value: client.config.appeal })
         }
 
