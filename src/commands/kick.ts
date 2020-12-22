@@ -50,7 +50,7 @@ export default new Command({
 
         const dms = await user.createDM()
         await dms.send({ embed: log.displayUserEmbed(client) }).catch(noop)
-        await message.guild.members.ban(user, { reason })
+        await member.kick(reason)
 
         await message.channel.sendSuccess(`Kicked ${user} (**#${log.id}**).`)
         await client.log(log)
