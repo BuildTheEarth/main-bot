@@ -5,6 +5,7 @@ export default function pastTense(verb: string): string {
         return verb + last(verb) + "ed"
     if (verb.endsWith("c")) return verb + "ked"
     if (verb.endsWith("e")) return verb + "d"
+    return verb + "ed"
 }
 
 function last(word: string, count: number = 0): string {
