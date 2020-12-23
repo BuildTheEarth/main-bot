@@ -91,6 +91,14 @@ export default class Suggestion extends BaseEntity {
         }
     }
 
+    getURL(client: Client): string {
+        const category = this.staff ? "staff" : "main"
+        const guild = client.config.guilds[category]
+        const channel = client.config.suggestions[category]
+        const message = this.message
+        return `https://discord.com/channels/${guild}/${channel}/${message}`
+    }
+
     async displayEmbed(client: Client): Promise<Discord.MessageEmbedOptions> {
         if (this.deletedAt) {
             const deleter =
