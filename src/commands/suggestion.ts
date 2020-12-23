@@ -104,6 +104,7 @@ export default new Command({
 
             const results = await Suggestions.createQueryBuilder("suggestion")
                 .where(`INSTR(suggestion.${field}, :query)`, { query })
+                .andWhere(`suggestion.staff = :staff`, { staff })
                 .andWhere(
                     new Brackets(query =>
                         query
