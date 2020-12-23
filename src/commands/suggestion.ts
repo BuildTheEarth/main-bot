@@ -12,7 +12,7 @@ import { Brackets } from "typeorm"
 
 export default new Command({
     name: "suggestion",
-    aliases: [],
+    aliases: ["suggestions"],
     description: "Manage suggestions.",
     permission: Roles.ANY,
     usage: "",
