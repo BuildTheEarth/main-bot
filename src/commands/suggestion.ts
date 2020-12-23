@@ -104,7 +104,6 @@ export default new Command({
 
             const results = await Suggestions.createQueryBuilder("suggestion")
                 .where(`INSTR(suggestion.${field}, :query)`, { query })
-                .orWhere(`INSTR(suggestion.${field})`)
                 .andWhere(
                     new Brackets(query =>
                         query
@@ -128,9 +127,10 @@ export default new Command({
             }
 
             for (const suggestion of results) {
+                const url = suggestion.getURL(client)
                 embed.fields.push({
                     name: `#${await suggestion.getDisplayNumber()} — ${suggestion.title}`,
-                    value: truncateString(suggestion.body, 128)
+                    value: `[\\🔗](${url}) ${truncateString(suggestion.body, 128)}`
                 })
             }
 
