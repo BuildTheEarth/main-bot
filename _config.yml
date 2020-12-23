@@ -22,10 +22,11 @@ reactionRoles:
 emojis:
     upvote: 👍
     downvote: 👎
-    online: 🟢
-    idle: 🌙
-    dnd: 🔴
-    offline: ⚫
+    text:
+        online: 🟢
+        idle: 🌙
+        dnd: 🔴
+        offline: ⚫
 colors:
     success: "#1EAD2F"
     error: "#ED5439"

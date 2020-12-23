@@ -99,13 +99,14 @@ Rename the `_config.yml` file to `config.yml` and fill in all of the fields:
     -   **\<channel ID>**
         -   **\<message ID>**
             -   **\<emoji name>**: A role ID (enclosed in quotes).
--   **emojis**: The emojis to use for certain occasions. They can be Unicode emojis, or custom emoji IDs.
+-   **emojis**: Emojis to use for certain occasions. They can be Unicode emojis or custom emoji IDs.
     -   **upvote**
     -   **downvote**
-    -   **online**
-    -   **idle**
-    -   **dnd**
-    -   **offline**
+    -   **text**: Emojis to be used in text. They can be virtually any string (but preferrably emojis).
+        -   **online**
+        -   **idle**
+        -   **dnd**
+        -   **offline**
 -   **colors**: The color palette for message embeds.
     -   **success**
     -   **error**

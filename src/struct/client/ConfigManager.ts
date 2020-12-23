@@ -6,11 +6,13 @@ import { SuggestionStatus } from "../../entities/Suggestion"
 import { Action } from "../../entities/ActionLog"
 import { EmojiIdentifierResolvable } from "discord.js"
 
+export type Field<T = string> = { [key: string]: T }
 export type GuildCategories = { main: string; staff: string }
 export type SuggestionCategories = Record<SuggestionStatus, string>
 export type ActionLogCategories = Record<Action, string>
-export type ReactionRole = { [key: string]: { [key: string]: { [key: string]: string } } }
-export type EmojiList = { [key: string]: EmojiIdentifierResolvable }
+export type ReactionRole = Field<Field<Field>>
+export type EmojiList = Field<EmojiIdentifierResolvable> & { text: Field }
+export type AssetList = { suggestions: SuggestionCategories; cases: ActionLogCategories }
 export type ColorPalette = { success: string; error: string; info: string }
 export type DatabaseInfo = { host: string; name: string; user: string; pass: string }
 
@@ -27,7 +29,7 @@ export default class ConfigManager implements Config {
     reactionRoles: ReactionRole
     emojis: EmojiList
     colors: ColorPalette & { suggestions: SuggestionCategories }
-    assets: { suggestions: SuggestionCategories; cases: ActionLogCategories }
+    assets: AssetList
     database: DatabaseInfo
 
     constructor(client: Client) {
@@ -71,6 +73,6 @@ export type Config = {
     reactionRoles: ReactionRole
     emojis: EmojiList
     colors: ColorPalette & { suggestions: SuggestionCategories }
-    assets: { suggestions: SuggestionCategories; cases: ActionLogCategories }
+    assets: AssetList
     database: DatabaseInfo
 }
