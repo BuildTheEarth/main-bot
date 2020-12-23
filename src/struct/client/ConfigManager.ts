@@ -45,9 +45,6 @@ export default class ConfigManager implements Config {
                 this.client.logger.error(`Failed to read config.yml: ${e.message}`)
                 process.exit(1)
             })
-        for (const [name, resolvable] of Object.entries(config.emojis))
-            if (typeof resolvable === "string" && resolvable.length === 18)
-                config.emojis[name] = this.client.emojis.cache.get(resolvable as string)
 
         for (const [key, value] of Object.entries(config)) this[key] = value
     }
