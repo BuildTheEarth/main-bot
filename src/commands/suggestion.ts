@@ -1,3 +1,4 @@
+import Discord from "discord.js"
 import Client from "../struct/Client"
 import Message from "../struct/discord/Message"
 import Args from "../struct/Args"
@@ -6,6 +7,8 @@ import TextChannel from "../struct/discord/TextChannel"
 import Suggestion, { SuggestionStatuses } from "../entities/Suggestion"
 import Roles from "../util/roles"
 import humanizeArray from "../util/humanizeArray"
+import truncateString from "../util/truncateString"
+import { Brackets } from "typeorm"
 
 export default new Command({
     name: "suggestion",
@@ -36,9 +39,16 @@ export default new Command({
             description: "Change the status of a suggestion.",
             permission: [Roles.SUGGESTION_TEAM, Roles.MANAGER],
             usage: "<number> <status> [reason]"
+        },
+        {
+            name: "search",
+            description: "Search for suggestions.",
+            permission: Roles.ANY,
+            usage: "['title' | 'body' | 'teams'] | <query> | [status/es]"
         }
     ],
     async run(this: Command, client: Client, message: Message, args: Args) {
+        const Suggestions = client.db.getRepository(Suggestion)
         const staff = message.guild?.id === client.config.guilds.staff
         const category = staff ? "staff" : "main"
         const discussionID = client.config.suggestions.discussion[category]
@@ -77,7 +87,57 @@ export default new Command({
             )
 
         const suggestionsID = client.config.suggestions[category]
-        const suggestions = <TextChannel>await client.channels.fetch(suggestionsID, true)
+        const suggestions: TextChannel = await client.channels
+            .fetch(suggestionsID, true)
+            .catch(() => null)
+
+        if (subcommand === "search") {
+            args.separator = "|"
+            const field = args.consumeIf(["title", "body", "teams"]) || "body"
+            const query = args.consume()
+            let statuses = args
+                .consume()
+                .split(/,? ?/)
+                .map(s => s.toLowerCase())
+            if (!statuses.length) statuses = Object.keys(SuggestionStatuses)
+            const cleanQuery = Discord.Util.escapeMarkdown(truncateString(query, 50))
+
+            const results = await Suggestions.createQueryBuilder("suggestion")
+                .where(`INSTR(suggestion.${field}, :query)`, { query })
+                .orWhere(`INSTR(suggestion.${field})`)
+                .andWhere(
+                    new Brackets(query =>
+                        query
+                            .where(`suggestion.status IN(:statuses)`, { statuses })
+                            .orWhere(`suggestion.status IS NULL`)
+                    )
+                )
+                .take(25)
+                .orderBy("COALESCE(suggestion.number, suggestion.extends)", "DESC")
+                .getMany()
+
+            if (!results.length)
+                return message.channel.sendError(
+                    `No suggestions found for **${cleanQuery}**!`
+                )
+
+            const embed: Discord.MessageEmbedOptions = {
+                color: client.config.colors.success,
+                description: `Results found for **${cleanQuery}**:`,
+                fields: []
+            }
+
+            for (const suggestion of results) {
+                embed.fields.push({
+                    name: `#${await suggestion.getDisplayNumber()} — ${suggestion.title}`,
+                    value: truncateString(suggestion.body, 128)
+                })
+            }
+
+            return message.channel.send({ embed })
+        }
+
+        /* suggestion management commands from here */
 
         const number = Number(args.consume().match(/\d+/)?.[0])
         if (Number.isNaN(number))
