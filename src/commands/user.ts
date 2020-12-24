@@ -137,7 +137,7 @@ export default new Command({
             }**`
         const activities = user.presence.activities.map(humanizeActivity).join("\n")
 
-        const presenceStatusEmoji = client.config.emojis[user.presence.status]
+        const presenceStatusEmoji = client.config.emojis.text[user.presence.status]
         const presenceStatusName =
             user.presence.status === "dnd"
                 ? "Do Not Disturb"
