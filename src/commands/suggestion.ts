@@ -4,6 +4,7 @@ import Message from "../struct/discord/Message"
 import Args from "../struct/Args"
 import Command from "../struct/Command"
 import TextChannel from "../struct/discord/TextChannel"
+import DMChannel from "../struct/discord/DMChannel"
 import Suggestion, { SuggestionStatuses } from "../entities/Suggestion"
 import Roles from "../util/roles"
 import humanizeArray from "../util/humanizeArray"
@@ -207,6 +208,7 @@ export default new Command({
         } else if (subcommand === "status") {
             if (!canManage) return
 
+            const oldStatus = suggestion.status
             const status = args.consume().toLowerCase()
             const reason = args.consumeRest()
             if (!(status in SuggestionStatuses)) {
@@ -223,6 +225,26 @@ export default new Command({
             await suggestion.save()
             const embed = await suggestion.displayEmbed(client)
             await suggestionMessage.edit({ embed })
+
+            if (status !== oldStatus) {
+                const author: Discord.User = await client.users
+                    .fetch(suggestion.author, true)
+                    .catch(() => null)
+                if (author) {
+                    const dms = (await author.createDM()) as DMChannel
+                    const updater = `<@${suggestion.statusUpdater}>`
+                    // marked as something -> marked your suggestion as something
+                    const actioned = SuggestionStatuses[status]
+                        .toLowerCase()
+                        .replace("ed ", "ed your suggestion ")
+                    const number = await suggestion.getDisplayNumber()
+                    const title = `[${suggestion.title}](${suggestion.getURL(client)})`
+                    const cleanTitle = Discord.Util.escapeMarkdown(title)
+
+                    const update = `${updater} ${actioned}: **#${number} — ${cleanTitle}**.`
+                    dms.sendSuccess(update).catch(() => null)
+                }
+            }
 
             return message.channel.sendSuccess("Updated the suggestion!")
         }
