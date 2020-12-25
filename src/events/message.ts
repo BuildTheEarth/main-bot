@@ -27,15 +27,16 @@ export default async function (this: Client, message: Message): Promise<unknown>
         const command = this.commands.search(commandName)
         if (!command) {
             const firstArg = args.consume().toLowerCase()
-            const languageName = languages.getName(firstArg)
-            const language = languageName ? firstArg.toLowerCase() : "en"
+            const languageName = languages.getName(firstArg) || "English"
+            const language = languages.validate(firstArg) ? firstArg.toLowerCase() : "en"
             const snippet = await Snippet.findOne({ name: commandName, language })
 
             if (!snippet) {
                 const unlocalizedSnippet = await Snippet.findOne({ name: commandName })
                 if (unlocalizedSnippet)
-                    // prettier-ignore
-                    message.channel.sendError(`The **${commandName}** snippet hasn't been translated to ${languageName || "English"} yet.`)
+                    message.channel.sendError(
+                        `The **${commandName}** snippet hasn't been translated to ${languageName} yet.`
+                    )
                 return
             }
 
