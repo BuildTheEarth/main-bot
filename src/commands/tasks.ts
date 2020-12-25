@@ -8,7 +8,7 @@ import Command from "../struct/Command"
 import Task, { TaskStatus, VALID_STATUSES } from "../entities/Task"
 import Roles from "../util/roles"
 import humanizeArray from "../util/humanizeArray"
-import { Brackets } from "typeorm"
+import { Brackets, Like } from "typeorm"
 
 export default new Command({
     name: "tasks",
@@ -124,16 +124,18 @@ export default new Command({
             })
         } else if (subcommand === "report") {
             const channel = (await args.consumeChannel()) || message.channel
-            const tasks = await Tasks.createQueryBuilder("task")
-                .where(`task.assignees LIKE '%${message.author.id}%'`)
-                .andWhere("task.status = :status", { status: "done" })
-                .andWhere("task.status != :status", { status: "reported" })
-                .getMany()
+            const tasks = await Task.find({
+                where: {
+                    assignees: Like(`%${message.author.id}%`),
+                    status: "done"
+                }
+            })
+
             if (!tasks.length)
                 return message.channel.sendError("Your done task list is empty!")
 
             const report = tasks.map(task => `•   ${task.title}`).join("\n")
-            await channel.send(`Task report by <@${message.author.id}>:\n\n${report}`)
+            await channel.send(`Task report from <@${message.author.id}>:\n\n${report}`)
 
             for (const task of tasks) {
                 task.status = "reported"
