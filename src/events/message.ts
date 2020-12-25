@@ -31,6 +31,11 @@ export default async function (this: Client, message: Message): Promise<unknown>
             const language = languages.validate(firstArg) ? firstArg.toLowerCase() : "en"
             const snippet = await Snippet.findOne({ name: commandName, language })
 
+            if (language === "zh")
+                return message.channel.sendError(
+                    `Please choose \`zh-s\` (简体中文) or \`zh-t\` (繁體中文)!`
+                )
+
             if (!snippet) {
                 const unlocalizedSnippet = await Snippet.findOne({ name: commandName })
                 if (unlocalizedSnippet)
