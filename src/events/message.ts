@@ -4,7 +4,7 @@ import Message from "../struct/discord/Message"
 import Args from "../struct/Args"
 import Role from "../struct/discord/Role"
 import Snippet from "../entities/Snippet"
-import languages from "iso-639-1"
+import languages from "../util/patchedISO6391"
 import Roles from "../util/roles"
 import chalk from "chalk"
 

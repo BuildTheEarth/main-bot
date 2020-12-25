@@ -4,7 +4,7 @@ import Args from "../struct/Args"
 import Command from "../struct/Command"
 import Snippet from "../entities/Snippet"
 import Roles from "../util/roles"
-import languages from "iso-639-1"
+import languages from "../util/patchedISO6391"
 
 export default new Command({
     name: "snippets",
