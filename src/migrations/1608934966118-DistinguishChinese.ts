@@ -6,7 +6,7 @@ export class DistinguishChinese1608934966118 implements MigrationInterface {
         if (!(await queryRunner.hasTable("snippets"))) return
 
         await queryRunner.query(
-            "ALTER TABLE snippets ALTER COLUMN language VARCHAR(4) NOT NULL"
+            "ALTER TABLE snippets MODIFY COLUMN language VARCHAR(4) NOT NULL"
         )
         await queryRunner.query(
             "UPDATE snippets SET language = 'zh-s' WHERE language = 'zh'"
@@ -26,7 +26,7 @@ export class DistinguishChinese1608934966118 implements MigrationInterface {
             "UPDATE snippets SET language = 'cn' WHERE language = 'zh-t'"
         )
         await queryRunner.query(
-            "ALTER TABLE snippets ALTER COLUMN language VARCHAR(2) NOT NULL"
+            "ALTER TABLE snippets MODIFY COLUMN language VARCHAR(2) NOT NULL"
         )
     }
 }
