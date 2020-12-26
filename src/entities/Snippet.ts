@@ -1,7 +1,7 @@
 import { Entity, Column, PrimaryGeneratedColumn, BaseEntity } from "typeorm"
 import Discord from "discord.js"
 import Client from "../struct/Client"
-import languages from "iso-639-1"
+import languages from "../util/patchedISO6391"
 
 @Entity({ name: "snippets" })
 export default class Snippet extends BaseEntity {
@@ -11,7 +11,7 @@ export default class Snippet extends BaseEntity {
     @Column({ length: 32 })
     name: string
 
-    @Column({ length: 2 })
+    @Column({ length: 4 })
     language: string
 
     @Column({ length: 2000 })
