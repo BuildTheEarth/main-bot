@@ -8,7 +8,7 @@ import Command from "../struct/Command"
 import Task, { TaskStatus, VALID_STATUSES } from "../entities/Task"
 import Roles from "../util/roles"
 import humanizeArray from "../util/humanizeArray"
-import { Brackets, Like } from "typeorm"
+import { Brackets } from "typeorm"
 
 export default new Command({
     name: "tasks",
@@ -126,7 +126,7 @@ export default new Command({
             const channel = (await args.consumeChannel()) || message.channel
             const tasks = await Task.find({
                 where: {
-                    assignees: Like(`%${message.author.id}%`),
+                    assignees: Includes(message.author.id),
                     status: "done"
                 }
             })
