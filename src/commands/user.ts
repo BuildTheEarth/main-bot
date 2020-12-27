@@ -92,7 +92,7 @@ export default new Command({
                 // @ts-ignore
                 channel._typing &&
                 // @ts-ignore
-                channel?.guild.id === message.guild.id &&
+                channel.guild?.id === message.guild?.id &&
                 // @ts-ignore
                 channel._typing.has(user.id) &&
                 // @ts-ignore
