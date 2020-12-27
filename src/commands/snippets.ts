@@ -43,7 +43,7 @@ export default new Command({
 
         if (subcommand === "list" || !subcommand) {
             const snippets = await Snippet.find()
-            const snippetLanguages: { [key: string]: string[] } = {}
+            const snippetLanguages: { [name: string]: string[] } = {}
 
             for (const snippet of snippets) {
                 if (snippetLanguages[snippet.name]) {
@@ -54,8 +54,12 @@ export default new Command({
             }
 
             let list = ""
-            for (const [snippet, languages] of Object.entries(snippetLanguages))
-                list += `• \u200B \u200B ${snippet} (${languages.join(", ")})\n`
+            for (const [snippet, languages] of Object.entries(snippetLanguages)) {
+                languages.sort()
+                const onlyEnglish = languages.length === 1 && languages[0] === "en"
+                const languageList = onlyEnglish ? "" : ` (${languages.join(", ")})`
+                list += `• \u200B \u200B ${snippet}${languageList}\n`
+            }
 
             return message.channel.sendSuccess({
                 author: { name: "Snippet list" },
