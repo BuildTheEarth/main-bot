@@ -66,12 +66,14 @@ export default new Command({
                 .slice(0, max)
                 .join(", ")
             if (member.roles.cache.size > max) formattedRoles += "..."
-            embed.fields.push({ name: "Roles", value: formattedRoles })
+            if (formattedRoles)
+                embed.fields.push({ name: "Roles", value: formattedRoles })
 
             const permissions = member.permissions
                 .toArray(true)
                 .map(name => humanizeConstant(name, ["VAD"]))
-            embed.fields.push({ name: "Permissions", value: permissions.join(", ") })
+            if (permissions)
+                embed.fields.push({ name: "Permissions", value: permissions.join(", ") })
         }
 
         embed.fields.push({
