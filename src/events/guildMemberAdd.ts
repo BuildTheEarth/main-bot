@@ -7,5 +7,5 @@ export default async function guildMemberAdd(
     member: GuildMember
 ): Promise<void> {
     const mute = await TimedPunishment.findOne({ member: member.id })
-    if (mute && mute.end > new Date()) member.mute("Mute on re-join")
+    if (mute) member.mute("Mute on re-join")
 }
