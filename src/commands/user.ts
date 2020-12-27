@@ -107,7 +107,7 @@ export default new Command({
             })
         }
 
-        const vc = member.voice?.channel
+        const vc = member?.voice?.channel
         if (vc) {
             embed.fields.push({
                 name: "Connected to",
