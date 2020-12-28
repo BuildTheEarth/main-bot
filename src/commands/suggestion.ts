@@ -93,6 +93,8 @@ export default new Command({
             .catch(() => null)
 
         if (subcommand === "search") {
+            const PER_PAGE = 10
+
             args.separator = "|"
             const field = args.consumeIf(["title", "body", "teams"]) || "body"
             const query = args.consume()
@@ -103,7 +105,8 @@ export default new Command({
             if (!statuses.length) statuses = Object.keys(SuggestionStatuses)
             const cleanQuery = Discord.Util.escapeMarkdown(truncateString(query, 50))
 
-            const results = await Suggestions.createQueryBuilder("suggestion")
+            const queryBuilder = Suggestions.createQueryBuilder("suggestion")
+            const selection = queryBuilder
                 .where(`INSTR(suggestion.${field}, :query)`, { query })
                 .andWhere(`suggestion.staff = :staff`, { staff })
                 .andWhere(
@@ -113,11 +116,12 @@ export default new Command({
                             .orWhere(`suggestion.status IS NULL`)
                     )
                 )
-                .take(25)
                 .orderBy("COALESCE(suggestion.number, suggestion.extends)", "DESC")
-                .getMany()
+            const total = await selection.getCount()
+            const results = await selection.take(PER_PAGE).getMany()
+            const paginate = total > PER_PAGE
 
-            if (!results.length)
+            if (!total)
                 return message.channel.sendError(
                     `No suggestions found for **${cleanQuery}**!`
                 )
@@ -125,18 +129,56 @@ export default new Command({
             const embed: Discord.MessageEmbedOptions = {
                 color: client.config.colors.success,
                 description: `Results found for **${cleanQuery}**:`,
-                fields: []
+                footer: {}
             }
 
-            for (const suggestion of results) {
-                const url = suggestion.getURL(client)
-                embed.fields.push({
-                    name: `#${await suggestion.getDisplayNumber()} — ${suggestion.title}`,
-                    value: `[\\🔗](${url}) ${truncateString(suggestion.body, 128)}`
-                })
+            const formatResults = async (
+                results: Suggestion[],
+                embed: Discord.MessageEmbedOptions
+            ) => {
+                embed.fields = []
+                for (const suggestion of results) {
+                    const number = await suggestion.getDisplayNumber()
+                    const url = suggestion.getURL(client)
+                    embed.fields.push({
+                        name: `#${number} — ${suggestion.title}`,
+                        value: `[\\🔗](${url}) ${truncateString(suggestion.body, 128)}`
+                    })
+                }
             }
 
-            return message.channel.send({ embed })
+            await formatResults(results, embed)
+            if (!paginate) return message.channel.send({ embed })
+
+            const pages = Math.ceil(total / PER_PAGE)
+            embed.footer.text = `${total} results total, page 1/${pages}`
+            const resultsMessage = await message.channel.send({ embed })
+
+            const { emojis } = client.config
+            await resultsMessage.react(emojis.left)
+            await resultsMessage.react(emojis.right)
+
+            const filter = (reaction: Discord.MessageReaction) =>
+                [emojis.left, emojis.right].includes(reaction.emoji.name)
+            const reactions = resultsMessage.createReactionCollector(filter)
+
+            let old = 1
+            let page = 1
+            reactions.on("collect", async (reaction, user) => {
+                if (reaction.emoji.name === emojis.left && page > 1) page--
+                if (reaction.emoji.name === emojis.right && page < pages) page++
+                await reaction.users.remove(user)
+
+                if (old === page) return
+                old = page
+
+                const results = await selection.skip((page - 1) * PER_PAGE).getMany()
+                await formatResults(results, embed)
+                embed.footer.text = `${total} results total, page ${page}/${pages}`
+                await resultsMessage.edit({ embed })
+            })
+
+            return
         }
 
         /* suggestion management commands from here */
