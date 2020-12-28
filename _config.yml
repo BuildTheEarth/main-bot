@@ -22,6 +22,8 @@ reactionRoles:
 emojis:
     upvote: 👍
     downvote: 👎
+    left: ⬅️
+    right: ➡️
     text:
         online: 🟢
         idle: 🌙
