@@ -39,7 +39,7 @@ export default new Command({
     name: "language",
     aliases: ["lang"],
     description: "Give a member a language role.",
-    permission: [Roles.SUPPORT, Roles.HELPER, Roles.STAFF],
+    permission: Roles.STAFF,
     usage: "<member> <language>",
     async run(this: Command, client: Client, message: Message, args: Args) {
         const user = await args.consumeUser()
