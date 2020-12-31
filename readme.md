@@ -89,9 +89,10 @@ Rename the `_config.yml` file to `config.yml` and fill in all of the fields:
 -   **logs**: The logs channel ID (enclosed in quotes).
 -   **appeal**: The ban appeal message.
 -   **vanity**: The vanity invite code to use when level 3 boosting is reached.
--   **guilds**: The guild IDs for the main and staff servers:
+-   **guilds**: The guild IDs for the main, staff, and YouTube group servers:
     -   **main**
     -   **staff**
+    -   **youtube**
 -   **suggestions**: The channel IDs for the main and staff servers' suggestions channel:
     -   **main**
     -   **staff**

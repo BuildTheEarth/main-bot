@@ -24,7 +24,7 @@ export default class ConfigManager implements Config {
     logs: string
     appeal: string
     vanity: string
-    guilds: GuildCategories
+    guilds: GuildCategories & { youtube: string }
     suggestions: GuildCategories & { discussion: GuildCategories }
     reactionRoles: ReactionRole
     emojis: EmojiList
@@ -65,7 +65,7 @@ export type Config = {
     logs: string
     appeal: string
     vanity: string
-    guilds: GuildCategories
+    guilds: GuildCategories & { youtube: string }
     suggestions: GuildCategories & { discussion: GuildCategories }
     reactionRoles: ReactionRole
     emojis: EmojiList
