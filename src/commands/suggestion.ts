@@ -66,8 +66,8 @@ export default new Command({
                 `Please run this command in <#${discussionID}>!`
             )
             if (message.channel.id === client.config.suggestions[category]) {
-                await message.delete()
-                await errorMessage.delete({ timeout: 10000 })
+                await message.delete().catch(() => null)
+                await errorMessage.delete({ timeout: 10000 }).catch(() => null)
             }
             return
         }

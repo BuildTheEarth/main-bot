@@ -37,13 +37,14 @@ export default new Command({
         if (title?.length > 99) error = "That title is too long!"
 
         if (error) {
-            if (message.channel.type !== "dm") await message.delete()
+            if (message.channel.type !== "dm") await message.delete().catch(() => null)
             const errorMessage = await message.channel.sendError(error)
-            return await errorMessage.delete({ timeout: 10000 })
+            return await errorMessage.delete({ timeout: 10000 }).catch(() => null)
         }
 
         // delete message asap if suggestion is anonymous
-        if (anon && message.channel.type !== "dm") await message.delete()
+        if (anon && message.channel.type !== "dm")
+            await message.delete().catch(() => null)
         else message.react("👌")
 
         const suggestion = new Suggestion()
@@ -67,6 +68,7 @@ export default new Command({
 
         await suggestionMessage.react(client.config.emojis.upvote)
         await suggestionMessage.react(client.config.emojis.downvote)
-        if (!anon && message.channel.type !== "dm") await message.delete()
+        if (!anon && message.channel.type !== "dm")
+            await message.delete().catch(() => null)
     }
 })
