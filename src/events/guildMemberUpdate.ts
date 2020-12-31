@@ -10,7 +10,7 @@ export default async function guildMemberUpdate(
     if (newMember.guild.id === this.config.guilds.youtube) {
         const main = this.guilds.cache.get(this.config.guilds.main)
         const mainMember: GuildMember = await main.members
-            .fetch({ user: newMember })
+            .fetch({ user: newMember.user, cache: true })
             .catch(() => null)
         if (!mainMember) return
 
