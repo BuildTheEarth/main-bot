@@ -9,6 +9,7 @@ import Roles from "../util/roles"
 import chalk from "chalk"
 
 export default async function (this: Client, message: Message): Promise<unknown> {
+    if (message.guild?.id === this.config.guilds.youtube) return
     if (message.author.bot) return
 
     const mainGuild = this.guilds.cache.get(this.config.guilds.main)
