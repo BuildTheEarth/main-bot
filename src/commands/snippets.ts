@@ -16,19 +16,19 @@ export default new Command({
         {
             name: "add",
             description: "Add a snippet.",
-            permission: [Roles.MANAGER, Roles.PR_TRANSLATION_TEAM],
+            permission: [Roles.SUPPORT, Roles.MANAGER, Roles.PR_TRANSLATION_TEAM],
             usage: "<name> <language> <body>"
         },
         {
             name: "edit",
             description: "Edit a snippet.",
-            permission: [Roles.MANAGER, Roles.PR_TRANSLATION_TEAM],
+            permission: [Roles.SUPPORT, Roles.MANAGER, Roles.PR_TRANSLATION_TEAM],
             usage: "<name> <language> <body>"
         },
         {
             name: "delete",
             description: "Delete a snippet.",
-            permission: Roles.MANAGER,
+            permission: [Roles.SUPPORT, Roles.MANAGER],
             usage: "<name> <language>"
         },
         {
@@ -67,8 +67,8 @@ export default new Command({
             })
         }
 
-        const editPermissions = [Roles.MANAGER, Roles.PR_TRANSLATION_TEAM]
-        const deletePermissions = Roles.MANAGER
+        const editPermissions = [Roles.SUPPORT, Roles.MANAGER, Roles.PR_TRANSLATION_TEAM]
+        const deletePermissions = [Roles.SUPPORT, Roles.MANAGER]
         if (!message.member.hasStaffPermission(editPermissions)) return
         const canDelete = message.member.hasStaffPermission(deletePermissions)
         if (subcommand === "delete" && !canDelete) return
