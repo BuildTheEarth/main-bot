@@ -127,7 +127,9 @@ export default new Command({
 
         // uh...
         const humanizeEmoji = (emoji: Discord.Emoji) =>
-            !emoji.id ? emoji.name : `<${emoji.identifier}>`
+            !emoji.id
+                ? emoji.name
+                : `<${emoji.animated ? "a" : ""}:${emoji.name}:${emoji.id}>`
         const humanizeStatus = (status: Discord.Activity) =>
             (status.emoji ? humanizeEmoji(status.emoji) + " " : "") +
             (status.state ? Discord.Util.escapeMarkdown(status.state) : "")
