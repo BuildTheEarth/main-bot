@@ -21,7 +21,7 @@
         "@types/node-fetch": "^2.5.7",
         "@typescript-eslint/eslint-plugin": "^4.11.1",
         "@typescript-eslint/parser": "^4.11.1",
-        "eslint": "^7.16.0",
+        "eslint": "^7.17.0",
         "eslint-config-prettier": "^7.1.0",
         "pm2": "^4.5.1",
         "prettier": "2.2.1",
