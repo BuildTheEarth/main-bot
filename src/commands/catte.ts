@@ -10,6 +10,6 @@ export default new Command({
     permission: Roles.ANY,
     usage: "",
     async run(this: Command, _client: Client, message: Message) {
-        await message.channel.send("Is the best staff")
+        await message.channel.send("STOP THE CAP")
     }
 })
