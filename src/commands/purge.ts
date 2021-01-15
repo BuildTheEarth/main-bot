@@ -15,6 +15,8 @@ export default new Command({
         const amount = Number(args.consume())
         if (Number.isNaN(amount))
             return message.channel.sendError("You must provide a valid amount!")
+        if(amount > 100)
+            return message.channel.sendError("CATTE IS BEING A TEST")
 
         const purged = await (<TextChannel>message.channel).bulkDelete(amount, true)
         await message.channel.sendSuccess(`Purged ${purged.size} messages.`)
