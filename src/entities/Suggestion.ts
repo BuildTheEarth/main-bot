@@ -96,6 +96,17 @@ export default class Suggestion extends BaseEntity {
         }
     }
 
+    static parseIdentifier(input: string): { number: number; extension: string } {
+        input = input
+            .trim()
+            .replace(/^\*?\*?#?/, "")
+            .replace(/:?\*?\*?:?$/, "")
+        const number = Number(input.match(/\d+/)?.[0])
+        const extensionMatch = input.match(/[b-z]$/i)?.[0]
+        const extension = extensionMatch ? extensionMatch.toLowerCase() : null
+        return { number, extension }
+    }
+
     getURL(client: Client): string {
         const category = this.staff ? "staff" : "main"
         const guild = client.config.guilds[category]
