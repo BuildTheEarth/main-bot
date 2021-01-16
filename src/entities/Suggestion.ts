@@ -83,7 +83,7 @@ export default class Suggestion extends BaseEntity {
         else if (!staff) return existing + 1000
     }
 
-    async getDisplayNumber(): Promise<string> {
+    async getIdentifier(): Promise<string> {
         if (!this.extends) {
             return this.number.toString()
         } else {
@@ -114,7 +114,7 @@ export default class Suggestion extends BaseEntity {
             }
         }
 
-        const displayNumber = await this.getDisplayNumber()
+        const displayNumber = await this.getIdentifier()
         const embed: Discord.MessageEmbedOptions = {
             color: "#999999",
             author: { name: `#${displayNumber} — ${this.title}` },

@@ -138,7 +138,7 @@ export default new Command({
             ) => {
                 embed.fields = []
                 for (const suggestion of results) {
-                    const number = await suggestion.getDisplayNumber()
+                    const number = await suggestion.getIdentifier()
                     const url = suggestion.getURL(client)
                     embed.fields.push({
                         name: `#${number} — ${suggestion.title}`,
@@ -198,7 +198,7 @@ export default new Command({
             return message.channel.sendError("Can't find the suggestion's message!")
 
         if (subcommand === "link") {
-            const displayNumber = await suggestion.getDisplayNumber()
+            const displayNumber = await suggestion.getIdentifier()
             const url = suggestionMessage.url
             if (suggestion.deletedAt) {
                 return message.channel.sendSuccess(
@@ -280,7 +280,7 @@ export default new Command({
                         .toLowerCase()
                         .replace(/ed( |$)/, "ed your suggestion ")
                         .trim()
-                    const number = await suggestion.getDisplayNumber()
+                    const number = await suggestion.getIdentifier()
                     const title = `[${suggestion.title}](${suggestion.getURL(client)})`
                     const cleanTitle = Discord.Util.escapeMarkdown(title)
 
