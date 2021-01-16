@@ -15,9 +15,11 @@ export type SuggestionStatus = keyof typeof SuggestionStatuses
 export enum SuggestionStatuses {
     "approved" = "Approved",
     "denied" = "Denied",
+    "duplicate" = "Marked as duplicate",
     "forwarded" = "Forwarded to the respective team",
+    "in-progress" = "Marked as in progress",
     "information" = "Marked as needing more information",
-    "in-progress" = "Marked as in progress"
+    "invalid" = "Invalidated"
 }
 
 @Entity({ name: "suggestions" })
