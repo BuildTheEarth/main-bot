@@ -107,6 +107,11 @@ export default class Suggestion extends BaseEntity {
         return { number, extension }
     }
 
+    static isIdentifier(input: string): boolean {
+        const identifier = this.parseIdentifier(input)
+        return !!identifier.number && !!identifier.extension
+    }
+
     getURL(client: Client): string {
         const category = this.staff ? "staff" : "main"
         const guild = client.config.guilds[category]
