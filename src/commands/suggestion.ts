@@ -285,7 +285,12 @@ export default new Command({
                     const cleanTitle = Discord.Util.escapeMarkdown(title)
 
                     const update = `${updater} ${actioned}: **#${number} — ${cleanTitle}**.`
-                    dms.sendSuccess(update).catch(() => null)
+                    dms.send({
+                        embed: {
+                            color: client.config.colors.suggestions[status],
+                            description: update
+                        }
+                    }).catch(() => null)
                 }
             }
 
