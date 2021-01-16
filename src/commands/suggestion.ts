@@ -278,7 +278,8 @@ export default new Command({
                     // marked as something -> marked your suggestion as something
                     const actioned = SuggestionStatuses[status]
                         .toLowerCase()
-                        .replace("ed ", "ed your suggestion ")
+                        .replace(/ed( |$)/, "ed your suggestion ")
+                        .trim()
                     const number = await suggestion.getDisplayNumber()
                     const title = `[${suggestion.title}](${suggestion.getURL(client)})`
                     const cleanTitle = Discord.Util.escapeMarkdown(title)
