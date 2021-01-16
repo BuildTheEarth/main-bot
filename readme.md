@@ -117,16 +117,20 @@ Rename the `_config.yml` file to `config.yml` and fill in all of the fields:
     -   **suggestions**
         -   **approved**
         -   **denied**
+        -   **duplicate**
         -   **forwarded**
-        -   **information**
         -   **in-progress**
+        -   **information**
+        -   **invalid**
 -   **assets**: URLs pointing to the asset images (from [`/assets/`](assets)). This is required as attachments are **(a)** a burden to work with and **(b)** not editable.
     -   **suggestions**
         -   **approved**
         -   **denied**
+        -   **duplicate**
         -   **forwarded**
-        -   **information**
         -   **in-progress**
+        -   **information**
+        -   **invalid**
     -   **cases**
         -   **warn**
         -   **mute**
