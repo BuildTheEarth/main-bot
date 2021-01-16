@@ -37,17 +37,21 @@ colors:
     suggestions:
         approved: "#4B53EB"
         denied: "#EB4364"
+        duplicate: "#E5B823"
         forwarded: "#D25424"
-        information: "#62D18A"
         in-progress: "#E5B823"
+        information: "#62D18A"
+        invalid: "#EB4364"
 
 assets:
     suggestions:
         approved: https://i.imgur.com/ttZm92O.png
         denied: https://i.imgur.com/3RjU2cu.png
+        duplicate: https://i.imgur.com/21C2CPw.png
         forwarded: https://i.imgur.com/21Xcn53.png
         in-progress: https://i.imgur.com/hJt4Cjs.png
         information: https://i.imgur.com/JToVhw7.png
+        invalid: https://i.imgur.com/1srPUeR.png
     cases:
         warn: https://i.imgur.com/HvFuorQ.png
         mute: https://i.imgur.com/32AebCX.png
