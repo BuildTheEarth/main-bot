@@ -109,7 +109,7 @@ export default class Suggestion extends BaseEntity {
     }
 
     static isIdentifier(input: string): boolean {
-        const identifier = this.parseIdentifier(input)
+        const identifier = Suggestion.parseIdentifier(input)
         return !!identifier.number && !!identifier.extension
     }
 
