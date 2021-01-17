@@ -15,6 +15,7 @@ suggestions:
     discussion:
         main: ""
         staff: ""
+suggestionMgrID: ""
 suggestionOffset:
     main: 0
     staff: 0
