@@ -111,6 +111,7 @@ export default class Suggestion extends BaseEntity {
         const extensionNumber = Suggestion.ALPHABET.indexOf(identifier.extension) - 1
         return await Suggestion.getRepository()
             .createQueryBuilder("suggestion")
+            .withDeleted()
             .where("suggestion.extends = :extends", { extends: identifier.number })
             .andWhere("suggestion.staff = :staff", { staff })
             .orderBy("suggestion.created_at", "ASC")
