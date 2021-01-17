@@ -15,6 +15,9 @@ suggestions:
     discussion:
         main: ""
         staff: ""
+suggestionOffset:
+    main: 0
+    staff: 0
 reactionRoles:
     <channel ID>:
         <message ID>:

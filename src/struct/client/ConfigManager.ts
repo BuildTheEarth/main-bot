@@ -7,7 +7,7 @@ import { Action } from "../../entities/ActionLog"
 import { EmojiIdentifierResolvable } from "discord.js"
 
 export type Field<T = string> = { [key: string]: T }
-export type GuildCategories = { main: string; staff: string }
+export type GuildCategories<T = string> = { main: T; staff: T }
 export type SuggestionCategories = Record<SuggestionStatus, string>
 export type ActionLogCategories = Record<Action, string>
 export type ReactionRole = Field<Field<Field>>
@@ -26,6 +26,7 @@ export default class ConfigManager implements Config {
     vanity: string
     guilds: GuildCategories & { youtube: string }
     suggestions: GuildCategories & { discussion: GuildCategories }
+    suggestionOffset: GuildCategories<number>
     reactionRoles: ReactionRole
     emojis: EmojiList
     colors: ColorPalette & { suggestions: SuggestionCategories }
@@ -67,6 +68,7 @@ export type Config = {
     vanity: string
     guilds: GuildCategories & { youtube: string }
     suggestions: GuildCategories & { discussion: GuildCategories }
+    suggestionOffset: GuildCategories<number>
     reactionRoles: ReactionRole
     emojis: EmojiList
     colors: ColorPalette & { suggestions: SuggestionCategories }
