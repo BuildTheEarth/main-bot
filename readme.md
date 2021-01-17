@@ -96,6 +96,9 @@ Rename the `_config.yml` file to `config.yml` and fill in all of the fields:
 -   **suggestions**: The channel IDs for the main and staff servers' suggestions channel:
     -   **main**
     -   **staff**
+-   **suggestionOffset**: The numbers from where to start counting suggestions:
+    -   **main**
+    -   **staff**
 -   **reactionRoles**: A map of the reaction roles.
     -   **\<channel ID>**
         -   **\<message ID>**
