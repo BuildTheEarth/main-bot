@@ -13,7 +13,13 @@ export default new Command({
     name: "check",
     aliases: ["history", "logs", "records"],
     description: "Check a user's punishment records.",
-    permission: [Roles.HELPER, Roles.MODERATOR, Roles.MANAGER, Roles.SUPPORT],
+    permission: [
+        Roles.HELPER,
+        Roles.MODERATOR,
+        Roles.MANAGER,
+        Roles.SUPPORT,
+        Roles.PR_SUBTEAM_LEADS
+    ],
     usage: "<user> ['deleted']",
     async run(this: Command, client: Client, message: Message, args: Args) {
         const user = await args.consumeUser(true)
