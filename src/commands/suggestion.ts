@@ -183,11 +183,11 @@ export default new Command({
 
         /* suggestion management commands from here */
 
-        const number = Number(args.consume().match(/\d+/)?.[0])
-        if (Number.isNaN(number))
+        const identifier = Suggestion.parseIdentifier(args.consume())
+        if (!identifier.number)
             return message.channel.sendError("You must specify a suggestion number!")
 
-        const suggestion = await Suggestion.findOne({ number, staff })
+        const suggestion = await Suggestion.findByIdentifier(identifier, staff)
         if (!suggestion)
             return message.channel.sendError("Hmm... That suggestion doesn't exist.")
 
