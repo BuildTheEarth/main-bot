@@ -6,8 +6,6 @@ import Suggestion from "../entities/Suggestion"
 import Roles from "../util/roles"
 import TextChannel from "../struct/discord/TextChannel"
 
-const EXTENSION_REGEX = /^(?:\*?\*?#?)(\d{1,10}) *(?:[a-z])(?::?\*?\*?:? *)/i
-
 export default new Command({
     name: "suggest",
     aliases: [],
@@ -25,12 +23,13 @@ export default new Command({
                 `Please run this command in <#${suggestionsChannel}>!`
             )
 
+        const identifier = args.consumeIf(Suggestion.isIdentifier)
+        const extend = identifier && Suggestion.parseIdentifier(identifier)
         args.separator = "|"
         const [title, body, teams] = args.consume(3)
 
         let error: string
-        const extend = title.match(EXTENSION_REGEX)?.[1]
-        if (extend && !(await Suggestion.findOne({ number: Number(extend) })))
+        if (extend && !(await Suggestion.findOne({ number: extend.number })))
             error = `The suggestion you're trying to extend (**#${extend}**) doesn't exist!`
         if (!body) error = "You must specify a suggestion body!"
         if (!title) error = "You must specify a title!"
@@ -48,11 +47,11 @@ export default new Command({
         else message.react("👌")
 
         const suggestion = new Suggestion()
-        if (!extend) suggestion.number = await Suggestion.findNumber(staff, client)
-        else suggestion.extends = Number(extend)
+        if (extend?.number) suggestion.extends = extend.number
+        else suggestion.number = await Suggestion.findNumber(staff, client)
         suggestion.author = message.author.id
         suggestion.anonymous = anon
-        suggestion.title = title.replace(EXTENSION_REGEX, "")
+        suggestion.title = title
         suggestion.body = body
         suggestion.teams = teams || null
         suggestion.staff = staff
