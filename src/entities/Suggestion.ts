@@ -74,13 +74,14 @@ export default class Suggestion extends BaseEntity {
     @SnowflakeColumn({ nullable: true })
     deleter?: string
 
-    static async findNumber(staff: boolean): Promise<number> {
+    static async findNumber(staff: boolean, client: Client): Promise<number> {
+        const field = staff ? "staff" : "main"
         const existing = await this.count({
             where: { staff, extends: null },
             withDeleted: true
         })
-        if (staff) return existing + 352
-        else if (!staff) return existing + 1000
+
+        return existing + client.config.suggestionOffset[field]
     }
 
     async getIdentifier(): Promise<string> {

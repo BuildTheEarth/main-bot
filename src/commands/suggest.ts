@@ -48,7 +48,7 @@ export default new Command({
         else message.react("👌")
 
         const suggestion = new Suggestion()
-        if (!extend) suggestion.number = await Suggestion.findNumber(staff)
+        if (!extend) suggestion.number = await Suggestion.findNumber(staff, client)
         else suggestion.extends = Number(extend)
         suggestion.author = message.author.id
         suggestion.anonymous = anon
