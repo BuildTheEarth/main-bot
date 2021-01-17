@@ -21,6 +21,10 @@ export enum SuggestionStatuses {
     "information" = "Marked as needing more information",
     "invalid" = "Invalidated"
 }
+export interface Identifier {
+    number: number
+    extension: string
+}
 
 @Entity({ name: "suggestions" })
 export default class Suggestion extends BaseEntity {
@@ -97,7 +101,25 @@ export default class Suggestion extends BaseEntity {
         }
     }
 
-    static parseIdentifier(input: string): { number: number; extension: string } {
+    static async findByIdentifier(
+        identifier: Identifier,
+        staff: boolean
+    ): Promise<Suggestion> {
+        if (!identifier.extension)
+            return await this.findOne({ number: identifier.number, staff })
+
+        const extensionNumber = Suggestion.ALPHABET.indexOf(identifier.extension) - 1
+        return await Suggestion.getRepository()
+            .createQueryBuilder("suggestion")
+            .where("suggestion.extends = :extends", { extends: identifier.number })
+            .andWhere("suggestion.staff = :staff", { staff })
+            .orderBy("suggestion.created_at", "ASC")
+            .skip(extensionNumber)
+            .take(1) // required for skip()
+            .getOne()
+    }
+
+    static parseIdentifier(input: string): Identifier {
         input = input
             .trim()
             .replace(/^\*?\*?#?/, "")
