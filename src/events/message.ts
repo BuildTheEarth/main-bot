@@ -69,7 +69,10 @@ export default async function (this: Client, message: Message): Promise<unknown>
     }
 
     const suggestions = Object.values(this.config.suggestions)
-    if (suggestions.includes(message.channel.id)) {
+    if (
+        suggestions.includes(message.channel.id) &&
+        !message.member.hasStaffPermission(Roles.MANAGER)
+    ) {
         const error = await message.channel.sendError(
             `Please use the \`suggest\` command to post suggestions! (Check \`${this.config.prefix}help suggest\` for help). **Your message will be deleted in 30 seconds.**`
         )
