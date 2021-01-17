@@ -94,7 +94,7 @@ export default class ActionLog extends BaseEntity {
             thumbnail: { url: client.config.assets.cases[this.action] },
             fields: [
                 { name: "Member", value: `<@${this.member}>` },
-                { name: this.length ? "Length" : "\u200B", value: length },
+                { name: this.length !== null ? "Length" : "\u200B", value: length },
                 { name: "Reason", value: this.reason },
                 { name: "Moderator", value: `<@${this.executor}>` },
                 { name: "Context", value: `[Link](${messageLink})` },
