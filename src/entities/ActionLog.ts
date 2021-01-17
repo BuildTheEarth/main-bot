@@ -87,7 +87,8 @@ export default class ActionLog extends BaseEntity {
 
     displayEmbed(client: Client): Discord.MessageEmbedOptions {
         const messageLink = `https://discord.com/channels/${client.config.guilds.main}/${this.channel}/${this.message}`
-        const length = this.length ? formatPunishmentTime(this.length, true) : "\u200B"
+        const length =
+            this.length !== null ? formatPunishmentTime(this.length, true) : "\u200B"
         const embed: Discord.MessageEmbedOptions = {
             color: client.config.colors.success,
             author: { name: `Case #${this.id} (${this.action})` },
