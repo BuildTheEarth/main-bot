@@ -70,13 +70,14 @@ export default async function (this: Client, message: Message): Promise<unknown>
 
     const suggestions = Object.values(this.config.suggestions)
     if (suggestions.includes(message.channel.id)) {
-        const error = await message.channel.sendError(
-            `Please use the \`suggest\` command to post suggestions! (Check \`${this.config.prefix}help suggest\` for help). **Your message will be deleted in 30 seconds.**`
-        )
-
-        await message.delete({ timeout: 30000 })
-        await error.delete({ timeout: 30000 })
-        return
+        if (message.author.id !== "369661965376946176") {
+            const error = await message.channel.sendError(
+                `Please use the \`suggest\` command to post suggestions! (Check \`${this.config.prefix}help suggest\` for help). **Your message will be deleted in 30 seconds.**`
+            )
+            await message.delete({ timeout: 30000 })
+            await error.delete({ timeout: 30000 })
+            return
+        }
     }
 
     if (message.content === "donde es server")
