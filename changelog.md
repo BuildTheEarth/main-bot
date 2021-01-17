@@ -1,3 +1,27 @@
+## [v1.5.0] <sub><sup><sub>17/01/21</sub></sup></sub>
+
+**Features:**
+
+-   Began automatically setting vanity invite when level 3 boosting is reached.
+-   Created `avatar` command.
+-   Created tasks.
+-   Renamed `teamOwner` command to `position`, allow for more roles.
+-   Created `snippets source` subcommand.
+-   Created `suggestion search` subcommand.
+-   Created `duplicate` and `invalid` suggestion statuses.
+
+**Changes:**
+
+-   Switched `information` and `approved` suggestion asset colors.
+-   Began allowing `zh-s` and `zh-t` languages for snippets.
+-   Started supporting/mirroring Pippen's YouTube group roles.
+
+**Bug fixes:**
+
+-   Various bug fixes to `user` command.
+-   Fixed suggestion number calculation after sub-suggestions were made.
+-   Began supporting sub-suggestion management.
+
 ## [v1.4.0] <sub><sup><sub>19/12/20</sub></sup></sub>
 
 **Internal changes:**
