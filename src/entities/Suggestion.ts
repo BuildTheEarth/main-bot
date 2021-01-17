@@ -145,19 +145,20 @@ export default class Suggestion extends BaseEntity {
     }
 
     async displayEmbed(client: Client): Promise<Discord.MessageEmbedOptions> {
+        const identifier = await this.getIdentifier()
+
         if (this.deletedAt) {
             const deleter =
                 this.deleter === this.author ? "the author" : `<@${this.deleter}>`
             return {
                 color: client.config.colors.error,
-                description: `**#${this.number}**: The suggestion has been deleted by ${deleter}.`
+                description: `**#${identifier}**: The suggestion has been deleted by ${deleter}.`
             }
         }
 
-        const displayNumber = await this.getIdentifier()
         const embed: Discord.MessageEmbedOptions = {
             color: "#999999",
-            author: { name: `#${displayNumber} — ${this.title}` },
+            author: { name: `#${identifier} — ${this.title}` },
             thumbnail: { url: null },
             description: this.body,
             fields: []
