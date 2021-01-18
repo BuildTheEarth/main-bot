@@ -33,7 +33,8 @@
         "build": "tsc",
         "watch": "tsc --watch",
         "format": "prettier --write src/",
-        "lint": "eslint src --fix"
+        "lint": "eslint src --fix",
+        "update": "git pull && npm run build && pm2 restart main-bot"
     },
     "repository": "BuildTheEarth/main-bot",
     "author": "BuildTheEarth",
