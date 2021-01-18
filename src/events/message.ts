@@ -83,5 +83,5 @@ export default async function (this: Client, message: Message): Promise<unknown>
     }
 
     if (message.content === "donde es server")
-        return message.channel.send("no hay server!")
+        return message.channel.send("hay un server!")
 }
