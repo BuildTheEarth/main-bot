@@ -5,10 +5,10 @@ export default function formatPunishmentTime(
     bare: boolean = false
 ): string {
     if (bare) {
-        if (length === 0) return "**Permanent**"
+        if (!length) return "**Permanent**"
         else return ms(length, { long: true })
     } else {
-        if (length === 0) return "**permanently**"
+        if (!length) return "**permanently**"
         else return `for ${ms(length, { long: true })}`
     }
 }
