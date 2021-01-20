@@ -63,6 +63,8 @@ assets:
         unmute: https://i.imgur.com/ZC0qrC9.png
         unban: https://i.imgur.com/PfrLhuO.png
 
+rules: []
+
 database:
     host: ""
     name: ""

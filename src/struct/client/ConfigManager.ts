@@ -31,6 +31,7 @@ export default class ConfigManager {
     emojis: EmojiList
     colors: ColorPalette & { suggestions: SuggestionCategories }
     assets: AssetList
+    rules: string[]
     database: DatabaseInfo
 
     constructor(client: Client) {
