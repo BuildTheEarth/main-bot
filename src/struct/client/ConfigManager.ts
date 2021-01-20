@@ -16,7 +16,7 @@ export type AssetList = { suggestions: SuggestionCategories; cases: ActionLogCat
 export type ColorPalette = { success: string; error: string; info: string }
 export type DatabaseInfo = { host: string; name: string; user: string; pass: string }
 
-export default class ConfigManager implements Config {
+export default class ConfigManager {
     client: Client
     token: string
     modpack: string
@@ -39,7 +39,7 @@ export default class ConfigManager implements Config {
 
     async load(): Promise<void> {
         const configPath = path.join(__dirname, "../../../config.yml")
-        const config: Config = await fs.promises
+        const config = await fs.promises
             .readFile(configPath, "utf-8")
             .then(yaml => YAML.parse(yaml))
             .catch((e: Error) => {
@@ -57,21 +57,4 @@ export default class ConfigManager implements Config {
             }
         }
     }
-}
-
-export type Config = {
-    token: string
-    modpack: string
-    prefix: string
-    logs: string
-    appeal: string
-    vanity: string
-    guilds: GuildCategories & { youtube: string }
-    suggestions: GuildCategories & { discussion: GuildCategories }
-    suggestionOffset: GuildCategories<number>
-    reactionRoles: ReactionRole
-    emojis: EmojiList
-    colors: ColorPalette & { suggestions: SuggestionCategories }
-    assets: AssetList
-    database: DatabaseInfo
 }
