@@ -141,6 +141,7 @@ Rename the `_config.yml` file to `config.yml` and fill in all of the fields:
         -   **ban**
         -   **unmute**
         -   **unban**
+-   **rules:** A list of rules for the server (used by the `rule` command).
 -   **database**: The information/credentials for connecting to the database.
     -   **host**: The database host (most likely `localhost`).
     -   **name**: The name of the database.
