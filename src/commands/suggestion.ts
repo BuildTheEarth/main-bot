@@ -224,6 +224,8 @@ export default new Command({
                 return message.channel.sendError("That title is too long!")
             if (field === "teams" && edited.length > 255)
                 return message.channel.sendError("That team is too long!")
+            if (!edited)
+                return message.channel.sendError("You must provide a new field body!")
 
             suggestion[field] = edited
             await suggestion.save()
