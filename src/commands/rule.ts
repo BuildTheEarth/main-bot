@@ -16,8 +16,10 @@ export default new Command({
         let rule: string
 
         if (Number.isInteger(number)) {
+            if (number < 1) return message.channel.sendError("That's not a valid number.")
+
             const count = client.config.rules.length
-            if (number > count || number === 0)
+            if (number > count)
                 return message.channel.sendError(`There are only ${count} rules.`)
             rule = client.config.rules[number - 1]
         } else {
