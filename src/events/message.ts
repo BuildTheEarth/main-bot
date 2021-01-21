@@ -23,14 +23,13 @@ export default async function (this: Client, message: Message): Promise<unknown>
     if (message.content.startsWith(this.config.prefix)) {
         const body = message.content.slice(this.config.prefix.length).trim()
         const args = new Args(body, message)
-        const commandName = args.consume()
 
-        const command = this.commands.search(commandName)
+        const command = this.commands.search(args.command)
         if (!command) {
             const firstArg = args.consume().toLowerCase()
             const languageName = languages.getName(firstArg) || "English"
             const language = languages.validate(firstArg) ? firstArg.toLowerCase() : "en"
-            const snippet = await Snippet.findOne({ name: commandName, language })
+            const snippet = await Snippet.findOne({ name: args.command, language })
 
             if (firstArg.toLowerCase() === "zh")
                 return message.channel.sendError(
@@ -38,10 +37,10 @@ export default async function (this: Client, message: Message): Promise<unknown>
                 )
 
             if (!snippet) {
-                const unlocalizedSnippet = await Snippet.findOne({ name: commandName })
+                const unlocalizedSnippet = await Snippet.findOne({ name: args.command })
                 if (unlocalizedSnippet)
                     message.channel.sendError(
-                        `The **${commandName}** snippet hasn't been translated to ${languageName} yet.`
+                        `The **${args.command}** snippet hasn't been translated to ${languageName} yet.`
                     )
                 return
             }
