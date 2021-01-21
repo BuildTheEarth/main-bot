@@ -83,8 +83,6 @@ This project follows the [All Contributors][] specification. Contributions of an
 
 Rename the `_config.yml` file to `config.yml` and fill in all of the fields:
 
--   **token**: The Discord bot's token.
--   **modpack**: The secret key for our modpack image API (required for the `modpack` command).
 -   **prefix**: The command prefix.
 -   **logs**: The logs channel ID (enclosed in quotes).
 -   **appeal**: The ban appeal message.
@@ -142,6 +140,8 @@ Rename the `_config.yml` file to `config.yml` and fill in all of the fields:
         -   **unmute**
         -   **unban**
 -   **rules:** A list of rules for the server (used by the `rule` command).
+-   **token**: The Discord bot's token.
+-   **modpackAuth**: The key for our modpack image API (required for the `modpack` command).
 -   **database**: The information/credentials for connecting to the database.
     -   **host**: The database host (most likely `localhost`).
     -   **name**: The name of the database.
