@@ -4,11 +4,13 @@ import Message from "./discord/Message"
 
 export default class Args {
     raw: string
+    command: string
     separator?: string
     message: Message
 
     constructor(value: string, message: Message) {
         this.raw = value.trim()
+        this.command = this.consume()
         this.message = message
     }
 
