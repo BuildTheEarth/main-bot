@@ -6,7 +6,7 @@ import Roles from "../util/roles"
 
 export default new Command({
     name: "rule",
-    aliases: [],
+    aliases: ["rules"],
     description: "Get a rule's text.",
     permission: Roles.ANY,
     usage: "<number | text>",
