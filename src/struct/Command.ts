@@ -10,7 +10,7 @@ export default class Command implements CommandProperties {
     usage: string
     dms: boolean
     subcommands: SubCommandProperties[]
-    run: (client: Client, message: Message, args: Args) => void
+    run: (client: Client, message: Message, args: Args) => void | Promise<void>
 
     constructor(properties: CommandProperties) {
         this.name = properties.name
