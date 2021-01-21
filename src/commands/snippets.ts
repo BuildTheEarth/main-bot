@@ -98,7 +98,7 @@ export default new Command({
                 if (!existingSnippet)
                     return message.channel.sendError("That snippet doesn't exist!")
                 if (existingSnippet.body === body)
-                    return message.channel.sendSuccess("Nothing changed.")
+                    return message.channel.sendError("Nothing changed.")
                 snippet = existingSnippet
             }
 
