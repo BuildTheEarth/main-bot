@@ -115,7 +115,7 @@ export default new Command({
                 await image.save()
             }
 
-            await ModpackImage.post(client.config.modpack)
+            await ModpackImage.post(client.config.modpackAuth)
             message.channel.sendSuccess("Pushed changes locally and to API!")
         } else if (subcommand === "url") {
             message.channel.sendSuccess(ModpackImage.API_URL)

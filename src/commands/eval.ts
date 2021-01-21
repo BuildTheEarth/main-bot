@@ -43,7 +43,7 @@ export default new Command({
             const wrapped = code.includes("await") ? `(async () => {${code}})()` : code
 
             const tokenRegex = new RegExp(client.token, "g")
-            const modpackRegex = new RegExp(client.config.modpack, "g")
+            const modpackRegex = new RegExp(client.config.modpackAuth, "g")
             const pwRegex = new RegExp(client.config.database.pass, "g")
             const out = stringifyAnything(await eval(wrapped))
                 .replace(tokenRegex, "")
