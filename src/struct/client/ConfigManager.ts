@@ -18,8 +18,6 @@ export type DatabaseInfo = { host: string; name: string; user: string; pass: str
 
 export default class ConfigManager {
     client: Client
-    token: string
-    modpack: string
     prefix: string
     logs: string
     appeal: string
@@ -32,6 +30,8 @@ export default class ConfigManager {
     colors: ColorPalette & { suggestions: SuggestionCategories }
     assets: AssetList
     rules: string[]
+    token: string
+    modpackAuth: string
     database: DatabaseInfo
 
     constructor(client: Client) {
