@@ -34,7 +34,8 @@
         "watch": "tsc --watch",
         "format": "prettier --write src/",
         "lint": "eslint src --fix",
-        "update": "git pull && npm run build && pm2 restart main-bot"
+        "update": "git pull && npm run build && pm2 restart main-bot",
+        "update:migrate": "git pull && npm run build && pm2 stop main-bot && typeorm migration:run && pm2 start main-bot"
     },
     "repository": "BuildTheEarth/main-bot",
     "author": "BuildTheEarth",
