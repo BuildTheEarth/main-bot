@@ -16,7 +16,7 @@ export default new Command({
             name: "edit",
             description: "Edit a case.",
             permission: [Roles.HELPER, Roles.MODERATOR, Roles.MANAGER],
-            usage: "<id> <new reason>"
+            usage: "<id> [image URL | attachment] <new reason>"
         },
         {
             name: "delete",
@@ -38,13 +38,15 @@ export default new Command({
             const embed = log.displayEmbed(client)
             await message.channel.send({ embed })
         } else if (subcommand === "edit") {
+            const image = args.consumeImage()
             const reason = args.consumeRest()
-            if (!reason)
-                return message.channel.sendError("You must provide a new reason!")
-            if (reason === log.reason)
+            if (!reason && !image)
+                return message.channel.sendError("You must provide a new reason/image!")
+            if (reason === log.reason && !image)
                 return message.channel.sendError("Nothing changed.")
 
-            log.reason = reason
+            if (image) log.reasonImage = image
+            if (reason) log.reason = reason
             await log.save()
             await message.channel.sendSuccess(`Edited case **#${id}**.`)
             await client.log(log)
