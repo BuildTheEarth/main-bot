@@ -60,12 +60,29 @@ export default async function (this: Client, message: Message): Promise<unknown>
         if (!member && !command.dms) return
         if (command.permission !== Roles.ANY && !hasPermission) return
 
-        command.run(this, message, args)
-        const tag = member
+        const label = message.member
             ? (<Role>member.roles.highest).format()
             : chalk.blueBright("DMs")
-        this.logger.info(`${tag} ${message.author.tag} ran '${commandName}' command.`)
-        return
+
+        try {
+            await command.run(this, message, args)
+        } catch (error) {
+            message.channel.sendError(
+                "An unknown error occurred! Please contact one of the bot developers for help."
+            )
+
+            const stack = (<string>error.stack)
+                .split("\n")
+                .map(line => "    " + line)
+                .join("\n")
+            return this.logger.error(
+                `${label} ${message.author.tag} tried to run '${command.name}' command:\n${stack}`
+            )
+        }
+
+        return this.logger.info(
+            `${label} ${message.author.tag} ran '${command.name}' command.`
+        )
     }
 
     const suggestions = Object.values(this.config.suggestions)
