@@ -21,9 +21,9 @@ export default new Command({
             : await main.members
                   .fetch({ user: message.author, cache: true })
                   .catch(() => null)) as GuildMember
+        const commandName = args.consume()
 
-        if (args.raw) {
-            const commandName = args.consume()
+        if (commandName) {
             const command = client.commands.search(commandName)
             if (!command)
                 return message.channel.sendError(
@@ -73,10 +73,25 @@ export default new Command({
         const allowedCommands = client.commands.filter(command =>
             member.hasStaffPermission(command.permission)
         )
-        const commandNames = allowedCommands.map(command => command.name)
+
+        const formattedCommands = allowedCommands
+            .map(command => `• **${command.name}:** ${command.description}`)
+            .join("\n")
+
         return message.channel.sendSuccess({
             author: { name: "Here are all the commands you have access to:" },
-            description: humanizeArray(commandNames, true, "")
+            description: formattedCommands,
+            fields: [
+                {
+                    name: "Arguments",
+                    value:
+                        "Argument names enclosed in `[square brackets]` are optional. Ones enclosed in `<angle brackets>` are required. Ones enclosed in `['single quotes']` mean that you should type their name to toggle an option (instead of providing a value of your own)."
+                },
+                {
+                    name: "More info",
+                    value: `To get info on a specific command, use the \`${client.config.prefix}help [command]\` command.`
+                }
+            ]
         })
     }
 })
