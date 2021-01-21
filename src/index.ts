@@ -42,3 +42,13 @@ async function main() {
 }
 
 main()
+
+process.on("uncaughtException", (error: Error) => {
+    client.logger.error(error.stack)
+    setTimeout(() => process.exit(1), 100)
+})
+
+process.on("unhandledRejection", (error: Error) => {
+    client.logger.error(`[Unhandled Rejection] ${error.stack}`)
+    setTimeout(() => process.exit(1), 100)
+})
