@@ -4,7 +4,6 @@ import Args from "../struct/Args"
 import TimedPunishment from "../entities/TimedPunishment"
 import ActionLog from "../entities/ActionLog"
 import Command from "../struct/Command"
-import GuildMember from "../struct/discord/GuildMember"
 import Roles from "../util/roles"
 import noop from "../util/noop"
 
