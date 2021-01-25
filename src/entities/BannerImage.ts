@@ -21,8 +21,8 @@ export default class BannerImage extends BaseEntity {
     @Column()
     location: string
 
-    @Column()
-    description: string
+    @Column({ nullable: true })
+    description?: string
 
     @SnowflakeColumn()
     creator: string
