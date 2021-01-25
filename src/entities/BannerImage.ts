@@ -25,4 +25,9 @@ export default class BannerImage extends BaseEntity {
 
     @DeleteDateColumn({ name: "deleted_at" })
     deletedAt?: Date
+
+    format(): string {
+        const builders = this.builders.map(id => `<@${id}>`).join(", ")
+        return `**#${this.id}:** [Link](${this.url}), by ${builders}`
+    }
 }
