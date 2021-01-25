@@ -36,6 +36,12 @@ export default new Command({
             description: "Get the source response of a specific snippet.",
             permission: Roles.ANY,
             usage: "<name> <language>"
+        },
+        {
+            name: "aliases",
+            description: "Add aliases to a snippet",
+            permission: [Roles.MANAGER],
+            usage: "<list | add | remove> <name> <language> [alias]"
         }
     ],
     async run(this: Command, client: Client, message: Message, args: Args) {
@@ -65,6 +71,41 @@ export default new Command({
                 author: { name: "Snippet list" },
                 description: list
             })
+        } else if (subcommand === "aliases") {
+            const subcommand = args.consume().toLowerCase();
+            const name = args.consume().toLowerCase()
+            const language = args.consume().toLowerCase()
+            const languageName = languages.getName(language)
+            if (!name) return message.channel.sendError("You must specify a snippet name.")
+            if (!languageName)
+                return message.channel.sendError("You must specify a valid snippet language.")
+
+            const snippet = await Snippet.findOne({ name, language });
+            if (!snippet)
+                return message.channel.sendError("That snippet doesn't exist!");
+            if (subcommand === "list"){
+                const aliases = snippet.aliases;
+                if (aliases.length < 1) {
+                    return message.channel.sendError("no aliases");
+                }
+                return message.channel.sendSuccess("• " + snippet.aliases.join("\n• "));
+            }
+            const alias = args.consume().toLowerCase();
+            if (!alias)
+                return message.channel.sendError("You must specify an alias.")
+            if (subcommand === "add"){
+                snippet.aliases.push(alias);
+                await snippet.save();
+                return message.channel.sendSuccess(`Added the alias **${alias}** to **${name}** snippet in ${languageName}.`);
+            } else if (subcommand === "remove"){
+                const aliases = snippet.aliases
+                if(!aliases.includes(alias)){
+                    return message.channel.sendError("That snippet does not have this alias!");
+                }
+                aliases.splice(aliases.indexOf(alias), 1);
+                await snippet.save();
+                return message.channel.sendSuccess(`Removed the alias **${alias}** from **${name}** snippet in ${languageName}.`);
+            }
         }
 
         const editPermissions = [Roles.SUPPORT, Roles.MANAGER, Roles.PR_TRANSLATION_TEAM]

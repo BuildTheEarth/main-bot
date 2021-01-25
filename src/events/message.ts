@@ -7,6 +7,7 @@ import Snippet from "../entities/Snippet"
 import languages from "../util/patchedISO6391"
 import Roles from "../util/roles"
 import chalk from "chalk"
+import Includes from "../entities/operators/Includes"
 
 export default async function (this: Client, message: Message): Promise<unknown> {
     if (message.guild?.id === this.config.guilds.youtube) return
@@ -29,7 +30,7 @@ export default async function (this: Client, message: Message): Promise<unknown>
             const firstArg = args.consume().toLowerCase()
             const languageName = languages.getName(firstArg) || "English"
             const language = languages.validate(firstArg) ? firstArg.toLowerCase() : "en"
-            const snippet = await Snippet.findOne({ name: args.command, language })
+            let snippet = await Snippet.findOne({ name: args.command, language })
 
             if (firstArg.toLowerCase() === "zh")
                 return message.channel.sendError(
@@ -38,11 +39,16 @@ export default async function (this: Client, message: Message): Promise<unknown>
 
             if (!snippet) {
                 const unlocalizedSnippet = await Snippet.findOne({ name: args.command })
-                if (unlocalizedSnippet)
-                    message.channel.sendError(
+                if (unlocalizedSnippet){
+                    return message.channel.sendError(
                         `The **${args.command}** snippet hasn't been translated to ${languageName} yet.`
                     )
-                return
+                } else {
+                    const aliasSnippet = await Snippet.findOne({ where: { aliases: Includes(args.command) } });
+                    if(aliasSnippet){
+                        snippet = aliasSnippet;
+                    }
+                }
             }
 
             // eslint-disable-next-line @typescript-eslint/no-empty-function
