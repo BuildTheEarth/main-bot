@@ -135,6 +135,7 @@ export default new Command({
                 snippet = new Snippet()
                 snippet.name = name
                 snippet.language = language
+                snippet.aliases = []
             } else if (subcommand === "edit") {
                 if (!existingSnippet)
                     return message.channel.sendError("That snippet doesn't exist!")
