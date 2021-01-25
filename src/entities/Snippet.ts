@@ -17,7 +17,7 @@ export default class Snippet extends BaseEntity {
     @Column({ length: 2000 })
     body: string
 
-    @Column("simple-array", { default: "" })
+    @Column("simple-array")
     aliases: string[]
 
     displayEmbed(client: Client): Discord.MessageEmbedOptions {
