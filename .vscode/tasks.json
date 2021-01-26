@@ -1,0 +1,23 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "type": "npm",
+            "script": "watch",
+            "problemMatcher": ["$tsc-watch"],
+            "group": "build",
+            "label": "Build TypeScript in watch mode",
+            "detail": "tsc --watch",
+            "isBackground": true
+        },
+        {
+            "type": "npm",
+            "script": "start",
+            "problemMatcher": [],
+            "group": "none",
+            "label": "Start the bot",
+            "detail": "node dist/index.js --unhandled-rejections=strict",
+            "isBackground": true
+        }
+    ]
+}
