@@ -65,8 +65,10 @@ export default new Command({
         await log.save()
 
         const formattedLength = formatPunishmentTime(length)
-        const dms = await user.createDM()
-        dms.send({ embed: log.displayUserEmbed(client) }).catch(noop)
+        await user
+            .createDM()
+            .then(dms => dms.send({ embed: log.displayUserEmbed(client) }))
+            .catch(noop)
 
         const away = member ? "" : ", though they're not in the server"
         const formattedUser = user.id === message.author.id ? "*you*" : user.toString()

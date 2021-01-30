@@ -65,8 +65,10 @@ export default new Command({
         await log.save()
 
         const formattedLength = formatPunishmentTime(length)
-        const dms = await user.createDM()
-        await dms.send({ embed: log.displayUserEmbed(client) }).catch(noop)
+        await user
+            .createDM()
+            .then(dms => dms.send({ embed: log.displayUserEmbed(client) }))
+            .catch(noop)
         await message.guild.members.ban(user, { reason })
 
         await message.channel.sendSuccess(
