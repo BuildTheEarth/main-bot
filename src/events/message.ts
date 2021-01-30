@@ -39,20 +39,19 @@ export default async function (this: Client, message: Message): Promise<unknown>
 
             if (!snippet) {
                 const unlocalizedSnippet = await Snippet.findOne({ name: args.command })
-                if (unlocalizedSnippet){
+                if (unlocalizedSnippet) {
                     return message.channel.sendError(
                         `The **${args.command}** snippet hasn't been translated to ${languageName} yet.`
                     )
                 } else {
-                    const aliasSnippet = await Snippet.findOne({ where: { aliases: Includes(args.command) } });
-                    if(aliasSnippet){
-                        snippet = aliasSnippet;
-                    }
+                    const aliasSnippet = await Snippet.findOne({
+                        where: { aliases: Includes(args.command) }
+                    })
+                    if (aliasSnippet) snippet = aliasSnippet
                 }
             }
 
-            // eslint-disable-next-line @typescript-eslint/no-empty-function
-            return message.channel.send(snippet.body).catch(() => {})
+            return message.channel.send(snippet.body).catch(() => null)
         }
 
         const member = (message.guild
@@ -66,7 +65,7 @@ export default async function (this: Client, message: Message): Promise<unknown>
         if (command.permission !== Roles.ANY && !hasPermission) return
 
         const label = message.member
-            ? (<Role>member.roles.highest).format()
+            ? (member.roles.highest as Role).format()
             : chalk.blueBright("DMs")
 
         try {
