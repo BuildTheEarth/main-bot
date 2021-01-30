@@ -33,18 +33,17 @@ export default new Command({
         const member: GuildMember = await message.guild.members
             .fetch({ user, cache: true })
             .catch(() => null)
-        if (!member) return message.channel.sendError("That user is not in the server!")
 
-        const existingMute = await TimedPunishment.findOne({
-            member: user.id,
-            type: "mute"
-        })
-        if (existingMute) return message.channel.sendError("That user is already muted!")
-
-        if (member.hasStaffPermission(Roles.STAFF) && member.id !== message.author.id)
+        const mute = await TimedPunishment.findOne({ member: user.id, type: "mute" })
+        if (mute) return message.channel.sendError("That user is already muted!")
+        if (
+            member &&
+            member.hasStaffPermission(Roles.STAFF) &&
+            member.id !== message.author.id
+        )
             return message.channel.sendError("You can't mute other staff!")
 
-        await member.mute(reason)
+        if (member) await member.mute(reason)
 
         const punishment = new TimedPunishment()
         punishment.member = user.id
@@ -69,9 +68,10 @@ export default new Command({
         const dms = await user.createDM()
         dms.send({ embed: log.displayUserEmbed(client) }).catch(noop)
 
+        const away = member ? "" : ", though they're not in the server"
         const formattedUser = user.id === message.author.id ? "*you*" : user.toString()
         await message.channel.sendSuccess(
-            `Muted ${formattedUser} ${formattedLength} (**#${log.id}**).`
+            `Muted ${formattedUser} ${formattedLength} (**#${log.id}**)${away}.`
         )
         await client.log(log)
     }
