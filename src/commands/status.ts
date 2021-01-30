@@ -31,8 +31,11 @@ export default new Command({
 
             if (status.players.online) {
                 let players = `There are **${status.players.online}** / **${status.players.max}** players online.\n\n`
-                const info = status.info.clean.filter(line => line.startsWith("["))
-                players += info.join("\n").replace(/\[(\d+)]/g, "**$1**")
+                if (status?.info?.clean)
+                    players += status.info.clean
+                        .filter(line => line.startsWith("["))
+                        .join("\n")
+                        .replace(/\[(\d+)]/g, "**$1**")
 
                 embed.fields[0].value = players
             } else {
