@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import Message from "../struct/discord/Message"
 import Args from "../struct/Args"
 import Client from "../struct/Client"
@@ -15,20 +14,23 @@ import CommandList from "../struct/client/CommandList"
 import ConfigManager from "../struct/client/ConfigManager"
 import EventList from "../struct/client/EventList"
 
+import flattenMarkdown from "../util/flattenMarkdown"
 import formatPunishmentTime from "../util/formatPunishmentTime"
 import formatUTCDate from "../util/formatUTCDate"
+import humanizeArray from "../util/humanizeArray"
 import humanizeConstant from "../util/humanizeConstant"
 import isURL from "../util/isURL"
 import loadDir from "../util/loadDir"
 import noop from "../util/noop"
+import pastTense from "../util/pastTense"
+import patchedISO6391 from "../util/patchedISO6391"
 import Roles from "../util/roles"
 import stringifyAnything from "../util/stringifyAnything"
 import truncateString from "../util/truncateString"
-/* eslint-enable @typescript-eslint/no-unused-vars */
 
 // prettier-ignore
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-const _ = { Args, Client, Command, ActionLog, ModerationNote, ModpackImage, Snippet, Suggestion, TimedPunishment, CommandList, ConfigManager, EventList, formatPunishmentTime, formatUTCDate, humanizeConstant, isURL, loadDir, noop, Roles, stringifyAnything, truncateString }
+const _ = { Args, Client, Command, ActionLog, ModerationNote, ModpackImage, Snippet, Suggestion, TimedPunishment, CommandList, ConfigManager, EventList, flattenMarkdown, formatPunishmentTime, formatUTCDate, humanizeArray, humanizeConstant, isURL, loadDir, noop, pastTense, patchedISO6391, Roles, stringifyAnything, truncateString }
 
 export default new Command({
     name: "eval",
