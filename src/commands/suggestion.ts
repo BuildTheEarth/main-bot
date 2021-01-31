@@ -220,10 +220,14 @@ export default new Command({
                 )
 
             const edited = args.consumeRest()
-            if (field === "title" && edited.length > 99)
-                return message.channel.sendError("That title is too long!")
+            if (field === "title" && edited.length > 200)
+                return message.channel.sendError(
+                    "That title is too long! (max. 200 characters)."
+                )
             if (field === "teams" && edited.length > 255)
-                return message.channel.sendError("That team is too long!")
+                return message.channel.sendError(
+                    "That team is too long! (max. 255 characters)."
+                )
             if (!edited)
                 return message.channel.sendError("You must provide a new field body!")
 

@@ -33,7 +33,7 @@ export default new Command({
             error = `The suggestion you're trying to extend (**#${extend}**) doesn't exist!`
         if (!body) error = "You must specify a suggestion body!"
         if (!title) error = "You must specify a title!"
-        if (title?.length > 99) error = "That title is too long!"
+        if (title?.length > 200) error = "That title is too long! (max. 200 characters)."
 
         if (error) {
             if (message.channel.type !== "dm") await message.delete().catch(() => null)
