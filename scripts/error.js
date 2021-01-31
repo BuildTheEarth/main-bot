@@ -8,7 +8,8 @@ const content = fs
     .readFileSync(`${__dirname}/../logs/${last}`, "UTF-8")
     .replace(/\r\n/g, "\n")
 
-const error = content.match(/^(\[[\d:]+?\]) ERROR: (.+)\[/ms)
+// i will forget what this regex does in 3 hours
+const error = content.match(/^(\[[\d:]+\]) ERROR: ([^[]+?)\n\[(?!.*ERROR:)/ms)
 if (!error) console.log(chalk.redBright("No error found in latest log file."))
 else {
     const [, timestamp, full] = error
@@ -17,5 +18,5 @@ else {
     let formatted = chalk`{yellowBright ${timestamp}} {redBright ${kind}}: ${message.trim()}\n`
     if (stack) formatted += chalk.gray(stack.replace(/^\n+/g, ""))
 
-    process.stdout.write(formatted.trim())
+    console.log(formatted.trim())
 }
