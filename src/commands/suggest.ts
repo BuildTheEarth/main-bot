@@ -3,8 +3,9 @@ import Message from "../struct/discord/Message"
 import Args from "../struct/Args"
 import Command from "../struct/Command"
 import Suggestion from "../entities/Suggestion"
-import Roles from "../util/roles"
 import TextChannel from "../struct/discord/TextChannel"
+import Roles from "../util/roles"
+import flattenMarkdown from "../util/flattenMarkdown"
 
 export default new Command({
     name: "suggest",
@@ -26,7 +27,8 @@ export default new Command({
         const identifier = args.consumeIf(Suggestion.isIdentifier)
         const extend = identifier && Suggestion.parseIdentifier(identifier)
         args.separator = "|"
-        const [title, body, teams] = args.consume(3)
+        const title = flattenMarkdown(args.consume(), client, message.guild)
+        const [body, teams] = args.consume(2)
 
         let error: string
         if (extend && !(await Suggestion.findOne({ number: extend.number })))
