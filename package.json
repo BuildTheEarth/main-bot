@@ -35,7 +35,8 @@
         "format": "prettier --write src/",
         "lint": "eslint src --fix",
         "update": "git pull && npm run build && pm2 restart main-bot",
-        "update:migrate": "git pull && npm run build && pm2 stop main-bot && typeorm migration:run && pm2 start main-bot"
+        "update:migrate": "git pull && npm run build && pm2 stop main-bot && typeorm migration:run && pm2 start main-bot",
+        "error": "node scripts/error"
     },
     "repository": "BuildTheEarth/main-bot",
     "author": "BuildTheEarth",
