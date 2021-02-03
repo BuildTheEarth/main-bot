@@ -34,10 +34,9 @@ export default new Command({
             return message.channel.sendError(
                 `You can't manage members in the **${expanded}** team!`
             )
-        const main = client.guilds.cache.get(client.config.guilds.main)
-        const role = main.roles.cache.find(role => role.name === expanded)
+        const role = client.guilds.main.roles.cache.find(role => role.name === expanded)
 
-        const member: GuildMember = await main.members
+        const member: GuildMember = await client.guilds.main.members
             .fetch({ user, cache: true })
             .catch(() => null)
         if (!member) return message.channel.sendError("The user is not in the server!")

@@ -4,9 +4,8 @@ import Discord from "discord.js"
 export default function flattenMarkdown(
     string: string,
     client: Client,
-    guild: Discord.Guild
+    guild: Discord.Guild = client.guilds.main
 ): string {
-    guild = guild || client.guilds.cache.get(client.config.guilds.main)
     return string.replace(
         /(^|[^\\])<(@|@!|@&|#)(\d{18})>/g,
         replacer.bind(null, client, guild)

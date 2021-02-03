@@ -35,15 +35,16 @@ export default class TimedPunishment extends BaseEntity {
 
     async undo(client: Client): Promise<void> {
         clearTimeout(this.undoTimeout)
-        const guild = client.guilds.cache.get(client.config.guilds.main)
         if (this.type === "mute") {
-            const member: GuildMember = await guild.members
+            const member: GuildMember = await client.guilds.main.members
                 .fetch({ user: this.member, cache: true })
                 .catch(() => null)
             if (!member) return
             member.unmute("End of punishment")
         } else if (this.type === "ban") {
-            await guild.members.unban(this.member, "End of punishment").catch(() => null)
+            await client.guilds.main.members
+                .unban(this.member, "End of punishment")
+                .catch(() => null)
         }
     }
 

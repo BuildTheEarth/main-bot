@@ -1,5 +1,6 @@
 import { Connection, createConnection } from "typeorm"
 import Discord from "discord.js"
+import GuildManager from "./discord/GuildManager"
 import TextChannel from "./discord/TextChannel"
 import EventList from "./client/EventList"
 import CommandList from "./client/CommandList"
@@ -9,6 +10,7 @@ import ActionLog from "../entities/ActionLog"
 import Snippet from "../entities/Snippet"
 
 export default class Client extends Discord.Client {
+    guilds: GuildManager = new GuildManager(this)
     db: Connection
     logger = createLogger({ filePath: __dirname + "/../../logs/" })
     config = new ConfigManager(this)

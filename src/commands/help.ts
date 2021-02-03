@@ -15,10 +15,9 @@ export default new Command({
     usage: "[command]",
     dms: true,
     async run(this: Command, client: Client, message: Message, args: Args) {
-        const main = client.guilds.cache.get(client.config.guilds.main)
         const member = (message.guild
             ? message.member
-            : await main.members
+            : await client.guilds.main.members
                   .fetch({ user: message.author, cache: true })
                   .catch(() => null)) as GuildMember
         const commandName = args.consume()
