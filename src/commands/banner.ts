@@ -21,9 +21,14 @@ export default new Command({
             name: "queue",
             description: "List the current banner queue.",
             usage: ""
+        },
+        {
+            name: "cycle",
+            description: "Force the banner queue to cycle to the next banner.",
+            usage: ""
         }
     ],
-    async run(this: Command, _client: Client, message: Message, args: Args) {
+    async run(this: Command, client: Client, message: Message, args: Args) {
         const subcommand = args.consumeIf(this.subcommands.map(sub => sub.name))
 
         if (subcommand === "add" || !subcommand) {
@@ -56,6 +61,9 @@ export default new Command({
                 author: { name: "Banner queue" },
                 description: formatted || "*Empty.*"
             })
+        } else if (subcommand === "cycle") {
+            BannerImage.cycle(client)
+            await message.channel.sendSuccess("Forced banner queue cycle.")
         }
     }
 })
