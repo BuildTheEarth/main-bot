@@ -35,18 +35,22 @@ export default class BannerImage extends BaseEntity {
         return `**#${this.id}:** [Link](${this.url}), by ${builders}`
     }
 
+    private static cycleTimeout: NodeJS.Timeout
+
     static async cycle(client: Client): Promise<void> {
-        const main = client.guilds.cache.get(client.config.guilds.main)
-        if (!main.features.includes("BANNER")) return
-        const next = await this.findOne()
+        clearTimeout(this.cycleTimeout)
+        if (!client.guilds.main.features.includes("BANNER")) return
+        const next = await this.findOne({ order: { id: "ASC" } })
 
         if (!next) {
             client.logger.warn("[BannerImage] Queue is empty; cannot update banner.")
             return
         }
 
-        await main.setBanner(next.url)
-        const updates = main.channels.cache.find(c => c.name === "updates") as TextChannel
+        await client.guilds.main.setBanner(next.url)
+        const updates = client.guilds.main.channels.cache.find(
+            channel => channel.name === "updates"
+        ) as TextChannel
 
         const many = next.builders.length > 1
         const mentions = next.builders.map(id => `<@${id}>`)
@@ -64,5 +68,20 @@ export default class BannerImage extends BaseEntity {
         await updates.sendSuccess(embed)
         await next.softRemove()
         client.logger.info("Updated banner with first image in queue!")
+    }
+
+    static schedule(client: Client): void {
+        const now = new Date()
+        const monday = new Date()
+        const today = now.getDay()
+        const offset = 8 - today
+        const mondate = now.getDate() + offset
+        monday.setDate(mondate)
+        monday.setUTCHours(0, 0, 0, 0)
+        const tillMonday = monday.getTime() - Date.now()
+
+        this.cycleTimeout = setTimeout(() => {
+            this.cycle(client)
+        }, tillMonday)
     }
 }
