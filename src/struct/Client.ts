@@ -10,7 +10,7 @@ import ActionLog from "../entities/ActionLog"
 import Snippet from "../entities/Snippet"
 
 export default class Client extends Discord.Client {
-    guilds = new GuildManager(this)
+    guilds: GuildManager = new GuildManager(this)
     db: Connection
     logger = createLogger({ filePath: __dirname + "/../../logs/" })
     config = new ConfigManager(this)
