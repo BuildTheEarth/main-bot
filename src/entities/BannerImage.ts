@@ -8,6 +8,7 @@ import {
 import Discord from "discord.js"
 import Client from "../struct/Client"
 import TextChannel from "../struct/discord/TextChannel"
+import quote from "../util/quote"
 
 @Entity({ name: "banner_images" })
 export default class BannerImage extends BaseEntity {
@@ -58,8 +59,7 @@ export default class BannerImage extends BaseEntity {
             image: next
         }
 
-        if (next.description)
-            embed.description += `\n\n> ${next.description.replace(/\n/g, "\n >")}`
+        if (next.description) embed.description += `\n\n${quote(next.description)}`
 
         await updates.sendSuccess(embed)
         await next.softRemove()
