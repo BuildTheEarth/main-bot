@@ -3,6 +3,7 @@ import Message from "../struct/discord/Message"
 import Args from "../struct/Args"
 import Command from "../struct/Command"
 import Roles from "../util/roles"
+import quote from "../util/quote"
 
 export default new Command({
     name: "rule",
@@ -27,6 +28,6 @@ export default new Command({
             if (!rule) return message.channel.sendError(`Couldn't find that rule.`)
         }
 
-        return message.channel.send(`>>> ${rule}`)
+        return quote(rule)
     }
 })
