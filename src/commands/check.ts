@@ -62,7 +62,10 @@ export default new Command({
         if (clean) {
             embed.description = `✨ No cases found for ${user} (${user.tag}).`
         } else {
-            const current = await TimedPunishment.findOne({ member: user.id })
+            const current = await TimedPunishment.findOne({
+                where: { member: user.id },
+                order: { type: "ASC" } // make "ban" take precedence over "mute"
+            })
             const currentLog = actionLogs.find(log => log.punishment?.id === current?.id)
             const adjective = current?.type === "mute" ? "muted" : "banned"
             const cases = showDeleted ? "Deleted cases" : "Cases"

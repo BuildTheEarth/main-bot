@@ -3,8 +3,9 @@ import Message from "../struct/discord/Message"
 import Args from "../struct/Args"
 import Command from "../struct/Command"
 import Suggestion from "../entities/Suggestion"
-import Roles from "../util/roles"
 import TextChannel from "../struct/discord/TextChannel"
+import Roles from "../util/roles"
+import flattenMarkdown from "../util/flattenMarkdown"
 
 export default new Command({
     name: "suggest",
@@ -26,14 +27,15 @@ export default new Command({
         const identifier = args.consumeIf(Suggestion.isIdentifier)
         const extend = identifier && Suggestion.parseIdentifier(identifier)
         args.separator = "|"
-        const [title, body, teams] = args.consume(3)
+        const title = flattenMarkdown(args.consume(), client, message.guild)
+        const [body, teams] = args.consume(2)
 
         let error: string
         if (extend && !(await Suggestion.findOne({ number: extend.number })))
             error = `The suggestion you're trying to extend (**#${extend}**) doesn't exist!`
         if (!body) error = "You must specify a suggestion body!"
         if (!title) error = "You must specify a title!"
-        if (title?.length > 99) error = "That title is too long!"
+        if (title?.length > 200) error = "That title is too long! (max. 200 characters)."
 
         if (error) {
             if (message.channel.type !== "dm") await message.delete().catch(() => null)

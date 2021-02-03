@@ -9,6 +9,7 @@ import Suggestion, { SuggestionStatuses } from "../entities/Suggestion"
 import Roles from "../util/roles"
 import humanizeArray from "../util/humanizeArray"
 import truncateString from "../util/truncateString"
+import flattenMarkdown from "../util/flattenMarkdown"
 import { Brackets } from "typeorm"
 
 export default new Command({
@@ -219,11 +220,16 @@ export default new Command({
                     "You can't edit other people's suggestions!"
                 )
 
-            const edited = args.consumeRest()
-            if (field === "title" && edited.length > 99)
-                return message.channel.sendError("That title is too long!")
+            let edited = args.consumeRest()
+            if (field === "title") edited = flattenMarkdown(edited, client, message.guild)
+            if (field === "title" && edited.length > 200)
+                return message.channel.sendError(
+                    "That title is too long! (max. 200 characters)."
+                )
             if (field === "teams" && edited.length > 255)
-                return message.channel.sendError("That team is too long!")
+                return message.channel.sendError(
+                    "That team is too long! (max. 255 characters)."
+                )
             if (!edited)
                 return message.channel.sendError("You must provide a new field body!")
 
