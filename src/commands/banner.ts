@@ -4,6 +4,7 @@ import Args from "../struct/Args"
 import Command from "../struct/Command"
 import BannerImage from "../entities/BannerImage"
 import Roles from "../util/roles"
+import quote from "../util/quote"
 
 export default new Command({
     name: "banner",
@@ -26,6 +27,11 @@ export default new Command({
             name: "queue",
             description: "List the current banner queue.",
             usage: ""
+        },
+        {
+            name: "show",
+            description: "Show info on a specific queued banner.",
+            usage: "<id>"
         },
         {
             name: "cycle",
@@ -58,8 +64,9 @@ export default new Command({
 
             await message.channel.sendSuccess(`Queued the banner! (**#${banner.id}**).`)
         } else if (subcommand === "delete") {
-            const id = Number(args.consume())
-            const banner = await BannerImage.findOne(id)
+            const id = args.consume()
+            if (!id) return message.channel.sendError("You must provide the banner ID.")
+            const banner = await BannerImage.findOne(Number(id))
             if (!banner) return message.channel.sendError("That banner doesn't exist.")
 
             await banner.remove()
@@ -70,6 +77,23 @@ export default new Command({
             return message.channel.sendSuccess({
                 author: { name: "Banner queue" },
                 description: formatted || "*Empty.*"
+            })
+        } else if (subcommand === "show") {
+            const id = args.consume()
+            if (!id) return message.channel.sendError("You must provide the banner ID.")
+            const banner = await BannerImage.findOne(Number(id))
+            if (!banner) return message.channel.sendError("That banner doesn't exist.")
+
+            await message.channel.send({
+                embed: {
+                    author: { name: `Banner #${banner.id}` },
+                    color: client.config.colors.info,
+                    description: banner.description ? quote(banner.description) : null,
+                    fields: [
+                        { name: "Builders", value: banner.builders.map(id => `<@${id}>`) }
+                    ],
+                    image: banner
+                }
             })
         } else if (subcommand === "cycle") {
             BannerImage.cycle(client)
