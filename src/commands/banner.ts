@@ -18,6 +18,11 @@ export default new Command({
             usage: "<image URL | attachment> | <location> | <builders> | [description]"
         },
         {
+            name: "delete",
+            description: "Delete a banner from the queue.",
+            usage: "<id>"
+        },
+        {
             name: "queue",
             description: "List the current banner queue.",
             usage: ""
@@ -54,6 +59,13 @@ export default new Command({
             await message.channel.sendSuccess(
                 `Added the banner to the queue! (**#${banner.id}**).`
             )
+        } else if (subcommand === "delete") {
+            const id = Number(args.consume())
+            const banner = await BannerImage.findOne(id)
+            if (!banner) return message.channel.sendError("That banner doesn't exist.")
+
+            await banner.remove()
+            await message.channel.sendSuccess(`Removed banner **#${id}** from queue.`)
         } else if (subcommand === "queue") {
             const banners = await BannerImage.find()
             const formatted = banners.map(banner => banner.format()).join("\n")
