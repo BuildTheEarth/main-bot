@@ -68,9 +68,11 @@ export default class BannerImage extends BaseEntity {
         await updates.sendSuccess(embed)
         await next.softRemove()
         client.logger.info("Updated banner with first image in queue!")
+        this.schedule(client)
     }
 
     static schedule(client: Client): void {
+        if (this.cycleTimeout) clearTimeout(this.cycleTimeout)
         const now = new Date()
         const monday = new Date()
         const today = now.getDay()
