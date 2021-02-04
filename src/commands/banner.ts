@@ -56,16 +56,14 @@ export default new Command({
             if (description) banner.description = description
             await banner.save()
 
-            await message.channel.sendSuccess(
-                `Added the banner to the queue! (**#${banner.id}**).`
-            )
+            await message.channel.sendSuccess(`Queued the banner! (**#${banner.id}**).`)
         } else if (subcommand === "delete") {
             const id = Number(args.consume())
             const banner = await BannerImage.findOne(id)
             if (!banner) return message.channel.sendError("That banner doesn't exist.")
 
             await banner.remove()
-            await message.channel.sendSuccess(`Removed banner **#${id}** from queue.`)
+            await message.channel.sendSuccess(`Removed banner **#${id}** from the queue.`)
         } else if (subcommand === "queue") {
             const banners = await BannerImage.find()
             const formatted = banners.map(banner => banner.format()).join("\n")
@@ -75,7 +73,7 @@ export default new Command({
             })
         } else if (subcommand === "cycle") {
             BannerImage.cycle(client)
-            await message.channel.sendSuccess("Forced banner queue cycle.")
+            await message.channel.sendSuccess("Forced a banner queue cycle.")
         }
     }
 })
