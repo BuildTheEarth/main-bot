@@ -3,6 +3,7 @@ import Args from "../struct/Args"
 import Client from "../struct/Client"
 import Command from "../struct/Command"
 
+import BannerImage from "../entities/BannerImage"
 import ActionLog from "../entities/ActionLog"
 import ModerationNote from "../entities/ModerationNote"
 import ModpackImage from "../entities/ModpackImage"
@@ -30,7 +31,7 @@ import truncateString from "../util/truncateString"
 
 // prettier-ignore
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-const _ = { Args, Client, Command, ActionLog, ModerationNote, ModpackImage, Snippet, Suggestion, TimedPunishment, CommandList, ConfigManager, EventList, flattenMarkdown, formatPunishmentTime, formatUTCDate, humanizeArray, humanizeConstant, isURL, loadDir, noop, pastTense, patchedISO6391, Roles, stringifyAnything, truncateString }
+const _ = { Args, Client, Command, BannerImage, ActionLog, ModerationNote, ModpackImage, Snippet, Suggestion, TimedPunishment, CommandList, ConfigManager, EventList, flattenMarkdown, formatPunishmentTime, formatUTCDate, humanizeArray, humanizeConstant, isURL, loadDir, noop, pastTense, patchedISO6391, Roles, stringifyAnything, truncateString }
 
 export default new Command({
     name: "eval",

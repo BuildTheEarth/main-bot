@@ -1,13 +1,16 @@
 import chalk from "chalk"
+import BannerImage from "../entities/BannerImage"
 import TimedPunishment from "../entities/TimedPunishment"
 import Client from "../struct/Client"
-import Guild from "../struct/discord/Guild"
 import TextChannel from "../struct/discord/TextChannel"
+import noop from "../util/noop"
 
 export default async function ready(this: Client): Promise<void> {
-    const main = this.guilds.cache.get(this.config.guilds.main) as Guild
-    this.user.setActivity(`with ${main.memberCount} users`, { type: "PLAYING" })
+    const activity = `with ${this.guilds.main.memberCount} users`
+    await this.user.setActivity(activity, { type: "PLAYING" }).catch(noop)
 
+    // schedule punishment undoings and banner queue cycles
+    BannerImage.schedule(this)
     const punishments = await TimedPunishment.find()
     for (const punishment of punishments) punishment.schedule(this)
 
@@ -23,14 +26,15 @@ export default async function ready(this: Client): Promise<void> {
         }
     }
 
-    if (main.features.includes("VANITY_URL")) {
-        const current = await main.fetchVanityData()
+    if (this.guilds.main.features.includes("VANITY_URL")) {
+        const current = await this.guilds.main.fetchVanityData()
         const outdated = current?.code !== this.config.vanity
         if (outdated) {
-            await main.setVanityCode(this.config.vanity, "Reached level 3 boosting")
-            this.logger.info(
-                `Set vanity code to ${chalk.hex("#FF73FA")(this.config.vanity)}`
-            )
+            const reason = "Reached level 3 boosting"
+            await this.guilds.main.setVanityCode(this.config.vanity, reason)
+
+            const pink = chalk.hex("#FF73FA")
+            this.logger.info(`Set vanity code to ${pink(this.config.vanity)}.`)
         }
     }
 }
