@@ -9,7 +9,7 @@ CREATE TABLE \`banner_images\` (
     \`url\` varchar(255) NOT NULL,
     \`builders\` text NOT NULL,
     \`location\` varchar(255) NOT NULL,
-    \`description\` varchar(255) NOT NULL,
+    \`description\` varchar(255) DEFAULT NULL,
     \`deleted_at\` datetime(6) DEFAULT NULL,
     PRIMARY KEY (\`id\`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci`)
