@@ -18,6 +18,7 @@ import formatPunishmentTime from "../util/formatPunishmentTime"
 import formatUTCDate from "../util/formatUTCDate"
 import milliseconds from "./transformers/milliseconds"
 import past from "../util/pastTense"
+import noop from "../util/noop"
 
 export type Action = "warn" | "mute" | "kick" | "ban" | "unmute" | "unban"
 
@@ -126,20 +127,27 @@ export default class ActionLog extends BaseEntity {
         return embed
     }
 
-    displayUserEmbed(client: Client): Discord.MessageEmbedOptions {
+    async notifyMember(client: Client): Promise<void> {
         const length = this.length ? " " + formatPunishmentTime(this.length) : ""
         const actioned = past(this.action)
-        const embed = {
-            color: client.config.colors.error,
+        const color = this.action.startsWith("un") ? "success" : "error"
+
+        const embed: Discord.MessageEmbedOptions = {
+            color: client.config.colors[color],
             description: `*<@${this.executor}> has ${actioned} you${length}:*\n\n${this.reason}`,
-            image: this.reasonImage ? { url: this.reasonImage } : null,
-            fields: []
-        }
-        if (this.action === "ban") {
-            embed.description += "\n\u200B"
-            embed.fields.push({ name: "Appealing", value: client.config.appeal })
+            image: this.reasonImage ? { url: this.reasonImage } : null
         }
 
-        return embed
+        if (this.action === "ban") {
+            embed.description += "\n\u200B"
+            embed.fields = [{ name: "Appealing", value: client.config.appeal }]
+        }
+
+        const user = await client.users.fetch(this.member, true)
+        if (!user) return
+        await user // both createDM() and send() can fail, so use a promise chain
+            .createDM()
+            .then(dms => dms.send({ embed }))
+            .catch(noop)
     }
 }
