@@ -6,7 +6,6 @@ import ActionLog from "../entities/ActionLog"
 import Command from "../struct/Command"
 import GuildMember from "../struct/discord/GuildMember"
 import Roles from "../util/roles"
-import noop from "../util/noop"
 import formatPunishmentTime from "../util/formatPunishmentTime"
 
 export default new Command({
@@ -43,8 +42,6 @@ export default new Command({
         )
             return message.channel.sendError("You can't mute other staff!")
 
-        if (member) await member.mute(reason)
-
         const punishment = new TimedPunishment()
         punishment.member = user.id
         punishment.type = "mute"
@@ -64,13 +61,10 @@ export default new Command({
         log.punishment = punishment
         await log.save()
 
-        const formattedLength = formatPunishmentTime(length)
-        await user
-            .createDM()
-            .then(dms => dms.send({ embed: log.displayUserEmbed(client) }))
-            .catch(noop)
-
+        await log.notifyMember(client)
+        if (member) await member.mute(reason)
         const away = member ? "" : ", though they're not in the server"
+        const formattedLength = formatPunishmentTime(length)
         const formattedUser = user.id === message.author.id ? "*you*" : user.toString()
         await message.channel.sendSuccess(
             `Muted ${formattedUser} ${formattedLength} (**#${log.id}**)${away}.`

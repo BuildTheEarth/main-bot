@@ -5,7 +5,6 @@ import Command from "../struct/Command"
 import GuildMember from "../struct/discord/GuildMember"
 import ActionLog from "../entities/ActionLog"
 import Roles from "../util/roles"
-import noop from "../util/noop"
 
 export default new Command({
     name: "kick",
@@ -48,10 +47,8 @@ export default new Command({
         log.length = null
         await log.save()
 
-        const dms = await user.createDM()
-        await dms.send({ embed: log.displayUserEmbed(client) }).catch(noop)
+        await log.notifyMember(client)
         await member.kick(reason)
-
         await message.channel.sendSuccess(`Kicked ${user} (**#${log.id}**).`)
         await client.log(log)
     }

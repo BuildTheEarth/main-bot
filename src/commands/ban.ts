@@ -6,7 +6,6 @@ import ActionLog from "../entities/ActionLog"
 import Command from "../struct/Command"
 import GuildMember from "../struct/discord/GuildMember"
 import Roles from "../util/roles"
-import noop from "../util/noop"
 import formatPunishmentTime from "../util/formatPunishmentTime"
 
 export default new Command({
@@ -64,13 +63,9 @@ export default new Command({
         log.punishment = punishment
         await log.save()
 
-        const formattedLength = formatPunishmentTime(length)
-        await user
-            .createDM()
-            .then(dms => dms.send({ embed: log.displayUserEmbed(client) }))
-            .catch(noop)
+        await log.notifyMember(client)
         await message.guild.members.ban(user, { reason })
-
+        const formattedLength = formatPunishmentTime(length)
         await message.channel.sendSuccess(
             `Banned ${user} ${formattedLength} (**#${log.id}**).`
         )

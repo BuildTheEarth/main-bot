@@ -5,7 +5,6 @@ import Command from "../struct/Command"
 import GuildMember from "../struct/discord/GuildMember"
 import ActionLog from "../entities/ActionLog"
 import Roles from "../util/roles"
-import noop from "../util/noop"
 
 export default new Command({
     name: "warn",
@@ -42,9 +41,7 @@ export default new Command({
         log.length = null
         await log.save()
 
-        const dms = await user.createDM()
-        dms.send({ embed: log.displayUserEmbed(client) }).catch(noop)
-
+        await log.notifyMember(client)
         const formattedUser = user.id === message.author.id ? "*you*" : user.toString()
         await message.channel.sendSuccess(`Warned ${formattedUser} (**#${log.id}**).`)
         await client.log(log)
