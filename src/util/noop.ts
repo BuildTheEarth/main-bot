@@ -1,3 +1,3 @@
-export default function noop<T>(arg: T): T {
-    return arg
+export default function noop(): null {
+    return null
 }
