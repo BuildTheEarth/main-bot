@@ -31,7 +31,7 @@ export default class TimedPunishment extends BaseEntity {
         return new Date(this.createdAt.getTime() + this.length)
     }
 
-    undoTimeout: NodeJS.Timeout
+    private undoTimeout: NodeJS.Timeout
 
     async undo(client: Client): Promise<void> {
         clearTimeout(this.undoTimeout)
