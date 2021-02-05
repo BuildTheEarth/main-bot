@@ -10,7 +10,7 @@ const API_URL = "https://api.mcsrvstat.us/2/network.buildtheearth.net"
 
 export default new Command({
     name: "status",
-    aliases: ["server"],
+    aliases: ["server", "network"],
     description: "Check the status of the Minecraft network.",
     permission: Roles.ANY,
     usage: "",
