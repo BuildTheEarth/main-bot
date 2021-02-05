@@ -9,7 +9,7 @@ const content = fs
     .replace(/\r\n/g, "\n")
 
 // i will forget what this regex does in 3 hours
-const error = content.match(/^(\[[\d:]+\]) ERROR: ([^[]+?)\n\[(?!.*ERROR:)/ms)
+const error = content.match(/^(\[[\d:]+\]) ERROR: ([^[]+?)\n(\[(?!.*ERROR:)|$)/ms)
 if (!error) console.log(chalk.redBright("No error found in latest log file."))
 else {
     const [, timestamp, full] = error
