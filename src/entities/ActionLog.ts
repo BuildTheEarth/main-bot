@@ -127,7 +127,7 @@ export default class ActionLog extends BaseEntity {
         return embed
     }
 
-    async notifyMember(client: Client): Promise<void> {
+    private displayNotification(client: Client): Discord.MessageEmbedOptions {
         const length = this.length ? " " + formatPunishmentTime(this.length) : ""
         const actioned = past(this.action)
         const color = this.action.startsWith("un") ? "success" : "error"
@@ -143,8 +143,14 @@ export default class ActionLog extends BaseEntity {
             embed.fields = [{ name: "Appealing", value: client.config.appeal }]
         }
 
+        return embed
+    }
+
+    async notifyMember(client: Client): Promise<void> {
         const user = await client.users.fetch(this.member, true)
         if (!user) return
+
+        const embed = this.displayNotification(client)
         await user // both createDM() and send() can fail, so use a promise chain
             .createDM()
             .then(dms => dms.send({ embed }))
