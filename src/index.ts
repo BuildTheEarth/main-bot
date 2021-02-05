@@ -49,6 +49,6 @@ process.on("uncaughtException", (error: Error) => {
 })
 
 process.on("unhandledRejection", (error: Error) => {
-    client.logger.error(`[Unhandled Rejection] ${error.stack}`)
+    client.logger.error(`(Unhandled Rejection) ${error.stack}`)
     setTimeout(() => process.exit(1), 100)
 })
