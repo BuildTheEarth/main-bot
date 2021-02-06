@@ -163,4 +163,16 @@ export default class ActionLog extends BaseEntity {
             await this.save()
         }
     }
+
+    async updateNotification(client: Client): Promise<void> {
+        if (!this.notification) return
+        const user = await client.users.fetch(this.member, true)
+        if (!user) return
+        const channel = user.dmChannel
+        if (!channel) return
+
+        const notification = await channel.messages.fetch(this.notification, true)
+        const embed = this.displayNotification(client)
+        await notification.edit({ embed }).catch(noop)
+    }
 }
