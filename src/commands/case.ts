@@ -48,6 +48,7 @@ export default new Command({
             if (image) log.reasonImage = image
             if (reason) log.reason = reason
             await log.save()
+            await log.updateNotification(client)
             await message.channel.sendSuccess(`Edited case **#${id}**.`)
             await client.log(log)
         } else if (subcommand === "delete") {
