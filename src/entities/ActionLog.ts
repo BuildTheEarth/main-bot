@@ -154,9 +154,13 @@ export default class ActionLog extends BaseEntity {
         if (!user) return
 
         const embed = this.displayNotification(client)
-        await user // both createDM() and send() can fail, so use a promise chain
+        const notification = await user // both createDM() and send() can fail, so use a promise chain
             .createDM()
             .then(dms => dms.send({ embed }))
             .catch(noop)
+        if (notification) {
+            this.notification = notification.id
+            await this.save()
+        }
     }
 }
