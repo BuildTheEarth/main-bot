@@ -51,6 +51,9 @@ export default class ActionLog extends BaseEntity {
     @SnowflakeColumn()
     message: string
 
+    @SnowflakeColumn()
+    notification: string
+
     @CreateDateColumn({ name: "created_at" })
     createdAt: Date
 
