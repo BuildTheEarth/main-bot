@@ -8,7 +8,7 @@ import languages from "../util/patchedISO6391"
 
 export default new Command({
     name: "snippets",
-    aliases: ["tags"],
+    aliases: ["snippet", "tags"],
     description: "List and manage snippets.",
     permission: Roles.ANY,
     usage: "",
