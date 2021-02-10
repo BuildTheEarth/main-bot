@@ -25,7 +25,7 @@
         "eslint-config-prettier": "^7.2.0",
         "pm2": "^4.5.4",
         "prettier": "2.2.1",
-        "typescript": "^4.1.3"
+        "typescript": "^4.1.4"
     },
     "scripts": {
         "start": "node dist/index.js --unhandled-rejections=strict",
