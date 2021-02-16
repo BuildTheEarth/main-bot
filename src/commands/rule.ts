@@ -28,6 +28,6 @@ export default new Command({
             if (!rule) return message.channel.sendError(`Couldn't find that rule.`)
         }
 
-        message.channel.send(quote(rule))
+        message.channel.send(quote(rule), { allowedMentions: { parse: [] } })
     }
 })
