@@ -48,7 +48,7 @@ export default async function (this: Client, message: Message): Promise<unknown>
 
             if (!snippet) {
                 const unlocalizedSnippet = await Snippets.createQueryBuilder("snippet")
-                    .where(find)
+                    .where(new Brackets(find))
                     .getOne()
                 if (unlocalizedSnippet)
                     message.channel.sendError(
