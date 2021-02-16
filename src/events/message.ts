@@ -7,11 +7,12 @@ import Snippet from "../entities/Snippet"
 import languages from "../util/patchedISO6391"
 import Roles from "../util/roles"
 import chalk from "chalk"
-import Includes from "../entities/operators/Includes"
+import { Brackets, WhereExpression } from "typeorm"
 
 export default async function (this: Client, message: Message): Promise<unknown> {
     if (message.guild?.id === this.config.guilds.youtube) return
     if (message.author.bot) return
+    const Snippets = Snippet.getRepository()
 
     const mainGuild = this.guilds.cache.get(this.config.guilds.main)
     const main = mainGuild.id === message.guild?.id
@@ -30,25 +31,30 @@ export default async function (this: Client, message: Message): Promise<unknown>
             const firstArg = args.consume().toLowerCase()
             const languageName = languages.getName(firstArg) || "English"
             const language = languages.validate(firstArg) ? firstArg.toLowerCase() : "en"
-            let snippet = await Snippet.findOne({ name: args.command, language })
 
             if (firstArg.toLowerCase() === "zh")
                 return message.channel.sendError(
                     `Please choose \`zh-s\` (简体中文) or \`zh-t\` (繁體中文)!`
                 )
 
+            const find = (query: WhereExpression) =>
+                query
+                    .where("snippet.name = :name", { name: args.command })
+                    .orWhere("INSTR(snippet.aliases, :name)")
+            const snippet = await Snippets.createQueryBuilder("snippet")
+                .where("snippet.language = :language", { language })
+                .andWhere(new Brackets(find))
+                .getOne()
+
             if (!snippet) {
-                const unlocalizedSnippet = await Snippet.findOne({ name: args.command })
-                if (unlocalizedSnippet) {
-                    return message.channel.sendError(
+                const unlocalizedSnippet = await Snippets.createQueryBuilder("snippet")
+                    .where(find)
+                    .getOne()
+                if (unlocalizedSnippet)
+                    message.channel.sendError(
                         `The **${args.command}** snippet hasn't been translated to ${languageName} yet.`
                     )
-                } else {
-                    const aliasSnippet = await Snippet.findOne({
-                        where: { aliases: Includes(args.command) }
-                    })
-                    if (aliasSnippet) snippet = aliasSnippet
-                }
+                return
             }
 
             return message.channel.send(snippet.body).catch(() => null)
