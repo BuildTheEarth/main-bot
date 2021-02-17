@@ -49,22 +49,23 @@ export default new Command({
 
         if (subcommand === "list" || !subcommand) {
             const snippets = await Snippet.find()
-            const snippetLanguages: { [name: string]: string[] } = {}
+            const tidy: Record<string, { aliases: string[]; languages: string[] }> = {}
 
             for (const snippet of snippets) {
-                if (snippetLanguages[snippet.name]) {
-                    snippetLanguages[snippet.name].push(snippet.language)
-                } else {
-                    snippetLanguages[snippet.name] = [snippet.language]
-                }
+                if (!tidy[snippet.name])
+                    tidy[snippet.name] = { aliases: [], languages: [] }
+
+                if (snippet.aliases) tidy[snippet.name].aliases.push(...snippet.aliases)
+                tidy[snippet.name].languages.push(snippet.language)
             }
 
             let list = ""
-            for (const [snippet, languages] of Object.entries(snippetLanguages)) {
+            for (const [name, { aliases, languages }] of Object.entries(tidy)) {
                 languages.sort()
+                const triggers = [name, ...aliases].join(" / ")
                 const onlyEnglish = languages.length === 1 && languages[0] === "en"
                 const languageList = onlyEnglish ? "" : ` (${languages.join(", ")})`
-                list += `• \u200B \u200B ${snippet}${languageList}\n`
+                list += `• \u200B \u200B ${triggers}${languageList}\n`
             }
 
             return message.channel.sendSuccess({
@@ -93,6 +94,7 @@ export default new Command({
             const alias = args.consume().toLowerCase()
             if (!alias) return message.channel.sendError("You must specify an alias!")
             if (action === "add") {
+                if (!snippet.aliases) snippet.aliases = []
                 snippet.aliases.push(alias)
                 await snippet.save()
                 return message.channel.sendSuccess(
