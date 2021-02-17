@@ -172,8 +172,8 @@ export default new Command({
                 embed: {
                     color: client.config.colors.info,
                     description:
-                        `The \`${existingSnippet.name}\` snippet responds with ` +
-                        `the following text in **${languageName}**:` +
+                        `The **${existingSnippet.name}** snippet responds with ` +
+                        `the following text in ${languageName}:` +
                         `\n\`\`\`${existingSnippet.body}\`\`\``
                 }
             })
