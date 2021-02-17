@@ -41,7 +41,7 @@ export default new Command({
             name: "aliases",
             description: "Add aliases to a snippet",
             permission: [Roles.MANAGER],
-            usage: "<list | add | remove> <name> <language> [alias]"
+            usage: "<list | add | delete> <name> <language> [alias]"
         }
     ],
     async run(this: Command, client: Client, message: Message, args: Args) {
@@ -72,9 +72,7 @@ export default new Command({
                 description: list
             })
         } else if (subcommand === "aliases") {
-            const subcommand = args.consume().toLowerCase()
-            const name = args.consume().toLowerCase()
-            const language = args.consume().toLowerCase()
+            const [action, name, language] = args.consume(3)
             const languageName = languages.getName(language)
             if (!name)
                 return message.channel.sendError("You must specify a snippet name.")
@@ -85,34 +83,31 @@ export default new Command({
 
             const snippet = await Snippet.findOne({ name, language })
             if (!snippet) return message.channel.sendError("That snippet doesn't exist!")
-            if (subcommand === "list") {
-                const aliases = snippet.aliases
-                if (aliases.length < 1)
-                    return message.channel.sendError("This snippet has no aliases.")
-
-                const list = snippet.aliases.map(a => `• \u200B \u200B ${a}`).join("\n")
+            if (action === "list") {
+                const list =
+                    snippet.aliases.map(alias => `• \u200B \u200B ${alias}`).join("\n") ||
+                    "*No aliases.*"
                 return message.channel.sendSuccess(list)
             }
 
             const alias = args.consume().toLowerCase()
             if (!alias) return message.channel.sendError("You must specify an alias!")
-            if (subcommand === "add") {
+            if (action === "add") {
                 snippet.aliases.push(alias)
                 await snippet.save()
                 return message.channel.sendSuccess(
                     `Added alias **${alias}** to **${name}** snippet in ${languageName}.`
                 )
-            } else if (subcommand === "remove") {
-                const aliases = snippet.aliases
-                if (!aliases.includes(alias))
+            } else if (action === "delete") {
+                if (!snippet.aliases.includes(alias))
                     return message.channel.sendError(
                         "That snippet does not have this alias!"
                     )
 
-                aliases.splice(aliases.indexOf(alias), 1)
+                snippet.aliases.splice(snippet.aliases.indexOf(alias), 1)
                 await snippet.save()
                 return message.channel.sendSuccess(
-                    `Removed the alias **${alias}** from **${name}** snippet in ${languageName}.`
+                    `Removed the **${alias}** alias from **${name}** snippet in ${languageName}.`
                 )
             }
         }
