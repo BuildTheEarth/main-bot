@@ -18,8 +18,8 @@ export default class BannerImage extends BaseEntity {
     @Column()
     url: string
 
-    @Column("simple-array")
-    builders: string[]
+    @Column()
+    credit: string
 
     @Column()
     location: string
@@ -31,8 +31,7 @@ export default class BannerImage extends BaseEntity {
     deletedAt?: Date
 
     format(): string {
-        const builders = this.builders.map(id => `<@${id}>`).join(", ")
-        return `**#${this.id}:** [Link](${this.url}), by ${builders}`
+        return `**#${this.id}:** [Link](${this.url}), by ${this.credit}`
     }
 
     private static cycleTimeout: NodeJS.Timeout
@@ -52,14 +51,9 @@ export default class BannerImage extends BaseEntity {
             channel => channel.name === "updates"
         ) as TextChannel
 
-        const many = next.builders.length > 1
-        const mentions = next.builders.map(id => `<@${id}>`)
-        const list = many ? mentions.map(m => `• ${m}`).join("\n") : mentions[0]
-        const wholeDamnThing = many ? `:\n${list}\n\nA` : ` ${list}, a`
-
         const embed: Discord.MessageEmbedOptions = {
             author: { name: "New banner!" },
-            description: `This week's banner was built by${wholeDamnThing}nd it's located in **${next.location}**.`,
+            description: `This week's banner was built by **${next.credit}**, and it's located in **${next.location}**.`,
             image: next
         }
 
