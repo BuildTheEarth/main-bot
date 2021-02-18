@@ -165,6 +165,8 @@ export default new Command({
             await message.channel.sendSuccess(`Deleted **${name}** snippet in ${languageName}.`)
             await client.log(existingSnippet, "delete", message.author)
         } else if (subcommand === "source") {
+            if (!existingSnippet)
+                return message.channel.sendError("That snippet doesn't exist!")
             await message.channel.send({
                 embed: {
                     color: client.config.colors.info,
