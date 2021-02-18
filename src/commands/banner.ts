@@ -16,7 +16,7 @@ export default new Command({
         {
             name: "add",
             description: "Add a banner to the queue.",
-            usage: "<image URL | attachment> | <location> | <builders> | [description]"
+            usage: "<image URL | attachment> | <location> | <credit> | [description]"
         },
         {
             name: "delete",
@@ -45,20 +45,18 @@ export default new Command({
         if (subcommand === "add" || !subcommand) {
             args.separator = "|"
             const image = args.consumeImage()
-            const location = args.consume()
-            const builders = Array.from(args.consume().match(/\d{18}/g) || [])
-            const description = args.consume()
+            const [location, credit, description] = args.consume(3)
 
             let missing: string
             if (!image) missing = "the banner image"
             else if (!location) missing = "the location of the build"
-            else if (!builders.length) missing = "a list of builders"
+            else if (!credit) missing = "the image credit"
             if (missing) return message.channel.sendError(`You must provide ${missing}!`)
 
             const banner = new BannerImage()
             banner.url = image
             banner.location = location
-            banner.builders = builders
+            banner.credit = credit
             if (description) banner.description = description
             await banner.save()
 
@@ -89,9 +87,7 @@ export default new Command({
                     author: { name: `Banner #${banner.id}` },
                     color: client.config.colors.info,
                     description: banner.description ? quote(banner.description) : null,
-                    fields: [
-                        { name: "Builders", value: banner.builders.map(id => `<@${id}>`) }
-                    ],
+                    fields: [{ name: "Credit", value: banner.credit }],
                     image: banner
                 }
             })
