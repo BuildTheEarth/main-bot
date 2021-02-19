@@ -52,6 +52,10 @@ export default new Command({
             else if (!location) missing = "the location of the build"
             else if (!credit) missing = "the image credit"
             if (missing) return message.channel.sendError(`You must provide ${missing}!`)
+            if (description?.length > 512)
+                return message.channel.sendError(
+                    "That description is too long! (max. 512 characters)."
+                )
 
             const banner = new BannerImage()
             banner.url = image
