@@ -24,7 +24,7 @@ export default class BannerImage extends BaseEntity {
     @Column()
     location: string
 
-    @Column({ nullable: true })
+    @Column({ length: 512, nullable: true })
     description?: string
 
     @DeleteDateColumn({ name: "deleted_at" })
