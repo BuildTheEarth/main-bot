@@ -80,7 +80,7 @@ export default new Command({
                 return message.channel.sendError("You must specify image credit!")
 
             const image = new ModpackImage()
-            image.key = <ModpackImageKey>key
+            image.key = key as ModpackImageKey
             image.set = "queue"
             image.url = url
             image.credit = key === "logo" ? null : credit

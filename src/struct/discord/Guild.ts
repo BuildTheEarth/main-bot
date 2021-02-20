@@ -12,7 +12,7 @@ export default class Guild extends Discord.Guild {
     }
 
     member(user: Discord.UserResolvable): GuildMember {
-        return <GuildMember>super.member(user)
+        return super.member(user) as GuildMember
     }
 
     async setVanityCode(code: string, reason?: string): Promise<void> {

@@ -12,7 +12,7 @@ export default new Command({
     permission: Roles.MANAGER,
     usage: "[channel]",
     async run(this: Command, client: Client, message: Message, args: Args) {
-        const channel = (await args.consumeChannel()) || <TextChannel>message.channel
+        const channel = (await args.consumeChannel()) || (message.channel as TextChannel)
         const reason = `By ${message.author.tag} (${message.author.id})`
         await channel.updateOverwrite(message.guild.id, { SEND_MESSAGES: null }, reason)
 

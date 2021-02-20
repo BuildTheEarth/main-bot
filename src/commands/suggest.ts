@@ -60,7 +60,7 @@ export default new Command({
 
         const category = staff ? "staff" : "main"
         const suggestionsID = client.config.suggestions[category]
-        const suggestions = <TextChannel>await client.channels.fetch(suggestionsID, true)
+        const suggestions = client.channels.cache.get(suggestionsID) as TextChannel
 
         const embed = await suggestion.displayEmbed(client)
         const suggestionMessage = await suggestions.send({ embed })

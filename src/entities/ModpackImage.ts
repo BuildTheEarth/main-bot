@@ -50,7 +50,7 @@ export default class ModpackImage extends BaseEntity {
             if (existing) await existing.remove()
 
             const image = new ModpackImage()
-            image.key = <ModpackImageKey>key
+            image.key = key as ModpackImageKey
             image.set = "store"
             image.url = data.url
             image.credit = data.credit

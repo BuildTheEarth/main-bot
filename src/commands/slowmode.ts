@@ -11,10 +11,10 @@ export default new Command({
     description: "Set the slowmode.",
     permission: [Roles.HELPER, Roles.MODERATOR, Roles.MANAGER],
     usage: "[seconds | 'show'] [channel]",
-    async run(this: Command, client: Client, message: Message, args: Args) {
+    async run(this: Command, _client: Client, message: Message, args: Args) {
         const firstArg = args.consume()
         const slowmode = Math.round(Number(firstArg))
-        const channel = (await args.consumeChannel()) || <TextChannel>message.channel
+        const channel = (await args.consumeChannel()) || (message.channel as TextChannel)
         if (isNaN(slowmode)) {
             const current = channel.rateLimitPerUser
             const s = current === 1 ? "" : "s"
