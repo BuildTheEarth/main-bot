@@ -11,7 +11,7 @@ export default new Command({
     name: "advance",
     aliases: ["advanced"],
     description: "Add or remove a user as an advanced builder.",
-    permission: Roles.BUILDER_COUNCIL,
+    permission: [Roles.BUILDER_COUNCIL, Roles.MANAGER],
     usage: "<user> ['remove']",
     async run(client: Client, message: Message, args: Args) {
         const user = await args.consumeUser()
