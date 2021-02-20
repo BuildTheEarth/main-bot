@@ -28,7 +28,7 @@ export default new Command({
             .catch(noop)
         if (!member || !member.hasRole(Roles.BUILDER))
             return message.channel.sendError("That user is not a builder.")
-        const role = client.guilds.main.role(Roles.MUTED)
+        const role = client.guilds.main.role(Roles.ADVANCED_BUILDER)
 
         if (remove) {
             const record = await AdvancedBuilder.findOne(user.id)
