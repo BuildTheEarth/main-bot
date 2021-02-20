@@ -60,7 +60,7 @@ export default class BannerImage extends BaseEntity {
 
         await updates.sendSuccess(embed)
         await next.softRemove()
-        client.logger.info("Updated banner with first image in queue!")
+        client.logger.info("Updated banner with first image in queue.")
         this.schedule(client)
     }
 
