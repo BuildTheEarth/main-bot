@@ -34,7 +34,7 @@ export default new Command({
             return message.channel.sendError(
                 `You can't manage members in the **${expanded}** team!`
             )
-        const role = client.guilds.main.roles.cache.find(role => role.name === expanded)
+        const role = client.guilds.main.role(expanded)
 
         const member: GuildMember = await client.guilds.main.members
             .fetch({ user, cache: true })

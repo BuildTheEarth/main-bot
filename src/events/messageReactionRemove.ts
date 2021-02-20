@@ -12,7 +12,7 @@ export default async function messageReactionAdd(
     const role = channel?.[reaction.message.id]?.[reaction.emoji.name]
     const guild = reaction.message.guild
     if (guild) {
-        const member = await guild.members.fetch({ user, cache: true }).catch(() => null)
+        const member = await guild.members.fetch({ user, cache: true }).catch(noop)
         if (member && role) await member.roles.remove(role).catch(noop)
     }
 }

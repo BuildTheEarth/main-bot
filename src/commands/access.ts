@@ -16,7 +16,7 @@ export default new Command({
         if (!perms.has("VIEW_CHANNEL"))
             return message.channel.sendError("You can't see that channel.")
 
-        const manager = message.guild.roles.cache.find(role => role.name === "Manager")
+        const manager = message.guild.role(Roles.MANAGER)
         const reason = `Access requested by ${message.author.tag} (${message.author.id})`
         await channel.updateOverwrite(manager, { MANAGE_ROLES: true }, reason)
 

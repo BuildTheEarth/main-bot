@@ -4,6 +4,7 @@ import Args from "../struct/Args"
 import Command from "../struct/Command"
 import GuildMember from "../struct/discord/GuildMember"
 import Roles from "../util/roles"
+import noop from "../util/noop"
 
 const LANGUAGE_ROLES = {
     english: "English",
@@ -52,7 +53,7 @@ export default new Command({
 
         const member: GuildMember = await message.guild.members
             .fetch({ user, cache: true })
-            .catch(() => null)
+            .catch(noop)
         if (!member) return message.channel.sendError("The user is not in the server!")
 
         const languageInput = args.consume().toLowerCase()
@@ -62,7 +63,7 @@ export default new Command({
                 languageInput ? "That's not a language!" : "You must provide a language!"
             )
 
-        const role = message.guild.roles.cache.find(r => r.name === language)
+        const role = message.guild.role(language)
         await member.roles.add(role)
         await message.channel.sendSuccess("Role added!")
     }

@@ -1,5 +1,6 @@
 import Client from "../struct/Client"
 import GuildMember from "../struct/discord/GuildMember"
+import noop from "../util/noop"
 import Roles from "../util/roles"
 
 export default async function guildMemberRemove(
@@ -10,12 +11,10 @@ export default async function guildMemberRemove(
         const main = this.guilds.cache.get(this.config.guilds.main)
         const mainMember: GuildMember = await main.members
             .fetch({ user: member.user, cache: true })
-            .catch(() => null)
+            .catch(noop)
         if (!mainMember) return
-        const mainRole = main.roles.cache.find(
-            role => role.name === Roles.PIPPEN_YOUTUBE_GROUP
-        )
+        const mainRole = main.role(Roles.PIPPEN_YOUTUBE_GROUP)
 
-        mainMember.roles.remove(mainRole).catch(() => null)
+        mainMember.roles.remove(mainRole).catch(noop)
     }
 }
