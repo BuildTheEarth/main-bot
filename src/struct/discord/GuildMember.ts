@@ -17,12 +17,12 @@ export default class GuildMember extends Discord.GuildMember {
     }
 
     async mute(reason: string): Promise<this> {
-        await this.roles.add(this.guild.muteRole, reason)
+        await this.roles.add(this.guild.role(Roles.MUTED), reason)
         return this
     }
 
     async unmute(reason: string): Promise<this> {
-        await this.roles.remove(this.guild.muteRole, reason)
+        await this.roles.remove(this.guild.role(Roles.MUTED), reason)
         return this
     }
 }
