@@ -116,8 +116,8 @@ export default new Command({
 
         const editPermissions = [Roles.SUPPORT, Roles.MANAGER, Roles.PR_TRANSLATION_TEAM]
         const deletePermissions = [Roles.SUPPORT, Roles.MANAGER]
-        if (!message.member.hasStaffPermission(editPermissions)) return
-        const canDelete = message.member.hasStaffPermission(deletePermissions)
+        if (!message.member.hasRole(editPermissions)) return
+        const canDelete = message.member.hasRole(deletePermissions)
         if (subcommand === "delete" && !canDelete) return
 
         const name = args.consume().toLowerCase()

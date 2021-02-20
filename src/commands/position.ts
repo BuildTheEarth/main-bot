@@ -5,6 +5,7 @@ import Command from "../struct/Command"
 import GuildMember from "../struct/discord/GuildMember"
 import Roles from "../util/roles"
 import pseudoteamPositions from "../data/pseudoteamPositions"
+import noop from "../util/noop"
 
 export default new Command({
     name: "position",
@@ -24,13 +25,13 @@ export default new Command({
         let position = args.consumeIf(["bto", "vcc", "vs"])
         if (!position)
             for (const [team, lead] of Object.entries(pseudoteamPositions.leads))
-                if (message.member.hasStaffPermission(lead)) position = team
+                if (message.member.hasRole(lead)) position = team
         if (!position) return
 
         const lead = pseudoteamPositions.leads[position]
         const expanded = pseudoteamPositions.expansions[position]
 
-        if (!message.member.hasStaffPermission(lead))
+        if (!message.member.hasRole(lead))
             return message.channel.sendError(
                 `You can't manage members in the **${expanded}** team!`
             )
@@ -38,7 +39,7 @@ export default new Command({
 
         const member: GuildMember = await client.guilds.main.members
             .fetch({ user, cache: true })
-            .catch(() => null)
+            .catch(noop)
         if (!member) return message.channel.sendError("The user is not in the server!")
 
         const demote = !!args.consumeIf("demote")

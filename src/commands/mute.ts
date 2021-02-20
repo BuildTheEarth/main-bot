@@ -35,11 +35,7 @@ export default new Command({
 
         const mute = await TimedPunishment.findOne({ member: user.id, type: "mute" })
         if (mute) return message.channel.sendError("That user is already muted!")
-        if (
-            member &&
-            member.hasStaffPermission(Roles.STAFF) &&
-            member.id !== message.author.id
-        )
+        if (member && member.hasRole(Roles.STAFF) && member.id !== message.author.id)
             return message.channel.sendError("You can't mute other staff!")
 
         const punishment = new TimedPunishment()

@@ -38,9 +38,9 @@ export default new Command({
         if (title?.length > 200) error = "That title is too long! (max. 200 characters)."
 
         if (error) {
-            if (message.channel.type !== "dm") await message.delete().catch(() => null)
+            if (message.channel.type !== "dm") message.delete().catch(() => null)
             const errorMessage = await message.channel.sendError(error)
-            return await errorMessage.delete({ timeout: 10000 }).catch(() => null)
+            return errorMessage.delete({ timeout: 10000 }).catch(() => null)
         }
 
         // delete message asap if suggestion is anonymous

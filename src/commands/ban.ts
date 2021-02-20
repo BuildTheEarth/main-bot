@@ -7,6 +7,7 @@ import Command from "../struct/Command"
 import GuildMember from "../struct/discord/GuildMember"
 import Roles from "../util/roles"
 import formatPunishmentTime from "../util/formatPunishmentTime"
+import noop from "../util/noop"
 
 export default new Command({
     name: "ban",
@@ -36,8 +37,8 @@ export default new Command({
 
         const member: GuildMember = await message.guild.members
             .fetch({ user, cache: true })
-            .catch(() => null)
-        if (member && member.hasStaffPermission(Roles.STAFF))
+            .catch(noop)
+        if (member && member.hasRole(Roles.STAFF))
             return message.channel.sendError(
                 member.id === message.author.id
                     ? "You can't ban yourself, cezon."

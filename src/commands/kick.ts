@@ -29,7 +29,7 @@ export default new Command({
             .fetch({ user, cache: true })
             .catch(() => null)
         if (!member) return message.channel.sendError("The user is not in the server!")
-        if (member.hasStaffPermission(Roles.STAFF))
+        if (member.hasRole(Roles.STAFF))
             return message.channel.sendError(
                 member.id === message.author.id
                     ? "Okay, sadist, you can't kick yourself."

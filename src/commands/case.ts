@@ -52,7 +52,7 @@ export default new Command({
             await message.channel.sendSuccess(`Edited case **#${id}**.`)
             await client.log(log)
         } else if (subcommand === "delete") {
-            if (!message.member.hasStaffPermission(Roles.MODERATOR)) return
+            if (!message.member.hasRole(Roles.MODERATOR)) return
             const reason = args.consumeRest()
             if (!reason)
                 return message.channel.sendError("You must provide a deletion reason!")

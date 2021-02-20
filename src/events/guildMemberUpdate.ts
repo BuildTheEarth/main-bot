@@ -15,8 +15,8 @@ export default async function guildMemberUpdate(
         if (!mainMember) return
 
         const mainRole = this.guilds.main.role(Roles.PIPPEN_YOUTUBE_GROUP)
-        const was = oldMember.hasStaffPermission(Roles.YOUTUBE)
-        const is = newMember.hasStaffPermission(Roles.YOUTUBE)
+        const was = oldMember.hasRole(Roles.YOUTUBE)
+        const is = newMember.hasRole(Roles.YOUTUBE)
 
         if (was && !is) mainMember.roles.remove(mainRole).catch(noop)
         else if (is && !was) mainMember.roles.add(mainRole).catch(noop)

@@ -66,7 +66,7 @@ export default async function (this: Client, message: Message): Promise<unknown>
                   .fetch({ user: message.author, cache: true })
                   .catch(() => null)) as GuildMember
 
-        const hasPermission = member && member.hasStaffPermission(command.permission)
+        const hasPermission = member && member.hasRole(command.permission)
         if (!member && !command.dms) return
         if (command.permission !== Roles.ANY && !hasPermission) return
 
@@ -98,14 +98,14 @@ export default async function (this: Client, message: Message): Promise<unknown>
     const suggestions = Object.values(this.config.suggestions)
     if (
         suggestions.includes(message.channel.id) &&
-        !message.member.hasStaffPermission(Roles.MANAGER)
+        !message.member.hasRole(Roles.MANAGER)
     ) {
         const error = await message.channel.sendError(
             `Please use the \`suggest\` command to post suggestions! (Check \`${this.config.prefix}help suggest\` for help). **Your message will be deleted in 30 seconds.**`
         )
 
-        await message.delete({ timeout: 30000 })
-        await error.delete({ timeout: 30000 })
+        message.delete({ timeout: 30000 })
+        error.delete({ timeout: 30000 })
         return
     }
 

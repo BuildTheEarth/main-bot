@@ -11,6 +11,7 @@ import humanizeArray from "../util/humanizeArray"
 import truncateString from "../util/truncateString"
 import flattenMarkdown from "../util/flattenMarkdown"
 import { Brackets } from "typeorm"
+import noop from "../util/noop"
 
 export default new Command({
     name: "suggestion",
@@ -55,7 +56,7 @@ export default new Command({
         const category = staff ? "staff" : "main"
         const discussionID = client.config.suggestions.discussion[category]
         const canManage = message.member
-            ? message.member.hasStaffPermission([Roles.SUGGESTION_TEAM, Roles.MANAGER])
+            ? message.member.hasRole([Roles.SUGGESTION_TEAM, Roles.MANAGER])
             : false
 
         if (
@@ -67,8 +68,8 @@ export default new Command({
                 `Please run this command in <#${discussionID}>!`
             )
             if (message.channel.id === client.config.suggestions[category]) {
-                await message.delete().catch(() => null)
-                await errorMessage.delete({ timeout: 10000 }).catch(() => null)
+                message.delete().catch(noop)
+                errorMessage.delete({ timeout: 10000 }).catch(noop)
             }
             return
         }
@@ -76,7 +77,7 @@ export default new Command({
         const subcommand = args.consume()
         const availableSubcommands = this.subcommands.filter(sub =>
             message.member
-                ? message.member.hasStaffPermission(sub.permission || this.permission)
+                ? message.member.hasRole(sub.permission || this.permission)
                 : false
         )
 
@@ -279,7 +280,7 @@ export default new Command({
             if (status !== oldStatus) {
                 const author: Discord.User = await client.users
                     .fetch(suggestion.author, true)
-                    .catch(() => null)
+                    .catch(noop)
                 if (author) {
                     const dms = (await author.createDM()) as DMChannel
                     const updater = `<@${suggestion.statusUpdater}>`
@@ -298,7 +299,7 @@ export default new Command({
                             color: client.config.colors.suggestions[status],
                             description: update
                         }
-                    }).catch(() => null)
+                    }).catch(noop)
                 }
             }
 

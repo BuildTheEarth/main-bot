@@ -28,7 +28,7 @@ export default new Command({
                 return message.channel.sendError(
                     `Unknown command \`${truncateString(commandName, 32, "...")}\`.`
                 )
-            if (!member.hasStaffPermission(command.permission))
+            if (!member.hasRole(command.permission))
                 return message.channel.sendError(
                     "You don't have permission to use that command!"
                 )
@@ -52,7 +52,7 @@ export default new Command({
 
             if (command.subcommands && command.subcommands.length) {
                 const allowedSubcommands = command.subcommands.filter(sub =>
-                    member.hasStaffPermission(sub.permission)
+                    member.hasRole(sub.permission)
                 )
 
                 const formattedSubcommands = allowedSubcommands.map(sub => {
@@ -70,7 +70,7 @@ export default new Command({
         }
 
         const allowedCommands = client.commands.filter(command =>
-            member.hasStaffPermission(command.permission)
+            member.hasRole(command.permission)
         )
 
         const formattedCommands = allowedCommands

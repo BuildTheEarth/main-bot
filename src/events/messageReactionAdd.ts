@@ -24,7 +24,7 @@ export default async function messageReactionAdd(
             guild.id === this.config.guilds.staff &&
             channel.name === "weekly-updates" &&
             reaction.emoji.name === "📣" &&
-            member.hasStaffPermission(Roles.MANAGER)
+            member.hasRole(Roles.MANAGER)
         ) {
             await reaction.users.remove(user)
             let update = reaction.message.content
