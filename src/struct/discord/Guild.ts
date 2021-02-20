@@ -8,10 +8,6 @@ export default class Guild extends Discord.Guild {
     client: Client
     members: GuildMemberManager
 
-    get muteRole(): Discord.Role {
-        return this.roles.cache.find(role => role.name.toLowerCase() === "muted")
-    }
-
     member(user: Discord.UserResolvable): GuildMember {
         return super.member(user) as GuildMember
     }
