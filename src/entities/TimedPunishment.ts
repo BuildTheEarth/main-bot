@@ -9,6 +9,8 @@ import SnowflakeColumn from "./decorators/SnowflakeColumn"
 import Client from "../struct/Client"
 import GuildMember from "../struct/discord/GuildMember"
 import milliseconds from "./transformers/milliseconds"
+import noop from "../util/noop"
+import pastTense from "../util/pastTense"
 
 @Entity({ name: "timed_punishments" })
 export default class TimedPunishment extends BaseEntity {
@@ -35,25 +37,30 @@ export default class TimedPunishment extends BaseEntity {
 
     async undo(client: Client): Promise<void> {
         clearTimeout(this.undoTimeout)
+        const user = await client.users.fetch(this.member, true)
+        if (!user) return
+
         if (this.type === "mute") {
             const member: GuildMember = await client.guilds.main.members
-                .fetch({ user: this.member, cache: true })
-                .catch(() => null)
+                .fetch({ user, cache: true })
+                .catch(noop)
             if (!member) return
-            member.unmute("End of punishment")
+            await member.unmute("End of punishment").catch(noop)
         } else if (this.type === "ban") {
-            await client.guilds.main.members
-                .unban(this.member, "End of punishment")
-                .catch(() => null)
+            await client.guilds.main.members.unban(user, "End of punishment").catch(noop)
         }
+
+        const undid = "un" + pastTense(this.type)
+        client.logger.info(`Automatically ${undid} ${user.tag}.`)
+
+        await this.remove()
     }
 
     schedule(client: Client): void {
         if (this.length === 0) return
         const timeout = this.end.getTime() - Date.now()
-        this.undoTimeout = setTimeout(async () => {
-            await this.undo(client)
-            await this.remove()
+        this.undoTimeout = setTimeout(() => {
+            this.undo(client)
         }, timeout)
     }
 }
