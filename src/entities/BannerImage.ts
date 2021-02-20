@@ -37,7 +37,6 @@ export default class BannerImage extends BaseEntity {
     private static cycleTimeout: NodeJS.Timeout
 
     static async cycle(client: Client): Promise<void> {
-        clearTimeout(this.cycleTimeout)
         if (!client.guilds.main.features.includes("BANNER")) return
         const next = await this.findOne({ order: { id: "ASC" } })
 
