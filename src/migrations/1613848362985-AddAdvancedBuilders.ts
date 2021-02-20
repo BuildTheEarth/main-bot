@@ -9,7 +9,7 @@ CREATE TABLE \`advanced_builders\` (
     \`builder\` varchar(18) NOT NULL,
     \`given_at\` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
     PRIMARY KEY (\`builder\`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci
             `)
     }
 
