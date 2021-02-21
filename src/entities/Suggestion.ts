@@ -11,17 +11,17 @@ import SnowflakeColumn from "./decorators/SnowflakeColumn"
 import Discord from "discord.js"
 import Client from "../struct/Client"
 import replaceAsync from "string-replace-async"
+import suggestionStatusActions from "../data/suggestionStatusActions"
 
-export type SuggestionStatus = keyof typeof SuggestionStatuses
-export enum SuggestionStatuses {
-    "approved" = "Approved",
-    "denied" = "Denied",
-    "duplicate" = "Marked as duplicate",
-    "forwarded" = "Forwarded to the respective team",
-    "in-progress" = "Marked as in progress",
-    "information" = "Marked as needing more information",
-    "invalid" = "Invalidated"
-}
+export type SuggestionStatus =
+    | "approved"
+    | "denied"
+    | "duplicate"
+    | "forwarded"
+    | "in-progress"
+    | "information"
+    | "invalid"
+
 export interface Identifier {
     number: number
     extension: string
@@ -184,7 +184,7 @@ export default class Suggestion extends BaseEntity {
             embed.color = client.config.colors.suggestions[this.status]
             embed.thumbnail.url = client.config.assets.suggestions[this.status]
 
-            let action = SuggestionStatuses[this.status] as string
+            let action = suggestionStatusActions[this.status] as string
             let reason = this.statusReason || ""
             let refers = ""
             if (["forwarded", "duplicate"].includes(this.status)) {

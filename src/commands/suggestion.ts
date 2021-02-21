@@ -5,13 +5,14 @@ import Args from "../struct/Args"
 import Command from "../struct/Command"
 import TextChannel from "../struct/discord/TextChannel"
 import DMChannel from "../struct/discord/DMChannel"
-import Suggestion, { SuggestionStatuses } from "../entities/Suggestion"
+import Suggestion, { SuggestionStatus } from "../entities/Suggestion"
 import Roles from "../util/roles"
 import humanizeArray from "../util/humanizeArray"
 import truncateString from "../util/truncateString"
 import flattenMarkdown from "../util/flattenMarkdown"
 import { Brackets } from "typeorm"
 import noop from "../util/noop"
+import suggestionStatusActions from "../data/suggestionStatusActions"
 
 export default new Command({
     name: "suggestion",
@@ -104,7 +105,7 @@ export default new Command({
                 .consume()
                 .split(/,? ?/)
                 .map(s => s.toLowerCase())
-            if (!statuses.length) statuses = Object.keys(SuggestionStatuses)
+            if (!statuses.length) statuses = Object.keys(suggestionStatusActions)
             const cleanQuery = Discord.Util.escapeMarkdown(truncateString(query, 50))
 
             const queryBuilder = Suggestions.createQueryBuilder("suggestion")
@@ -262,14 +263,14 @@ export default new Command({
             const oldStatus = suggestion.status
             const status = args.consume().toLowerCase()
             const reason = args.consumeRest()
-            if (!(status in SuggestionStatuses)) {
-                const formatted = humanizeArray(Object.keys(SuggestionStatuses))
+            if (!(status in suggestionStatusActions)) {
+                const formatted = humanizeArray(Object.keys(suggestionStatusActions))
                 return message.channel.sendError(
                     `You must specify a new suggestion status! (${formatted}).`
                 )
             }
 
-            suggestion.status = status as keyof typeof SuggestionStatuses
+            suggestion.status = status as SuggestionStatus
             suggestion.statusUpdater = message.author.id
             suggestion.statusReason = reason || null
 
@@ -285,7 +286,7 @@ export default new Command({
                     const dms = (await author.createDM()) as DMChannel
                     const updater = `<@${suggestion.statusUpdater}>`
                     // marked as something -> marked your suggestion as something
-                    const actioned = SuggestionStatuses[status]
+                    const actioned = suggestionStatusActions[status]
                         .toLowerCase()
                         .replace(/ed( |$)/, "ed your suggestion ")
                         .trim()
