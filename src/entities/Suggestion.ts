@@ -10,6 +10,7 @@ import {
 import SnowflakeColumn from "./decorators/SnowflakeColumn"
 import Discord from "discord.js"
 import Client from "../struct/Client"
+import replaceAsync from "string-replace-async"
 
 export type SuggestionStatus = keyof typeof SuggestionStatuses
 export enum SuggestionStatuses {
@@ -198,6 +199,19 @@ export default class Suggestion extends BaseEntity {
                         action = action.replace("to the respective team", "")
                 }
             }
+
+            // link suggestion numbers
+            const regex = /#?\d+[a-z]?/gi
+            const replacer = async (input: string) => {
+                const identifier = Suggestion.parseIdentifier(input)
+                // prettier-ignore
+                const suggestion = await Suggestion.findByIdentifier(identifier, this.staff)
+                if (!suggestion) return input
+                return `[${input}](${suggestion.getURL(client)})`
+            }
+
+            refers = await replaceAsync(refers, regex, replacer)
+            reason = await replaceAsync(reason, regex, replacer)
 
             embed.fields.push({
                 name: "Status",
