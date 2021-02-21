@@ -13,14 +13,16 @@ import Client from "../struct/Client"
 import replaceAsync from "string-replace-async"
 import suggestionStatusActions from "../data/suggestionStatusActions"
 
-export type SuggestionStatus =
-    | "approved"
-    | "denied"
-    | "duplicate"
-    | "forwarded"
-    | "in-progress"
-    | "information"
-    | "invalid"
+export type SuggestionStatus = keyof typeof SuggestionStatuses
+export enum SuggestionStatuses {
+    "approved",
+    "denied",
+    "duplicate",
+    "forwarded",
+    "in-progress",
+    "information",
+    "invalid"
+}
 
 export interface Identifier {
     number: number

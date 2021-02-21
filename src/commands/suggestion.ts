@@ -5,7 +5,7 @@ import Args from "../struct/Args"
 import Command from "../struct/Command"
 import TextChannel from "../struct/discord/TextChannel"
 import DMChannel from "../struct/discord/DMChannel"
-import Suggestion, { SuggestionStatus } from "../entities/Suggestion"
+import Suggestion, { SuggestionStatus, SuggestionStatuses } from "../entities/Suggestion"
 import Roles from "../util/roles"
 import humanizeArray from "../util/humanizeArray"
 import truncateString from "../util/truncateString"
@@ -105,7 +105,7 @@ export default new Command({
                 .consume()
                 .split(/,? ?/)
                 .map(s => s.toLowerCase())
-            if (!statuses.length) statuses = Object.keys(suggestionStatusActions)
+            if (!statuses.length) statuses = Object.keys(SuggestionStatuses)
             const cleanQuery = Discord.Util.escapeMarkdown(truncateString(query, 50))
 
             const queryBuilder = Suggestions.createQueryBuilder("suggestion")
