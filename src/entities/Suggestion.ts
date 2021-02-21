@@ -180,14 +180,28 @@ export default class Suggestion extends BaseEntity {
         if (this.teams) embed.fields.push({ name: "Team/s", value: this.teams })
 
         if (this.status) {
-            const action = SuggestionStatuses[this.status]
-            const reason = this.statusReason ? `\n\n${this.statusReason}` : ""
-            const assets = client.config.assets.suggestions
             embed.color = client.config.colors.suggestions[this.status]
-            embed.thumbnail.url = assets[this.status]
+            embed.thumbnail.url = client.config.assets.suggestions[this.status]
+
+            let action = SuggestionStatuses[this.status] as string
+            let reason = this.statusReason
+            let refers = ""
+            if (["forwarded", "duplicate"].includes(this.status)) {
+                const prep = { forwarded: "to", duplicate: "of" }[this.status]
+                // "to/of ($1). ($2)"
+                const regex = new RegExp(`^${prep}\\s+([^.]+)(?:\\.\\s+)?(.+)?`, "i")
+                const match = reason.match(regex)
+                if (match) {
+                    refers = ` ${prep} ${match[1]}`
+                    reason = match[2] || ""
+                    if (this.status === "forwarded")
+                        action = action.replace("to the respective team", "")
+                }
+            }
+
             embed.fields.push({
                 name: "Status",
-                value: `*${action} by <@${this.statusUpdater}>.*${reason}`
+                value: `*${action}${refers} by <@${this.statusUpdater}>.*\n\n${reason}`
             })
         }
 
