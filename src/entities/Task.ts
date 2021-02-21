@@ -1,8 +1,14 @@
 import { Entity, Column, PrimaryGeneratedColumn, BaseEntity } from "typeorm"
 import SnowflakeColumn from "./decorators/SnowflakeColumn"
 
-export const VALID_STATUSES = ["in-progress", "abandoned", "done", "reported", "hidden"]
-export type TaskStatus = "in-progress" | "abandoned" | "done" | "reported" | "hidden"
+export type TaskStatus = keyof typeof TaskStatuses
+export enum TaskStatuses {
+    "in-progress",
+    "abandoned",
+    "done",
+    "reported",
+    "hidden"
+}
 
 @Entity({ name: "tasks" })
 export default class Task extends BaseEntity {

@@ -5,7 +5,7 @@ import Client from "../struct/Client"
 import Message from "../struct/discord/Message"
 import Args from "../struct/Args"
 import Command from "../struct/Command"
-import Task, { TaskStatus, VALID_STATUSES } from "../entities/Task"
+import Task, { TaskStatus, TaskStatuses } from "../entities/Task"
 import Roles from "../util/roles"
 import humanizeArray from "../util/humanizeArray"
 import { Brackets } from "typeorm"
@@ -50,13 +50,14 @@ export default new Command({
             const [title, description] = args.consume(2)
             const status = args.consume().toLowerCase() || null
 
+            const statuses = humanizeArray(Object.keys(TaskStatuses))
             let error: string
             if (title.length > 99)
                 error = "The task's title is too long! (max. 99 characters)."
             if (!title || !description)
                 error = "You must provide a title and a description!"
-            if (status && !VALID_STATUSES.includes(status))
-                error = `That's not a valid status! (${humanizeArray(VALID_STATUSES)}).`
+            if (status && !TaskStatuses[status])
+                error = `That's not a valid status! (${statuses}).`
             if (error) return message.channel.sendError(error)
 
             const task = new Task()
@@ -75,9 +76,10 @@ export default new Command({
             if (Number.isNaN(id))
                 return message.channel.sendError("You must provide a task ID!")
             const status = args.consume().toLowerCase()
-            if (!VALID_STATUSES.includes(status))
+            const statuses = humanizeArray(Object.keys(TaskStatuses))
+            if (!TaskStatuses[status])
                 return message.channel.sendError(
-                    `That's not a valid status! (${humanizeArray(VALID_STATUSES)}).`
+                    `That's not a valid status! (${statuses}).`
                 )
 
             const task = await Task.findOne(id)
