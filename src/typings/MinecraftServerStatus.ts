@@ -1,5 +1,5 @@
 // https://api.mcsrvstat.us/
-export default interface MinecraftServerStatusResponse {
+export default interface MinecraftServerStatus {
     online: boolean
     ip: string
     port: number
