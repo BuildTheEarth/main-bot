@@ -20,7 +20,15 @@ import milliseconds from "./transformers/milliseconds"
 import past from "../util/pastTense"
 import noop from "../util/noop"
 
-export type Action = "warn" | "mute" | "kick" | "ban" | "unmute" | "unban"
+export type Action = keyof typeof Actions
+export enum Actions {
+    "warn",
+    "mute",
+    "kick",
+    "ban",
+    "unmute",
+    "unban"
+}
 
 @Entity({ name: "action_logs" })
 export default class ActionLog extends BaseEntity {
