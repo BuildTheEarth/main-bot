@@ -1,11 +1,23 @@
 import fetch, { Response } from "node-fetch"
 import { Entity, Column, PrimaryGeneratedColumn, BaseEntity } from "typeorm"
 
-export const VALID_KEYS = ["logo", "1", "2", "3", "4", "5"]
-export type ModpackImageKey = "logo" | "1" | "2" | "3" | "4" | "5"
+export type ModpackImageKey = keyof typeof ModpackImageKeys
+export enum ModpackImageKeys {
+    "logo",
+    // @ts-ignore
+    "1",
+    // @ts-ignore
+    "2",
+    // @ts-ignore
+    "3",
+    // @ts-ignore
+    "4",
+    // @ts-ignore
+    "5"
+}
 export type ModpackImageSetName = "queue" | "store"
 export type ModpackImageData = { url: string; credit: string }
-export type ModpackImageSet = { [key in ModpackImageKey]?: ModpackImageData }
+export type ModpackImageSet = Partial<Record<ModpackImageKey, ModpackImageData>>
 
 @Entity({ name: "modpack_images" })
 export default class ModpackImage extends BaseEntity {
@@ -44,7 +56,7 @@ export default class ModpackImage extends BaseEntity {
         const object: ModpackImageSet = await response.json()
 
         for (const [key, data] of Object.entries(object)) {
-            if (!VALID_KEYS.includes(key)) continue
+            if (!ModpackImageKeys[key]) continue
 
             const existing = images.find(image => image.key === key)
             if (existing) await existing.remove()
