@@ -11,6 +11,7 @@
         "mysql2": "^2.2.5",
         "node-fetch": "^2.6.1",
         "reflect-metadata": "^0.1.13",
+        "string-replace-async": "^2.0.0",
         "typeorm": "^0.2.31",
         "winston": "^3.3.3",
         "yaml": "^1.10.0"
