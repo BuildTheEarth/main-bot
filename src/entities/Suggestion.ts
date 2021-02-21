@@ -185,7 +185,7 @@ export default class Suggestion extends BaseEntity {
             embed.thumbnail.url = client.config.assets.suggestions[this.status]
 
             let action = SuggestionStatuses[this.status] as string
-            let reason = this.statusReason
+            let reason = this.statusReason || ""
             let refers = ""
             if (["forwarded", "duplicate"].includes(this.status)) {
                 const prep = { forwarded: "to", duplicate: "of" }[this.status]
