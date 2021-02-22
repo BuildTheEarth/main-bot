@@ -73,6 +73,10 @@ export default async function (this: Client, message: Message): Promise<unknown>
         const label = message.member
             ? (member.roles.highest as Role).format()
             : chalk.blueBright("DMs")
+        const tag =
+            command.name === "suggest" && !message.guild
+                ? "(Anonymous)"
+                : message.author.tag
 
         try {
             await command.run(this, message, args)
@@ -81,18 +85,16 @@ export default async function (this: Client, message: Message): Promise<unknown>
                 "An unknown error occurred! Please contact one of the bot developers for help."
             )
 
-            const stack = (<string>error.stack)
+            const stack = (error.stack as string)
                 .split("\n")
                 .map(line => "    " + line)
                 .join("\n")
             return this.logger.error(
-                `${label} ${message.author.tag} tried to run '${command.name}' command:\n${stack}`
+                `${label} ${tag} tried to run '${command.name}' command:\n${stack}`
             )
         }
 
-        return this.logger.info(
-            `${label} ${message.author.tag} ran '${command.name}' command.`
-        )
+        return this.logger.info(`${label} ${tag} ran '${command.name}' command.`)
     }
 
     const suggestions = Object.values(this.config.suggestions)
