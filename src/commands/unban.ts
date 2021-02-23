@@ -28,8 +28,6 @@ export default new Command({
         if (!ban) return message.channel.sendError("The user is not banned!")
 
         await ban.undo(client)
-        await ban.remove()
-
         const log = new ActionLog()
         log.action = "unban"
         log.member = user.id
