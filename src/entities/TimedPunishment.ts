@@ -59,8 +59,13 @@ export default class TimedPunishment extends BaseEntity {
     schedule(client: Client): void {
         if (this.length === 0) return
         const timeout = this.end.getTime() - Date.now()
-        this.undoTimeout = setTimeout(() => {
-            this.undo(client)
-        }, timeout)
+
+        // avoid TimeoutOverflowWarning; reschedule
+        // (2147483647 ms is ~24 days)
+        if (timeout > 2147483647) {
+            this.undoTimeout = setTimeout(() => this.schedule(client), 2147483647)
+        } else {
+            this.undoTimeout = setTimeout(() => this.undo(client), timeout)
+        }
     }
 }
