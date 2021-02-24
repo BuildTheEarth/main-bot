@@ -40,7 +40,7 @@ export default new Command({
         {
             name: "aliases",
             description: "Add aliases to a snippet",
-            permission: [Roles.MANAGER],
+            permission: [Roles.SUPPORT, Roles.MANAGER],
             usage: "<list | add | delete> <name> <language> [alias]"
         }
     ],
