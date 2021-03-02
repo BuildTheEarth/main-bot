@@ -30,6 +30,7 @@ export default class ConfigManager {
     colors: ColorPalette & { suggestions: SuggestionCategories }
     assets: AssetList
     rules: string[]
+    buildTeamInvites: Field
     token: string
     modpackAuth: string
     database: DatabaseInfo
