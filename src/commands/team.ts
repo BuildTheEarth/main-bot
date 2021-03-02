@@ -12,10 +12,9 @@ export default new Command({
     usage: "<team>",
     async run(this: Command, client: Client, message: Message, args: Args) {
         const input = args.consume().toLowerCase()
-        const team = Object.keys(client.config.buildTeamInvites).find(team => {
-            team = team.toLowerCase()
-            return team === input || (input.length > 3 && team.includes(input))
-        })
+        const teams = Object.keys(client.config.buildTeamInvites)
+        const team = // using separate calls to give priority to the first criterion
+            teams.find(team => team === input) || teams.find(team => team.includes(input))
 
         if (!team)
             return message.channel.sendError("Couldn't find an invite for that team.")
