@@ -140,7 +140,7 @@ Rename the `_config.yml` file to `config.yml` and fill in all of the fields:
         -   **unmute**
         -   **unban**
 -   **rules:** A list of rules for the server (used by the `rule` command).
--   **buildTeamInvites:** A list of build team invites (map `name` -> `invite`). For a list scraped from our website, check out [build-team-invite-scraper](https://github.com/BuildTheEarth/build-team-invite-scraper) (make sure to indent them one level).
+-   **buildTeamInvites:** A list of build team invites (map `name` -> `invite`), used by the `team` command. For a list scraped from our website, check out [build-team-invite-scraper](https://github.com/BuildTheEarth/build-team-invite-scraper) (make sure to indent them one level).
 -   **token**: The Discord bot's token.
 -   **modpackAuth**: The key for our modpack image API (required for the `modpack` command).
 -   **database**: The information/credentials for connecting to the database.
