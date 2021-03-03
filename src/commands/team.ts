@@ -11,7 +11,7 @@ export default new Command({
     permission: Roles.ANY,
     usage: "<team>",
     async run(this: Command, client: Client, message: Message, args: Args) {
-        const input = args.consume().toLowerCase()
+        const input = args.consumeRest().toLowerCase()
         const teams = Object.keys(client.config.buildTeamInvites)
         const team = // using separate calls to give priority to the first criterion
             teams.find(team => team === input) || teams.find(team => team.includes(input))
