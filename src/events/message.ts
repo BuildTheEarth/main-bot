@@ -67,7 +67,7 @@ export default async function (this: Client, message: Message): Promise<unknown>
                   .catch(() => null)) as GuildMember
 
         const hasPermission = member && member.hasRole(command.permission)
-        if (!member && !command.dms) return
+        if (message.channel.type === "dm" && !command.dms) return
         if (command.permission !== Roles.ANY && !hasPermission) return
 
         const label = message.member
