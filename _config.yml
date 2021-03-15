@@ -67,6 +67,7 @@ buildTeamInvites: {}
 token: ""
 modpackAuth: ""
 database:
+    type: ""
     host: ""
     name: ""
     user: ""

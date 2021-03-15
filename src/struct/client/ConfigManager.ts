@@ -14,7 +14,14 @@ export type ReactionRole = Field<Field<Field>>
 export type EmojiList = Field<EmojiIdentifierResolvable> & { text: Field }
 export type AssetList = { suggestions: SuggestionCategories; cases: ActionLogCategories }
 export type ColorPalette = { success: string; error: string; info: string }
-export type DatabaseInfo = { host: string; name: string; user: string; pass: string }
+export type DatabaseInfo = {
+    type: "mariadb" | "mysql" | "sqlite"
+    path?: string
+    host?: string
+    name?: string
+    user?: string
+    pass?: string
+}
 
 export default class ConfigManager {
     client: Client
