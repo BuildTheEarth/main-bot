@@ -14,7 +14,7 @@
         "string-replace-async": "^2.0.0",
         "typeorm": "^0.2.31",
         "winston": "^3.3.3",
-        "yaml": "^1.10.0"
+        "yaml": "^1.10.2"
     },
     "devDependencies": {
         "@types/ms": "^0.7.31",
