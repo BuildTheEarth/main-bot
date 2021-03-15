@@ -8,6 +8,7 @@ import GuildMember from "../struct/discord/GuildMember"
 import Roles from "../util/roles"
 import formatPunishmentTime from "../util/formatPunishmentTime"
 import noop from "../util/noop"
+import TextChannel from "../struct/discord/TextChannel"
 
 export default new Command({
     name: "ban",
@@ -44,7 +45,10 @@ export default new Command({
                     ? "You can't ban yourself, cezon."
                     : "Alrighty, revolutionist, you can't ban other staff!"
             )
-
+        const reviewerChannel = (message.guild.channels.cache.find((ch) => ch.name == "reviewer-committee") as TextChannel)
+        if(member && member.hasRole(Roles.BUILDER) && reviewerChannel) {
+            reviewerChannel.sendSuccess(`Builder ${user} (${user.id}) was banned!`)
+        }
         const punishment = new TimedPunishment()
         punishment.member = user.id
         punishment.type = "ban"
@@ -63,7 +67,7 @@ export default new Command({
         log.message = message.id
         log.punishment = punishment
         await log.save()
-
+        
         await log.notifyMember(client)
         await message.guild.members.ban(user, { reason })
         const formattedLength = formatPunishmentTime(length)
