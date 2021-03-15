@@ -33,7 +33,7 @@
         "start:production": "pm2 start ecosystem.yml --env production",
         "build": "tsc",
         "watch": "tsc --watch",
-        "format": "prettier --write src/",
+        "format": "prettier --write -c src",
         "lint": "eslint src --fix",
         "update": "git pull && npm run build && pm2 restart main-bot",
         "update:migrate": "git pull && npm run build && pm2 stop main-bot && typeorm migration:run && pm2 start main-bot",
