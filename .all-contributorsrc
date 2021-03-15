@@ -85,6 +85,16 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "fnionn",
+      "name": "Fionn",
+      "avatar_url": "https://avatars.githubusercontent.com/u/53976867?v=4",
+      "profile": "https://www.youtube.com/channel/UCxiYE392PghWtHEQaTN81oA",
+      "contributions": [
+        "infra",
+        "code"
+      ]
     }
   ],
   "projectName": "main-bot",
