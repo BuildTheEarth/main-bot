@@ -45,8 +45,10 @@ export default new Command({
                     ? "You can't ban yourself, cezon."
                     : "Alrighty, revolutionist, you can't ban other staff!"
             )
-        const reviewerChannel = (message.guild.channels.cache.find((ch) => ch.name == "reviewer-committee") as TextChannel)
-        if(member && member.hasRole(Roles.BUILDER) && reviewerChannel) {
+        const reviewerChannel = message.guild.channels.cache.find(
+            ch => ch.name == "reviewer-committee"
+        ) as TextChannel
+        if (member && member.hasRole(Roles.BUILDER) && reviewerChannel) {
             reviewerChannel.sendSuccess(`Builder ${user} (${user.id}) was banned!`)
         }
         const punishment = new TimedPunishment()
@@ -67,7 +69,7 @@ export default new Command({
         log.message = message.id
         log.punishment = punishment
         await log.save()
-        
+
         await log.notifyMember(client)
         await message.guild.members.ban(user, { reason })
         const formattedLength = formatPunishmentTime(length)
