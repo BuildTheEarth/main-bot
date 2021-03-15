@@ -1,6 +1,6 @@
 {
     "name": "main-bot",
-    "version": "1.5.0",
+    "version": "1.6.0",
     "description": "The main official bot for the BuildTheEarth Discord server.",
     "dependencies": {
         "@buildtheearth/bot-logger": "^1.0.3",

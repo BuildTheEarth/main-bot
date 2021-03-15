@@ -1,3 +1,46 @@
+## [v1.6.0] <sub><sup><sub>15/03/21</sub></sup></sub>
+
+**Features:**
+
+-   Created `status` command.
+-   Created `rule` command.
+    -   Created `rules` config field.
+-   Added more info to the `help` command.
+-   Allowed editing images of cases.
+-   Allowed muting and unmuting users not in the server.
+-   Created `banner` command and periodic banner cycling.
+-   Added snippet aliases.
+-   Began updating punishment notifications in users' DMs.
+-   Began inlining suggestion status targets (like "forwarded to **someone**") in status text.
+-   Created `team` command.
+    -   Created `buildTeamInvites` config field.
+-   Created `advance` role.
+
+**Bug fixes:**
+
+-   Began disallowing empty bodies in `suggestion edit`.
+-   Began catching all uncaught errors when running commands.
+-   Made bans take precedence over mutes when checking a user.
+-   Anonymized suggestion authors in logs.
+
+**Changes:**
+
+-   Deleted `catte` command.
+-   Renamed `modpack` field to `modpackAuth` in config.
+
+**Internal changes:**
+
+-   Simplified ConfigManager typings.
+-   Started logging uncaught exceptions and unhandled rejections.
+-   Created `main`, `staff`, and `youtube` properties of `GuildManager`.
+-   Created `command` property of Args.
+-   Created `update:migrate` npm script.
+-   Created `error` npm script.
+-   Created `flattenMarkdown()` util.
+-   Created `quote()` util.
+-   Changed `displayUserEmbed()` of ActionLog into `notifyMember()`.
+-   Renamed `hasStaffPermission()` of GuildMember to `hasRole()`.
+
 ## [v1.5.0] <sub><sup><sub>17/01/21</sub></sup></sub>
 
 **Features:**
