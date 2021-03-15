@@ -1,4 +1,4 @@
-import { Connection, createConnection } from "typeorm"
+import { ConnectionOptions, Connection, createConnection } from "typeorm"
 import Discord from "discord.js"
 import GuildManager from "./discord/GuildManager"
 import TextChannel from "./discord/TextChannel"
@@ -20,15 +20,31 @@ export default class Client extends Discord.Client {
 
     async initDatabase(): Promise<void> {
         const db = this.config.database
-        this.db = await createConnection({
-            type: "mysql",
-            host: db.host,
-            database: db.name,
-            username: db.user,
-            password: db.pass,
+        const options: Partial<ConnectionOptions> = {
+            type: db.type,
             entities: [__dirname + "/../entities/*.js"],
             synchronize: process.env.NODE_ENV !== "production"
-        })
+        }
+
+        if (!["mariadb", "mysql", "sqlite"].includes(db.type)) {
+            this.logger.error("Only MariaDB, MySQL, and SQLite databases are supported.")
+            process.exit(1)
+        }
+
+        if (["mariadb", "mysql"].includes(db.type)) {
+            Object.assign(options, {
+                host: db.host,
+                database: db.name,
+                username: db.user,
+                password: db.pass
+            })
+        } else if (db.type === "sqlite") {
+            Object.assign(options, {
+                database: db.path
+            })
+        }
+
+        this.db = await createConnection(options as ConnectionOptions) // non-Partial
     }
 
     login(): Promise<string> {
