@@ -1,6 +1,4 @@
-# Install Files / Folders
-yarn.lock
-package-lock.json
+# Install Data
 node_modules
 
 # Build
