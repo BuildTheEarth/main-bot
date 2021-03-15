@@ -1,4 +1,14 @@
-node_modules/
-config.yml
+# Install Files / Folders
+yarn.lock
+package-lock.json
+node_modules
+
+# Build
 dist/
+
+# Config + Database Files
+config.yml
+*.sqlite
+
+# Logs
 logs/
