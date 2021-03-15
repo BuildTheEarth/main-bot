@@ -144,10 +144,14 @@ Rename the `_config.yml` file to `config.yml` and fill in all of the fields:
 -   **token**: The Discord bot's token.
 -   **modpackAuth**: The key for our modpack image API (required for the `modpack` command).
 -   **database**: The information/credentials for connecting to the database.
-    -   **host**: The database host (most likely `localhost`).
-    -   **name**: The name of the database.
-    -   **user**: The username to connect with.
-    -   **pass**: The password of the user to connect with.
+    -   **type**: The database type; `mariadb`, `mysql`, or `sqlite`.
+    -   If using MariaDB or MySQL:
+        -   **host**: The database host (most likely `localhost`).
+        -   **name**: The name of the database.
+        -   **user**: The username to connect with.
+        -   **pass**: The password of the user to connect with.
+    -   If using SQLite (recommended for easier development and testing):
+        -   **path**: The path to the database file.
 
 ### Scripts
 
