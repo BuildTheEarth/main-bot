@@ -12,4 +12,4 @@ jobs:
             - id: format
               run: "echo ::set-output name=prettier_output::$(npm run format)"
             - if: "contains(steps.format.outputs.prettier_output, 'Code style issues fixed in the above file')"
-              run: "::error::Code style is inconsistent."
+              run: "echo ::error::Code style is inconsistent."
