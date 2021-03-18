@@ -1,12 +1,15 @@
 name: Format
 on:
-  push:
-  pull_request:
+    push:
+    pull_request:
 jobs:
-  format:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
-      - run: npm i
-      - run: npm run format
+    format:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v2
+            - uses: actions/setup-node@v2
+            - run: npm i
+            - id: format
+              run: "echo ::set-output name=prettier_output::$(npm run format)"
+            - if: "contains(steps.format.outputs.prettier_output, 'Code style issues fixed in the above file')"
+              run: "echo ::error::Code style is inconsistent."
