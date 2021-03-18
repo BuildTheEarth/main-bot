@@ -31,6 +31,7 @@
     "scripts": {
         "start": "node dist/index.js --unhandled-rejections=strict",
         "start:production": "pm2 start ecosystem.yml --env production",
+        "pre-commit": "npm run lint && npm run format",
         "build": "tsc",
         "watch": "tsc --watch",
         "format": "prettier --write -c src",
