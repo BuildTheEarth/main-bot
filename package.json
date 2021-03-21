@@ -11,6 +11,7 @@
         "mysql2": "^2.2.5",
         "node-fetch": "^2.6.1",
         "reflect-metadata": "^0.1.13",
+        "sqlite3": "^5.0.2",
         "string-replace-async": "^2.0.0",
         "typeorm": "^0.2.31",
         "winston": "^3.3.3",
@@ -31,6 +32,7 @@
     "scripts": {
         "start": "node dist/index.js --unhandled-rejections=strict",
         "start:production": "pm2 start ecosystem.yml --env production",
+        "pre-commit": "npm run lint && npm run format",
         "build": "tsc",
         "watch": "tsc --watch",
         "format": "prettier --write -c src",
