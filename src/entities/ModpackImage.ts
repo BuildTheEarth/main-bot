@@ -13,7 +13,7 @@ export default class ModpackImage extends BaseEntity {
     @PrimaryGeneratedColumn()
     id: number
 
-    @Column()
+    @Column({ type: "varchar" })
     key: ModpackImageKey
 
     @Column()
