@@ -2,7 +2,7 @@ import Client from "../struct/Client"
 import Message from "../struct/discord/Message"
 import Args from "../struct/Args"
 import Command from "../struct/Command"
-import ModpackImage, { ModpackImageKey, ModpackImageKeys } from "../entities/ModpackImage"
+import ModpackImage, { ModpackImageKey } from "../entities/ModpackImage"
 import Roles from "../util/roles"
 import isURL from "../util/isURL"
 
@@ -72,7 +72,7 @@ export default new Command({
             })
         } else if (subcommand === "set") {
             const [key, url, credit] = args.consumeRest(3)
-            if (!key || !ModpackImageKeys[key])
+            if (!key || !ModpackImage.isValidKey(key))
                 return message.channel.sendError("You must specify a valid key!")
             if (!url || !isURL(url))
                 return message.channel.sendError("You must specify a valid URL!")
@@ -90,7 +90,7 @@ export default new Command({
             message.channel.sendSuccess(header + "\n\n" + image.format())
         } else if (subcommand === "delete") {
             const key = args.consume()
-            if (!key || !ModpackImageKeys[key])
+            if (!key || !ModpackImage.isValidKey(key))
                 return message.channel.sendError("You must specify a valid key!")
 
             const image = await ModpackImage.findOne({ key: key as ModpackImageKey })

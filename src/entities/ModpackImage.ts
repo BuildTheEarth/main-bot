@@ -1,20 +1,7 @@
 import fetch, { Response } from "node-fetch"
 import { Entity, Column, PrimaryGeneratedColumn, BaseEntity } from "typeorm"
 
-export type ModpackImageKey = keyof typeof ModpackImageKeys
-export enum ModpackImageKeys {
-    "logo",
-    // @ts-ignore
-    "1",
-    // @ts-ignore
-    "2",
-    // @ts-ignore
-    "3",
-    // @ts-ignore
-    "4",
-    // @ts-ignore
-    "5"
-}
+export type ModpackImageKey = "logo" | 1 | 2 | 3 | 4 | 5
 export type ModpackImageSetName = "queue" | "store"
 export type ModpackImageData = { url: string; credit: string }
 export type ModpackImageSet = Partial<Record<ModpackImageKey, ModpackImageData>>
@@ -50,13 +37,17 @@ export default class ModpackImage extends BaseEntity {
         }
     }
 
+    static isValidKey(value: number | string): boolean {
+        return ["logo", "1", "2", "3", "4", "5"].includes(value.toString())
+    }
+
     static async fetch(): Promise<{ response: Response; body: ModpackImageSet }> {
         const images = await this.find({ set: "store" })
         const response: Response = await fetch(this.API_URL)
         const object: ModpackImageSet = await response.json()
 
         for (const [key, data] of Object.entries(object)) {
-            if (!ModpackImageKeys[key]) continue
+            if (!ModpackImage.isValidKey(key)) continue
 
             const existing = images.find(image => image.key === key)
             if (existing) await existing.remove()
