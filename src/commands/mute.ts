@@ -10,7 +10,7 @@ import formatPunishmentTime from "../util/formatPunishmentTime"
 
 export default new Command({
     name: "mute",
-    aliases: [],
+    aliases: ["stfu"],
     description: "Mute a member.",
     permission: [Roles.HELPER, Roles.MODERATOR, Roles.MANAGER],
     usage: "<member> <length> [image URL | attachment] <reason>",
@@ -59,7 +59,7 @@ export default new Command({
 
         await log.notifyMember(client)
         if (member) await member.mute(reason)
-        const away = member ? "" : ", though they're not in the server"
+        const away = member ? "" : ", but uhhhh they're not in the server :flushed:"
         const formattedLength = formatPunishmentTime(length)
         const formattedUser = user.id === message.author.id ? "*you*" : user.toString()
         await message.channel.sendSuccess(

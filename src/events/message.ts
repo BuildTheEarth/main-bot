@@ -119,4 +119,12 @@ export default async function (this: Client, message: Message): Promise<unknown>
 
     if (message.content.toLowerCase().includes("catte"))
         return message.channel.send("<@391984806638125066> is 130cm short")
+    
+    if (message.content.toLowerCase().includes("uwu"))
+        return message.channel.send("rawr! u so warm *nuzzles*") // Pls leave this 
+    
+    if (message.content.toLowerCase().includes(" tlauncher ") || message.content.toLowerCase().includes(" t launcher ")) 
+        return message.channel.send("Sorry but you can only join the project with an official edition of Minecraft, tlauncher is not allowed.")
+        // The spaces next to both " tlauncher " are to make sure that it doesn't catch strings like minecraft launcher
 }
+

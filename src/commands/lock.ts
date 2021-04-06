@@ -7,7 +7,7 @@ import Roles from "../util/roles"
 
 export default new Command({
     name: "lock",
-    aliases: [],
+    aliases: ["everyone_shut_the_fuck_up", "oh_shit"],  
     description: "Lock the channel.",
     permission: Roles.MANAGER,
     usage: "[channel]",

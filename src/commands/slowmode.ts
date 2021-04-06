@@ -7,7 +7,7 @@ import Roles from "../util/roles"
 
 export default new Command({
     name: "slowmode",
-    aliases: ["cooldown", "ratelimit"],
+    aliases: ["cooldown", "ratelimit", "smh_calm_down"],
     description: "Set the slowmode.",
     permission: [Roles.HELPER, Roles.MODERATOR, Roles.MANAGER],
     usage: "[seconds | 'show'] [channel]",

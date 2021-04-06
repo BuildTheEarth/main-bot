@@ -7,7 +7,7 @@ import TextChannel from "../struct/discord/TextChannel"
 
 export default new Command({
     name: "purge",
-    aliases: ["prune", "bulkdelete"],
+    aliases: ["prune", "bulkdelete", "censorship_time"],
     description: "Bulk-delete messages in a channel.",
     permission: [Roles.MODERATOR, Roles.MANAGER],
     usage: "<amount>",

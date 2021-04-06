@@ -8,7 +8,7 @@ import quote from "../util/quote"
 export default new Command({
     name: "rule",
     aliases: ["rules"],
-    description: "Get a rule's text.",
+    description: "Get a rule's description.",
     permission: Roles.ANY,
     usage: "<number | text>",
     async run(this: Command, client: Client, message: Message, args: Args) {

@@ -12,8 +12,8 @@ import TextChannel from "../struct/discord/TextChannel"
 
 export default new Command({
     name: "ban",
-    aliases: [],
-    description: "Ban a member.",
+    aliases: ["begone", "gtfo", "getrekt"],                     // These were suggestions from moderators themselves :heart_eyes_cat: 
+    description: "Ban a member. Like a boss.",
     permission: [Roles.MODERATOR, Roles.MANAGER],
     usage: "<member> <length> <image URL | attachment> <reason>",
     async run(this: Command, client: Client, message: Message, args: Args) {
