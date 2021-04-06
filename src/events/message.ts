@@ -113,4 +113,10 @@ export default async function (this: Client, message: Message): Promise<unknown>
 
     if (message.content === "donde es server")
         return message.channel.send("hay un server!")
+
+    if (message.content.toLowerCase().includes("el server es premium"))
+        return message.channel.send("Solo puedes construir en el server con una cuenta minecraft premium/comprada")
+
+    if (message.content.toLowerCase().includes("catte"))
+        return message.channel.send("<@391984806638125066> is 130cm short")
 }
