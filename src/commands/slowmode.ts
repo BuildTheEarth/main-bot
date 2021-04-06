@@ -6,9 +6,9 @@ import Command from "../struct/Command"
 import Roles from "../util/roles"
 
 export default new Command({
-    name: "slowmode",
+    name: "Slowmode",
     aliases: ["cooldown", "ratelimit"],
-    description: "Set the slowmode.",
+    description: "Set the slowmode in a particular chat",
     permission: [Roles.HELPER, Roles.MODERATOR, Roles.MANAGER],
     usage: "[seconds | 'show'] [channel]",
     async run(this: Command, _client: Client, message: Message, args: Args) {
@@ -23,7 +23,7 @@ export default new Command({
         }
 
         if (slowmode < 0)
-            return message.channel.sendError("How would that even work? Time travel?")
+            return message.channel.sendError("How would that even work? Time travel? :rolling_eyes:")
         else if (slowmode === 6 * 60 * 60)
             return message.channel.sendError("Please, not this again.")
         else if (slowmode > 6 * 60 * 60)
