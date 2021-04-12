@@ -4,7 +4,7 @@
     "description": "The main official bot for the BuildTheEarth Discord server.",
     "dependencies": {
         "@buildtheearth/bot-logger": "^1.0.3",
-        "discord.js": "^12.5.1",
+        "discord.js": "^12.5.3",
         "fecha": "^4.2.1",
         "iso-639-1": "^2.1.9",
         "ms": "^2.1.3",
