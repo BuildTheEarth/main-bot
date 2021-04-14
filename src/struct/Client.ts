@@ -57,7 +57,12 @@ export default class Client extends Discord.Client {
         executor?: Discord.User
     ): Promise<void> {
         const channel: TextChannel = await this.channels
-            .fetch(this.config.logs, true)
+            .fetch(
+                log instanceof Snippet
+                    ? this.config.logging.snippetLogs
+                    : this.config.logging.modLogs,
+                true
+            )
             .catch(() => null)
         if (!channel) return
 

@@ -1,8 +1,10 @@
 prefix: ""
-logs: ""
 appeal: ""
 vanity: ""
 
+logging:
+    modLogs: ""
+    snippetLogs: ""
 guilds:
     main: ""
     staff: ""

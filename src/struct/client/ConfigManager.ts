@@ -22,13 +22,17 @@ export type DatabaseInfo = {
     user?: string
     pass?: string
 }
+export type loggingConfig = {
+    modLogs: string
+    snippetLogs: string
+}
 
 export default class ConfigManager {
     client: Client
     prefix: string
-    logs: string
     appeal: string
     vanity: string
+    logging: loggingConfig
     guilds: GuildCategories & { youtube: string }
     suggestions: GuildCategories & { discussion: GuildCategories }
     suggestionOffset: GuildCategories<number>
