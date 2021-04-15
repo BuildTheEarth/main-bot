@@ -85,9 +85,11 @@ This project follows the [All Contributors][] specification. Contributions of an
 Rename the `_config.yml` file to `config.yml` and fill in all of the fields:
 
 -   **prefix**: The command prefix.
--   **logs**: The logs channel ID (enclosed in quotes).
 -   **appeal**: The ban appeal message.
 -   **vanity**: The vanity invite code to use when level 3 boosting is reached.
+-   **logging**: The Channel IDs where certain actions will be logged.
+    -   **modLogs**
+    -   **snippetLogs**
 -   **guilds**: The guild IDs for the main, staff, and YouTube group servers:
     -   **main**
     -   **staff**
