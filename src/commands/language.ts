@@ -51,7 +51,7 @@ export default new Command({
                     : "Couldn't find that user."
             )
 
-        const member: GuildMember = await message.guild.members
+        const member: GuildMember = await client.guilds.main.members
             .fetch({ user, cache: true })
             .catch(noop)
         if (!member) return message.channel.sendError("The user is not in the server!")
@@ -63,8 +63,9 @@ export default new Command({
                 languageInput ? "That's not a language!" : "You must provide a language!"
             )
 
-        const role = message.guild.role(language)
+        const role = client.guilds.main.role(language)
         await member.roles.add(role)
         await message.channel.sendSuccess("Role added!")
     }
 })
+
