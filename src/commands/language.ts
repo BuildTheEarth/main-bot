@@ -68,4 +68,3 @@ export default new Command({
         await message.channel.sendSuccess("Role added!")
     }
 })
-
