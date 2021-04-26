@@ -108,7 +108,7 @@ export default class ActionLog extends BaseEntity {
             fields: [
                 { name: "Member", value: `<@${this.member}>` },
                 { name: this.length !== null ? "Length" : "\u200B", value: length },
-                { name: "Reason", value: this.reason },
+                { name: "Reason", value: this.reason || "*None provided.*" },
                 { name: "Moderator", value: `<@${this.executor}>` },
                 { name: "Context", value: `[Link](${messageLink})` },
                 { name: "Time", value: formatUTCDate(this.createdAt) }
