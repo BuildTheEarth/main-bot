@@ -22,6 +22,19 @@ export default new Command({
                     ? "You must provide a user to mute!"
                     : "Couldn't find that user."
             )
+        const member: GuildMember = await message.guild.members
+            .fetch({ user, cache: true })
+            .catch(() => null)
+        if (member) {
+            if (member.user.bot)
+                return message.channel.sendError(
+                    "Look at you, hacker, a pathetic creature of meat and bone. How can you challenge a perfect, immortal machine?"
+                )
+            if (member.hasRole(Roles.STAFF))
+                return message.channel.sendError(
+                    "This is literally 1984. You can't mute other staff!"
+                )
+        }
 
         const length = args.consumeLength()
         if (length == null) return message.channel.sendError("You must provide a length!")
@@ -29,14 +42,9 @@ export default new Command({
         const image = args.consumeImage()
         const reason = args.consumeRest()
         if (!reason) return message.channel.sendError("You must provide a reason!")
-        const member: GuildMember = await message.guild.members
-            .fetch({ user, cache: true })
-            .catch(() => null)
 
         const mute = await TimedPunishment.findOne({ member: user.id, type: "mute" })
         if (mute) return message.channel.sendError("That user is already muted!")
-        if (member && member.hasRole(Roles.STAFF) && member.id !== message.author.id)
-            return message.channel.sendError("You can't mute other staff!")
 
         const punishment = new TimedPunishment()
         punishment.member = user.id

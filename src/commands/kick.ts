@@ -5,6 +5,7 @@ import Command from "../struct/Command"
 import GuildMember from "../struct/discord/GuildMember"
 import ActionLog from "../entities/ActionLog"
 import Roles from "../util/roles"
+import noop from "../util/noop"
 
 export default new Command({
     name: "kick",
@@ -20,21 +21,23 @@ export default new Command({
                     ? "You must provide a user to kick!"
                     : "Couldn't find that user."
             )
+        const member: GuildMember = await message.guild.members
+            .fetch({ user, cache: true })
+            .catch(noop)
+        if (!member) return message.channel.sendError("The user is not in the server!")
+
+        if (member.user.bot)
+            return message.channel.sendError(
+                "Look at you, hacker, a pathetic creature of meat and bone. How can you challenge a perfect, immortal machine?"
+            )
+        if (member.id === message.author.id)
+            return message.channel.sendError("Okay, sadist, you can't kick yourself.")
+        if (member.hasRole(Roles.STAFF))
+            return message.channel.sendError("Rude! You can't kick other staff.")
 
         const image = args.consumeImage()
         const reason = args.consumeRest()
         if (!reason) return message.channel.sendError("You must provide a reason!")
-
-        const member: GuildMember = await message.guild.members
-            .fetch({ user, cache: true })
-            .catch(() => null)
-        if (!member) return message.channel.sendError("The user is not in the server!")
-        if (member.hasRole(Roles.STAFF))
-            return message.channel.sendError(
-                member.id === message.author.id
-                    ? "Okay, sadist, you can't kick yourself."
-                    : "Rude! You can't kick other staff."
-            )
 
         const log = new ActionLog()
         log.action = "kick"

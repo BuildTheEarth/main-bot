@@ -25,6 +25,21 @@ export default new Command({
                     ? "You must provide a user to ban!"
                     : "Couldn't find that user."
             )
+        const member: GuildMember = await message.guild.members
+            .fetch({ user, cache: true })
+            .catch(noop)
+        if (member) {
+            if (member.user.bot)
+                return message.channel.sendError(
+                    "Look at you, hacker, a pathetic creature of meat and bone. How can you challenge a perfect, immortal machine?"
+                )
+            if (member.id === message.author.id)
+                return message.channel.sendError("You can't ban yourself, cezon.")
+            if (member.hasRole(Roles.STAFF))
+                return message.channel.sendError(
+                    "Alrighty, revolutionist, you can't ban other staff!"
+                )
+        }
 
         const length = args.consumeLength()
         if (length == null) return message.channel.sendError("You must provide a length!")
@@ -35,16 +50,6 @@ export default new Command({
 
         const ban = await TimedPunishment.findOne({ member: user.id, type: "ban" })
         if (ban) return message.channel.sendError("The user is already banned!")
-
-        const member: GuildMember = await message.guild.members
-            .fetch({ user, cache: true })
-            .catch(noop)
-        if (member && member.hasRole(Roles.STAFF))
-            return message.channel.sendError(
-                member.id === message.author.id
-                    ? "You can't ban yourself, cezon."
-                    : "Alrighty, revolutionist, you can't ban other staff!"
-            )
 
         const reviewerChannel = message.guild.channels.cache.find(
             ch => ch.name == "reviewer-committee"
