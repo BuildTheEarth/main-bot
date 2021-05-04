@@ -29,7 +29,6 @@ export default new Command({
         if (!mute) return message.channel.sendError("That user is not muted!")
 
         await mute.undo(client)
-        await mute.remove()
 
         const log = new ActionLog()
         log.action = "unmute"
