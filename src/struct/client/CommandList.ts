@@ -8,6 +8,7 @@ export default class CommandList extends Discord.Collection<string, Command> {
     }
 
     search(name: string): Command {
+        name = name.toLowerCase()
         return this.find(command => {
             return command.name === name || command.aliases.includes(name)
         })
