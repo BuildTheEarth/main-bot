@@ -41,7 +41,7 @@ export default new Command({
         {
             name: "status",
             description: "Change the status of a suggestion.",
-            permission: [Roles.COMMUNITY_TEAM, Roles.MANAGER],
+            permission: [Roles.SUGGESTION_TEAM, Roles.MANAGER],
             usage: "<number> <status> [reason]"
         },
         {
@@ -57,7 +57,7 @@ export default new Command({
         const category = staff ? "staff" : "main"
         const discussionID = client.config.suggestions.discussion[category]
         const canManage = message.member
-            ? message.member.hasRole([Roles.COMMUNITY_TEAM, Roles.MANAGER])
+            ? message.member.hasRole([Roles.SUGGESTION_TEAM, Roles.MANAGER])
             : false
 
         if (
