@@ -13,21 +13,21 @@
         "reflect-metadata": "^0.1.13",
         "sqlite3": "^5.0.2",
         "string-replace-async": "^2.0.0",
-        "typeorm": "^0.2.32",
+        "typeorm": "^0.2.33",
         "winston": "^3.3.3",
         "yaml": "^1.10.2"
     },
     "devDependencies": {
         "@types/ms": "^0.7.31",
-        "@types/node": "^15.0.1",
+        "@types/node": "^15.9.0",
         "@types/node-fetch": "^2.5.10",
-        "@typescript-eslint/parser": "^4.22.0",
-        "@typescript-eslint/eslint-plugin": "^4.22.0",
-        "eslint": "^7.25.0",
+        "@typescript-eslint/parser": "^4.26.0",
+        "@typescript-eslint/eslint-plugin": "^4.26.0",
+        "eslint": "^7.27.0",
         "eslint-config-prettier": "^8.3.0",
         "pm2": "^4.5.6",
-        "prettier": "2.2.1",
-        "typescript": "^4.2.4"
+        "prettier": "2.3.0",
+        "typescript": "^4.3.2"
     },
     "scripts": {
         "start": "node dist/index.js --unhandled-rejections=strict",
