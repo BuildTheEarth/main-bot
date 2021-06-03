@@ -1,6 +1,7 @@
 import chalk from "chalk"
 import BannerImage from "../entities/BannerImage"
 import TimedPunishment from "../entities/TimedPunishment"
+import AdvancedBuilder from "../entities/AdvancedBuilder"
 import Client from "../struct/Client"
 import TextChannel from "../struct/discord/TextChannel"
 import noop from "../util/noop"
@@ -9,10 +10,10 @@ export default async function ready(this: Client): Promise<void> {
     const activity = `with ${this.guilds.main.memberCount} users`
     await this.user.setActivity(activity, { type: "PLAYING" }).catch(noop)
 
-    // schedule punishment undoings and banner queue cycles
+    // schedule punishment undoings, banner queue cycles, and advanced builder removals!
     BannerImage.schedule(this)
-    const punishments = await TimedPunishment.find()
-    for (const punishment of punishments) punishment.schedule(this)
+    for (const punishment of await TimedPunishment.find()) punishment.schedule(this)
+    for (const builder of await AdvancedBuilder.find()) builder.schedule(this)
 
     // cache reaction role messages
     for (const channelID of Object.keys(this.config.reactionRoles)) {
