@@ -7,10 +7,10 @@ export default class GuildMember extends Discord.GuildMember {
     client: Client
     guild: Guild
 
-    hasRole(roles: string | string[]): boolean {
+    hasRole(roles: string | string[], botDevBypass = true): boolean {
         if (roles === Roles.ANY) return true
         if (typeof roles === "string") roles = [roles]
-        roles.push(Roles.BOT_DEVELOPER)
+        if (botDevBypass) roles.push(Roles.BOT_DEVELOPER)
         for (const role of roles)
             if (this.roles.cache.find(r => r.name === role)) return true
         return false
