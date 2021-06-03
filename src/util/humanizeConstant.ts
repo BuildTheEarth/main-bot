@@ -1,13 +1,14 @@
 export default function humanizeConstant(
     name: string,
-    knownAcronyms: string[] = []
+    uppercaseExceptions: string[] = [],
+    lowercaseExceptions: string[] = []
 ): string {
     return name
         .split("_")
-        .map(word =>
-            knownAcronyms.includes(word)
-                ? word
-                : word[0].toUpperCase() + word.slice(1).toLowerCase()
-        )
+        .map(word => {
+            if (uppercaseExceptions.includes(word)) return word.toUpperCase()
+            if (lowercaseExceptions.includes(word)) return word.toLowerCase()
+            return word[0].toUpperCase() + word.slice(1).toLowerCase()
+        })
         .join(" ")
 }
