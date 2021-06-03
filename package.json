@@ -19,7 +19,7 @@
     },
     "devDependencies": {
         "@types/ms": "^0.7.31",
-        "@types/node": "^15.6.1",
+        "@types/node": "^15.9.0",
         "@types/node-fetch": "^2.5.10",
         "@typescript-eslint/parser": "^4.26.0",
         "@typescript-eslint/eslint-plugin": "^4.26.0",
