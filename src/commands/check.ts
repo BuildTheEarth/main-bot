@@ -8,6 +8,7 @@ import ActionLog, { Action } from "../entities/ActionLog"
 import TimedPunishment from "../entities/TimedPunishment"
 import ModerationNote from "../entities/ModerationNote"
 import { FindManyOptions, Not, IsNull } from "typeorm"
+import noop from "../util/noop"
 
 export default new Command({
     name: "check",
@@ -24,7 +25,7 @@ export default new Command({
     async run(this: Command, client: Client, message: Message, args: Args) {
         const user = await args.consumeUser(true)
         const showDeleted = args.consume().toLowerCase() === "deleted"
-        const member = await client.guilds.main.members.fetch({ user })
+        const member = await client.guilds.main.members.fetch({ user }).catch(noop)
 
         if (!user)
             return message.channel.sendError(
