@@ -24,7 +24,7 @@ export default new Command({
     async run(this: Command, client: Client, message: Message, args: Args) {
         const user = await args.consumeUser(true)
         const showDeleted = args.consume().toLowerCase() === "deleted"
-        const member = await client.guilds.main.fetch({ user })
+        const member = await client.guilds.main.members.fetch({ user })
 
         if (!user)
             return message.channel.sendError(
