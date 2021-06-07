@@ -24,6 +24,7 @@ export default new Command({
     async run(this: Command, client: Client, message: Message, args: Args) {
         const user = await args.consumeUser(true)
         const showDeleted = args.consume().toLowerCase() === "deleted"
+        const member = await client.guilds.main.fetch({ user })
 
         if (!user)
             return message.channel.sendError(
@@ -60,7 +61,7 @@ export default new Command({
         }
 
         if (clean) {
-            embed.description = `✨ No cases found for ${user} (${user.tag}).`
+            embed.description = ` No cases found for ${user} (${user.tag}).`
         } else {
             const current = await TimedPunishment.findOne({
                 where: { member: user.id },
@@ -88,6 +89,7 @@ export default new Command({
 
         const notes = await ModerationNote.findOne(user.id)
         if (notes) embed.fields.push({ name: "Notes", value: notes.body, inline: true })
+        if (!member) embed.footer = { text: "This user is not in the server." }
 
         await message.channel.sendSuccess(embed)
     }
