@@ -12,6 +12,6 @@ export default function formatTimestamp(
     date: Date | number,
     format: "d" | "D" | "f" | "F" | "R" | "t" | "T" = "f"
 ): string {
-    const seconds = date instanceof Date ? date.getTime() / 1000 : date
+    const seconds = date instanceof Date ? Math.round(date.getTime() / 1000) : date
     return `<t:${seconds}:${format}>`
 }
