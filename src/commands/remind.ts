@@ -39,7 +39,6 @@ export default new Command({
             const tidy: Record<string, { channel: string; message: string }> = {}
 
             for (const reminder of reminders) {
-                // if(reminder.cancelled) continue;
                 if (!tidy[reminder.id])
                     tidy[reminder.id] = { channel: "", message: "" }
 
