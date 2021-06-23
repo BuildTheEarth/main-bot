@@ -5,6 +5,7 @@ import AdvancedBuilder from "../entities/AdvancedBuilder"
 import Client from "../struct/Client"
 import TextChannel from "../struct/discord/TextChannel"
 import noop from "../util/noop"
+import Reminder from "../entities/Reminder"
 
 export default async function ready(this: Client): Promise<void> {
     const activity = `with ${this.guilds.main.memberCount} users`
@@ -14,6 +15,7 @@ export default async function ready(this: Client): Promise<void> {
     BannerImage.schedule(this)
     for (const punishment of await TimedPunishment.find()) punishment.schedule(this)
     for (const builder of await AdvancedBuilder.find()) builder.schedule(this)
+    for (const reminder of await Reminder.find()) reminder.schedule(this)
 
     // cache reaction role messages
     for (const channelID of Object.keys(this.config.reactionRoles)) {
