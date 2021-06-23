@@ -27,9 +27,6 @@ export default class Reminder extends BaseEntity {
     @CreateDateColumn({ name: "created_at" })
     createdAt: Date
 
-    @Column({ default: false })
-    cancelled: boolean
-
     get end(): Date {
         return new Date(this.createdAt.getTime() + this.interval)
     }
