@@ -65,9 +65,6 @@ export default new Command({
             const time = args.consume().toLowerCase()
             let millis
             switch (time) {
-                case "test":
-                    millis = 1000 * 5 // 5 seconds
-                    break
                 case "weekly":
                     millis = 1000 * 60 * 60 * 24 * 7 // 1 week (1000 milliseconds * 60 seconds * 60 minutes * 24 hours * 7 days)
                     break
