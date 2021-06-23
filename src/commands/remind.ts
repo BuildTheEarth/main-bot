@@ -39,7 +39,7 @@ export default new Command({
             const tidy: Record<string, { channel: string; message: string }> = {}
 
             for (const reminder of reminders) {
-                if(reminder.cancelled) continue;
+                // if(reminder.cancelled) continue;
                 if (!tidy[reminder.id])
                     tidy[reminder.id] = { channel: "", message: "" }
 
@@ -97,9 +97,8 @@ export default new Command({
         const reminder = await Reminder.findOne(id)
 
         if (subcommand === "delete") {
-            if(!reminder) return message.channel.sendError("that reminder doesn't exist!")
-            reminder.cancelled = true
-            await reminder.save()
+            if(!reminder) return message.channel.sendError("That reminder doesn't exist!")
+            await reminder.delete()
             return message.channel.sendSuccess(`Reminder ${id} deleted!`)
         } else if (subcommand === "edit") {
             console.log("edit")

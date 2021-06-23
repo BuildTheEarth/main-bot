@@ -43,10 +43,7 @@ export default class Reminder extends BaseEntity {
                 channel.id === this.channel
         ) as Discord.TextChannel
         if (!channel) return
-        if(!await (await Reminder.findOne(this.id)).cancelled)
-            channel.send(this.message)
-            this.createdAt = new Date(Date.now())
-            this.schedule(client)
+        channel.send(this.message)
     }
 
     schedule(client: Client): void {
@@ -60,5 +57,10 @@ export default class Reminder extends BaseEntity {
         } else {
             this.reminderTimeout = setTimeout(() => this.sendReminder(client), timeout)
         }
+    }
+
+    async delete(): Promise<void> {
+        clearTimeout(this.reminderTimeout)
+        await this.remove()
     }
 }
