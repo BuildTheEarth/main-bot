@@ -4,7 +4,7 @@ import Args from "../struct/Args"
 import Command from "../struct/Command"
 import Roles from "../util/roles"
 import ModerationNote from "../entities/ModerationNote"
-import formatUTCDate from "../util/formatUTCDate"
+import formatTimestamp from "../util/formatTimestamp"
 
 export default new Command({
     name: "notes",
@@ -69,7 +69,7 @@ export default new Command({
                     },
                     {
                         name: "Last updated",
-                        value: formatUTCDate(note.updatedAt),
+                        value: formatTimestamp(note.updatedAt, "R"),
                         inline: true
                     }
                 )

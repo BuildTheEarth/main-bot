@@ -15,7 +15,7 @@ import Client from "../struct/Client"
 import TimedPunishment from "./TimedPunishment"
 import truncateSting from "../util/truncateString"
 import formatPunishmentTime from "../util/formatPunishmentTime"
-import formatUTCDate from "../util/formatUTCDate"
+import formatTimestamp from "../util/formatTimestamp"
 import milliseconds from "./transformers/milliseconds"
 import past from "../util/pastTense"
 import noop from "../util/noop"
@@ -111,7 +111,7 @@ export default class ActionLog extends BaseEntity {
                 { name: "Reason", value: this.reason || "*None provided.*" },
                 { name: "Moderator", value: `<@${this.executor}>` },
                 { name: "Context", value: `[Link](${messageLink})` },
-                { name: "Time", value: formatUTCDate(this.createdAt) }
+                { name: "Date", value: formatTimestamp(this.createdAt, "d") }
             ].map(field => ({ ...field, inline: true }))
         }
 
@@ -120,7 +120,7 @@ export default class ActionLog extends BaseEntity {
         }
 
         if (this.deletedAt) {
-            const formattedTimestamp = formatUTCDate(this.deletedAt)
+            const formattedTimestamp = formatTimestamp(this.deletedAt, "d")
             embed.description = "*This case has been deleted.*"
             embed.color = client.config.colors.error
             embed.fields.push(
