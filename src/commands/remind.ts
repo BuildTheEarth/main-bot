@@ -100,7 +100,11 @@ export default new Command({
             await reminder.delete()
             return message.channel.sendSuccess(`Reminder ${id} deleted!`)
         } else if (subcommand === "edit") {
-            console.log("edit")
+            if(!reminder) return message.channel.sendError("That reminder doesn't exist!")
+            const body = args.consumeRest()
+            reminder.message = body
+            await reminder.save()
+            return message.channel.sendSuccess(`Set reminder ${id}'s message to ${body}`)
         }
     }
 })
