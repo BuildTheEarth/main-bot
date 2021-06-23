@@ -137,7 +137,9 @@ export default new Command({
 
             if (subcommand === "add") {
                 if (client.commands.search(name))
-                    return message.channel.sendError("That snippet name is already used by a command.")
+                    return message.channel.sendError(
+                        "That snippet name is already used by a command."
+                    )
                 if (existingSnippet)
                     return message.channel.sendError("That snippet already exists!")
                 snippet = new Snippet()
