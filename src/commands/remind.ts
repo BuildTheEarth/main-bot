@@ -79,6 +79,9 @@ export default new Command({
                 case "monthly":
                     millis = 1000*60*60*24*30 // 30 days (1000 milliseconds * 60 seconds * 60 minutes * 24 hours * 30 days)
                     break
+                case "bi-monthly":
+                    millis = 1000*60*60*24*15 // 30 days (1000 milliseconds * 60 seconds * 60 minutes * 24 hours * 15 days)
+                    break
                 default:
                     return message.channel.sendError("Invalid time length !")
             }
