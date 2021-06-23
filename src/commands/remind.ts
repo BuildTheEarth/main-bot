@@ -39,8 +39,7 @@ export default new Command({
             const tidy: Record<string, { channel: string; message: string }> = {}
 
             for (const reminder of reminders) {
-                if (!tidy[reminder.id])
-                    tidy[reminder.id] = { channel: "", message: "" }
+                if (!tidy[reminder.id]) tidy[reminder.id] = { channel: "", message: "" }
 
                 tidy[reminder.id].channel = reminder.channel
                 tidy[reminder.id].message = reminder.message
@@ -55,39 +54,39 @@ export default new Command({
                 author: { name: "Reminder list" },
                 description: list
             })
-            
         }
 
         if (subcommand === "add") {
             const channel = await args.consumeChannel()
-            if(!channel){
-                return message.channel.sendError("no channel found");
+            if (!channel) {
+                return message.channel.sendError("no channel found")
             }
 
             const time = args.consume().toLowerCase()
-            let millis;
-            switch(time) {
+            let millis
+            switch (time) {
                 case "test":
-                    millis = 1000*5 // 5 seconds
+                    millis = 1000 * 5 // 5 seconds
                     break
                 case "weekly":
-                    millis =  1000*60*60*24*7 // 1 week (1000 milliseconds * 60 seconds * 60 minutes * 24 hours * 7 days)
-                    break;
+                    millis = 1000 * 60 * 60 * 24 * 7 // 1 week (1000 milliseconds * 60 seconds * 60 minutes * 24 hours * 7 days)
+                    break
                 case "bi-weekly":
-                    millis =  1000*60*60*24*3.5 // 1 week (1000 milliseconds * 60 seconds * 60 minutes * 24 hours * 3.5 days)
+                    millis = 1000 * 60 * 60 * 24 * 3.5 // 1 week (1000 milliseconds * 60 seconds * 60 minutes * 24 hours * 3.5 days)
                     break
                 case "monthly":
-                    millis = 1000*60*60*24*30 // 30 days (1000 milliseconds * 60 seconds * 60 minutes * 24 hours * 30 days)
+                    millis = 1000 * 60 * 60 * 24 * 30 // 30 days (1000 milliseconds * 60 seconds * 60 minutes * 24 hours * 30 days)
                     break
                 case "bi-monthly":
-                    millis = 1000*60*60*24*15 // 30 days (1000 milliseconds * 60 seconds * 60 minutes * 24 hours * 15 days)
+                    millis = 1000 * 60 * 60 * 24 * 15 // 30 days (1000 milliseconds * 60 seconds * 60 minutes * 24 hours * 15 days)
                     break
                 default:
                     return message.channel.sendError("Invalid time length !")
             }
 
             const body = args.consumeRest()
-            if (!body) return message.channel.sendError("You must specify a reminder message.")
+            if (!body)
+                return message.channel.sendError("You must specify a reminder message.")
 
             const reminder = new Reminder()
             reminder.channel = channel.id
@@ -101,15 +100,17 @@ export default new Command({
 
         const id = parseInt(args.consume())
         if (!id) return message.channel.sendError("You must specify an id!")
-        
+
         const reminder = await Reminder.findOne(id)
 
         if (subcommand === "delete") {
-            if(!reminder) return message.channel.sendError("That reminder doesn't exist!")
+            if (!reminder)
+                return message.channel.sendError("That reminder doesn't exist!")
             await reminder.delete()
             return message.channel.sendSuccess(`Reminder ${id} deleted!`)
         } else if (subcommand === "edit") {
-            if(!reminder) return message.channel.sendError("That reminder doesn't exist!")
+            if (!reminder)
+                return message.channel.sendError("That reminder doesn't exist!")
             const body = args.consumeRest()
             reminder.message = body
             await reminder.save()
