@@ -60,11 +60,13 @@ export default async function (this: Client, message: Message): Promise<unknown>
             return message.channel.send(snippet.body).catch(() => null)
         }
 
-        const member = (message.guild
-            ? message.member
-            : await mainGuild.members
-                  .fetch({ user: message.author, cache: true })
-                  .catch(() => null)) as GuildMember
+        const member = (
+            message.guild
+                ? message.member
+                : await mainGuild.members
+                      .fetch({ user: message.author, cache: true })
+                      .catch(() => null)
+        ) as GuildMember
 
         const hasPermission = member && member.hasRole(command.permission)
         if (message.channel.type === "dm" && !command.dms) return
