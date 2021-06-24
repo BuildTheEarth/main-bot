@@ -4,6 +4,7 @@ import Args from "../struct/Args"
 import Command from "../struct/Command"
 import Roles from "../util/roles"
 import Reminder from "../entities/Reminder"
+import formatUTCDate from "../util/formatUTCDate"
 
 export default new Command({
     name: "remind",
@@ -36,18 +37,23 @@ export default new Command({
 
         if (subcommand === "list" || !subcommand) {
             const reminders = await Reminder.find()
-            const tidy: Record<string, { channel: string; message: string }> = {}
+            const tidy: Record<string, { channel: string; message: string; end: Date }> =
+                {}
 
             for (const reminder of reminders) {
-                if (!tidy[reminder.id]) tidy[reminder.id] = { channel: "", message: "" }
+                if (!tidy[reminder.id])
+                    tidy[reminder.id] = { channel: "", message: "", end: new Date() }
 
                 tidy[reminder.id].channel = reminder.channel
                 tidy[reminder.id].message = reminder.message
+                tidy[reminder.id].end = reminder.end
             }
 
             let list = ""
-            for (const [id, { channel, message }] of Object.entries(tidy)) {
-                list += `${id}: \u200B \u200B <#${channel}> - ${message}\n`
+            for (const [id, { channel, message, end }] of Object.entries(tidy)) {
+                list += `${id}: \u200B \u200B <#${channel}> (next reminder at ${formatUTCDate(
+                    end
+                )}) - ${message}\n`
             }
 
             return message.channel.sendSuccess({
@@ -65,6 +71,9 @@ export default new Command({
             const time = args.consume().toLowerCase()
             let millis
             switch (time) {
+                case "test":
+                    millis = 1000 * 5
+                    break
                 case "weekly":
                     millis = 1000 * 60 * 60 * 24 * 7 // 1 week (1000 milliseconds * 60 seconds * 60 minutes * 24 hours * 7 days)
                     break
