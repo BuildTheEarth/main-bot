@@ -65,7 +65,7 @@ export default new Command({
         if (subcommand === "add") {
             const channel = await args.consumeChannel()
             if (!channel) {
-                return message.channel.sendError("no channel found")
+                return message.channel.sendError("You must provide a channel!")
             }
 
             const time = args.consume().toLowerCase()
