@@ -17,7 +17,7 @@ import EventList from "../struct/client/EventList"
 
 import flattenMarkdown from "../util/flattenMarkdown"
 import formatPunishmentTime from "../util/formatPunishmentTime"
-import formatUTCDate from "../util/formatUTCDate"
+import formatTimestamp from "../util/formatTimestamp"
 import humanizeArray from "../util/humanizeArray"
 import humanizeConstant from "../util/humanizeConstant"
 import isURL from "../util/isURL"
@@ -31,7 +31,7 @@ import truncateString from "../util/truncateString"
 
 // prettier-ignore
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-const _ = { Args, Client, Command, BannerImage, ActionLog, ModerationNote, ModpackImage, Snippet, Suggestion, TimedPunishment, CommandList, ConfigManager, EventList, flattenMarkdown, formatPunishmentTime, formatUTCDate, humanizeArray, humanizeConstant, isURL, loadDir, noop, pastTense, patchedISO6391, Roles, stringifyAnything, truncateString }
+const _ = { Args, Client, Command, BannerImage, ActionLog, ModerationNote, ModpackImage, Snippet, Suggestion, TimedPunishment, CommandList, ConfigManager, EventList, flattenMarkdown, formatPunishmentTime, formatTimestamp, humanizeArray, humanizeConstant, isURL, loadDir, noop, pastTense, patchedISO6391, Roles, stringifyAnything, truncateString }
 
 export default new Command({
     name: "eval",

@@ -5,8 +5,8 @@ import Args from "../struct/Args"
 import Command from "../struct/Command"
 import GuildMember from "../struct/discord/GuildMember"
 import Roles from "../util/roles"
-import formatUTCDate from "../util/formatUTCDate"
 import humanizeConstant from "../util/humanizeConstant"
+import formatTimestamp from "../util/formatTimestamp"
 import userFlags from "../data/userFlags"
 import activityTypes from "../data/activityTypes"
 
@@ -78,14 +78,14 @@ export default new Command({
 
         embed.fields.push({
             name: "Creation date",
-            value: formatUTCDate(user.createdAt),
+            value: formatTimestamp(user.createdAt, "f"),
             inline: true
         })
 
         if (member)
             embed.fields.push({
                 name: member ? "Join date" : "\u200B",
-                value: member ? formatUTCDate(member.joinedAt) : "\u200B",
+                value: member ? formatTimestamp(member.joinedAt, "f") : "\u200B",
                 inline: true
             })
 
