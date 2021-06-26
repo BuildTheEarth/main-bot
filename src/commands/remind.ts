@@ -4,7 +4,7 @@ import Args from "../struct/Args"
 import Command from "../struct/Command"
 import Roles from "../util/roles"
 import Reminder from "../entities/Reminder"
-import formatUTCDate from "../util/formatUTCDate"
+import formatTimestamp from "../util/formatTimestamp"
 
 export default new Command({
     name: "remind",
@@ -51,9 +51,7 @@ export default new Command({
 
             let list = ""
             for (const [id, { channel, message, end }] of Object.entries(tidy)) {
-                list += `${id}: \u200B \u200B <#${channel}> (next reminder at ${formatUTCDate(
-                    end
-                )}) - ${message}\n`
+                list += `${id}: \u200B \u200B <#${channel}> (next reminder ${formatTimestamp(end, "R")}) - ${message}\n`
             }
 
             return message.channel.sendSuccess({
