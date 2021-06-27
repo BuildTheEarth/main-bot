@@ -26,6 +26,22 @@ export type loggingConfig = {
     modLogs: string
     snippetLogs: string
 }
+export type GoogleDriveKeyInfo = {
+    type: string
+    project_id: string
+    private_key_id: string
+    private_key: string
+    client_email: string
+    client_id: string
+    auth_uri: string
+    token_uri: string
+    auth_provider_x509_cert_url: string
+    client_x509_cert_url: string
+}
+export type BedrockToolInfo = {
+    googleDriveKeyInfo: GoogleDriveKeyInfo
+    folderID: string
+}
 
 export default class ConfigManager {
     client: Client
@@ -45,6 +61,7 @@ export default class ConfigManager {
     token: string
     modpackAuth: string
     database: DatabaseInfo
+    bedrocktool: BedrockToolInfo
 
     constructor(client: Client) {
         this.client = client
