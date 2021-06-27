@@ -36,8 +36,13 @@ export default new Command({
             return message.channel.sendError("Rude! You can't kick other staff.")
 
         const image = args.consumeImage()
-        const reason = args.consumeRest()
+        let reason = args.consumeRest()
         if (!reason) return message.channel.sendError("You must provide a reason!")
+        let autoFill = type => reason = `Please change your ${type} and come back.`
+
+        if (["username", "name"].includes(reason.toLowerCase())) autoFill("username")
+        if (["pfp", "profile photo"].includes(reason.toLowerCase())) autoFill("profile photo")
+        if (["status"].includes(reason.toLowerCase())) autoFill("status")
 
         const log = new ActionLog()
         log.action = "kick"
