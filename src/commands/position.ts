@@ -11,7 +11,7 @@ export default new Command({
     name: "position",
     aliases: ["promote", "demote", "vcc", "vs", "bto"],
     description: "Promote/demote a member from your team.",
-    permission: [Roles.PR_SUBTEAM_LEADS, Roles.REGIONAL_BUILD_TEAM_LEAD],
+    permission: [Roles.SUBTEAM_LEAD, Roles.REGIONAL_BUILD_TEAM_LEAD],
     usage: "<member> ['bto' | 'vcc' | 'vs'] ['promote' | 'demote']",
     async run(this: Command, client: Client, message: Message, args: Args) {
         const user = await args.consumeUser()
