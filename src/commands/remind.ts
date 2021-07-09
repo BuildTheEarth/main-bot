@@ -51,7 +51,7 @@ export default new Command({
 
             let list = ""
             for (const [id, { channel, message, end }] of Object.entries(tidy)) {
-                list += `${id}: \u200B \u200B <#${channel}> (next reminder ${formatTimestamp(end, "R")}) - ${message}\n`
+                list += `**#$id:** <#${channel}> (next ${formatTimestamp(end, "R")}) — ${message}\n`
             }
 
             return message.channel.sendSuccess({
@@ -85,7 +85,7 @@ export default new Command({
                     millis = 1000 * 60 * 60 * 24 * 15 // half a month (1000ms * 60s * 60m * 24h * 15d)
                     break
                 default:
-                    return message.channel.sendError("Invalid time length !")
+                    return message.channel.sendError("Invalid time length!")
             }
 
             const body = args.consumeRest()
@@ -103,7 +103,7 @@ export default new Command({
         }
 
         const id = parseInt(args.consume())
-        if (!id) return message.channel.sendError("You must specify an id!")
+        if (!id) return message.channel.sendError("You must specify an ID!")
 
         const reminder = await Reminder.findOne(id)
 
@@ -111,14 +111,14 @@ export default new Command({
             if (!reminder)
                 return message.channel.sendError("That reminder doesn't exist!")
             await reminder.delete()
-            return message.channel.sendSuccess(`Reminder ${id} deleted!`)
+            return message.channel.sendSuccess(`Reminder **#${id}** deleted!`)
         } else if (subcommand === "edit") {
             if (!reminder)
                 return message.channel.sendError("That reminder doesn't exist!")
             const body = args.consumeRest()
             reminder.message = body
             await reminder.save()
-            return message.channel.sendSuccess(`Set reminder ${id}'s message to ${body}`)
+            return message.channel.sendSuccess(`Set the message of reminder **#${id}** to:\n>>>${body}`)
         }
     }
 })
