@@ -51,7 +51,10 @@ export default new Command({
 
             let list = ""
             for (const [id, { channel, message, end }] of Object.entries(tidy)) {
-                list += `**#$id:** <#${channel}> (next ${formatTimestamp(end, "R")}) — ${message}\n`
+                list += `**#$id:** <#${channel}> (next ${formatTimestamp(
+                    end,
+                    "R"
+                )}) — ${message}\n`
             }
 
             return message.channel.sendSuccess({
@@ -118,7 +121,9 @@ export default new Command({
             const body = args.consumeRest()
             reminder.message = body
             await reminder.save()
-            return message.channel.sendSuccess(`Set the message of reminder **#${id}** to:\n>>>${body}`)
+            return message.channel.sendSuccess(
+                `Set the message of reminder **#${id}** to:\n>>>${body}`
+            )
         }
     }
 })
