@@ -73,16 +73,16 @@ export default new Command({
                     millis = 1000 * 5
                     break
                 case "weekly":
-                    millis = 1000 * 60 * 60 * 24 * 7 // 1 week (1000 milliseconds * 60 seconds * 60 minutes * 24 hours * 7 days)
+                    millis = 1000 * 60 * 60 * 24 * 7 // 1 week (1000ms * 60s * 60m * 24h * 7d)
                     break
                 case "bi-weekly":
-                    millis = 1000 * 60 * 60 * 24 * 3.5 // 1 week (1000 milliseconds * 60 seconds * 60 minutes * 24 hours * 3.5 days)
+                    millis = 1000 * 60 * 60 * 24 * 3.5 // half a week (1000ms * 60s * 60m * 24h * 3.5d)
                     break
                 case "monthly":
-                    millis = 1000 * 60 * 60 * 24 * 30 // 30 days (1000 milliseconds * 60 seconds * 60 minutes * 24 hours * 30 days)
+                    millis = 1000 * 60 * 60 * 24 * 30 // 1 month (1000ms * 60s * 60m * 24h * 30d)
                     break
                 case "bi-monthly":
-                    millis = 1000 * 60 * 60 * 24 * 15 // 30 days (1000 milliseconds * 60 seconds * 60 minutes * 24 hours * 15 days)
+                    millis = 1000 * 60 * 60 * 24 * 15 // half a month (1000ms * 60s * 60m * 24h * 15d)
                     break
                 default:
                     return message.channel.sendError("Invalid time length !")
