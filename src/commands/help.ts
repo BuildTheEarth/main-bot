@@ -15,11 +15,13 @@ export default new Command({
     usage: "[command]",
     dms: true,
     async run(this: Command, client: Client, message: Message, args: Args) {
-        const member = (message.guild
-            ? message.member
-            : await client.guilds.main.members
-                  .fetch({ user: message.author, cache: true })
-                  .catch(() => null)) as GuildMember
+        const member = (
+            message.guild
+                ? message.member
+                : await client.guilds.main.members
+                      .fetch({ user: message.author, cache: true })
+                      .catch(() => null)
+        ) as GuildMember
         const commandName = args.consume()
 
         if (commandName) {
