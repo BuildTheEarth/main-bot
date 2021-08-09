@@ -1,14 +1,13 @@
 import ms from "ms"
 import Discord from "discord.js"
-import Message from "./discord/Message"
 
 export default class Args {
     raw: string
     command: string
     separator?: string
-    message: Message
+    message: Discord.Message
 
-    constructor(value: string, message: Message) {
+    constructor(value: string, message: Discord.Message) {
         this.raw = value.trim()
         this.command = this.consume()
         this.message = message
@@ -103,7 +102,7 @@ export default class Args {
         if (!id) return null
         this.remove()
         const channel: Discord.TextChannel = await this.message.client.channels
-            .fetch(id, true)
+            .fetch(id, { force: true })
             .catch(() => null)
         return channel
     }
@@ -120,7 +119,7 @@ export default class Args {
                     case "yourself":
                         return this.message.client.user
                     case "someone":
-                        return users.array()[Math.floor(Math.random() * users.size)]
+                        return users[Math.floor(Math.random() * users.size)]
                 }
             }
         }
@@ -135,7 +134,9 @@ export default class Args {
             return user || null
         } else if (id) {
             this.consume()
-            const user: Discord.User = await users.fetch(id, true).catch(() => null)
+            const user: Discord.User = await users
+                .fetch(id, { force: true })
+                .catch(() => null)
             return user || null
         } else if (!tag && !id) {
             return undefined

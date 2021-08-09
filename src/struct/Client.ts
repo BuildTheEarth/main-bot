@@ -1,22 +1,25 @@
 import { ConnectionOptions, Connection, createConnection } from "typeorm"
 import Discord from "discord.js"
-import GuildManager from "./discord/GuildManager"
-import TextChannel from "./discord/TextChannel"
 import EventList from "./client/EventList"
 import CommandList from "./client/CommandList"
 import ConfigManager from "./client/ConfigManager"
 import createLogger from "@buildtheearth/bot-logger"
 import ActionLog from "../entities/ActionLog"
 import Snippet from "../entities/Snippet"
+import hexToRGB from "../util/hexToRGB"
+import GuildManager from "./discord/GuildManager"
+import Channel from "./discord/Channel"
 
 export default class Client extends Discord.Client {
-    guilds: GuildManager = new GuildManager(this)
+    guilds: Discord.GuildManager
+    customGuilds = new GuildManager(this)
     db: Connection
     logger = createLogger({ filePath: __dirname + "/../../logs/" })
     config = new ConfigManager(this)
     events = new EventList(this)
     commands = new CommandList()
     aliases = new Discord.Collection()
+    channel = new Channel(this)
 
     async initDatabase(): Promise<void> {
         const db = this.config.database
@@ -56,12 +59,12 @@ export default class Client extends Discord.Client {
         action?: "add" | "edit" | "delete",
         executor?: Discord.User
     ): Promise<void> {
-        const channel: TextChannel = await this.channels
+        const channel: Discord.TextChannel = await this.channels
             .fetch(
                 log instanceof Snippet
                     ? this.config.logging.snippetLogs
                     : this.config.logging.modLogs,
-                true
+                { force: true }
             )
             .catch(() => null)
         if (!channel) return
@@ -72,10 +75,10 @@ export default class Client extends Discord.Client {
                 delete embed.description
                 embed.author.name += " deleted"
             } else if (embed.color === this.config.colors.success) {
-                embed.color = this.config.colors.info
+                embed.color = hexToRGB(this.config.colors.info)
             }
 
-            await channel.send({ embed })
+            await channel.send({ embeds: [embed] })
         } else if (log instanceof Snippet) {
             const embed = log.displayEmbed(this)
             embed.thumbnail = {
@@ -88,16 +91,16 @@ export default class Client extends Discord.Client {
                     break
                 case "edit":
                     embed.author.name += " edited"
-                    embed.color = this.config.colors.info
+                    embed.color = hexToRGB(this.config.colors.info)
                     break
                 case "delete":
                     embed.author.name += " deleted"
-                    embed.color = this.config.colors.error
+                    embed.color = hexToRGB(this.config.colors.error)
                     break
             }
-            await channel.send({ embed })
+            await channel.send({ embeds: [embed] })
         } else {
-            await channel.send({ embed: log })
+            await channel.send({ embeds: [log] })
         }
     }
 }
