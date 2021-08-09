@@ -7,7 +7,6 @@ import {
 } from "typeorm"
 import Discord from "discord.js"
 import Client from "../struct/Client"
-import TextChannel from "../struct/discord/TextChannel"
 import quote from "../util/quote"
 
 @Entity({ name: "banner_images" })
@@ -37,7 +36,7 @@ export default class BannerImage extends BaseEntity {
     private static cycleTimeout: NodeJS.Timeout
 
     static async cycle(client: Client): Promise<void> {
-        if (!client.guilds.main.features.includes("BANNER")) return
+        if (!client.customGuilds.main().features.includes("BANNER")) return
         const next = await this.findOne({ order: { id: "ASC" } })
 
         if (!next) {
@@ -45,10 +44,12 @@ export default class BannerImage extends BaseEntity {
             return
         }
 
-        await client.guilds.main.setBanner(next.url)
-        const updates = client.guilds.main.channels.cache.find(
-            channel => channel.name === "updates"
-        ) as TextChannel
+        await client.customGuilds.main().setBanner(next.url)
+        const updates = client.customGuilds
+            .main()
+            .channels.cache.find(
+                channel => channel.name === "updates"
+            ) as Discord.TextChannel
 
         const embed: Discord.MessageEmbedOptions = {
             author: { name: "New banner!" },
@@ -58,7 +59,7 @@ export default class BannerImage extends BaseEntity {
 
         if (next.description) embed.description += `\n\n${quote(next.description)}`
 
-        await updates.sendSuccess(embed)
+        await client.channel.sendSuccess(updates, embed)
         await next.softRemove()
         client.logger.info("Updated banner with first image in queue.")
         this.schedule(client)

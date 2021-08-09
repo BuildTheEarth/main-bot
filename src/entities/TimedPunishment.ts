@@ -11,6 +11,7 @@ import GuildMember from "../struct/discord/GuildMember"
 import milliseconds from "./transformers/milliseconds"
 import noop from "../util/noop"
 import pastTense from "../util/pastTense"
+import Discord from "discord.js"
 
 @Entity({ name: "timed_punishments" })
 export default class TimedPunishment extends BaseEntity {
@@ -37,17 +38,21 @@ export default class TimedPunishment extends BaseEntity {
 
     async undo(client: Client): Promise<void> {
         clearTimeout(this.undoTimeout)
-        const user = await client.users.fetch(this.member, true)
+        const user = await client.users.fetch(this.member, { force: true })
         if (!user) return
 
         if (this.type === "mute") {
-            const member: GuildMember = await client.guilds.main.members
-                .fetch({ user, cache: true })
+            const member: Discord.GuildMember = await client.customGuilds
+                .main()
+                .members.fetch({ user, cache: true })
                 .catch(noop)
             if (!member) return
-            await member.unmute("End of punishment").catch(noop)
+            await GuildMember.unmute(member, "End of punishment").catch(noop)
         } else if (this.type === "ban") {
-            await client.guilds.main.members.unban(user, "End of punishment").catch(noop)
+            await client.customGuilds
+                .main()
+                .members.unban(user, "End of punishment")
+                .catch(noop)
         }
 
         const undid = "un" + pastTense(this.type)
