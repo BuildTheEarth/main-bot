@@ -1,10 +1,10 @@
 import Client from "../struct/Client"
-import Message from "../struct/discord/Message"
 import Args from "../struct/Args"
 import Command from "../struct/Command"
 import Roles from "../util/roles"
 import ModerationNote from "../entities/ModerationNote"
 import formatTimestamp from "../util/formatTimestamp"
+import Discord from "discord.js"
 
 export default new Command({
     name: "notes",
@@ -29,11 +29,12 @@ export default new Command({
             usage: "<member>"
         }
     ],
-    async run(this: Command, client: Client, message: Message, args: Args) {
+    async run(this: Command, client: Client, message: Discord.Message, args: Args) {
         const subcommand = args.consumeIf(["add", "edit", "clear"])
         const user = await args.consumeUser(true)
         if (!user)
-            return message.channel.sendError(
+            return client.channel.sendError(
+                message.channel,
                 user === undefined
                     ? "You must provide a user!"
                     : "Couldn't find that user."
@@ -41,9 +42,13 @@ export default new Command({
         const body = args.consumeRest()
         if (subcommand && subcommand !== "clear") {
             if (!body)
-                return message.channel.sendError("You must specify a new note body!")
+                return client.channel.sendError(
+                    message.channel,
+                    "You must specify a new note body!"
+                )
             if (body.length > 1024)
-                return message.channel.sendError(
+                return client.channel.sendError(
+                    message.channel,
                     "That note is too long! (max. 1024 characters)."
                 )
         }
@@ -73,34 +78,45 @@ export default new Command({
                         inline: true
                     }
                 )
-            await message.channel.sendSuccess(embed)
+            await client.channel.sendSuccess(message.channel, embed)
         } else if (!subcommand || subcommand === "add") {
             if (!body)
-                return message.channel.sendError("You must specify the note's body!")
+                return client.channel.sendError(
+                    message.channel,
+                    "You must specify the note's body!"
+                )
 
             if (note) {
                 const tip = body.length <= 1024 ? " (Overwrite it with `note edit`)." : ""
                 note.body += `\n${body}`
                 if (note.body.length > 1024)
-                    return message.channel.sendError(
+                    return client.channel.sendError(
+                        message.channel,
                         `Appending to this note would exceed the character limit!${tip}`
                     )
                 if (!note.updaters.includes(message.author.id))
                     note.updaters.push(message.author.id)
 
                 await note.save()
-                await message.channel.sendSuccess(`Updated ${user}'s notes!`)
+                await client.channel.sendSuccess(
+                    message.channel,
+                    `Updated ${user}'s notes!`
+                )
             } else {
                 const newNote = new ModerationNote()
                 newNote.member = user.id
                 newNote.body = body
                 newNote.updaters = [message.author.id]
                 await newNote.save()
-                await message.channel.sendSuccess(`Created ${user}'s notes!`)
+                await client.channel.sendSuccess(
+                    message.channel,
+                    `Created ${user}'s notes!`
+                )
             }
         } else if (subcommand === "edit") {
             if (!note) {
-                return message.channel.sendError(
+                return client.channel.sendError(
+                    message.channel,
                     `${user} doesn't have any notes! (Add them with \`${client.config.prefix}note add\`)`
                 )
             }
@@ -109,10 +125,10 @@ export default new Command({
                 note.updaters.push(message.author.id)
 
             await note.save()
-            await message.channel.sendSuccess(`Updated ${user}'s notes!`)
+            await client.channel.sendSuccess(message.channel, `Updated ${user}'s notes!`)
         } else if (subcommand === "clear") {
             await note.remove()
-            await message.channel.sendSuccess(`Cleared ${user}'s notes!`)
+            await client.channel.sendSuccess(message.channel, `Cleared ${user}'s notes!`)
         }
     }
 })

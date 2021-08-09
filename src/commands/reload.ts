@@ -1,9 +1,9 @@
 import Client from "../struct/Client"
-import Message from "../struct/discord/Message"
 import Args from "../struct/Args"
 import Command from "../struct/Command"
 import Roles from "../util/roles"
 import truncateString from "../util/truncateString"
+import Discord from "discord.js"
 
 export default new Command({
     name: "reload",
@@ -11,7 +11,7 @@ export default new Command({
     description: "Reload a command/an event handler/the config/a module/all modules.",
     permission: Roles.BOT_DEVELOPER,
     usage: "<command | event | 'config' | filename | 'all'>",
-    async run(this: Command, client: Client, message: Message, args: Args) {
+    async run(this: Command, client: Client, message: Discord.Message, args: Args) {
         const name = args.consume()
         const command = client.commands.search(name)
         const handler = client.events.get(name)
@@ -26,7 +26,8 @@ export default new Command({
 
         if (!command && !handler && !config && !file && !all) {
             const truncated = truncateString(name, 32, "...")
-            return message.channel.sendError(
+            return client.channel.sendError(
+                message.channel,
                 `Unknown command, event handler, or module \`${truncated}\`.`
             )
         }
@@ -58,6 +59,6 @@ export default new Command({
             }
         }
 
-        message.channel.sendSuccess(`Reloaded ${fullname}.`)
+        client.channel.sendSuccess(message.channel, `Reloaded ${fullname}.`)
     }
 })

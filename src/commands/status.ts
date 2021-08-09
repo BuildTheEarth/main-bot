@@ -1,6 +1,5 @@
 import Discord from "discord.js"
 import Client from "../struct/Client"
-import Message from "../struct/discord/Message"
 import Command from "../struct/Command"
 import Roles from "../util/roles"
 import noop from "../util/noop"
@@ -17,7 +16,7 @@ export default new Command({
     description: "Check the status of the Minecraft network.",
     permission: Roles.ANY,
     usage: "",
-    async run(this: Command, _client: Client, message: Message) {
+    async run(this: Command, _client: Client, message: Discord.Message) {
         const status = (url: string) =>
             fetch(url)
                 .then(res => res.json())
@@ -26,7 +25,10 @@ export default new Command({
         const bedrock = await status(BEDROCK_URL)
 
         if (!java?.online) {
-            return message.channel.sendError("The network is currently offline. :(")
+            return _client.channel.sendError(
+                message.channel,
+                "The network is currently offline. :("
+            )
         } else {
             const embed: Discord.MessageEmbedOptions = {
                 description: "The network is online!",
@@ -54,7 +56,7 @@ export default new Command({
                     : "The Bedrock proxy is offline right now."
             })
 
-            await message.channel.sendSuccess(embed)
+            await _client.channel.sendSuccess(message.channel, embed)
         }
     }
 })

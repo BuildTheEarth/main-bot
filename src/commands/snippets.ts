@@ -1,10 +1,12 @@
 import Client from "../struct/Client"
-import Message from "../struct/discord/Message"
 import Args from "../struct/Args"
 import Command from "../struct/Command"
 import Snippet from "../entities/Snippet"
 import Roles from "../util/roles"
 import languages from "../util/patchedISO6391"
+import hexToRGB from "../util/hexToRGB"
+import GuildMember from "../struct/discord/GuildMember"
+import Discord from "discord.js"
 
 export default new Command({
     name: "snippets",
@@ -44,7 +46,7 @@ export default new Command({
             usage: "<list | add | delete> <name> <language> [alias]"
         }
     ],
-    async run(this: Command, client: Client, message: Message, args: Args) {
+    async run(this: Command, client: Client, message: Discord.Message, args: Args) {
         const subcommand = args.consume().toLowerCase()
 
         if (subcommand === "list" || !subcommand) {
@@ -68,7 +70,7 @@ export default new Command({
                 list += `• \u200B \u200B ${triggers}${languageList}\n`
             }
 
-            return message.channel.sendSuccess({
+            return client.channel.sendSuccess(message.channel, {
                 author: { name: "Snippet list" },
                 description: list
             })
@@ -76,39 +78,54 @@ export default new Command({
             const [action, name, language] = args.consume(3)
             const languageName = languages.getName(language)
             if (!name)
-                return message.channel.sendError("You must specify a snippet name.")
+                return client.channel.sendError(
+                    message.channel,
+                    "You must specify a snippet name."
+                )
             if (!languageName)
-                return message.channel.sendError(
+                return client.channel.sendError(
+                    message.channel,
                     "You must specify a valid snippet language."
                 )
 
             const snippet = await Snippet.findOne({ name, language })
-            if (!snippet) return message.channel.sendError("That snippet doesn't exist!")
+            if (!snippet)
+                return client.channel.sendError(
+                    message.channel,
+                    "That snippet doesn't exist!"
+                )
             if (action === "list") {
                 const list =
                     snippet.aliases.map(alias => `• \u200B \u200B ${alias}`).join("\n") ||
                     "*No aliases.*"
-                return message.channel.sendSuccess(list)
+                return client.channel.sendSuccess(message.channel, list)
             }
 
             const alias = args.consume().toLowerCase()
-            if (!alias) return message.channel.sendError("You must specify an alias!")
+            if (!alias)
+                return client.channel.sendError(
+                    message.channel,
+                    "You must specify an alias!"
+                )
             if (action === "add") {
                 if (!snippet.aliases) snippet.aliases = []
                 snippet.aliases.push(alias)
                 await snippet.save()
-                return message.channel.sendSuccess(
+                return client.channel.sendSuccess(
+                    message.channel,
                     `Added alias **${alias}** to **${name}** snippet in ${languageName}.`
                 )
             } else if (action === "delete") {
                 if (!snippet.aliases.includes(alias))
-                    return message.channel.sendError(
+                    return client.channel.sendError(
+                        message.channel,
                         "That snippet does not have this alias!"
                     )
 
                 snippet.aliases.splice(snippet.aliases.indexOf(alias), 1)
                 await snippet.save()
-                return message.channel.sendSuccess(
+                return client.channel.sendSuccess(
+                    message.channel,
                     `Removed the **${alias}** alias from **${name}** snippet in ${languageName}.`
                 )
             }
@@ -116,16 +133,23 @@ export default new Command({
 
         const editPermissions = [Roles.SUPPORT, Roles.MANAGER, Roles.PR_TRANSLATION_TEAM]
         const deletePermissions = [Roles.SUPPORT, Roles.MANAGER]
-        if (!message.member.hasRole(editPermissions)) return
-        const canDelete = message.member.hasRole(deletePermissions)
+        if (!GuildMember.hasRole(message.member, editPermissions)) return
+        const canDelete = GuildMember.hasRole(message.member, deletePermissions)
         if (subcommand === "delete" && !canDelete) return
 
         const name = args.consume().toLowerCase()
         const language = args.consume().toLowerCase()
         const languageName = languages.getName(language)
-        if (!name) return message.channel.sendError("You must specify a snippet name.")
+        if (!name)
+            return client.channel.sendError(
+                message.channel,
+                "You must specify a snippet name."
+            )
         if (!languageName)
-            return message.channel.sendError("You must specify a valid snippet language.")
+            return client.channel.sendError(
+                message.channel,
+                "You must specify a valid snippet language."
+            )
 
         const existingSnippet = await Snippet.findOne({ name, language })
 
@@ -133,24 +157,34 @@ export default new Command({
             const body = args.consumeRest()
             let snippet: Snippet
             if (!body)
-                return message.channel.sendError("You must specify a snippet body.")
+                return client.channel.sendError(
+                    message.channel,
+                    "You must specify a snippet body."
+                )
 
             if (subcommand === "add") {
                 if (client.commands.search(name))
-                    return message.channel.sendError(
+                    return client.channel.sendError(
+                        message.channel,
                         "That snippet name is already used by a command."
                     )
                 if (existingSnippet)
-                    return message.channel.sendError("That snippet already exists!")
+                    return client.channel.sendError(
+                        message.channel,
+                        "That snippet already exists!"
+                    )
                 snippet = new Snippet()
                 snippet.name = name
                 snippet.language = language
                 snippet.aliases = []
             } else if (subcommand === "edit") {
                 if (!existingSnippet)
-                    return message.channel.sendError("That snippet doesn't exist!")
+                    return client.channel.sendError(
+                        message.channel,
+                        "That snippet doesn't exist!"
+                    )
                 if (existingSnippet.body === body)
-                    return message.channel.sendError("Nothing changed.")
+                    return client.channel.sendError(message.channel, "Nothing changed.")
                 snippet = existingSnippet
             }
 
@@ -158,27 +192,35 @@ export default new Command({
             await snippet.save()
             const past = subcommand === "add" ? "Added" : "Edited"
             // prettier-ignore
-            await message.channel.sendSuccess(`${past} **${name}** snippet in ${languageName}.`)
+            await client.channel.sendSuccess(message.channel, `${past} **${name}** snippet in ${languageName}.`)
             await client.log(snippet, subcommand, message.author)
         } else if (subcommand === "delete") {
             if (!existingSnippet)
-                return message.channel.sendError("That snippet doesn't exist!")
+                return client.channel.sendError(
+                    message.channel,
+                    "That snippet doesn't exist!"
+                )
 
             await existingSnippet.remove()
             // prettier-ignore
-            await message.channel.sendSuccess(`Deleted **${name}** snippet in ${languageName}.`)
+            await client.channel.sendSuccess(message.channel, `Deleted **${name}** snippet in ${languageName}.`)
             await client.log(existingSnippet, "delete", message.author)
         } else if (subcommand === "source") {
             if (!existingSnippet)
-                return message.channel.sendError("That snippet doesn't exist!")
+                return client.channel.sendError(
+                    message.channel,
+                    "That snippet doesn't exist!"
+                )
             await message.channel.send({
-                embed: {
-                    color: client.config.colors.info,
-                    description:
-                        `The **${existingSnippet.name}** snippet responds with ` +
-                        `the following text in ${languageName}:` +
-                        `\n\`\`\`${existingSnippet.body}\`\`\``
-                }
+                embeds: [
+                    {
+                        color: hexToRGB(client.config.colors.info),
+                        description:
+                            `The **${existingSnippet.name}** snippet responds with ` +
+                            `the following text in ${languageName}:` +
+                            `\n\`\`\`${existingSnippet.body}\`\`\``
+                    }
+                ]
             })
         }
     }

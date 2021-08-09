@@ -1,10 +1,10 @@
 import Client from "../struct/Client"
-import Message from "../struct/discord/Message"
 import Args from "../struct/Args"
 import Command from "../struct/Command"
 import Roles from "../util/roles"
 import Reminder from "../entities/Reminder"
 import formatTimestamp from "../util/formatTimestamp"
+import Discord from "discord.js"
 
 export default new Command({
     name: "remind",
@@ -32,7 +32,7 @@ export default new Command({
             usage: "<id>"
         }
     ],
-    async run(this: Command, client: Client, message: Message, args: Args) {
+    async run(this: Command, client: Client, message: Discord.Message, args: Args) {
         const subcommand = args.consume().toLowerCase()
 
         if (subcommand === "list" || !subcommand) {
@@ -51,13 +51,13 @@ export default new Command({
 
             let list = ""
             for (const [id, { channel, message, end }] of Object.entries(tidy)) {
-                list += `**#$id:** <#${channel}> (next ${formatTimestamp(
+                list += `**#${id}:** <#${channel}> (next ${formatTimestamp(
                     end,
                     "R"
                 )}) — ${message}\n`
             }
 
-            return message.channel.sendSuccess({
+            return client.channel.sendSuccess(message.channel, {
                 author: { name: "Reminder list" },
                 description: list
             })
@@ -66,7 +66,10 @@ export default new Command({
         if (subcommand === "add") {
             const channel = await args.consumeChannel()
             if (!channel) {
-                return message.channel.sendError("You must provide a channel!")
+                return client.channel.sendError(
+                    message.channel,
+                    "You must provide a channel!"
+                )
             }
 
             const time = args.consume().toLowerCase()
@@ -88,12 +91,18 @@ export default new Command({
                     millis = 1000 * 60 * 60 * 24 * 15 // half a month (1000ms * 60s * 60m * 24h * 15d)
                     break
                 default:
-                    return message.channel.sendError("Invalid time length!")
+                    return client.channel.sendError(
+                        message.channel,
+                        "Invalid time length!"
+                    )
             }
 
             const body = args.consumeRest()
             if (!body)
-                return message.channel.sendError("You must specify a reminder message.")
+                return client.channel.sendError(
+                    message.channel,
+                    "You must specify a reminder message."
+                )
 
             const reminder = new Reminder()
             reminder.channel = channel.id
@@ -102,26 +111,40 @@ export default new Command({
             await reminder.save()
             reminder.schedule(client)
 
-            return message.channel.sendSuccess(`Scheduled reminder for ${channel}!`)
+            return client.channel.sendSuccess(
+                message.channel,
+                `Scheduled reminder for ${channel}!`
+            )
         }
 
         const id = parseInt(args.consume())
-        if (!id) return message.channel.sendError("You must specify an ID!")
+        if (!id)
+            return client.channel.sendError(message.channel, "You must specify an ID!")
 
         const reminder = await Reminder.findOne(id)
 
         if (subcommand === "delete") {
             if (!reminder)
-                return message.channel.sendError("That reminder doesn't exist!")
+                return client.channel.sendError(
+                    message.channel,
+                    "That reminder doesn't exist!"
+                )
             await reminder.delete()
-            return message.channel.sendSuccess(`Reminder **#${id}** deleted!`)
+            return client.channel.sendSuccess(
+                message.channel,
+                `Reminder **#${id}** deleted!`
+            )
         } else if (subcommand === "edit") {
             if (!reminder)
-                return message.channel.sendError("That reminder doesn't exist!")
+                return client.channel.sendError(
+                    message.channel,
+                    "That reminder doesn't exist!"
+                )
             const body = args.consumeRest()
             reminder.message = body
             await reminder.save()
-            return message.channel.sendSuccess(
+            return client.channel.sendSuccess(
+                message.channel,
                 `Set the message of reminder **#${id}** to:\n>>>${body}`
             )
         }

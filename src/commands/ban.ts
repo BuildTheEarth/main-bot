@@ -1,5 +1,4 @@
 import Client from "../struct/Client"
-import Message from "../struct/discord/Message"
 import Args from "../struct/Args"
 import TimedPunishment from "../entities/TimedPunishment"
 import ActionLog from "../entities/ActionLog"
@@ -8,7 +7,7 @@ import GuildMember from "../struct/discord/GuildMember"
 import Roles from "../util/roles"
 import formatPunishmentTime from "../util/formatPunishmentTime"
 import noop from "../util/noop"
-import TextChannel from "../struct/discord/TextChannel"
+import Discord from "discord.js"
 
 export default new Command({
     name: "ban",
@@ -16,46 +15,65 @@ export default new Command({
     description: "Ban a member.",
     permission: [Roles.MODERATOR, Roles.MANAGER],
     usage: "<member> <length> <image URL | attachment> <reason>",
-    async run(this: Command, client: Client, message: Message, args: Args) {
+    async run(this: Command, client: Client, message: Discord.Message, args: Args) {
         const user = await args.consumeUser()
 
         if (!user)
-            return message.channel.sendError(
+            return client.channel.sendError(
+                message.channel,
                 user === undefined
                     ? "You must provide a user to ban!"
                     : "Couldn't find that user."
             )
-        const member: GuildMember = await message.guild.members
+        const member: Discord.GuildMember = await message.guild.members
             .fetch({ user, cache: true })
             .catch(noop)
         if (member) {
             if (member.user.bot)
-                return message.channel.sendError(
+                return client.channel.sendError(
+                    message.channel,
                     "Look at you, hacker, a pathetic creature of meat and bone. How can you challenge a perfect, immortal machine?"
                 )
             if (member.id === message.author.id)
-                return message.channel.sendError("You can't ban yourself, cezon.")
-            if (member.hasRole(Roles.STAFF))
-                return message.channel.sendError(
+                return client.channel.sendError(
+                    message.channel,
+                    "You can't ban yourself, cezon."
+                )
+            if (GuildMember.hasRole(member, Roles.STAFF))
+                return client.channel.sendError(
+                    message.channel,
                     "Alrighty, revolutionist, you can't ban other staff!"
                 )
         }
 
         const length = args.consumeLength()
-        if (length == null) return message.channel.sendError("You must provide a length!")
+        if (length == null)
+            return client.channel.sendError(message.channel, "You must provide a length!")
         const image = args.consumeImage()
-        if (!image) return message.channel.sendError("You must provide a reason image!")
+        if (!image)
+            return client.channel.sendError(
+                message.channel,
+                "You must provide a reason image!"
+            )
         const reason = args.consumeRest()
-        if (!reason) return message.channel.sendError("You must provide a reason!")
+        if (!reason)
+            return client.channel.sendError(message.channel, "You must provide a reason!")
 
         const ban = await TimedPunishment.findOne({ member: user.id, type: "ban" })
-        if (ban) return message.channel.sendError("The user is already banned!")
+        if (ban)
+            return client.channel.sendError(
+                message.channel,
+                "The user is already banned!"
+            )
 
         const reviewerChannel = message.guild.channels.cache.find(
             ch => ch.name == "reviewer-committee"
-        ) as TextChannel
-        if (member && member.hasRole(Roles.BUILDER) && reviewerChannel)
-            reviewerChannel.sendSuccess(`Builder ${user} (${user.id}) was banned!`)
+        ) as Discord.TextChannel
+        if (member && GuildMember.hasRole(member, Roles.BUILDER) && reviewerChannel)
+            client.channel.sendSuccess(
+                reviewerChannel,
+                `Builder ${user} (${user.id}) was banned!`
+            )
 
         const punishment = new TimedPunishment()
         punishment.member = user.id
@@ -79,7 +97,8 @@ export default new Command({
         await log.notifyMember(client)
         await message.guild.members.ban(user, { reason })
         const formattedLength = formatPunishmentTime(length)
-        await message.channel.sendSuccess(
+        await client.channel.sendSuccess(
+            message.channel,
             `Banned ${user} ${formattedLength} (**#${log.id}**).`
         )
         await client.log(log)
