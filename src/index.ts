@@ -1,22 +1,22 @@
 import "reflect-metadata"
 import Discord from "discord.js"
 import Client from "./struct/Client"
-import DMChannel from "./struct/discord/DMChannel"
-import Guild from "./struct/discord/Guild"
-import GuildMember from "./struct/discord/GuildMember"
-import Message from "./struct/discord/Message"
-import NewsChannel from "./struct/discord/NewsChannel"
-import Role from "./struct/discord/Role"
-import TextChannel from "./struct/discord/TextChannel"
 
-Discord.Structures.extend("DMChannel", () => DMChannel)
-Discord.Structures.extend("Guild", () => Guild)
-Discord.Structures.extend("GuildMember", () => GuildMember)
-Discord.Structures.extend("Message", () => Message)
-Discord.Structures.extend("NewsChannel", () => NewsChannel)
-Discord.Structures.extend("Role", () => Role)
-Discord.Structures.extend("TextChannel", () => TextChannel)
-const client = new Client()
+const client = new Client({
+    intents: [
+        Discord.Intents.FLAGS.GUILDS,
+        Discord.Intents.FLAGS.GUILD_MEMBERS,
+        Discord.Intents.FLAGS.GUILD_BANS,
+        Discord.Intents.FLAGS.GUILD_INTEGRATIONS,
+        Discord.Intents.FLAGS.GUILD_WEBHOOKS,
+        Discord.Intents.FLAGS.GUILD_PRESENCES,
+        Discord.Intents.FLAGS.GUILD_MESSAGES,
+        Discord.Intents.FLAGS.GUILD_MESSAGE_REACTIONS,
+        Discord.Intents.FLAGS.DIRECT_MESSAGES,
+        Discord.Intents.FLAGS.DIRECT_MESSAGE_REACTIONS
+    ],
+    partials: ["CHANNEL"]
+})
 
 async function main() {
     client.logger.debug("Loading config...")
