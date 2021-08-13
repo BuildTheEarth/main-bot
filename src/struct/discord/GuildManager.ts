@@ -1,20 +1,22 @@
 import Discord from "discord.js"
 import Client from "../Client"
-import Guild from "./Guild"
 
-export default class GuildManager extends Discord.GuildManager {
+export default class GuildManager {
     client: Client
-    cache: Discord.Collection<string, Guild>
 
-    get main(): Guild {
-        return this.cache.get(this.client.config.guilds.main)
+    constructor(client: Client) {
+        this.client = client
     }
 
-    get staff(): Guild {
-        return this.cache.get(this.client.config.guilds.staff)
+    main(): Discord.Guild {
+        return this.client.guilds.cache.get(this.client.config.guilds.main)
     }
 
-    get youtube(): Guild {
-        return this.cache.get(this.client.config.guilds.youtube)
+    staff(): Discord.Guild {
+        return this.client.guilds.cache.get(this.client.config.guilds.staff)
+    }
+
+    youtube(): Discord.Guild {
+        return this.client.guilds.cache.get(this.client.config.guilds.youtube)
     }
 }

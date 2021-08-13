@@ -19,6 +19,7 @@ import formatTimestamp from "../util/formatTimestamp"
 import milliseconds from "./transformers/milliseconds"
 import past from "../util/pastTense"
 import noop from "../util/noop"
+import hexToRGB from "../util/hexToRGB"
 
 export type Action = keyof typeof Actions
 export enum Actions {
@@ -98,11 +99,13 @@ export default class ActionLog extends BaseEntity {
     }
 
     displayEmbed(client: Client): Discord.MessageEmbedOptions {
-        const messageLink = `https://discord.com/channels/${client.guilds.main.id}/${this.channel}/${this.message}`
+        const messageLink = `https://discord.com/channels/${
+            client.customGuilds.main().id
+        }/${this.channel}/${this.message}`
         const length =
             this.length !== null ? formatPunishmentTime(this.length, true) : "\u200B"
         const embed: Discord.MessageEmbedOptions = {
-            color: client.config.colors.success,
+            color: hexToRGB(client.config.colors.success),
             author: { name: `Case #${this.id} (${this.action})` },
             thumbnail: { url: client.config.assets.cases[this.action] },
             fields: [
@@ -122,7 +125,7 @@ export default class ActionLog extends BaseEntity {
         if (this.deletedAt) {
             const formattedTimestamp = formatTimestamp(this.deletedAt, "d")
             embed.description = "*This case has been deleted.*"
-            embed.color = client.config.colors.error
+            embed.color = hexToRGB(client.config.colors.error)
             embed.fields.push(
                 { name: "Deleter", value: `<@${this.deleter}>`, inline: true },
                 { name: "Deletion reason", value: this.deleteReason, inline: true },
@@ -144,7 +147,7 @@ export default class ActionLog extends BaseEntity {
         const color = this.action.startsWith("un") ? "success" : "error"
 
         const embed: Discord.MessageEmbedOptions = {
-            color: client.config.colors[color],
+            color: hexToRGB(client.config.colors[color]),
             description: `*<@${this.executor}> has ${actioned} you${length}:*\n\n${this.reason}`,
             image: this.reasonImage ? { url: this.reasonImage } : null
         }
@@ -158,13 +161,13 @@ export default class ActionLog extends BaseEntity {
     }
 
     async notifyMember(client: Client): Promise<void> {
-        const user = await client.users.fetch(this.member, true)
+        const user = await client.users.fetch(this.member, { force: true })
         if (!user) return
 
         const embed = this.displayNotification(client)
         const notification = await user // both createDM() and send() can fail, so use a promise chain
             .createDM()
-            .then(dms => dms.send({ embed }))
+            .then(dms => dms.send({ embeds: [embed] }))
             .catch(noop)
         if (notification) {
             this.notification = notification.id
@@ -174,13 +177,15 @@ export default class ActionLog extends BaseEntity {
 
     async updateNotification(client: Client): Promise<void> {
         if (!this.notification) return
-        const user = await client.users.fetch(this.member, true)
+        const user = await client.users.fetch(this.member, { force: true })
         if (!user) return
         const channel = user.dmChannel
         if (!channel) return
 
-        const notification = await channel.messages.fetch(this.notification, true)
+        const notification = await channel.messages.fetch(this.notification, {
+            force: true
+        })
         const embed = this.displayNotification(client)
-        await notification.edit({ embed }).catch(noop)
+        await notification.edit({ embeds: [embed] }).catch(noop)
     }
 }

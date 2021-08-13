@@ -2,13 +2,13 @@
 import Includes from "../entities/operators/Includes"
 import Discord from "discord.js"
 import Client from "../struct/Client"
-import Message from "../struct/discord/Message"
 import Args from "../struct/Args"
 import Command from "../struct/Command"
 import Task, { TaskStatus, TaskStatuses } from "../entities/Task"
 import Roles from "../util/roles"
 import humanizeArray from "../util/humanizeArray"
 import { Brackets } from "typeorm"
+import hexToRGB from "../util/hexToRGB"
 
 export default new Command({
     name: "tasks",
@@ -39,7 +39,7 @@ export default new Command({
             usage: "[channel]"
         }
     ],
-    async run(this: Command, client: Client, message: Message, args: Args) {
+    async run(this: Command, client: Client, message: Discord.Message, args: Args) {
         const Tasks = client.db.getRepository(Task)
         const subcommand = args.consumeIf(this.subcommands.map(sub => sub.name))
 
@@ -58,7 +58,7 @@ export default new Command({
                 error = "You must provide a title and a description!"
             if (status && !TaskStatuses[status])
                 error = `That's not a valid status! (${statuses}).`
-            if (error) return message.channel.sendError(error)
+            if (error) return client.channel.sendError(message.channel, error)
 
             const task = new Task()
             task.title = title
@@ -68,17 +68,22 @@ export default new Command({
             task.status = status as TaskStatus
             await task.save()
 
-            await message.channel.sendSuccess(
+            await client.channel.sendSuccess(
+                message.channel,
                 `Saved **${Discord.Util.escapeMarkdown(task.title)}**! (**#${task.id}**).`
             )
         } else if (subcommand === "status") {
             const id = Number(args.consume())
             if (Number.isNaN(id))
-                return message.channel.sendError("You must provide a task ID!")
+                return client.channel.sendError(
+                    message.channel,
+                    "You must provide a task ID!"
+                )
             const status = args.consume().toLowerCase()
             const statuses = humanizeArray(Object.keys(TaskStatuses))
             if (!TaskStatuses[status])
-                return message.channel.sendError(
+                return client.channel.sendError(
+                    message.channel,
                     `That's not a valid status! (${statuses}).`
                 )
 
@@ -86,7 +91,10 @@ export default new Command({
             task.status = status as TaskStatus
             await task.save()
 
-            await message.channel.sendSuccess(`Updated task **#${task.id}**!`)
+            await client.channel.sendSuccess(
+                message.channel,
+                `Updated task **#${task.id}**!`
+            )
         } else if (subcommand === "list") {
             const not = ["done", "reported"]
             if (message.guild) not.push("hidden")
@@ -106,7 +114,10 @@ export default new Command({
                 const assignees = Includes(message.author.id)
                 const all = await Task.find({ where: { assignees } })
                 const goodJob = all.length ? " Good job!" : ""
-                return message.channel.sendSuccess(`You have no pending tasks.${goodJob}`)
+                return client.channel.sendSuccess(
+                    message.channel,
+                    `You have no pending tasks.${goodJob}`
+                )
             }
 
             const single = tasks.every(task => task.creator === tasks[0].creator)
@@ -115,14 +126,16 @@ export default new Command({
                 assigner === message.author.id ? "yourself" : `<@${assigner}>`
             const assignedBy = single ? ` (All assigned by ${formattedAssigner}): ` : ""
             return message.channel.send({
-                embed: {
-                    color: client.config.colors.info,
-                    description: `Here are your active tasks!${assignedBy}`,
-                    fields: tasks.map(task => ({
-                        name: `#${task.id}: ${task.title} (${task.status || "open"})`,
-                        value: task.description
-                    }))
-                }
+                embeds: [
+                    {
+                        color: hexToRGB(client.config.colors.info),
+                        description: `Here are your active tasks!${assignedBy}`,
+                        fields: tasks.map(task => ({
+                            name: `#${task.id}: ${task.title} (${task.status || "open"})`,
+                            value: task.description
+                        }))
+                    }
+                ]
             })
         } else if (subcommand === "report") {
             const channel = (await args.consumeChannel()) || message.channel
@@ -134,7 +147,10 @@ export default new Command({
             })
 
             if (!tasks.length)
-                return message.channel.sendError("Your done task list is empty!")
+                return client.channel.sendError(
+                    message.channel,
+                    "Your done task list is empty!"
+                )
 
             const report = tasks.map(task => `•   ${task.title}`).join("\n")
             await channel.send(`Task report from <@${message.author.id}>:\n\n${report}`)
@@ -145,7 +161,10 @@ export default new Command({
             }
 
             if (channel.id !== message.channel.id)
-                await message.channel.sendSuccess(`Sent your task report to ${channel}!`)
+                await client.channel.sendSuccess(
+                    message.channel,
+                    `Sent your task report to ${channel}!`
+                )
         }
     }
 })

@@ -12,6 +12,7 @@ import Discord from "discord.js"
 import Client from "../struct/Client"
 import replaceAsync from "string-replace-async"
 import suggestionStatusActions from "../data/suggestionStatusActions"
+import hexToRGB from "../util/hexToRGB"
 
 export type SuggestionStatus = keyof typeof SuggestionStatuses
 export enum SuggestionStatuses {
@@ -154,7 +155,7 @@ export default class Suggestion extends BaseEntity {
             const deleter =
                 this.deleter === this.author ? "the author" : `<@${this.deleter}>`
             return {
-                color: client.config.colors.error,
+                color: hexToRGB(client.config.colors.error),
                 description: `**#${identifier}**: The suggestion has been deleted by ${deleter}.`
             }
         }
@@ -183,7 +184,7 @@ export default class Suggestion extends BaseEntity {
         if (this.teams) embed.fields.push({ name: "Team/s", value: this.teams })
 
         if (this.status) {
-            embed.color = client.config.colors.suggestions[this.status]
+            embed.color = hexToRGB(client.config.colors.suggestions[this.status])
             embed.thumbnail.url = client.config.assets.suggestions[this.status]
 
             let action = suggestionStatusActions[this.status] as string

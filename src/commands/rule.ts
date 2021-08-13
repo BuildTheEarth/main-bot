@@ -1,9 +1,9 @@
 import Client from "../struct/Client"
-import Message from "../struct/discord/Message"
 import Args from "../struct/Args"
 import Command from "../struct/Command"
 import Roles from "../util/roles"
 import quote from "../util/quote"
+import Discord from "discord.js"
 
 export default new Command({
     name: "rule",
@@ -11,23 +11,34 @@ export default new Command({
     description: "Get a rule's text.",
     permission: Roles.ANY,
     usage: "<number | text>",
-    async run(this: Command, client: Client, message: Message, args: Args) {
+    async run(this: Command, client: Client, message: Discord.Message, args: Args) {
         const query = args.consume().toLowerCase()
         const number = Number(query)
         let rule: string
 
         if (Number.isInteger(number)) {
-            if (number < 1) return message.channel.sendError("That's not a valid number.")
+            if (number < 1)
+                return client.channel.sendError(
+                    message.channel,
+                    "That's not a valid number."
+                )
 
             const count = client.config.rules.length
             if (number > count)
-                return message.channel.sendError(`There are only ${count} rules.`)
+                return client.channel.sendError(
+                    message.channel,
+                    `There are only ${count} rules.`
+                )
             rule = client.config.rules[number - 1]
         } else {
             rule = client.config.rules.find(rule => rule.toLowerCase().includes(query))
-            if (!rule) return message.channel.sendError(`Couldn't find that rule.`)
+            if (!rule)
+                return client.channel.sendError(
+                    message.channel,
+                    `Couldn't find that rule.`
+                )
         }
 
-        message.channel.send(quote(rule), { allowedMentions: { parse: [] } })
+        message.channel.send({ content: quote(rule), allowedMentions: { parse: [] } })
     }
 })

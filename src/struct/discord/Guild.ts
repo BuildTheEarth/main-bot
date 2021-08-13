@@ -1,26 +1,26 @@
 import Discord from "discord.js"
-import Client from "../Client"
-import GuildMember from "./GuildMember"
-import GuildMemberManager from "./GuildMemberManager"
-import Role from "./Role"
 
-export default class Guild extends Discord.Guild {
-    client: Client
-    members: GuildMemberManager
-
-    member(user: Discord.UserResolvable): GuildMember {
-        return super.member(user) as GuildMember
+export default class Guild {
+    static async member(
+        guild: Discord.Guild,
+        user: Discord.UserResolvable
+    ): Promise<Discord.GuildMember> {
+        return (await guild.members.fetch(user)) as Discord.GuildMember
     }
 
-    role(name: string): Role {
-        return this.roles.cache.find(role => role.name === name) as Role
+    static role(guild: Discord.Guild, name: string): Discord.Role {
+        return guild.roles.cache.find(role => role.name === name) as Discord.Role
     }
 
-    async setVanityCode(code: string, reason?: string): Promise<void> {
+    static async setVanityCode(
+        guild: Discord.Guild,
+        code: string,
+        reason?: string
+    ): Promise<void> {
         // @ts-ignore
-        await this.client.api
+        await guild.client.api
             // @ts-ignore
-            .guilds(this.id, "vanity-url")
+            .guilds(guild.id, "vanity-url")
             .patch({ data: { code }, reason })
     }
 }

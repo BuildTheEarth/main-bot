@@ -200,12 +200,25 @@ VALUES
 
         await queryRunner.query("ALTER TABLE Suggestions RENAME TO old_suggestions")
 
-        const client = new Client()
+        const client = new Client({
+            intents: [
+                Discord.Intents.FLAGS.GUILDS,
+                Discord.Intents.FLAGS.GUILD_MEMBERS,
+                Discord.Intents.FLAGS.GUILD_BANS,
+                Discord.Intents.FLAGS.GUILD_INTEGRATIONS,
+                Discord.Intents.FLAGS.GUILD_WEBHOOKS,
+                Discord.Intents.FLAGS.GUILD_PRESENCES,
+                Discord.Intents.FLAGS.GUILD_MESSAGES,
+                Discord.Intents.FLAGS.GUILD_MESSAGE_REACTIONS,
+                Discord.Intents.FLAGS.DIRECT_MESSAGES,
+                Discord.Intents.FLAGS.DIRECT_MESSAGE_REACTIONS
+            ]
+        })
         await client.config.load()
         await client.login()
 
         // prettier-ignore
-        const suggestionsChannel = await client.channels.fetch("705286174356537394", true) as Discord.TextChannel
+        const suggestionsChannel = await client.channels.fetch("705286174356537394", {force: true}) as Discord.TextChannel
         // prettier-ignore
         const oldSuggestions = await queryRunner.query("SELECT * FROM old_suggestions ORDER BY ID ASC")
 
@@ -236,7 +249,7 @@ CREATE TABLE \`suggestions\` (
             if (oldSuggestion.id < 342) continue
             const { messageID } = oldSuggestion
             const message: Discord.Message = await suggestionsChannel.messages
-                .fetch(messageID, true)
+                .fetch(messageID, { force: true })
                 .catch(() => null)
             if (!message) continue
 

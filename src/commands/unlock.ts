@@ -1,9 +1,9 @@
 import Client from "../struct/Client"
-import Message from "../struct/discord/Message"
 import Args from "../struct/Args"
 import Command from "../struct/Command"
-import TextChannel from "../struct/discord/TextChannel"
 import Roles from "../util/roles"
+import hexToRGB from "../util/hexToRGB"
+import Discord from "discord.js"
 
 export default new Command({
     name: "unlock",
@@ -11,14 +11,17 @@ export default new Command({
     description: "Unlock the channel.",
     permission: Roles.MANAGER,
     usage: "[channel]",
-    async run(this: Command, client: Client, message: Message, args: Args) {
-        const channel = (await args.consumeChannel()) || (message.channel as TextChannel)
+    async run(this: Command, client: Client, message: Discord.Message, args: Args) {
+        const channel =
+            (await args.consumeChannel()) || (message.channel as Discord.TextChannel)
+        /*eslint-disable */
         const reason = `By ${message.author.tag} (${message.author.id})`
-        await channel.updateOverwrite(message.guild.id, { SEND_MESSAGES: null }, reason)
+        /*eslint-enable */
+        await channel.permissionOverwrites.edit(message.guild.id, { SEND_MESSAGES: null }) // There is no non-hacky reason support here now
 
-        await message.channel.sendSuccess(`Unlocked ${channel}.`)
+        await client.channel.sendSuccess(message.channel, `Unlocked ${channel}.`)
         await client.log({
-            color: client.config.colors.success,
+            color: hexToRGB(client.config.colors.success),
             author: { name: "Unlocked" },
             description: `Channel ${channel} unlocked by ${message.author}.`
         })

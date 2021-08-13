@@ -1,9 +1,9 @@
 import Client from "../struct/Client"
-import Message from "../struct/discord/Message"
 import Args from "../struct/Args"
 import Command from "../struct/Command"
 import Roles from "../util/roles"
-import TextChannel from "../struct/discord/TextChannel"
+import hexToRGB from "../util/hexToRGB"
+import Discord from "discord.js"
 
 export default new Command({
     name: "purge",
@@ -11,16 +11,28 @@ export default new Command({
     description: "Bulk-delete messages in a channel.",
     permission: [Roles.MODERATOR, Roles.MANAGER],
     usage: "<amount>",
-    async run(this: Command, client: Client, message: Message, args: Args) {
+    async run(this: Command, client: Client, message: Discord.Message, args: Args) {
         const amount = Number(args.consume())
         if (Number.isNaN(amount))
-            return message.channel.sendError("You must provide a valid amount!")
+            return client.channel.sendError(
+                message.channel,
+                "You must provide a valid amount!"
+            )
         if (amount > 100)
-            return message.channel.sendError("You can only purge 100 messages at a time!")
-        const purged = await (message.channel as TextChannel).bulkDelete(amount, true)
-        await message.channel.sendSuccess(`Purged ${purged.size} messages.`)
+            return client.channel.sendError(
+                message.channel,
+                "You can only purge 100 messages at a time!"
+            )
+        const purged = await (message.channel as Discord.TextChannel).bulkDelete(
+            amount,
+            true
+        )
+        await client.channel.sendSuccess(
+            message.channel,
+            `Purged ${purged.size} messages.`
+        )
         await client.log({
-            color: client.config.colors.info,
+            color: hexToRGB(client.config.colors.info),
             author: { name: "Purge" },
             description: `${purged.size} messages purged by ${message.author} in ${message.channel}.`
         })

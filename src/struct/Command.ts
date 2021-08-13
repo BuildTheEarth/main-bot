@@ -1,6 +1,6 @@
 import Client from "../struct/Client"
-import Message from "../struct/discord/Message"
 import Args from "./Args"
+import Discord from "discord.js"
 
 export default class Command implements CommandProperties {
     name: string
@@ -10,7 +10,7 @@ export default class Command implements CommandProperties {
     usage: string
     dms: boolean
     subcommands: SubCommandProperties[]
-    run: (client: Client, message: Message, args: Args) => void | Promise<void>
+    run: (client: Client, message: Discord.Message, args: Args) => void | Promise<void>
 
     constructor(properties: CommandProperties) {
         this.name = properties.name
@@ -32,7 +32,7 @@ export interface CommandProperties extends SubCommandProperties {
     subcommands?: SubCommandProperties[]
     permission: string | string[]
     dms?: boolean
-    run: (client: Client, message: Message, args: Args) => void
+    run: (client: Client, message: Discord.Message, args: Args) => void
 }
 
 export interface SubCommandProperties {

@@ -1,9 +1,9 @@
 import Client from "../struct/Client"
-import Message from "../struct/discord/Message"
 import Args from "../struct/Args"
 import Command from "../struct/Command"
-import TextChannel from "../struct/discord/TextChannel"
 import Roles from "../util/roles"
+import hexToRGB from "../util/hexToRGB"
+import Discord from "discord.js"
 
 export default new Command({
     name: "lock",
@@ -11,14 +11,21 @@ export default new Command({
     description: "Lock the channel.",
     permission: Roles.MANAGER,
     usage: "[channel]",
-    async run(this: Command, client: Client, message: Message, args: Args) {
-        const channel = (await args.consumeChannel()) || (message.channel as TextChannel)
-        const reason = `Locked by ${message.author.tag} (${message.author.id})`
-        await channel.updateOverwrite(message.guild.id, { SEND_MESSAGES: false }, reason)
+    async run(this: Command, client: Client, message: Discord.Message, args: Args) {
+        const channel =
+            (await args.consumeChannel()) || (message.channel as Discord.TextChannel)
 
-        await message.channel.sendSuccess(`Locked ${channel}.`)
+        /*eslint-disable */
+        const reason = `Locked by ${message.author.tag} (${message.author.id})`
+        /*eslint-enable */
+
+        await channel.permissionOverwrites.edit(message.guild.id, {
+            SEND_MESSAGES: false
+        }) // There is no non-hacky reason support here now
+
+        await client.channel.sendSuccess(message.channel, `Locked ${channel}.`)
         await client.log({
-            color: client.config.colors.error,
+            color: hexToRGB(client.config.colors.error),
             author: { name: "Locked" },
             description: `Channel ${channel} locked by ${message.author}.`
         })

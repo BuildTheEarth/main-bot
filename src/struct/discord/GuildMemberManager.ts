@@ -5,7 +5,6 @@ import Discord, {
     Collection,
     Snowflake
 } from "discord.js"
-import GuildMember from "./GuildMember"
 
 export default class GuildMemberManager extends Discord.GuildMemberManager {
     fetch(
@@ -13,11 +12,15 @@ export default class GuildMemberManager extends Discord.GuildMemberManager {
             | UserResolvable
             | FetchMemberOptions
             | (FetchMembersOptions & { user: UserResolvable })
-    ): Promise<GuildMember>
-    fetch(options?: FetchMembersOptions): Promise<Collection<Snowflake, GuildMember>>
-    fetch(options: unknown): Promise<GuildMember | Collection<Snowflake, GuildMember>> {
-        return <Promise<GuildMember | Collection<Snowflake, GuildMember>>>(
-            super.fetch(options)
-        )
+    ): Promise<Discord.GuildMember>
+    fetch(
+        options?: FetchMembersOptions
+    ): Promise<Collection<Snowflake, Discord.GuildMember>>
+    fetch(
+        options: unknown
+    ): Promise<Discord.GuildMember | Collection<Snowflake, Discord.GuildMember>> {
+        return <
+            Promise<Discord.GuildMember | Collection<Snowflake, Discord.GuildMember>>
+        >super.fetch(options)
     }
 }

@@ -1,8 +1,7 @@
+import Discord from "discord.js"
 import Client from "../struct/Client"
-import Message from "../struct/discord/Message"
 import Args from "../struct/Args"
 import Command from "../struct/Command"
-import GuildMember from "../struct/discord/GuildMember"
 import ActionLog from "../entities/ActionLog"
 import Roles from "../util/roles"
 
@@ -12,11 +11,12 @@ export default new Command({
     description: "Warn a member.",
     permission: [Roles.HELPER, Roles.MODERATOR, Roles.MANAGER],
     usage: "<member> [image URL | attachment] <reason>",
-    async run(this: Command, client: Client, message: Message, args: Args) {
+    async run(this: Command, client: Client, message: Discord.Message, args: Args) {
         const user = await args.consumeUser()
 
         if (!user)
-            return message.channel.sendError(
+            return client.channel.sendError(
+                message.channel,
                 user === undefined
                     ? "You must provide a user to warn!"
                     : "Couldn't find that user."
@@ -24,11 +24,16 @@ export default new Command({
 
         const image = args.consumeImage()
         const reason = args.consumeRest()
-        if (!reason) return message.channel.sendError("You must provide a reason!")
-        const member: GuildMember = await message.guild.members
+        if (!reason)
+            return client.channel.sendError(message.channel, "You must provide a reason!")
+        const member: Discord.GuildMember = await message.guild.members
             .fetch({ user, cache: true })
             .catch(() => null)
-        if (!member) return message.channel.sendError("The user is not in the server!")
+        if (!member)
+            return client.channel.sendError(
+                message.channel,
+                "The user is not in the server!"
+            )
 
         const log = new ActionLog()
         log.action = "warn"
@@ -43,7 +48,10 @@ export default new Command({
 
         await log.notifyMember(client)
         const formattedUser = user.id === message.author.id ? "*you*" : user.toString()
-        await message.channel.sendSuccess(`Warned ${formattedUser} (**#${log.id}**).`)
+        await client.channel.sendSuccess(
+            message.channel,
+            `Warned ${formattedUser} (**#${log.id}**).`
+        )
         await client.log(log)
     }
 })

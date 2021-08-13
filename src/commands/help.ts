@@ -1,5 +1,5 @@
 import Client from "../struct/Client"
-import Message from "../struct/discord/Message"
+import Discord from "discord.js"
 import Args from "../struct/Args"
 import Command from "../struct/Command"
 import GuildMember from "../struct/discord/GuildMember"
@@ -14,24 +14,27 @@ export default new Command({
     permission: Roles.ANY,
     usage: "[command]",
     dms: true,
-    async run(this: Command, client: Client, message: Message, args: Args) {
+    async run(this: Command, client: Client, message: Discord.Message, args: Args) {
         const member = (
             message.guild
                 ? message.member
-                : await client.guilds.main.members
-                      .fetch({ user: message.author, cache: true })
+                : await client.customGuilds
+                      .main()
+                      .members.fetch({ user: message.author, cache: true })
                       .catch(() => null)
-        ) as GuildMember
+        ) as Discord.GuildMember
         const commandName = args.consume()
 
         if (commandName) {
             const command = client.commands.search(commandName)
             if (!command)
-                return message.channel.sendError(
+                return client.channel.sendError(
+                    message.channel,
                     `Unknown command \`${truncateString(commandName, 32, "...")}\`.`
                 )
-            if (!member.hasRole(command.permission))
-                return message.channel.sendError(
+            if (!GuildMember.hasRole(member, command.permission))
+                return client.channel.sendError(
+                    message.channel,
                     "You don't have permission to use that command!"
                 )
 
@@ -54,7 +57,7 @@ export default new Command({
 
             if (command.subcommands && command.subcommands.length) {
                 const allowedSubcommands = command.subcommands.filter(sub =>
-                    member.hasRole(sub.permission)
+                    GuildMember.hasRole(member, sub.permission)
                 )
 
                 const formattedSubcommands = allowedSubcommands.map(sub => {
@@ -68,18 +71,18 @@ export default new Command({
                 })
             }
 
-            return message.channel.sendSuccess(embed)
+            return client.channel.sendSuccess(message.channel, embed)
         }
 
         const allowedCommands = client.commands.filter(command =>
-            member.hasRole(command.permission)
+            GuildMember.hasRole(member, command.permission)
         )
 
         const formattedCommands = allowedCommands
             .map(command => `• **${command.name}:** ${command.description}`)
             .join("\n")
 
-        return message.channel.sendSuccess({
+        return client.channel.sendSuccess(message.channel, {
             author: { name: "Here are all the commands you have access to:" },
             description: formattedCommands,
             fields: [

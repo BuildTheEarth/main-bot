@@ -1,4 +1,4 @@
-import Message from "../struct/discord/Message"
+import Discord from "discord.js"
 import Args from "../struct/Args"
 import Client from "../struct/Client"
 import Command from "../struct/Command"
@@ -39,7 +39,7 @@ export default new Command({
     description: "Evaluate JavaScript code.",
     permission: Roles.BOT_DEVELOPER,
     usage: "<code>",
-    async run(this: Command, client: Client, message: Message, args: Args) {
+    async run(this: Command, client: Client, message: Discord.Message, args: Args) {
         const code = args.removeCodeblock()
 
         try {
@@ -53,14 +53,14 @@ export default new Command({
                 .replace(modpackRegex, "")
                 .replace(pwRegex, "")
 
-            message.channel.sendSuccess({
+            client.channel.sendSuccess(message.channel, {
                 author: { name: "Output" },
                 description: `\`\`\`js\n${truncateString(out, 1990)}\n\`\`\``
             })
         } catch (error) {
             const err = `${error.name || "Error"}: ${error.message}`
 
-            message.channel.sendError({
+            client.channel.sendError(message.channel, {
                 author: { name: "Error" },
                 description: `\`\`\`${truncateString(err, 1994)}\`\`\``
             })

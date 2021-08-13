@@ -1,6 +1,5 @@
 import Discord from "discord.js"
 import Client from "../struct/Client"
-import Message from "../struct/discord/Message"
 import Args from "../struct/Args"
 import Command from "../struct/Command"
 import Roles from "../util/roles"
@@ -22,13 +21,17 @@ export default new Command({
         Roles.PR_SUBTEAM_LEADS
     ],
     usage: "<user> ['deleted']",
-    async run(this: Command, client: Client, message: Message, args: Args) {
+    async run(this: Command, client: Client, message: Discord.Message, args: Args) {
         const user = await args.consumeUser(true)
         const showDeleted = args.consume().toLowerCase() === "deleted"
-        const member = await client.guilds.main.members.fetch({ user }).catch(noop)
+        const member = await client.customGuilds
+            .main()
+            .members.fetch({ user })
+            .catch(noop)
 
         if (!user)
-            return message.channel.sendError(
+            return client.channel.sendError(
+                message.channel,
                 user === undefined
                     ? "You must provide a user to check!"
                     : "Couldn't find that user."
@@ -92,6 +95,6 @@ export default new Command({
         if (notes) embed.fields.push({ name: "Notes", value: notes.body, inline: true })
         if (!member) embed.footer = { text: "This user is not in the server." }
 
-        await message.channel.sendSuccess(embed)
+        await client.channel.sendSuccess(message.channel, embed)
     }
 })

@@ -14,7 +14,7 @@ export default async function messageReactionAdd(
     const role = channel?.[reaction.message.id]?.[reaction.emoji.name]
     const guild = reaction.message.guild
     if (guild) {
-        const member: GuildMember = await guild.members
+        const member: Discord.GuildMember = await guild.members
             .fetch({ user, cache: true })
             .catch(() => null)
         if (member && role) await member.roles.add(role).catch(noop)
@@ -24,7 +24,7 @@ export default async function messageReactionAdd(
             guild.id === this.config.guilds.staff &&
             channel.name === "weekly-updates" &&
             reaction.emoji.name === "📣" &&
-            member.hasRole(Roles.MANAGER)
+            GuildMember.hasRole(member, Roles.MANAGER)
         ) {
             await reaction.users.remove(user)
             let update = reaction.message.content

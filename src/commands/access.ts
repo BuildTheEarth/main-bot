@@ -1,8 +1,9 @@
 import Client from "../struct/Client"
-import Message from "../struct/discord/Message"
 import Args from "../struct/Args"
 import Command from "../struct/Command"
+import Guild from "../struct/discord/Guild"
 import Roles from "../util/roles"
+import Discord from "discord.js"
 
 export default new Command({
     name: "access",
@@ -10,16 +11,24 @@ export default new Command({
     description: "Enable the Manage Permissions permission for a channel.",
     permission: Roles.MANAGER,
     usage: "[channel]",
-    async run(this: Command, _client: Client, message: Message, args: Args) {
+    async run(this: Command, client: Client, message: Discord.Message, args: Args) {
         const channel = await args.consumeChannel()
         const perms = channel.permissionsFor(message.member)
         if (!perms.has("VIEW_CHANNEL"))
-            return message.channel.sendError("You can't see that channel.")
+            return client.channel.sendError(
+                message.channel,
+                "You can't see that channel."
+            )
 
-        const manager = message.guild.role(Roles.MANAGER)
+        const manager = Guild.role(message.guild, Roles.MANAGER)
+        /*eslint-disable */
         const reason = `Access requested by ${message.author.tag} (${message.author.id})`
-        await channel.updateOverwrite(manager, { MANAGE_ROLES: true }, reason)
+        /*eslint-enable */
+        await channel.permissionOverwrites.edit(manager, { MANAGE_ROLES: true }) // There is no non-hacky reason support here now
 
-        await message.channel.sendSuccess(`Gave managers permission in ${channel}.`)
+        await client.channel.sendSuccess(
+            message.channel,
+            `Gave managers permission in ${channel}.`
+        )
     }
 })

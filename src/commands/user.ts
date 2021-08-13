@@ -1,14 +1,13 @@
 import Discord from "discord.js"
 import Client from "../struct/Client"
-import Message from "../struct/discord/Message"
 import Args from "../struct/Args"
 import Command from "../struct/Command"
-import GuildMember from "../struct/discord/GuildMember"
 import Roles from "../util/roles"
 import humanizeConstant from "../util/humanizeConstant"
 import formatTimestamp from "../util/formatTimestamp"
 import userFlags from "../data/userFlags"
 import activityTypes from "../data/activityTypes"
+import hexToRGB from "../util/hexToRGB"
 
 export default new Command({
     name: "user",
@@ -16,20 +15,21 @@ export default new Command({
     description: "Get info on someone.",
     permission: Roles.ANY,
     usage: "<user>",
-    async run(this: Command, client: Client, message: Message, args: Args) {
+    async run(this: Command, client: Client, message: Discord.Message, args: Args) {
         const user = await args.consumeUser(true)
         if (!user)
-            return message.channel.sendError(
+            return client.channel.sendError(
+                message.channel,
                 user === undefined
                     ? "You must provide a user!"
                     : "Couldn't find that user."
             )
-        const member: GuildMember = await message.guild.members
+        const member: Discord.GuildMember = await message.guild.members
             .fetch({ user, cache: true })
             .catch(() => null)
 
         const embed: Discord.MessageEmbedOptions = {
-            color: client.config.colors.info,
+            color: hexToRGB(client.config.colors.info),
             thumbnail: {
                 url: user.displayAvatarURL({ size: 64, format: "png", dynamic: true })
             },
@@ -89,26 +89,6 @@ export default new Command({
                 inline: true
             })
 
-        const typingIn: Discord.Channel = client.channels.cache.find(
-            channel =>
-                // @ts-ignore
-                channel._typing &&
-                // @ts-ignore
-                channel.guild?.id === message.guild?.id &&
-                // @ts-ignore
-                channel._typing.has(user.id) &&
-                // @ts-ignore
-                channel._typing.get(user.id).elapsedTime > 0
-        )
-
-        if (typingIn) {
-            const duration = Math.round(user.typingDurationIn(typingIn) / 1000)
-            embed.fields.push({
-                name: "Typing in",
-                value: `<#${typingIn.id}>, for **${duration}** seconds.`
-            })
-        }
-
         const vc = member?.voice?.channel
         if (vc) {
             embed.fields.push({
@@ -135,21 +115,30 @@ export default new Command({
             (status.state ? Discord.Util.escapeMarkdown(status.state) : "")
         const humanizeActivity = (act: Discord.Activity) =>
             `${activityTypes[act.type] || humanizeConstant(act.type)} **${
-                act.type === "CUSTOM_STATUS"
+                act.type === "CUSTOM"
                     ? humanizeStatus(act)
                     : Discord.Util.escapeMarkdown(act.name)
             }**`
-        const activities = user.presence.activities.map(humanizeActivity).join("\n")
+        const activities = (
+            await message.guild.members.fetch(user.id)
+        ).presence.activities
+            .map(humanizeActivity)
+            .join("\n")
 
-        const presenceStatusEmoji = client.config.emojis.text[user.presence.status]
+        const presenceStatusEmoji =
+            client.config.emojis.text[
+                (await message.guild.members.fetch(user.id)).presence.status
+            ]
         const presenceStatusName =
-            user.presence.status === "dnd"
+            (await message.guild.members.fetch(user.id)).presence.status === "dnd"
                 ? "Do Not Disturb"
-                : humanizeConstant(user.presence.status)
+                : humanizeConstant(
+                      (await message.guild.members.fetch(user.id)).presence.status
+                  )
 
-        const presence = `${presenceStatusEmoji} **${presenceStatusName}**\n${activities}`
+        const presence = `\\${presenceStatusEmoji} **${presenceStatusName}**\n${activities}`
         embed.fields.push({ name: "Presence", value: presence })
 
-        await message.channel.send({ embed })
+        await message.channel.send({ embeds: [embed] })
     }
 })
