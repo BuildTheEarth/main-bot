@@ -3,6 +3,8 @@ import Args from "../struct/Args"
 import Command from "../struct/Command"
 import Roles from "../util/roles"
 import Discord from "discord.js"
+import { Brackets, WhereExpression } from "typeorm"
+import Snippet from "../entities/Snippet"
 
 export default new Command({
     name: "team",
@@ -12,16 +14,26 @@ export default new Command({
     usage: "<team>",
     async run(this: Command, client: Client, message: Discord.Message, args: Args) {
         const input = args.consumeRest().toLowerCase()
-        const teams = Object.keys(client.config.buildTeamInvites)
-        const team = // using separate calls to give priority to the first criterion
-            teams.find(team => team === input) || teams.find(team => team.includes(input))
+        if (!input)
+            return client.channel.sendError(message.channel, "Please give a team name")
+        const Snippets = Snippet.getRepository()
+        const language = "en"
+        const find = (query: WhereExpression) =>
+            query
+                .where("snippet.name = :name", { name: input })
+                .andWhere("snippet.type = 'team'")
+                .orWhere("INSTR(snippet.aliases, :name)")
+        const snippet = await Snippets.createQueryBuilder("snippet")
+            .where("snippet.language = :language", { language })
+            .andWhere(new Brackets(find))
+            .getOne()
 
-        if (!team)
-            return client.channel.sendError(
-                message.channel,
-                "Couldn't find an invite for that team."
-            )
-        const invite = client.config.buildTeamInvites[team]
-        message.channel.send(invite)
+        if (!snippet) {
+            return client.channel.sendError(message.channel, `This team does not exist .`)
+        } else {
+            return message.channel
+                .send({ content: snippet.body, allowedMentions: { parse: [] } })
+                .catch(() => null)
+        }
     }
 })
