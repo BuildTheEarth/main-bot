@@ -46,15 +46,19 @@ export default async function (this: Client, message: Discord.Message): Promise<
             const find = (query: WhereExpression) =>
                 query
                     .where("snippet.name = :name", { name: args.command })
+                    .andWhere("snippet.type = 'snippet'")
                     .orWhere("INSTR(snippet.aliases, :name)")
+
             const snippet = await Snippets.createQueryBuilder("snippet")
                 .where("snippet.language = :language", { language })
                 .andWhere(new Brackets(find))
+                .andWhere("snippet.type = 'snippet'")
                 .getOne()
 
             if (!snippet) {
                 const unlocalizedSnippet = await Snippets.createQueryBuilder("snippet")
                     .where(new Brackets(find))
+                    .andWhere("snippet.type = 'snippet'")
                     .getOne()
                 if (unlocalizedSnippet)
                     this.channel.sendError(
