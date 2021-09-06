@@ -12,7 +12,7 @@
         "node-fetch": "^2.6.1",
         "reflect-metadata": "^0.1.13",
         "sqlite3": "^5.0.2",
-        "string-replace-async": "^2.0.0",
+        "string-replace-async": "^3.0.1",
         "typeorm": "^0.2.37",
         "winston": "^3.3.3",
         "yaml": "^1.10.2"
