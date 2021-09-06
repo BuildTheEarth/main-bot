@@ -39,7 +39,8 @@
         "lint": "eslint src --fix",
         "update": "git pull && npm run build && pm2 restart main-bot",
         "update:migrate": "git pull && npm run build && pm2 stop main-bot && typeorm migration:run && pm2 start main-bot",
-        "error": "node scripts/error"
+        "error": "node scripts/error",
+        "backup": "mysqldump main_bot --user root --password --result-file \"main_bot-$(date -u +'%Y_%m_%dT%H:%M:%SZ').sql\""
     },
     "repository": "BuildTheEarth/main-bot",
     "author": "BuildTheEarth",
