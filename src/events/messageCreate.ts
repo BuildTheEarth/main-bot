@@ -8,7 +8,7 @@ import languages from "../util/patchedISO6391"
 import Roles from "../util/roles"
 import chalk from "chalk"
 import Discord from "discord.js"
-import { Brackets, WhereExpression } from "typeorm"
+import { Brackets, WhereExpressionBuilder } from "typeorm"
 
 export default async function (this: Client, message: Discord.Message): Promise<unknown> {
     if (message.author.bot) return
@@ -42,7 +42,7 @@ export default async function (this: Client, message: Discord.Message): Promise<
                     `Please choose \`zh-s\` (简体中文) or \`zh-t\` (繁體中文)!`
                 )
 
-            const find = (query: WhereExpression) =>
+            const find = (query: WhereExpressionBuilder) =>
                 query
                     .where("snippet.name = :name", { name: args.command })
                     .orWhere("INSTR(snippet.aliases, :name)")
