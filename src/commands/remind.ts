@@ -46,7 +46,7 @@ export default new Command({
 
                 tidy[reminder.id].channel = reminder.channel
                 tidy[reminder.id].message = reminder.message
-                tidy[reminder.id].end = reminder.end
+                tidy[reminder.id].end = new Date(Date.now() + reminder.remainder)
             }
 
             let list = ""

@@ -27,6 +27,11 @@ export default class Reminder extends BaseEntity {
     @CreateDateColumn({ name: "created_at" })
     createdAt: Date
 
+    get remainder(): number {
+        const age = Date.now() - this.createdAt.getTime()
+        return age % this.interval
+    }
+
     private reminderTimeout: NodeJS.Timeout
 
     async send(client: Client): Promise<void> {
@@ -39,10 +44,7 @@ export default class Reminder extends BaseEntity {
 
     schedule(client: Client): void {
         if (this.interval === 0) return
-
-        const age = Date.now() - this.createdAt.getTime()
-        const remainder = age % this.interval
-        const timeout = this.interval - remainder
+        const timeout = this.interval - this.remainder
 
         // avoid TimeoutOverflowWarning; reschedule
         // (2147483647 ms is ~24 days)
