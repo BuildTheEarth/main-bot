@@ -7,7 +7,6 @@ export default async function guildMemberAdd(
     this: Client,
     member: Discord.GuildMember
 ): Promise<void> {
-    if (member.guild.id === this.config.guilds.youtube) return
     const mute = await TimedPunishment.findOne({ member: member.id })
     if (mute) GuildMember.mute(member, "Mute on re-join")
 }

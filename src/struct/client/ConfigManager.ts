@@ -22,7 +22,7 @@ export type DatabaseInfo = {
     user?: string
     pass?: string
 }
-export type loggingConfig = {
+export type LoggingConfig = {
     modLogs: string
     snippetLogs: string
 }
@@ -32,8 +32,8 @@ export default class ConfigManager {
     prefix: string
     appeal: string
     vanity: string
-    logging: loggingConfig
-    guilds: GuildCategories & { youtube: string }
+    logging: LoggingConfig
+    guilds: GuildCategories
     suggestions: GuildCategories & { discussion: GuildCategories }
     suggestionOffset: GuildCategories<number>
     reactionRoles: ReactionRole

@@ -11,7 +11,6 @@ import Discord from "discord.js"
 import { Brackets, WhereExpression } from "typeorm"
 
 export default async function (this: Client, message: Discord.Message): Promise<unknown> {
-    if (message.guild?.id === this.config.guilds.youtube) return
     if (message.author.bot) return
     const Snippets = Snippet.getRepository()
 

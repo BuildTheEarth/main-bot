@@ -90,10 +90,9 @@ Rename the `_config.yml` file to `config.yml` and fill in all of the fields:
 -   **logging**: The Channel IDs where certain actions will be logged.
     -   **modLogs**
     -   **snippetLogs**
--   **guilds**: The guild IDs for the main, staff, and YouTube group servers:
+-   **guilds**: The guild IDs for the main and staff servers:
     -   **main**
     -   **staff**
-    -   **youtube**
 -   **suggestions**: The channel IDs for the main and staff servers' suggestions channel:
     -   **main**
     -   **staff**

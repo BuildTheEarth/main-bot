@@ -15,8 +15,4 @@ export default class GuildManager {
     staff(): Discord.Guild {
         return this.client.guilds.cache.get(this.client.config.guilds.staff)
     }
-
-    youtube(): Discord.Guild {
-        return this.client.guilds.cache.get(this.client.config.guilds.youtube)
-    }
 }
