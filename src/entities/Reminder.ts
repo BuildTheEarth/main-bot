@@ -8,7 +8,7 @@ import {
 import SnowflakeColumn from "./decorators/SnowflakeColumn"
 import Client from "../struct/Client"
 import milliseconds from "./transformers/milliseconds"
-import Discord from "discord.js"
+import { TextChannel } from "discord.js"
 
 @Entity({ name: "reminders" })
 export default class Reminder extends BaseEntity {
@@ -27,32 +27,29 @@ export default class Reminder extends BaseEntity {
     @CreateDateColumn({ name: "created_at" })
     createdAt: Date
 
-    get end(): Date {
-        return new Date(this.createdAt.getTime() + this.interval)
-    }
-
     private reminderTimeout: NodeJS.Timeout
 
-    async sendReminder(client: Client): Promise<void> {
-        const channel = client.channels.cache.find(
-            channel =>
-                // @ts-ignore
-                channel.id === this.channel
-        ) as Discord.TextChannel
+    async send(client: Client): Promise<void> {
+        const channel = client.channels.cache.get(this.channel) as TextChannel
         if (!channel) return
+
         channel.send(this.message)
+        this.schedule(client)
     }
 
     schedule(client: Client): void {
         if (this.interval === 0) return
-        const timeout = this.end.getTime() - Date.now()
+
+        const age = Date.now() - this.createdAt.getTime()
+        const remainder = age % this.interval
+        const timeout = this.interval - remainder
 
         // avoid TimeoutOverflowWarning; reschedule
         // (2147483647 ms is ~24 days)
         if (timeout > 2147483647) {
             this.reminderTimeout = setTimeout(() => this.schedule(client), 2147483647)
         } else {
-            this.reminderTimeout = setTimeout(() => this.sendReminder(client), timeout)
+            this.reminderTimeout = setTimeout(() => this.send(client), timeout)
         }
     }
 
