@@ -11,7 +11,7 @@ export default new Command({
     name: "banner",
     aliases: [],
     description: "Manage the banner queue.",
-    permission: Roles.MANAGER,
+    permission: [Roles.MANAGER, Roles.BUILDER_COUNCIL],
     usage: "",
     subcommands: [
         {
