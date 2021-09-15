@@ -119,7 +119,7 @@ export default class Args {
                     case "yourself":
                         return this.message.client.user
                     case "someone":
-                        return users[Math.floor(Math.random() * users.size)]
+                        return users.random()
                 }
             }
         }
