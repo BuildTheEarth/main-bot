@@ -48,9 +48,14 @@ export default new Command({
             )
 
         const image = args.consumeImage()
-        const reason = args.consumeRest()
+        let reason = args.consumeRest()
         if (!reason)
             return client.channel.sendError(message.channel, "You must provide a reason!")
+        let autoFill = type => reason = `Please change your ${type} and come back.`
+
+        if (reason.toLowerCase() === "username") autoFill("username")
+        if (reason.toLowerCase() === "pfp") autoFill("profile photo")
+        if (reason.toLowerCase() === "status") autoFill("status")
 
         const log = new ActionLog()
         log.action = "kick"
