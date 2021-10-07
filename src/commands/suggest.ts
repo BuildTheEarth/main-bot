@@ -68,10 +68,20 @@ export default new Command({
         const suggestionMessage = await suggestions.send({ embeds: [embed] })
         suggestion.message = suggestionMessage.id
         await suggestion.save()
+        ;(
+            client.channels.cache.get(
+                client.config.suggestions.discussion[category]
+            ) as Discord.TextChannel
+        ).threads.create({
+            name: `${suggestion.number} ${suggestion.title}`,
+            autoArchiveDuration: 1440,
+            reason: "New suggestion."
+        })
 
         await suggestionMessage.react(client.config.emojis.upvote)
         await suggestionMessage.react(client.config.emojis.downvote)
-        if (!anon && message.channel.type !== "DM")
+        if (!anon && message.channel.type !== "DM") {
             await message.delete().catch(() => null)
+        }
     }
 })
