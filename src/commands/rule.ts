@@ -61,7 +61,7 @@ export default new Command({
                 else {
                     return client.channel.sendError(
                         message.channel,
-                        `This rule dosent exist, what were you thinking, go read the rules.`
+                        `This rule dosent exist.`
                     )
                 }
             } else {
@@ -75,7 +75,7 @@ export default new Command({
         } else {
             return client.channel.sendError(
                 message.channel,
-                `How dare you try and break such an amazing piece of machinery, you won't have a nice time when I rule over you, ${message.author.username}.`
+                `Valid input please!`
             )
         }
     }
