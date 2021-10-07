@@ -91,6 +91,7 @@ export default new Command({
             )
 
         const suggestionsID = client.config.suggestions[category]
+<<<<<<< HEAD
         const suggestions: Discord.TextChannel = await client.channels
             .fetch(suggestionsID, { force: true })
             .catch(() => null)
@@ -328,5 +329,20 @@ export default new Command({
 
             return client.channel.sendSuccess(message.channel, "Updated the suggestion!")
         }
+=======
+        const suggestions = client.channels.cache.get(
+            suggestionsID
+        ) as Discord.TextChannel
+
+        const embed = await suggestion.displayEmbed(client)
+        const suggestionMessage = await suggestions.send({ embeds: [embed] })
+        suggestion.message = suggestionMessage.id
+        await suggestion.save()
+
+        await suggestionMessage.react(client.config.emojis.upvote)
+        await suggestionMessage.react(client.config.emojis.downvote)
+        if (!anon && message.channel.type !== "DM")
+            await message.delete().catch(() => null)
+>>>>>>> parent of f622a5d... Add auto-thread creation for suggestions
     }
 })
