@@ -343,6 +343,9 @@ export default new Command({
         await suggestionMessage.react(client.config.emojis.downvote)
         if (!anon && message.channel.type !== "DM")
             await message.delete().catch(() => null)
+<<<<<<< HEAD
+>>>>>>> parent of f622a5d... Add auto-thread creation for suggestions
+=======
 >>>>>>> parent of f622a5d... Add auto-thread creation for suggestions
     }
 })
