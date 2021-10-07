@@ -24,12 +24,6 @@ export default new Command({
                     message.channel,
                     "That's not a valid number."
                 )
-            //if (number > count)
-            // return client.channel.sendError(
-            //     message.channel,
-            //     `There are only ${count} rules.`
-            // )
-            //rule = client.config.rules[number - 1]
 
             const Snippets = Snippet.getRepository()
             const firstArg = args.consume().toLowerCase()
