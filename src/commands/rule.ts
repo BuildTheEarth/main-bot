@@ -17,6 +17,7 @@ export default new Command({
     async run(this: Command, client: Client, message: Discord.Message, args: Args) {
         const query = args.consume().toLowerCase()
         const number = Number(query)
+        //let rule: string
 
         if (Number.isInteger(number) || Number.isFinite(number)) {
             if (number < 1)
