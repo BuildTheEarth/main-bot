@@ -11,11 +11,10 @@ import Discord from "discord.js"
 import { Brackets, WhereExpression } from "typeorm"
 
 export default async function (this: Client, message: Discord.Message): Promise<unknown> {
-    if (message.guild?.id === this.config.guilds.youtube) return
     if (message.author.bot) return
     const Snippets = Snippet.getRepository()
 
-    const mainGuild = this.guilds.cache.get(this.config.guilds.main)
+    const mainGuild = this.customGuilds.main()
     const main = mainGuild.id === message.guild?.id
     if (main && message.type === "USER_PREMIUM_GUILD_SUBSCRIPTION_TIER_3") {
         await Guild.setVanityCode(
