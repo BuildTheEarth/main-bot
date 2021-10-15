@@ -18,6 +18,9 @@ export default class Snippet extends BaseEntity {
     @Column({ length: 2000 })
     body: string
 
+    @Column()
+    type: "snippet" | "rule" | "team"
+
     @Column("simple-array")
     aliases: string[]
 

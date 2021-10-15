@@ -14,7 +14,7 @@ export default async function (this: Client, message: Discord.Message): Promise<
     if (message.author.bot) return
     const Snippets = Snippet.getRepository()
 
-    const mainGuild = this.guilds.cache.get(this.config.guilds.main)
+    const mainGuild = this.customGuilds.main()
     const main = mainGuild.id === message.guild?.id
     if (main && message.type === "USER_PREMIUM_GUILD_SUBSCRIPTION_TIER_3") {
         await Guild.setVanityCode(
@@ -45,15 +45,19 @@ export default async function (this: Client, message: Discord.Message): Promise<
             const find = (query: WhereExpressionBuilder) =>
                 query
                     .where("snippet.name = :name", { name: args.command })
+                    .andWhere("snippet.type = 'snippet'")
                     .orWhere("INSTR(snippet.aliases, :name)")
+
             const snippet = await Snippets.createQueryBuilder("snippet")
                 .where("snippet.language = :language", { language })
                 .andWhere(new Brackets(find))
+                .andWhere("snippet.type = 'snippet'")
                 .getOne()
 
             if (!snippet) {
                 const unlocalizedSnippet = await Snippets.createQueryBuilder("snippet")
                     .where(new Brackets(find))
+                    .andWhere("snippet.type = 'snippet'")
                     .getOne()
                 if (unlocalizedSnippet)
                     this.channel.sendError(
