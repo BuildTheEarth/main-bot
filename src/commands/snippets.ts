@@ -19,7 +19,7 @@ export default new Command({
             name: "list",
             description: "List all snippets.",
             permission: Roles.ANY,
-            usage: "['date' ]"
+            usage: "['date']"
         },
         {
             name: "add",
@@ -96,22 +96,33 @@ export default new Command({
                     return 0
                 })
             }
-
-            let list = ""
+            
+            let snippetEmbeds = [{
+                color: hexToRGB("#1EAD2F"),
+                author: { name: "Snippet list" },
+                description: ""
+            }]
+            let currentEmbed = 0
             for (const [name, { aliases, languages, type }] of sortedSnippets) {
                 if (type == currType) {
                     languages.sort()
                     const triggers = [name, ...aliases].join(" / ")
                     const onlyEnglish = languages.length === 1 && languages[0] === "en"
                     const languageList = onlyEnglish ? "" : ` (${languages.join(", ")})`
-                    list += `• \u200B \u200B ${triggers}${languageList}\n`
+                    if ([...(snippetEmbeds[currentEmbed].description + `• \u200B \u200B ${triggers}${languageList}\n`).split("_").join("\\_")].length > 4096) {
+                        currentEmbed += 1
+                        snippetEmbeds.push({
+                            color: hexToRGB("#1EAD2F"),
+                            author: { name: `Snippet list pt. ${currentEmbed + 1}` },
+                            description: ""
+                        })
+                    }
+                    snippetEmbeds[currentEmbed].description += `• \u200B \u200B ${triggers}${languageList}\n`.split("_").join("\\_")
                 }
             }
+             
 
-            return client.channel.sendSuccess(message.channel, {
-                author: { name: "Snippet list" },
-                description: list
-            })
+            return snippetEmbeds.forEach((element) => message.channel.send({embeds: [element]}))
         } else if (subcommand === "aliases") {
             if (rules) {
                 return client.channel.sendError(
