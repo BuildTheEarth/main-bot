@@ -25,14 +25,7 @@ export default new Command({
                  .orWhere(
                      new Brackets(qb => {
                          qb.where(
-                             "INSTR(snippet.aliases, CONCAT(:name, ','))"
-                         ).andWhere("snippet.type = 'team'")
-                     })
-                 )
-                 .orWhere(
-                     new Brackets(qb => {
-                         qb.where(
-                             "INSTR(snippet.aliases, CONCAT(',', :name))"
+                             "FIND_IN_SET(:name, snippet.aliases)"
                          ).andWhere("snippet.type = 'team'")
                      })
                  )
@@ -42,7 +35,7 @@ export default new Command({
             .getOne()
 
         if (!snippet) {
-            return client.channel.sendError(message.channel, `This team does not exist .`)
+            return client.channel.sendError(message.channel, `This team does not exist.`)
         } else {
             return message.channel
                 .send({ content: snippet.body, allowedMentions: { parse: [] } })
