@@ -3,7 +3,7 @@ import Args from "../struct/Args"
 import Command from "../struct/Command"
 import Roles from "../util/roles"
 import Discord from "discord.js"
-import { Brackets, WhereExpression } from "typeorm"
+import { Brackets, WhereExpression, WhereExpressionBuilder } from "typeorm"
 import Snippet from "../entities/Snippet"
 
 export default new Command({
@@ -18,12 +18,24 @@ export default new Command({
             return client.channel.sendError(message.channel, "Please give a team name")
         const Snippets = Snippet.getRepository()
         const language = "en"
-        const find = (query: WhereExpression) =>
-            query
-                .where("snippet.name = :name", { name: input })
-                .andWhere("snippet.type = 'team'")
-                .orWhere("INSTR(snippet.aliases, CONCAT(:name, ','))")
-                .orWhere("INSTR(snippet.aliases, CONCAT(',', :name))")
+        const find = (query: WhereExpressionBuilder) =>
+             query
+                 .where("snippet.name = :name", { name: input })
+                 .andWhere("snippet.type = 'team'")
+                 .orWhere(
+                     new Brackets(qb => {
+                         qb.where(
+                             "INSTR(snippet.aliases, CONCAT(:name, ','))"
+                         ).andWhere("snippet.type = 'team'")
+                     })
+                 )
+                 .orWhere(
+                     new Brackets(qb => {
+                         qb.where(
+                             "INSTR(snippet.aliases, CONCAT(',', :name))"
+                         ).andWhere("snippet.type = 'team'")
+                     })
+                 )
         const snippet = await Snippets.createQueryBuilder("snippet")
             .where("snippet.language = :language", { language })
             .andWhere(new Brackets(find))
