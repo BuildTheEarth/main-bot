@@ -49,14 +49,7 @@ export default async function (this: Client, message: Discord.Message): Promise<
                     .orWhere(
                         new Brackets(qb => {
                             qb.where(
-                                "INSTR(snippet.aliases, CONCAT(:name, ','))"
-                            ).andWhere("snippet.type = 'snippet'")
-                        })
-                    )
-                    .orWhere(
-                        new Brackets(qb => {
-                            qb.where(
-                                "INSTR(snippet.aliases, CONCAT(',', :name))"
+                                "FIND_IN_SET(:name, snippet.aliases)"
                             ).andWhere("snippet.type = 'snippet'")
                         })
                     )
