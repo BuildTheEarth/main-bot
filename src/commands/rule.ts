@@ -44,14 +44,7 @@ export default new Command({
                     .orWhere(
                         new Brackets(qb => {
                             qb.where(
-                                "INSTR(snippet.aliases, CONCAT(:name, ','))"
-                            ).andWhere("snippet.type = 'rule'")
-                        })
-                    )
-                    .orWhere(
-                        new Brackets(qb => {
-                            qb.where(
-                                "INSTR(snippet.aliases, CONCAT(',', :name))"
+                                "FIND_IN_SET(:name, snippet.aliases)"
                             ).andWhere("snippet.type = 'rule'")
                         })
                     )
