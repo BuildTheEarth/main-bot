@@ -46,7 +46,20 @@ export default async function (this: Client, message: Discord.Message): Promise<
                 query
                     .where("snippet.name = :name", { name: args.command })
                     .andWhere("snippet.type = 'snippet'")
-                    .orWhere("INSTR(snippet.aliases, :name)")
+                    .orWhere(
+                        new Brackets(qb => {
+                            qb.where(
+                                "INSTR(snippet.aliases, CONCAT(:name, ','))"
+                            ).andWhere("snippet.type = 'snippet'")
+                        })
+                    )
+                    .orWhere(
+                        new Brackets(qb => {
+                            qb.where(
+                                "INSTR(snippet.aliases, CONCAT(',', :name))"
+                            ).andWhere("snippet.type = 'snippet'")
+                        })
+                    )
 
             const snippet = await Snippets.createQueryBuilder("snippet")
                 .where("snippet.language = :language", { language })
