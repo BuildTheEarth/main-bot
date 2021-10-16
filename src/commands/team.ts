@@ -23,6 +23,7 @@ export default new Command({
                 .where("snippet.name = :name", { name: input })
                 .andWhere("snippet.type = 'team'")
                 .orWhere("INSTR(snippet.aliases, CONCAT(:name, ','))")
+                .orWhere("INSTR(snippet.aliases, CONCAT(',', :name))")
         const snippet = await Snippets.createQueryBuilder("snippet")
             .where("snippet.language = :language", { language })
             .andWhere(new Brackets(find))
