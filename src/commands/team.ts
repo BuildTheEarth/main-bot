@@ -35,7 +35,7 @@ export default new Command({
             .getOne()
 
         if (!snippet) {
-            return client.channel.sendError(message.channel, `This team does not exist, try searching on build team interactive map or the website`)
+            return client.channel.sendError(message.channel, `This team does not exist, try searching on build team interactive map or the website (=map)`)
         } else {
             return message.channel
                 .send({ content: snippet.body, allowedMentions: { parse: [] } })
