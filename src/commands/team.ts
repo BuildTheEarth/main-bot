@@ -3,7 +3,7 @@ import Args from "../struct/Args"
 import Command from "../struct/Command"
 import Roles from "../util/roles"
 import Discord from "discord.js"
-import { Brackets, WhereExpression, WhereExpressionBuilder } from "typeorm"
+import { Brackets, WhereExpressionBuilder } from "typeorm"
 import Snippet from "../entities/Snippet"
 
 export default new Command({
