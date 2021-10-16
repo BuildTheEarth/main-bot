@@ -91,8 +91,10 @@ export default new Command({
 
             if (sortMode.toLowerCase() != "date") {
                 sortedSnippets.sort((a, b) => {
-                    if (a[0] < b[0]) return -1
-                    if (a[0] > b[0]) return 1
+                    let [sort1, sort2] : any = [a[0], b[0]]
+                    if (currType === "rule") [sort1, sort2] = [Number(a[0]), Number(b[0])]
+                    if (sort1 < sort2) return -1
+                    if (sort1 > sort2) return 1
                     return 0
                 })
             }
