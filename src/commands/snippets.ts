@@ -16,40 +16,40 @@ export default new Command({
     usage: "",
     subcommands: [
         {
-            name: "list",
+            name: "['rules'| 'team'] list",
             description: "List all snippets.",
             permission: Roles.ANY,
             usage: "['date']"
         },
         {
-            name: "add",
+            name: "['rules'| 'team'] add",
             description: "Add a snippet.",
             permission: [Roles.SUPPORT, Roles.MANAGER, Roles.PR_TRANSLATION_TEAM],
-            usage: "['rules'| 'team'] <name> <language> <body>"
+            usage: "<name> <language> <body>"
         },
         {
-            name: "edit",
+            name: "['rules'| 'team'] edit",
             description: "Edit a snippet.",
             permission: [Roles.SUPPORT, Roles.MANAGER, Roles.PR_TRANSLATION_TEAM],
-            usage: "['rules' | 'team'] <name> <language> <body>"
+            usage: "<name> <language> <body>"
         },
         {
-            name: "delete",
+            name: "['rules'| 'team'] delete",
             description: "Delete a snippet.",
             permission: [Roles.SUPPORT, Roles.MANAGER],
-            usage: "['rules' | 'team'] <name> <language>"
+            usage: "<name> <language>"
         },
         {
-            name: "source",
+            name: "['rules'| 'team'] source",
             description: "Get the source response of a specific snippet.",
             permission: Roles.ANY,
-            usage: "['rules' | 'team'] <name> <language>"
+            usage: "<name> <language>"
         },
         {
-            name: "aliases",
-            description: "Add aliases to a snippet",
+            name: "['rules'| 'team'] aliases",
+            description: " Add aliases to a snippet",
             permission: [Roles.SUPPORT, Roles.MANAGER],
-            usage: "['rules' | 'team'] <list | add | delete> <name> <language> [alias]"
+            usage: "<list | add | delete> <name> <language> [alias]"
         }
     ],
     async run(this: Command, client: Client, message: Discord.Message, args: Args) {
