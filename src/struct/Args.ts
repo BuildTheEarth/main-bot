@@ -158,7 +158,7 @@ export default class Args {
         if (attachment) return attachment.url
 
         const url = this.consumeIf(/https?:\/\/(.+)?\.(jpe?g|png|gif)/i)
-        if (url) return url
+        if (url) return url.replace(/.(jpe?g|png|gif)/i, url.match(/.(jpe?g|png|gif)/i)[0].toLowerCase())
 
         return null
     }
