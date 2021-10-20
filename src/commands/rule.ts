@@ -3,7 +3,7 @@ import Args from "../struct/Args"
 import Command from "../struct/Command"
 import Roles from "../util/roles"
 import quote from "../util/quote"
-import { Brackets, WhereExpression } from "typeorm"
+import { Brackets, WhereExpressionBuilder } from "typeorm"
 import languages from "../util/patchedISO6391"
 import Snippet from "../entities/Snippet"
 import Discord from "discord.js"
@@ -37,11 +37,17 @@ export default new Command({
                     `Please choose \`zh-s\` (简体中文) or \`zh-t\` (繁體中文)!`
                 )
 
-            const find = (query: WhereExpression) =>
+            const find = (query: WhereExpressionBuilder) =>
                 query
                     .where("snippet.name = :name", { name: number })
                     .andWhere("snippet.type = 'rule'")
-                    .orWhere("INSTR(snippet.aliases, :name)")
+                    .orWhere(
+                        new Brackets(qb => {
+                            qb.where(
+                                "FIND_IN_SET(:name, snippet.aliases)"
+                            ).andWhere("snippet.type = 'rule'")
+                        })
+                    )
 
             const snippet = await Snippets.createQueryBuilder("snippet")
                 .where("snippet.language = :language", { language })

@@ -46,7 +46,13 @@ export default async function (this: Client, message: Discord.Message): Promise<
                 query
                     .where("snippet.name = :name", { name: args.command })
                     .andWhere("snippet.type = 'snippet'")
-                    .orWhere("INSTR(snippet.aliases, :name)")
+                    .orWhere(
+                        new Brackets(qb => {
+                            qb.where(
+                                "FIND_IN_SET(:name, snippet.aliases)"
+                            ).andWhere("snippet.type = 'snippet'")
+                        })
+                    )
 
             const snippet = await Snippets.createQueryBuilder("snippet")
                 .where("snippet.language = :language", { language })
