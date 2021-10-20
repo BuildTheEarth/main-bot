@@ -153,12 +153,12 @@ export default class Args {
 
     consumeImage(): string {
         const check = (att: Discord.MessageAttachment) =>
-            !!att.name.match(/\.(jpe?g|png|gif)$/)
+            !!att.name.match(/\.(jpe?g|png|gif)$/i)
         const attachment = this.consumeAttachment(check)
         if (attachment) return attachment.url
 
-        const url = this.consumeIf(/https?:\/\/(.+)?\.(jpe?g|png|gif)/)
-        if (url) return url
+        const url = this.consumeIf(/https?:\/\/(.+)?\.(jpe?g|png|gif)/i)
+        if (url) return url.replace(/.(jpe?g|png|gif)/i, url.match(/.(jpe?g|png|gif)/i)[0].toLowerCase())
 
         return null
     }
