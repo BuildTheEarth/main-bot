@@ -135,6 +135,8 @@ export default new Command({
 
             // eslint-disable-next-line prefer-const
             let [action, name, language] = args.consume(3)
+            const editPermissions = [Roles.SUPPORT, Roles.MANAGER, Roles.PR_TRANSLATION_TEAM]
+            if (!GuildMember.hasRole(message.member, editPermissions) && !(action === "list")) return
             const languageName = languages.getName(language)
             if (!name)
                 return client.channel.sendError(
@@ -193,7 +195,6 @@ export default new Command({
                 )
             }
         }
-
         const editPermissions = [Roles.SUPPORT, Roles.MANAGER, Roles.PR_TRANSLATION_TEAM]
         const deletePermissions = [Roles.SUPPORT, Roles.MANAGER]
         if (!GuildMember.hasRole(message.member, editPermissions)) return
