@@ -27,6 +27,11 @@ export type LoggingConfig = {
     snippetLogs: string
 }
 
+export type ImagesConfig = {
+    bindPort: number
+    bindAddress: string
+}
+
 export default class ConfigManager {
     client: Client
     prefix: string
@@ -37,6 +42,7 @@ export default class ConfigManager {
     suggestions: GuildCategories & { discussion: GuildCategories }
     suggestionOffset: GuildCategories<number>
     reactionRoles: ReactionRole
+    images: ImagesConfig
     emojis: EmojiList
     colors: ColorPalette & { suggestions: SuggestionCategories }
     assets: AssetList
