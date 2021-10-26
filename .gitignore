@@ -10,3 +10,6 @@ config.yml
 
 # Logs
 logs/
+
+#Webserver stuff
+images/
