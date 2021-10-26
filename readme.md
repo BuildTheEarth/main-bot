@@ -103,6 +103,9 @@ Rename the `_config.yml` file to `config.yml` and fill in all of the fields:
     -   **\<channel ID>**
         -   **\<message ID>**
             -   **\<emoji name>**: A role ID (enclosed in quotes).
+-   **images**: Image webserver port and address.
+    -   **bindPort**: Port to bind to
+    -   **bindAddress**: Address that points to the machine the bot is on
 -   **emojis**: Emojis to use for certain occasions. They can be Unicode emojis or custom emoji IDs.
     -   **upvote**
     -   **downvote**
