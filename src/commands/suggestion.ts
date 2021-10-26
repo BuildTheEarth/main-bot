@@ -156,22 +156,75 @@ export default new Command({
 
             const pages = Math.ceil(total / PER_PAGE)
             embed.footer.text = `${total} results total, page 1/${pages}`
-            const resultsMessage = await message.channel.send({ embeds: [embed] })
+            let row = new Discord.MessageActionRow().addComponents(
+                new Discord.MessageButton()
+                    .setCustomId(`${message.id}.forwards`)
+                    .setLabel(client.config.emojis.right.toString())
+                    .setStyle("SUCCESS")
+            )
+            const resultsMessage = await message.channel.send({
+                embeds: [embed],
+                components: [row]
+            })
 
-            const { emojis } = client.config
-            await resultsMessage.react(emojis.left)
-            await resultsMessage.react(emojis.right)
-
-            const filter = (reaction: Discord.MessageReaction) =>
-                [emojis.left, emojis.right].includes(reaction.emoji.name)
-            const reactions = resultsMessage.createReactionCollector({ filter: filter })
+            const filter = (interaction: Discord.Interaction) =>
+                interaction.isButton() &&
+                [`${message.id}.back`, `${message.id}.forwards`].includes(
+                    interaction.customId
+                )
+            const buttonpress = resultsMessage.createMessageComponentCollector({
+                filter: filter,
+                componentType: "BUTTON"
+            })
 
             let old = 1
             let page = 1
-            reactions.on("collect", async (reaction, user) => {
-                if (reaction.emoji.name === emojis.left && page > 1) page--
-                if (reaction.emoji.name === emojis.right && page < pages) page++
-                await reaction.users.remove(user)
+            buttonpress.on("collect", async interaction => {
+                if (interaction.user.id !== message.author.id)
+                    return interaction.reply({
+                        content: `Did you summon that menu?, I think not!`,
+                        ephemeral: true
+                    })
+                if (
+                    (interaction as Discord.ButtonInteraction).customId ===
+                    `${message.id}.forwards`
+                )
+                    page += 1
+                if (
+                    (interaction as Discord.ButtonInteraction).customId ===
+                    `${message.id}.back`
+                )
+                    page -= 1
+                if (page === 1) {
+                    row = new Discord.MessageActionRow().addComponents(
+                        new Discord.MessageButton()
+                            .setCustomId(`${message.id}.forwards`)
+                            .setLabel(client.config.emojis.right.toString())
+                            .setStyle("SUCCESS")
+                    )
+                } else if (page === pages) {
+                    row = new Discord.MessageActionRow().addComponents(
+                        new Discord.MessageButton()
+                            .setCustomId(`${message.id}.back`)
+                            .setLabel(client.config.emojis.left.toString())
+                            .setStyle("SUCCESS")
+                    )
+                } else {
+                    row = new Discord.MessageActionRow()
+
+                        .addComponents(
+                            new Discord.MessageButton()
+                                .setCustomId(`${message.id}.back`)
+                                .setLabel(client.config.emojis.left.toString())
+                                .setStyle("SUCCESS")
+                        )
+                        .addComponents(
+                            new Discord.MessageButton()
+                                .setCustomId(`${message.id}.forwards`)
+                                .setLabel(client.config.emojis.right.toString())
+                                .setStyle("SUCCESS")
+                        )
+                }
 
                 if (old === page) return
                 old = page
@@ -179,6 +232,9 @@ export default new Command({
                 const results = await selection.skip((page - 1) * PER_PAGE).getMany()
                 await formatResults(results, embed)
                 embed.footer.text = `${total} results total, page ${page}/${pages}`
+                await (interaction as Discord.ButtonInteraction).update({
+                    components: [row]
+                })
                 await resultsMessage.edit({ embeds: [embed] })
             })
 
