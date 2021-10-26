@@ -9,7 +9,7 @@ import hexToRGB from "../util/hexToRGB"
 export default new Command({
     name: "block",
     aliases: ["blocks", "material", "mcblock"],
-    description: "Ping pong!",
+    description: "Find a minecraft block! (currently only 1.12.2)",
     permission: Roles.ANY,
     usage: "<block1,block2>",
     subcommands: [
