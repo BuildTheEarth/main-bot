@@ -54,7 +54,6 @@ export default new Command({
             "base64"
         )
         let file = await client.webserver.addImage(buffIMG, `${message.id}/image0.png`)
-        console.log(file)
         if (results.length === 0)
             client.channel.sendError(message.channel, "No results were found")
         else if (results.length === 1)
