@@ -9,6 +9,7 @@ import Snippet from "../entities/Snippet"
 import hexToRGB from "../util/hexToRGB"
 import GuildManager from "./discord/GuildManager"
 import Channel from "./discord/Channel"
+import WebserverHandler from "./client/WebserverHandler"
 
 export default class Client extends Discord.Client {
     guilds: Discord.GuildManager
@@ -20,6 +21,7 @@ export default class Client extends Discord.Client {
     commands = new CommandList()
     aliases = new Discord.Collection()
     channel = new Channel(this)
+    webserver = new WebserverHandler(this)
 
     async initDatabase(): Promise<void> {
         const db = this.config.database
