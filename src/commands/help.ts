@@ -62,7 +62,9 @@ export default new Command({
 
                 const formattedSubcommands = allowedSubcommands.map(sub => {
                     const usage = sub.usage ? ` ${sub.usage}` : ""
-                    return `• **${sub.name.replace("['rules'| 'team'] ", "")}:** ${sub.description}\n  \`${client.config.prefix}${command.name} ${sub.name}${usage}\``
+                    return `• **${sub.name.replace("['rules'| 'team'] ", "")}:** ${
+                        sub.description
+                    }\n  \`${client.config.prefix}${command.name} ${sub.name}${usage}\``
                 })
 
                 embed.fields.push({

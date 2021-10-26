@@ -19,23 +19,26 @@ export default new Command({
         const Snippets = Snippet.getRepository()
         const language = "en"
         const find = (query: WhereExpressionBuilder) =>
-             query
-                 .where("snippet.name = :name", { name: input })
-                 .andWhere("snippet.type = 'team'")
-                 .orWhere(
-                     new Brackets(qb => {
-                         qb.where(
-                             "FIND_IN_SET(:name, snippet.aliases)"
-                         ).andWhere("snippet.type = 'team'")
-                     })
-                 )
+            query
+                .where("snippet.name = :name", { name: input })
+                .andWhere("snippet.type = 'team'")
+                .orWhere(
+                    new Brackets(qb => {
+                        qb.where("FIND_IN_SET(:name, snippet.aliases)").andWhere(
+                            "snippet.type = 'team'"
+                        )
+                    })
+                )
         const snippet = await Snippets.createQueryBuilder("snippet")
             .where("snippet.language = :language", { language })
             .andWhere(new Brackets(find))
             .getOne()
 
         if (!snippet) {
-            return client.channel.sendError(message.channel, `This team does not exist, try searching on build team interactive map or the website (=map)`)
+            return client.channel.sendError(
+                message.channel,
+                `This team does not exist, try searching on build team interactive map or the website (=map)`
+            )
         } else {
             return message.channel
                 .send({ content: snippet.body, allowedMentions: { parse: [] } })

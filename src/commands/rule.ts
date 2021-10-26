@@ -43,9 +43,9 @@ export default new Command({
                     .andWhere("snippet.type = 'rule'")
                     .orWhere(
                         new Brackets(qb => {
-                            qb.where(
-                                "FIND_IN_SET(:name, snippet.aliases)"
-                            ).andWhere("snippet.type = 'rule'")
+                            qb.where("FIND_IN_SET(:name, snippet.aliases)").andWhere(
+                                "snippet.type = 'rule'"
+                            )
                         })
                     )
 
@@ -79,10 +79,7 @@ export default new Command({
                     .catch(() => null)
             }
         } else {
-            return client.channel.sendError(
-                message.channel,
-                `Valid input please!`
-            )
+            return client.channel.sendError(message.channel, `Valid input please!`)
         }
     }
 })

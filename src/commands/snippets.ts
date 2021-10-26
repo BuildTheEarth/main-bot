@@ -91,19 +91,22 @@ export default new Command({
 
             if (sortMode.toLowerCase() != "date") {
                 sortedSnippets.sort((a, b) => {
-                    let [sort1, sort2] : any = [a[0], b[0]]
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    let [sort1, sort2]: any = [a[0], b[0]]
                     if (currType === "rule") [sort1, sort2] = [Number(a[0]), Number(b[0])]
                     if (sort1 < sort2) return -1
                     if (sort1 > sort2) return 1
                     return 0
                 })
             }
-            
-            let snippetEmbeds = [{
-                color: hexToRGB("#1EAD2F"),
-                author: { name: "Snippet list" },
-                description: ""
-            }]
+
+            const snippetEmbeds = [
+                {
+                    color: hexToRGB("#1EAD2F"),
+                    author: { name: "Snippet list" },
+                    description: ""
+                }
+            ]
             let currentEmbed = 0
             for (const [name, { aliases, languages, type }] of sortedSnippets) {
                 if (type == currType) {
@@ -111,7 +114,16 @@ export default new Command({
                     const triggers = [name, ...aliases].join(" / ")
                     const onlyEnglish = languages.length === 1 && languages[0] === "en"
                     const languageList = onlyEnglish ? "" : ` (${languages.join(", ")})`
-                    if ([...(snippetEmbeds[currentEmbed].description + `• \u200B \u200B ${triggers}${languageList}\n`).split("_").join("\\_")].length > 4096) {
+                    if (
+                        [
+                            ...(
+                                snippetEmbeds[currentEmbed].description +
+                                `• \u200B \u200B ${triggers}${languageList}\n`
+                            )
+                                .split("_")
+                                .join("\\_")
+                        ].length > 4096
+                    ) {
                         currentEmbed += 1
                         snippetEmbeds.push({
                             color: hexToRGB("#1EAD2F"),
@@ -119,12 +131,16 @@ export default new Command({
                             description: ""
                         })
                     }
-                    snippetEmbeds[currentEmbed].description += `• \u200B \u200B ${triggers}${languageList}\n`.split("_").join("\\_")
+                    snippetEmbeds[currentEmbed].description +=
+                        `• \u200B \u200B ${triggers}${languageList}\n`
+                            .split("_")
+                            .join("\\_")
                 }
             }
-             
 
-            return snippetEmbeds.forEach((element) => message.channel.send({embeds: [element]}))
+            return snippetEmbeds.forEach(element =>
+                message.channel.send({ embeds: [element] })
+            )
         } else if (subcommand === "aliases") {
             if (rules) {
                 return client.channel.sendError(
@@ -135,8 +151,16 @@ export default new Command({
 
             // eslint-disable-next-line prefer-const
             let [action, name, language] = args.consume(3)
-            const editPermissions = [Roles.SUPPORT, Roles.MANAGER, Roles.PR_TRANSLATION_TEAM]
-            if (!GuildMember.hasRole(message.member, editPermissions) && !(action === "list")) return
+            const editPermissions = [
+                Roles.SUPPORT,
+                Roles.MANAGER,
+                Roles.PR_TRANSLATION_TEAM
+            ]
+            if (
+                !GuildMember.hasRole(message.member, editPermissions) &&
+                !(action === "list")
+            )
+                return
             const languageName = languages.getName(language)
             if (!name)
                 return client.channel.sendError(
@@ -197,7 +221,7 @@ export default new Command({
         }
         const editPermissions = [Roles.SUPPORT, Roles.MANAGER, Roles.PR_TRANSLATION_TEAM]
         const deletePermissions = [Roles.SUPPORT, Roles.MANAGER]
-        if (!GuildMember.hasRole(message.member, editPermissions)) return
+        if (!GuildMember.hasRole(message.member, editPermissions) && subcommand !== "source") return
         const canDelete = GuildMember.hasRole(message.member, deletePermissions)
         if (subcommand === "delete" && !canDelete) return
 
@@ -297,7 +321,7 @@ export default new Command({
                         description:
                             `The **${existingSnippet.name}** ${currType} responds with ` +
                             `the following text in ${languageName}:` +
-                            `\n\`\`\`${existingSnippet.body}\`\`\``
+                            `\n\`\`\`\n${existingSnippet.body}\`\`\``
                     }
                 ]
             })
