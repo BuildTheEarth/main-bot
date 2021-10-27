@@ -51,7 +51,7 @@ export default new Command({
         let reason = args.consumeRest()
         if (!reason)
             return client.channel.sendError(message.channel, "You must provide a reason!")
-        let autoFill = type => reason = `Please change your ${type} and come back.`
+        const autoFill = type => reason = `Please change your ${type} and come back.`
 
         if (reason.toLowerCase() === "username") autoFill("username")
         if (reason.toLowerCase() === "pfp") autoFill("profile photo")
