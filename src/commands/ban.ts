@@ -55,10 +55,12 @@ export default new Command({
                 message.channel,
                 "You must provide a reason image!"
             )
-        const reason = args.consumeRest()
+        let reason = args.consumeRest()
         if (!reason)
             return client.channel.sendError(message.channel, "You must provide a reason!")
-
+        
+        if (reason == "phishing")
+            return reason = "You have been banned for phishing/scamming. It is very likely that your account was hacked.\n__Secure your Discord Account:__\n1. Change your Discord password\n2. Enable 2 factor authetification (2FA)\n\n__How to get unbanned in BTE:__\nSend an email to appeals@buildtheearth.net containing:\n> - your discord name + tag\n> - your Discord development tag\n> Please explicitly state that you have secured your account\n*The ban appeals are usually read on the weekends*"
         const ban = await TimedPunishment.findOne({ member: user.id, type: "ban" })
         if (ban)
             return client.channel.sendError(
