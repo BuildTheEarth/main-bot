@@ -56,7 +56,7 @@ export default new Command({
         const category = staff ? "staff" : "main"
         const discussionID = client.config.suggestions.discussion[category]
         const canManage = message.member
-            ? GuildMember.hasRole(message.member, [Roles.SUGGESTION_TEAM, Roles.MANAGER])
+            ? GuildMember.hasRole(message.member, [Roles.SUGGESTION_TEAM, Roles.MANAGER, Roles.MODERATOR])
             : false
 
         if (
