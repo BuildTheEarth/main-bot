@@ -56,7 +56,7 @@ export default new Command({
         const category = staff ? "staff" : "main"
         const discussionID = client.config.suggestions.discussion[category]
         const canManage = message.member
-            ? GuildMember.hasRole(message.member, [Roles.SUGGESTION_TEAM, Roles.MANAGER, Roles.MODERATOR])
+            ? GuildMember.hasRole(message.member, [Roles.SUGGESTION_TEAM, Roles.MANAGER])
             : false
 
         if (
@@ -316,7 +316,7 @@ export default new Command({
             await suggestionMessage.edit({ embeds: [embed] })
             return client.channel.sendSuccess(message.channel, "Edited the suggestion!")
         } else if (subcommand === "delete") {
-            if (suggestion.author !== message.author.id && !canManage)
+            if (suggestion.author !== message.author.id && !canManage && !GuildMember.hasRole(message.member, [Roles.MODERATOR]))
                 return client.channel.sendError(
                     message.channel,
                     "You can't delete other people's suggestions!"
