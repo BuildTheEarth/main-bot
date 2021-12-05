@@ -9,5 +9,6 @@ apps:
     script: dist/index.js
 deploy: 
   - fetch: all
-    post-deploy: "npm install && npm update && npm run build"
-    repo: "git@github.com:BuildTheEarth/main-bot.git"
+    production:
+      post-deploy: "npm install && npm update && npm run build"
+      repo: "git@github.com:BuildTheEarth/main-bot.git"
