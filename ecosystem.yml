@@ -8,7 +8,7 @@ apps:
     node_args: "--unhandled-rejections=strict"
     script: dist/index.js
 deploy: 
-  - fetch: all
     production:
+      fetch: all
       post-deploy: "npm install && npm update && npm run build"
       repo: "git@github.com:BuildTheEarth/main-bot.git"
