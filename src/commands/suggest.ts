@@ -10,7 +10,7 @@ export default new Command({
     name: "suggest",
     aliases: [],
     description: "Make a suggestion.",
-    permission: Roles.ANY,
+    permission: [Roles.STAFF, Roles.SUGGESTIONS],
     usage: "['anon'] <title> | <body> | [team/s]",
     dms: true,
     async run(this: Command, client: Client, message: Discord.Message, args: Args) {
