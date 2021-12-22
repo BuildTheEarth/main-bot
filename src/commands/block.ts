@@ -5,32 +5,48 @@ import Discord from "discord.js"
 import Args from "../struct/Args"
 import mcBlockInfo from "minecraft-block-info"
 import hexToRGB from "../util/hexToRGB"
+import CommandMessage from "../struct/CommandMessage"
 
 export default new Command({
     name: "block",
     aliases: ["blocks", "material", "mcblock"],
     description: "Find a minecraft block! (currently only 1.12.2)",
     permission: Roles.ANY,
-    usage: "<block1,block2>",
+    basesubcommand: "block",
+    args: [
+        {
+            name: "blocks",
+            description: "blocks to search seperated by ,",
+            required: true,
+            optionType: "STRING"
+        }
+    ],
     subcommands: [
         {
             name: "search",
             description: "Search for blocks based on query.",
-            usage: "<query>"
+            args: [
+                {
+                    name: "query",
+                    description: "Query to search by.",
+                    required: true,
+                    optionType: "STRING"
+                }
+            ]
         }
     ],
-    async run(this: Command, client: Client, message: Discord.Message, args: Args) {
-        let blocks = args.consume()
-        let results
-        if (!blocks)
-            return client.channel.sendError(message.channel, "No blocks were found")
-        if (blocks === "search") {
-            const query = args.consumeRest()
+    async run(this: Command, client: Client, message: CommandMessage, args: Args) {
+        const subcommand = args.consumeSubcommandIf(["block", "search"])
+        let results //TODO: Fix this huge mess
+        if (subcommand === "search") {
+            const query = args.consumeRest(["query"])
             if (!query)
-                return client.channel.sendError(message.channel, "No query was specified")
+                return client.response.sendError(message, "No query was specified")
             results = await mcBlockInfo.search(query)
-        } else {
-            blocks += " " + args.consumeRest()
+        }
+        if (subcommand === "absolute" || !subcommand) {
+            const blocks = args.consumeRest(["blocks"])
+            if (!blocks) return client.response.sendError(message, "No blocks were found")
             const blocksInput = blocks.trim().split(",")
             const newBlocks = []
             blocksInput.forEach(element => newBlocks.push(element.trim()))
@@ -39,8 +55,8 @@ export default new Command({
             )
         }
         if (results.length === 0 || !results.length) {
-            return client.channel.sendError(
-                message.channel,
+            return client.response.sendError(
+                message,
                 "Your search did not match any results\nSuggestions:\n• Make sure all words are spelled correctly.\n• Try different keywords.\n• Try more general keywords."
             )
         }
@@ -55,9 +71,9 @@ export default new Command({
         )
         let file = await client.webserver.addImage(buffIMG, `${message.id}/image0.png`)
         if (results.length === 0)
-            client.channel.sendError(message.channel, "No results were found")
+            client.response.sendError(message, "No results were found")
         else if (results.length === 1)
-            message.channel.send({
+            message.send({
                 embeds: [
                     new Discord.MessageEmbed()
                         .setTitle("Results")
@@ -77,24 +93,21 @@ export default new Command({
                 .setTitle(`Page ${pageNum + 1}`)
                 .setImage(file)
                 .setFooter(`Page ${pageNum + 1}/${results.length}`)
-            const resultsMessage = await message.channel.send({
+            await message.send({
                 embeds: [page],
                 components: [row]
             })
-            const filter = (interaction: Discord.Interaction) => {
-                return (
-                    interaction.isButton() &&
-                    [`${message.id}.back`, `${message.id}.forwards`].includes(
-                        interaction.customId
+            client.on("interactionCreate", async interaction => {
+                if (
+                    !(
+                        interaction.isButton() &&
+                        [`${message.id}.back`, `${message.id}.forwards`].includes(
+                            interaction.customId
+                        )
                     )
                 )
-            }
-            const buttons = resultsMessage.createMessageComponentCollector({
-                filter: filter,
-                componentType: "BUTTON"
-            })
-            buttons.on("collect", async interaction => {
-                if (interaction.user.id !== message.author.id)
+                    return
+                if (interaction.user.id !== message.member.id)
                     return interaction.reply({
                         content: `Did you summon that menu?, I think not!`,
                         ephemeral: true
@@ -173,10 +186,13 @@ export default new Command({
                 await (interaction as Discord.ButtonInteraction).update({
                     components: [row]
                 })
-
-                await resultsMessage.edit({
-                    embeds: [page]
-                })
+                if (interaction.message instanceof Discord.Message) {
+                    try {
+                        await interaction.message.edit({ embeds: [page] })
+                    } catch {
+                        interaction.editReply({ embeds: [page] })
+                    }
+                } else interaction.editReply({ embeds: [page] })
             })
         }
     }

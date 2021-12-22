@@ -98,9 +98,9 @@ export default class ActionLog extends BaseEntity {
         return formatted
     }
 
-    displayEmbed(client: Client): Discord.MessageEmbedOptions {
+    async displayEmbed(client: Client): Promise<Discord.MessageEmbedOptions> {
         const messageLink = `https://discord.com/channels/${
-            client.customGuilds.main().id
+            (await client.customGuilds.main()).id
         }/${this.channel}/${this.message}`
         const length =
             this.length !== null ? formatPunishmentTime(this.length, true) : "\u200B"

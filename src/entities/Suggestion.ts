@@ -85,8 +85,11 @@ export default class Suggestion extends BaseEntity {
     static async findNumber(staff: boolean, client: Client): Promise<number> {
         const field = staff ? "staff" : "main"
         const existing = await this.count({
-            where: { staff, extends: null },
-            withDeleted: true
+            where: {
+                staff: staff,
+                extends: null
+            },
+            options: { withDeleted: true }
         })
 
         return existing + client.config.suggestionOffset[field]

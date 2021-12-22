@@ -42,16 +42,16 @@ export default class TimedPunishment extends BaseEntity {
         if (!user) return
 
         if (this.type === "mute") {
-            const member: Discord.GuildMember = await client.customGuilds
-                .main()
-                .members.fetch({ user, cache: true })
+            const member: Discord.GuildMember = await (
+                await client.customGuilds.main()
+            ).members
+                .fetch({ user, cache: true })
                 .catch(noop)
             if (!member) return
             await GuildMember.unmute(member, "End of punishment").catch(noop)
         } else if (this.type === "ban") {
-            await client.customGuilds
-                .main()
-                .members.unban(user, "End of punishment")
+            await (await client.customGuilds.main()).members
+                .unban(user, "End of punishment")
                 .catch(noop)
         }
 
