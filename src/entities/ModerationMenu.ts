@@ -5,8 +5,8 @@ import SnowflakePrimaryColumn from "./decorators/SnowflakePrimaryColumn"
 
 @Entity({ name: "moderation_menus" })
 export default class ModerationMenu extends BaseEntity {
-    public static async  createMenu(message: Discord.Message): Promise<ModerationMenu> {
-        const modMenu =  new ModerationMenu()
+    public static async createMenu(message: Discord.Message): Promise<ModerationMenu> {
+        const modMenu = new ModerationMenu()
         modMenu.message = message.id
         modMenu.member = message.member.id
         // eslint-disable-next-line no-useless-escape
@@ -23,7 +23,7 @@ export default class ModerationMenu extends BaseEntity {
     @Column({ length: 2000 })
     message_text: string
 
-    @Column({type: "simple-array"})
+    @Column({ type: "simple-array" })
     punishment_types: ("BAN" | "WARN" | "MUTE" | "KICK")[]
 
     @Column({ length: 1024 })

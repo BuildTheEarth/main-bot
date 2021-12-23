@@ -114,7 +114,9 @@ export default new Command({
         await log.save()
 
         await log.notifyMember(client)
-        await message.guild.members.ban(user, { reason })
+        await message.guild.members.ban(user, {
+            reason: reason.length <= 512 ? reason : (await log.contextUrl(client)).href
+        })
         const formattedLength = formatPunishmentTime(length)
         await client.response.sendSuccess(
             message,

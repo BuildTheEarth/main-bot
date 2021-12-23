@@ -5,7 +5,7 @@ import milliseconds from "./transformers/milliseconds"
 
 export interface bannedTypes {
     [name: string]: {
-        punishment_type:  "BAN" | "WARN" | "MUTE" | "KICK"
+        punishment_type: "BAN" | "WARN" | "MUTE" | "KICK"
         reason: string
         duration: number
     }
@@ -13,7 +13,7 @@ export interface bannedTypes {
 
 export interface bannedWordsOptions {
     word: string
-    punishment_type:  "BAN" | "WARN" | "MUTE" | "KICK"
+    punishment_type: "BAN" | "WARN" | "MUTE" | "KICK"
     reason: string
     duration: number
     exception: boolean

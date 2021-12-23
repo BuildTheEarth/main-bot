@@ -11,10 +11,7 @@ const punishmentTypes = ["BAN", "MUTE", "KICK", "WARN"]
 
 export default new Command({
     name: "automod",
-    aliases: [
-        "blockword",
-        "blockedwords"
-    ],
+    aliases: ["blockword", "blockedwords"],
     description: "Manage banned words",
     subcommands: [
         {
@@ -146,7 +143,7 @@ export default new Command({
                         `Please specify a reason.`
                     )
                 const duration = args.consumeLength("duration")
-                if ((duration === null && (punishment !== "WARN" && punishment !== "KICK")))
+                if (duration === null && punishment !== "WARN" && punishment !== "KICK")
                     return await client.response.sendError(
                         message,
                         "You must provide a duration for Mutes and Bans!"

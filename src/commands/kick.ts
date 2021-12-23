@@ -78,7 +78,9 @@ export default new Command({
         await log.save()
 
         await log.notifyMember(client)
-        await member.kick(reason)
+        await member.kick(
+            reason.length <= 512 ? reason : (await log.contextUrl(client)).href
+        )
         await client.response.sendSuccess(message, `Kicked ${user} (**#${log.id}**).`)
         await client.log(log)
     }
