@@ -11,10 +11,6 @@ export default new Command({
     name: "suggest",
     aliases: [],
     description: "Make a suggestion.",
-<<<<<<< HEAD
-    permission: [Roles.STAFF, Roles.SUGGESTIONS],
-    usage: "['anon'] <title> | <body> | [team/s]",
-=======
     permission: Roles.ANY,
     seperator: " | ",
     args: [
@@ -50,7 +46,6 @@ export default new Command({
             optionType: "STRING"
         }
     ],
->>>>>>> 4aa751b6190aef6916450f0e598e84c13e73ce49
     dms: true,
     async run(this: Command, client: Client, message: CommandMessage, args: Args) {
         const anon = !!args.consumeIf(["anon", "anonymous"], "anon")

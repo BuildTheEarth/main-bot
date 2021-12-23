@@ -407,15 +407,9 @@ export default new Command({
             await suggestionMessage.edit({ embeds: [embed] })
             return client.response.sendSuccess(message, "Edited the suggestion!")
         } else if (subcommand === "delete") {
-<<<<<<< HEAD
-            if (suggestion.author !== message.author.id && !canManage && !GuildMember.hasRole(message.member, [Roles.MODERATOR]))
-                return client.channel.sendError(
-                    message.channel,
-=======
             if (suggestion.author !== message.member.id && !canManage)
                 return client.response.sendError(
                     message,
->>>>>>> 4aa751b6190aef6916450f0e598e84c13e73ce49
                     "You can't delete other people's suggestions!"
                 )
 
