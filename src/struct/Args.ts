@@ -181,7 +181,7 @@ export default class Args {
         }
         if (this.message.message instanceof Discord.CommandInteraction) {
             try {
-                const parsed: any = ms(this.message.message.options.getNumber(argName))
+                const parsed: any = ms(this.message.message.options.getString(argName))
                 return parsed === undefined ? null : parsed
             } catch {
                 return null
