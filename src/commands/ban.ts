@@ -82,6 +82,8 @@ export default new Command({
         if (!reason)
             return client.response.sendError(message, "You must provide a reason!")
 
+        message.continue()
+
         const ban = await TimedPunishment.findOne({ member: user.id, type: "ban" })
         if (ban) return client.response.sendError(message, "The user is already banned!")
 

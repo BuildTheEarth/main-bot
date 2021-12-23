@@ -41,6 +41,8 @@ export default new Command({
             )
         }
 
+        message.continue()
+
         let fullname: string
         if (command) {
             fullname = `\`${command.name}\` command`

@@ -101,6 +101,8 @@ export default new Command({
                     "That description is too long! (max. 512 characters)."
                 )
 
+            message.continue()
+
             const banner = new BannerImage()
             banner.url = image
             banner.location = location
@@ -119,6 +121,9 @@ export default new Command({
                     message,
                     "You must provide the banner ID."
                 )
+
+            message.continue()
+
             const banner = await BannerImage.findOne(Number(id))
             if (!banner)
                 return client.response.sendError(message, "That banner doesn't exist.")
@@ -129,6 +134,7 @@ export default new Command({
                 `Removed banner **#${id}** from the queue.`
             )
         } else if (subcommand === "queue") {
+            message.continue()
             const banners = await BannerImage.find()
             const formatted = banners.map(banner => banner.format()).join("\n")
             return client.response.sendSuccess(message, {
@@ -142,6 +148,9 @@ export default new Command({
                     message,
                     "You must provide the banner ID."
                 )
+
+            message.continue()
+
             const banner = await BannerImage.findOne(Number(id))
             if (!banner)
                 return client.response.sendError(message, "That banner doesn't exist.")
@@ -160,6 +169,7 @@ export default new Command({
                 ]
             })
         } else if (subcommand === "cycle") {
+            message.continue()
             BannerImage.cycle(client)
             await client.response.sendSuccess(message, "Forced a banner queue cycle.")
         }

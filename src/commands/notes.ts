@@ -102,6 +102,8 @@ export default new Command({
                 )
         }
 
+        message.continue()
+
         const note = await ModerationNote.findOne(user.id)
 
         if ((!subcommand && !body) || (subcommand === "check" && !body)) {

@@ -73,6 +73,8 @@ export default new Command({
         if (Number.isNaN(id))
             return client.response.sendError(message, "You must provide a case ID!")
 
+        message.continue()
+
         const log = await ActionLog.findOne(id, { options: { withDeleted: true } })
         if (!log)
             return client.response.sendError(message, `Couldn't find case **#${id}**.`)

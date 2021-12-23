@@ -232,6 +232,8 @@ export default new Command({
             (subcommand === "list" && !subcommandGroup) ||
             (!subcommand && !(subcommandGroup === "aliases"))
         ) {
+            message.continue()
+
             const sortMode = args.consume("date").toLowerCase()
             const snippets = await Snippet.find()
             const tidy: Record<
@@ -430,6 +432,8 @@ export default new Command({
             if (languageName && teams) language = "en"
             if (!languageName && teams) language = "en"
 
+            message.continue()
+
             const snippet = await Snippet.findOne({ name, language })
             if (!snippet)
                 return client.response.sendError(message, "That snippet doesn't exist!")
@@ -490,6 +494,8 @@ export default new Command({
             )
         if (languageName && teams) language = "en"
         if (!languageName && teams) language = "en"
+
+        message.continue()
 
         const existingSnippet = await Snippet.findOne({
             name: name,

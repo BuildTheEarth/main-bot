@@ -52,6 +52,8 @@ export default new Command({
         if (!member)
             return client.response.sendError(message, "The user is not in the server!")
 
+        message.continue()
+
         const log = new ActionLog()
         log.action = "warn"
         log.member = user.id

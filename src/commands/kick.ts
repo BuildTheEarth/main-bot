@@ -66,6 +66,8 @@ export default new Command({
         if (!reason)
             return client.response.sendError(message, "You must provide a reason!")
 
+        message.continue()
+
         const log = new ActionLog()
         log.action = "kick"
         log.member = user.id

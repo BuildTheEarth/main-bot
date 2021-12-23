@@ -34,7 +34,9 @@ export default class CommandMessage {
             )
         }
         if (this.message instanceof Discord.CommandInteraction) {
-            await this.message.reply(payload as Discord.InteractionReplyOptions)
+            if (this.message.deferred)
+                await this.message.followUp(payload as Discord.InteractionReplyOptions)
+            else await this.message.reply(payload as Discord.InteractionReplyOptions)
 
             return this
         }
@@ -80,9 +82,15 @@ export default class CommandMessage {
         }
     }
 
-    isSlashCommand(): boolean {
+    isSlashCommand(): this is Discord.CommandInteraction {
         if (this.message instanceof Discord.Message) return false
         if (this.message instanceof Discord.CommandInteraction) return true
+    }
+
+    async continue(): Promise<CommandMessage> {
+        if (this.message instanceof Discord.CommandInteraction)
+            await this.message.deferReply()
+        return this
     }
 }
 

@@ -28,6 +28,9 @@ export default new Command({
                 message,
                 "You can only purge 100 messages at a time!"
             )
+
+        message.continue()
+
         const purged = await (message.channel as Discord.TextChannel).bulkDelete(
             amount,
             true

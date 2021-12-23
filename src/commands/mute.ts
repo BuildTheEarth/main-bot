@@ -74,6 +74,8 @@ export default new Command({
         if (!reason)
             return client.response.sendError(message, "You must provide a reason!")
 
+        message.continue()
+
         const mute = await TimedPunishment.findOne({ member: user.id, type: "mute" })
         if (mute) return client.response.sendError(message, "That user is already muted!")
 
@@ -102,7 +104,7 @@ export default new Command({
         const formattedLength = formatPunishmentTime(length)
         const formattedUser = user.id === message.member.id ? "*you*" : user.toString()
         await client.response.sendError(
-            message.channel,
+            message,
             `Muted ${formattedUser} ${formattedLength} (**#${log.id}**)${away}.`
         )
         await client.log(log)

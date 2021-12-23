@@ -47,6 +47,8 @@ export default new Command({
             return client.response.sendError(message, "That user is not a builder.")
         const role = Guild.role(await client.customGuilds.main(), Roles.ADVANCED_BUILDER)
 
+        message.continue()
+
         if (remove) {
             const record = await AdvancedBuilder.findOne(user.id)
             if (!record)
