@@ -82,6 +82,8 @@ export default new Command({
         if (!reason)
             return client.response.sendError(message, "You must provide a reason!")
 
+        message.continue()
+
         const ban = await TimedPunishment.findOne({ member: user.id, type: "ban" })
         if (ban) return client.response.sendError(message, "The user is already banned!")
 
@@ -114,7 +116,9 @@ export default new Command({
         await log.save()
 
         await log.notifyMember(client)
-        await message.guild.members.ban(user, { reason })
+        await message.guild.members.ban(user, {
+            reason: reason.length <= 512 ? reason : (await log.contextUrl(client)).href
+        })
         const formattedLength = formatPunishmentTime(length)
         await client.response.sendSuccess(
             message,

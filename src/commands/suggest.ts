@@ -64,6 +64,8 @@ export default new Command({
         const title = await flattenMarkdown(args.consume("title"), client, message.guild)
         const [body, teams] = [args.consume("body"), args.consume("team")]
 
+        message.continue()
+
         let error: string
         if (extend && !(await Suggestion.findOne({ number: extend.number })))
             error = `The suggestion you're trying to extend (**#${extend}**) doesn't exist!`

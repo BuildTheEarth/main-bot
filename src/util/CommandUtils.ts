@@ -135,7 +135,7 @@ function argsToStrSubCommand(
         if (subcommand.subcommands)
             subcommand.subcommands.forEach(subsubcommand => {
                 if (command.seperator === " " && !slashcommand && subsubcommand.seperator)
-                trueSeperator = subsubcommand.seperator
+                    trueSeperator = subsubcommand.seperator
                 else if (!slashcommand) trueSeperator = command.seperator
                 args += `   *${subsubcommand.name}:* ${subsubcommand.description}\n`
                 let argList: CommandArgs[] = []

@@ -182,6 +182,7 @@ export default new Command({
 
         if (subcommand === "search") {
             const PER_PAGE = 10
+            message.continue()
 
             args.separator = "|"
             const field = args.consumeIf(["title", "body", "teams"], "field") || "body"
@@ -339,6 +340,8 @@ export default new Command({
                 message,
                 "You must specify a suggestion number!"
             )
+
+        message.continue()
 
         const suggestion = await Suggestion.findByIdentifier(identifier, staff)
         if (!suggestion)

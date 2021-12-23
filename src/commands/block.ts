@@ -42,6 +42,9 @@ export default new Command({
             const query = args.consumeRest(["query"])
             if (!query)
                 return client.response.sendError(message, "No query was specified")
+
+            message.continue()
+
             results = await mcBlockInfo.search(query)
         }
         if (subcommand === "absolute" || !subcommand) {
@@ -50,6 +53,9 @@ export default new Command({
             const blocksInput = blocks.trim().split(",")
             const newBlocks = []
             blocksInput.forEach(element => newBlocks.push(element.trim()))
+
+            message.continue()
+
             results = await mcBlockInfo.searchAbsolute(
                 await mcBlockInfo.filterInvalid(newBlocks)
             )

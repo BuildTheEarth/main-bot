@@ -23,6 +23,9 @@ export default new Command({
     async run(this: Command, client: Client, message: CommandMessage, args: Args) {
         const input = args.consumeRest(["team"]).toLowerCase()
         if (!input) return client.response.sendError(message, "Please give a team name")
+
+        message.continue()
+
         const Snippets = Snippet.getRepository()
         const language = "en"
         const find = (query: WhereExpression) =>

@@ -79,6 +79,7 @@ export default new Command({
         const subcommand = args.consumeSubcommand().toLowerCase()
 
         if (subcommand === "list" || !subcommand) {
+            message.continue()
             const reminders = await Reminder.find()
             const tidy: Record<string, { channel: string; message: string; end: Date }> =
                 {}
@@ -141,6 +142,8 @@ export default new Command({
                     "You must specify a reminder message."
                 )
 
+            message.continue()
+
             const reminder = new Reminder()
             reminder.channel = channel.id
             reminder.interval = millis
@@ -156,6 +159,8 @@ export default new Command({
 
         const id = parseInt(args.consume("id"))
         if (!id) return client.response.sendError(message, "You must specify an ID!")
+
+        message.continue()
 
         const reminder = await Reminder.findOne(id)
 

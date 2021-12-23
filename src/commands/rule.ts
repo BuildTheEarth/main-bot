@@ -48,6 +48,8 @@ export default new Command({
                     `Please choose \`zh-s\` (简体中文) or \`zh-t\` (繁體中文)!`
                 )
 
+            message.continue()
+
             const find = (query: WhereExpression) =>
                 query
                     .where("snippet.name = :name", { name: number })

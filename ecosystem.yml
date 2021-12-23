@@ -1,9 +1,14 @@
-apps:
-    - script: dist/index.js
-      name: main-bot
-      cwd: ./
-      env:
-          NODE_ENV: "development"
-      env_production:
-          NODE_ENV: "production"
-      node_args: --unhandled-rejections=strict
+apps: 
+  - cwd: ./
+    env: 
+      NODE_ENV: development
+    env_production: 
+      NODE_ENV: production
+    name: main-bot
+    node_args: "--unhandled-rejections=strict"
+    script: dist/index.js
+deploy: 
+    production:
+      fetch: all
+      post-deploy: "npm install && npm update && npm run build"
+      repo: "git@github.com:BuildTheEarth/main-bot.git"

@@ -59,6 +59,8 @@ export default new Command({
             criteria.options.withDeleted = true
         }
 
+        message.continue()
+
         const actionLogs = await ActionLog.find(criteria)
         const categorizedLogs: Record<Action, ActionLog[]> = {
             warn: [],

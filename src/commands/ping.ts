@@ -10,6 +10,7 @@ export default new Command({
     description: "Ping pong!",
     permission: Roles.ANY,
     async run(this: Command, _client: Client, message: CommandMessage) {
+        message.continue()
         const pinger = await message.send({ content: ":ping_pong: Pinging..." })
         const ping = Date.now() - message.createdTimestamp
         if (pinger) {

@@ -22,6 +22,8 @@ export default new Command({
     async run(this: Command, client: Client, message: CommandMessage, args: Args) {
         const query = args.removeCodeblock(args.consumeRest(["query"]))
 
+        message.continue()
+
         try {
             const out = JSON.stringify(await client.db.query(query), null, 2)
             client.response.sendSuccess(message, {

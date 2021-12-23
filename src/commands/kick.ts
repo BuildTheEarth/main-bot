@@ -66,6 +66,8 @@ export default new Command({
         if (!reason)
             return client.response.sendError(message, "You must provide a reason!")
 
+        message.continue()
+
         const log = new ActionLog()
         log.action = "kick"
         log.member = user.id
@@ -78,7 +80,9 @@ export default new Command({
         await log.save()
 
         await log.notifyMember(client)
-        await member.kick(reason)
+        await member.kick(
+            reason.length <= 512 ? reason : (await log.contextUrl(client)).href
+        )
         await client.response.sendSuccess(message, `Kicked ${user} (**#${log.id}**).`)
         await client.log(log)
     }

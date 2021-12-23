@@ -38,6 +38,7 @@ export default class TimedPunishment extends BaseEntity {
 
     async undo(client: Client): Promise<void> {
         clearTimeout(this.undoTimeout)
+        await this.remove()
         const user = await client.users.fetch(this.member, { force: true })
         if (!user) return
 
@@ -57,8 +58,6 @@ export default class TimedPunishment extends BaseEntity {
 
         const undid = "un" + pastTense(this.type)
         client.logger.info(`Automatically ${undid} ${user.tag}.`)
-
-        await this.remove()
     }
 
     schedule(client: Client): void {

@@ -17,6 +17,8 @@ export default new Command({
     description: "Check the status of the Minecraft network.",
     permission: Roles.ANY,
     async run(this: Command, client: Client, message: CommandMessage) {
+        message.continue()
+
         const status = (url: string) =>
             fetch(url)
                 .then(res => res.json())

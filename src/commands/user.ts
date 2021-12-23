@@ -32,6 +32,9 @@ export default new Command({
                     ? "You must provide a user!"
                     : "Couldn't find that user."
             )
+
+        message.continue()
+
         const member: Discord.GuildMember = await message.guild.members
             .fetch({ user, cache: true })
             .catch(() => null)
