@@ -7,24 +7,46 @@ import Roles from "../util/roles"
 import pseudoteamPositions from "../data/pseudoteamPositions"
 import noop from "../util/noop"
 import Discord from "discord.js"
+import CommandMessage from "../struct/CommandMessage"
 
 export default new Command({
     name: "position",
     aliases: ["promote", "demote", "vcc", "vs", "bto"],
     description: "Promote/demote a member from your team.",
     permission: [Roles.SUBTEAM_LEAD, Roles.REGIONAL_BUILD_TEAM_LEAD],
-    usage: "<member> ['bto' | 'vcc' | 'vs'] ['promote' | 'demote']",
-    async run(this: Command, client: Client, message: Discord.Message, args: Args) {
-        const user = await args.consumeUser()
+    args: [
+        {
+            name: "member",
+            description: "Member to promote/demote.",
+            optionType: "USER",
+            required: true
+        },
+        {
+            name: "position",
+            description: "Position to promote/demote to.",
+            optionType: "STRING",
+            required: false,
+            choices: ["bto", "vs", "vcc"]
+        },
+        {
+            name: "promote",
+            description: "Wheter to promote or demote",
+            optionType: "STRING",
+            required: false,
+            choices: ["promote", "demote"]
+        }
+    ],
+    async run(this: Command, client: Client, message: CommandMessage, args: Args) {
+        const user = await args.consumeUser("member")
         if (!user)
-            return client.channel.sendError(
-                message.channel,
+            return client.response.sendError(
+                message,
                 user === undefined
                     ? "You must provide a user to manage!"
                     : "Couldn't find that user."
             )
 
-        let position = args.consumeIf(["bto", "vcc", "vs"])
+        let position = args.consumeIf(["bto", "vcc", "vs"], "position")
         if (!position)
             for (const [team, lead] of Object.entries(pseudoteamPositions.leads))
                 if (GuildMember.hasRole(message.member, lead)) position = team
@@ -34,29 +56,29 @@ export default new Command({
         const expanded = pseudoteamPositions.expansions[position]
 
         if (!GuildMember.hasRole(message.member, lead))
-            return client.channel.sendError(
-                message.channel,
+            return client.response.sendError(
+                message,
                 `You can't manage members in the **${expanded}** team!`
             )
-        const role = Guild.role(client.customGuilds.main(), expanded)
+        const role = Guild.role(await client.customGuilds.main(), expanded)
 
-        const member: Discord.GuildMember = await client.customGuilds
-            .main()
-            .members.fetch({ user, cache: true })
+        const member: Discord.GuildMember = await (
+            await client.customGuilds.main()
+        ).members
+            .fetch({ user, cache: true })
             .catch(noop)
         if (!member)
-            return client.channel.sendError(
-                message.channel,
-                "The user is not in the server!"
-            )
+            return client.response.sendError(message, "The user is not in the server!")
 
-        const demote = !!args.consumeIf("demote")
+        await message.continue()
+
+        const demote = !!args.consumeIf("demote", "promote")
         const method = demote ? "remove" : "add"
         const past = demote ? "Demoted" : "Promoted"
         const preposition = demote ? "from" : "to"
         await member.roles[method](role)
-        await client.channel.sendSuccess(
-            message.channel,
+        await client.response.sendSuccess(
+            message,
             `${past} <@${user.id}> ${preposition} **${expanded}**!`
         )
     }

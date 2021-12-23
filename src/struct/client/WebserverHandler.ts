@@ -25,7 +25,10 @@ export default class WebserverHandler {
 
     async addImage(img: Buffer, name: string): Promise<string> {
         await ensureDirectoryExistence(path.join(__dirname, "../../../images/") + name)
-        await util.promisify(fs.writeFile)(path.join(__dirname, "../../../images/") + name, img)
+        await util.promisify(fs.writeFile)(
+            path.join(__dirname, "../../../images/") + name,
+            img
+        )
         return `http://${this.client.config.images.bindAddress}:${this.client.config.images.bindPort}/${name}` //fix this cardinal sin before pushing
     }
 

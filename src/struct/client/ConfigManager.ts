@@ -37,6 +37,7 @@ export default class ConfigManager {
     prefix: string
     appeal: string
     vanity: string
+    isDev: boolean
     logging: LoggingConfig
     guilds: GuildCategories
     suggestions: GuildCategories & { discussion: GuildCategories }

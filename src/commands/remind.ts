@@ -4,38 +4,82 @@ import Command from "../struct/Command"
 import Roles from "../util/roles"
 import Reminder from "../entities/Reminder"
 import formatTimestamp from "../util/formatTimestamp"
-import Discord from "discord.js"
+import ApiTypes from "discord-api-types"
+import CommandMessage from "../struct/CommandMessage"
+
+const remindTimes = ["test", "weekly", "bi-weekly", "monthly", "bi-monthly"]
 
 export default new Command({
     name: "remind",
-    aliases: [],
+    aliases: ["remindme", "reminders"],
     description: "List and manage reminders.",
     permission: [Roles.MANAGER],
-    usage: "",
     subcommands: [
         {
             name: "add",
             description: "Add a reminder.",
             permission: [Roles.MANAGER],
-            usage: "<channel> <interval> <message>"
+            args: [
+                {
+                    name: "channel",
+                    description: "Channel to remind in",
+                    required: true,
+                    optionType: "CHANNEL",
+                    channelTypes: [ApiTypes.ChannelType.GuildText]
+                },
+                {
+                    name: "interval",
+                    description: "Reminder interval.",
+                    required: true,
+                    optionType: "STRING",
+                    choices: remindTimes
+                },
+                {
+                    name: "message",
+                    description: "Reminder message.",
+                    required: true,
+                    optionType: "STRING"
+                }
+            ]
         },
         {
             name: "edit",
             description: "Edit a reminder.",
             permission: [Roles.MANAGER],
-            usage: "<id> <message>"
+            args: [
+                {
+                    name: "id",
+                    description: "Reminder ID",
+                    required: true,
+                    optionType: "STRING"
+                },
+                {
+                    name: "message",
+                    description: "Reminder message.",
+                    required: true,
+                    optionType: "STRING"
+                }
+            ]
         },
         {
             name: "delete",
             description: "Delete a reminder.",
             permission: [Roles.MANAGER],
-            usage: "<id>"
+            args: [
+                {
+                    name: "id",
+                    description: "Reminder ID",
+                    required: true,
+                    optionType: "STRING"
+                }
+            ]
         }
     ],
-    async run(this: Command, client: Client, message: Discord.Message, args: Args) {
-        const subcommand = args.consume().toLowerCase()
+    async run(this: Command, client: Client, message: CommandMessage, args: Args) {
+        const subcommand = args.consumeSubcommand().toLowerCase()
 
         if (subcommand === "list" || !subcommand) {
+            await message.continue()
             const reminders = await Reminder.find()
             const tidy: Record<string, { channel: string; message: string; end: Date }> =
                 {}
@@ -57,22 +101,19 @@ export default new Command({
                 )}) — ${message}\n`
             }
 
-            return client.channel.sendSuccess(message.channel, {
+            return client.response.sendSuccess(message, {
                 author: { name: "Reminder list" },
                 description: list
             })
         }
 
         if (subcommand === "add") {
-            const channel = await args.consumeChannel()
+            const channel = await args.consumeChannel("channel")
             if (!channel) {
-                return client.channel.sendError(
-                    message.channel,
-                    "You must provide a channel!"
-                )
+                return client.response.sendError(message, "You must provide a channel!")
             }
 
-            const time = args.consume().toLowerCase()
+            const time = args.consume("interval").toLowerCase()
             let millis
             switch (time) {
                 case "test":
@@ -91,18 +132,17 @@ export default new Command({
                     millis = 1000 * 60 * 60 * 24 * 15 // half a month (1000ms * 60s * 60m * 24h * 15d)
                     break
                 default:
-                    return client.channel.sendError(
-                        message.channel,
-                        "Invalid time length!"
-                    )
+                    return client.response.sendError(message, "Invalid time length!")
             }
 
-            const body = args.consumeRest()
+            const body = args.consumeRest(["message"])
             if (!body)
-                return client.channel.sendError(
-                    message.channel,
+                return client.response.sendError(
+                    message,
                     "You must specify a reminder message."
                 )
+
+            await message.continue()
 
             const reminder = new Reminder()
             reminder.channel = channel.id
@@ -111,40 +151,32 @@ export default new Command({
             await reminder.save()
             reminder.schedule(client)
 
-            return client.channel.sendSuccess(
-                message.channel,
+            return client.response.sendSuccess(
+                message,
                 `Scheduled reminder for ${channel}!`
             )
         }
 
-        const id = parseInt(args.consume())
-        if (!id)
-            return client.channel.sendError(message.channel, "You must specify an ID!")
+        const id = parseInt(args.consume("id"))
+        if (!id) return client.response.sendError(message, "You must specify an ID!")
+
+        await message.continue()
 
         const reminder = await Reminder.findOne(id)
 
         if (subcommand === "delete") {
             if (!reminder)
-                return client.channel.sendError(
-                    message.channel,
-                    "That reminder doesn't exist!"
-                )
+                return client.response.sendError(message, "That reminder doesn't exist!")
             await reminder.delete()
-            return client.channel.sendSuccess(
-                message.channel,
-                `Reminder **#${id}** deleted!`
-            )
+            return client.response.sendSuccess(message, `Reminder **#${id}** deleted!`)
         } else if (subcommand === "edit") {
             if (!reminder)
-                return client.channel.sendError(
-                    message.channel,
-                    "That reminder doesn't exist!"
-                )
-            const body = args.consumeRest()
+                return client.response.sendError(message, "That reminder doesn't exist!")
+            const body = args.consumeRest(["message"])
             reminder.message = body
             await reminder.save()
-            return client.channel.sendSuccess(
-                message.channel,
+            return client.response.sendSuccess(
+                message,
                 `Set the message of reminder **#${id}** to:\n>>>${body}`
             )
         }

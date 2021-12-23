@@ -8,22 +8,33 @@ import formatTimestamp from "../util/formatTimestamp"
 import userFlags from "../data/userFlags"
 import activityTypes from "../data/activityTypes"
 import hexToRGB from "../util/hexToRGB"
+import CommandMessage from "../struct/CommandMessage"
 
 export default new Command({
     name: "user",
     aliases: ["whois", "userinfo"],
     description: "Get info on someone.",
     permission: Roles.ANY,
-    usage: "<user>",
-    async run(this: Command, client: Client, message: Discord.Message, args: Args) {
-        const user = await args.consumeUser(true)
+    args: [
+        {
+            name: "member",
+            description: "Member to lookup.",
+            required: true,
+            optionType: "USER"
+        }
+    ],
+    async run(this: Command, client: Client, message: CommandMessage, args: Args) {
+        const user = await args.consumeUser("member", true)
         if (!user)
-            return client.channel.sendError(
-                message.channel,
+            return client.response.sendError(
+                message,
                 user === undefined
                     ? "You must provide a user!"
                     : "Couldn't find that user."
             )
+
+        await message.continue()
+
         const member: Discord.GuildMember = await message.guild.members
             .fetch({ user, cache: true })
             .catch(() => null)
@@ -119,26 +130,15 @@ export default new Command({
                     ? humanizeStatus(act)
                     : Discord.Util.escapeMarkdown(act.name)
             }**`
-        const activities = (
-            await message.guild.members.fetch(user.id)
-        ).presence.activities
-            .map(humanizeActivity)
-            .join("\n")
-
-        const presenceStatusEmoji =
-            client.config.emojis.text[
-                (await message.guild.members.fetch(user.id)).presence.status
-            ]
+        const activities = member.presence.activities.map(humanizeActivity).join("\n")
+        const presenceStatusEmoji = client.config.emojis.text[member.presence.status]
         const presenceStatusName =
-            (await message.guild.members.fetch(user.id)).presence.status === "dnd"
+            member.presence.status === "dnd"
                 ? "Do Not Disturb"
-                : humanizeConstant(
-                      (await message.guild.members.fetch(user.id)).presence.status
-                  )
+                : humanizeConstant(member.presence.status)
 
         const presence = `\\${presenceStatusEmoji} **${presenceStatusName}**\n${activities}`
         embed.fields.push({ name: "Presence", value: presence })
-
-        await message.channel.send({ embeds: [embed] })
+        await message.send({ embeds: [embed] })
     }
 })

@@ -4,56 +4,76 @@ import Command from "../struct/Command"
 import ModpackImage, { ModpackImageKey } from "../entities/ModpackImage"
 import Roles from "../util/roles"
 import isURL from "../util/isURL"
-import Discord from "discord.js"
+import CommandMessage from "../struct/CommandMessage"
 
 export default new Command({
     name: "modpack",
     aliases: ["mp"],
     description: "Manage the modpack's background images.",
     permission: Roles.MANAGER,
-    usage: "",
     subcommands: [
         {
             name: "list",
-            description: "List images on the queue and store.",
-            usage: ""
+            description: "List images on the queue and store."
         },
         {
             name: "set",
             description: "Add an image to the queue.",
-            usage: "<key> <url> <credit>"
+            args: [
+                {
+                    name: "key",
+                    description: "Image Key.",
+                    required: true,
+                    optionType: "STRING"
+                },
+                {
+                    name: "url",
+                    description: "Image Url.",
+                    required: true,
+                    optionType: "STRING"
+                },
+                {
+                    name: "credit",
+                    description: "Image Credit.",
+                    required: true,
+                    optionType: "STRING"
+                }
+            ]
         },
         {
             name: "delete",
             description: "Delete an image from the queue.",
-            usage: "<key>"
+            args: [
+                {
+                    name: "key",
+                    description: "Image Key.",
+                    required: true,
+                    optionType: "STRING"
+                }
+            ]
         },
         {
             name: "fetch",
-            description: "Force-fetch the data from the API.",
-            usage: ""
+            description: "Force-fetch the data from the API."
         },
         {
             name: "push",
-            description: "Push the queue to the store.",
-            usage: ""
+            description: "Push the queue to the store."
         },
 
         {
             name: "url",
-            description: "Get the URL to the modpack API.",
-            usage: ""
+            description: "Get the URL to the modpack API."
         }
     ],
-    async run(this: Command, client: Client, message: Discord.Message, args: Args) {
-        const subcommand = args.consume().toLowerCase()
+    async run(this: Command, client: Client, message: CommandMessage, args: Args) {
+        const subcommand = args.consumeSubcommand().toLowerCase()
         if (!this.subcommands.map(sub => sub.name).includes(subcommand))
-            return client.channel.sendError(
-                message.channel,
-                "You must specify a subcommand."
-            )
+            return client.response.sendError(message, "You must specify a subcommand.")
 
         if (subcommand === "list") {
+            await message.continue()
+
             const sort = (a: ModpackImage, b: ModpackImage) =>
                 a.key === "logo" ? -1 : Number(a.key) - Number(b.key)
             const images = (await ModpackImage.find()).sort(sort)
@@ -66,7 +86,7 @@ export default new Command({
             const queue = format("queue")
             const store = format("store")
 
-            client.channel.sendSuccess(message.channel, {
+            client.response.sendSuccess(message, {
                 author: { name: "Image list" },
                 fields: [
                     { name: "Queue", value: queue },
@@ -74,22 +94,22 @@ export default new Command({
                 ]
             })
         } else if (subcommand === "set") {
-            const [key, url, credit] = args.consumeRest(3)
+            const [key, url, credit] = [
+                args.consume("key"),
+                args.consume("url"),
+                args.consume("credit")
+            ]
             if (!key || !ModpackImage.isValidKey(key))
-                return client.channel.sendError(
-                    message.channel,
-                    "You must specify a valid key!"
-                )
+                return client.response.sendError(message, "You must specify a valid key!")
             if (!url || !isURL(url))
-                return client.channel.sendError(
-                    message.channel,
-                    "You must specify a valid URL!"
-                )
+                return client.response.sendError(message, "You must specify a valid URL!")
             if (!credit && key !== "logo")
-                return client.channel.sendError(
-                    message.channel,
+                return client.response.sendError(
+                    message,
                     "You must specify image credit!"
                 )
+
+            await message.continue()
 
             const image = new ModpackImage()
             image.key = key as ModpackImageKey
@@ -99,32 +119,32 @@ export default new Command({
             await image.save()
 
             const header = key === "logo" ? "Saved logo!" : "Saved image!"
-            client.channel.sendSuccess(message.channel, header + "\n\n" + image.format())
+            client.response.sendSuccess(message, header + "\n\n" + image.format())
         } else if (subcommand === "delete") {
-            const key = args.consume()
+            const key = args.consume("key")
             if (!key || !ModpackImage.isValidKey(key))
-                return client.channel.sendError(
-                    message.channel,
-                    "You must specify a valid key!"
-                )
+                return client.response.sendError(message, "You must specify a valid key!")
+
+            await message.continue()
 
             const image = await ModpackImage.findOne({ key: key as ModpackImageKey })
             if (!image)
-                return client.channel.sendError(
-                    message.channel,
-                    "Couldn't find that image!"
-                )
+                return client.response.sendError(message, "Couldn't find that image!")
 
             await image.remove()
-            client.channel.sendSuccess(message.channel, "Deleted image.")
+            client.response.sendSuccess(message, "Deleted image.")
         } else if (subcommand === "fetch") {
+            await message.continue()
+
             const { body } = await ModpackImage.fetch()
             const code = `\`\`\`${JSON.stringify(body, null, 2)}\`\`\``
-            client.channel.sendSuccess(
-                message.channel,
+            client.response.sendSuccess(
+                message,
                 `Updated data! Raw JSON response:\n\n${code}`
             )
         } else if (subcommand === "push") {
+            await message.continue()
+
             const queue = await ModpackImage.find({ set: "queue" })
             const store = await ModpackImage.find({ set: "store" })
 
@@ -138,12 +158,9 @@ export default new Command({
             }
 
             await ModpackImage.post(client.config.modpackAuth)
-            client.channel.sendSuccess(
-                message.channel,
-                "Pushed changes locally and to API!"
-            )
+            client.response.sendSuccess(message, "Pushed changes locally and to API!")
         } else if (subcommand === "url") {
-            client.channel.sendSuccess(message.channel, ModpackImage.API_URL)
+            client.response.sendSuccess(message, ModpackImage.API_URL)
         }
     }
 })

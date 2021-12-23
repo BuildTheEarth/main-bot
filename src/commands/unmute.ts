@@ -4,39 +4,53 @@ import TimedPunishment from "../entities/TimedPunishment"
 import ActionLog from "../entities/ActionLog"
 import Command from "../struct/Command"
 import Roles from "../util/roles"
-import Discord from "discord.js"
+import CommandMessage from "../struct/CommandMessage"
 
 export default new Command({
     name: "unmute",
     aliases: [],
     description: "Unmute a member.",
     permission: [Roles.HELPER, Roles.MODERATOR, Roles.MANAGER],
-    usage: "<member> <reason>",
-    async run(this: Command, client: Client, message: Discord.Message, args: Args) {
-        const user = await args.consumeUser()
+    args: [
+        {
+            name: "member",
+            description: "Member to ban.",
+            required: true,
+            optionType: "USER"
+        },
+        {
+            name: "reason",
+            description: "Ban reason.",
+            required: true,
+            optionType: "STRING"
+        }
+    ],
+    async run(this: Command, client: Client, message: CommandMessage, args: Args) {
+        const user = await args.consumeUser("member")
 
         if (!user)
-            return client.channel.sendError(
-                message.channel,
+            return client.response.sendError(
+                message,
                 user === undefined
                     ? "You must provide a user to unmute!"
                     : "Couldn't find that user."
             )
 
-        const reason = args.consumeRest()
+        const reason = args.consumeRest(["reason"])
         if (!reason)
-            return client.channel.sendError(message.channel, "You must provide a reason!")
+            return client.response.sendError(message, "You must provide a reason!")
+
+        await message.continue()
 
         const mute = await TimedPunishment.findOne({ member: user.id, type: "mute" })
-        if (!mute)
-            return client.channel.sendError(message.channel, "That user is not muted!")
+        if (!mute) return client.response.sendError(message, "That user is not muted!")
 
         await mute.undo(client)
 
         const log = new ActionLog()
         log.action = "unmute"
         log.member = user.id
-        log.executor = message.author.id
+        log.executor = message.member.id
         log.reason = reason
         log.channel = message.channel.id
         log.message = message.id
@@ -44,9 +58,9 @@ export default new Command({
         await log.save()
 
         await log.notifyMember(client)
-        const formattedUser = user.id === message.author.id ? "*you*" : user.toString()
-        await client.channel.sendSuccess(
-            message.channel,
+        const formattedUser = user.id === message.member.id ? "*you*" : user.toString()
+        await client.response.sendSuccess(
+            message,
             `Unmuted ${formattedUser} (**#${log.id}**).`
         )
         await client.log(log)

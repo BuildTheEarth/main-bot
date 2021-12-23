@@ -8,8 +8,11 @@ import ActionLog from "../entities/ActionLog"
 import Snippet from "../entities/Snippet"
 import hexToRGB from "../util/hexToRGB"
 import GuildManager from "./discord/GuildManager"
-import Channel from "./discord/Channel"
+import Response from "./discord/Response"
 import WebserverHandler from "./client/WebserverHandler"
+import { REST } from "@discordjs/rest"
+import BannedWord, { bannedTypes } from "../entities/BannedWord"
+import BannedWordFilter from "./client/BannedWordFilter"
 
 export default class Client extends Discord.Client {
     guilds: Discord.GuildManager
@@ -18,10 +21,13 @@ export default class Client extends Discord.Client {
     logger = createLogger({ filePath: __dirname + "/../../logs/" })
     config = new ConfigManager(this)
     events = new EventList(this)
-    commands = new CommandList()
+    commands = new CommandList(this)
     aliases = new Discord.Collection()
-    channel = new Channel(this)
+    response = new Response(this)
     webserver = new WebserverHandler(this)
+    restCommand = new REST({ version: "9" }).setToken(this.config.token)
+    filterWordsCached: { banned: bannedTypes; except: Array<string> }
+    filter = new BannedWordFilter(this)
 
     async initDatabase(): Promise<void> {
         const db = this.config.database
@@ -50,6 +56,7 @@ export default class Client extends Discord.Client {
         }
 
         this.db = await createConnection(options as ConnectionOptions) // non-Partial
+        this.filterWordsCached = await BannedWord.loadWords()
     }
 
     login(): Promise<string> {
@@ -72,7 +79,7 @@ export default class Client extends Discord.Client {
         if (!channel) return
 
         if (log instanceof ActionLog) {
-            const embed = log.displayEmbed(this)
+            const embed = await log.displayEmbed(this)
             if (embed.color === this.config.colors.error) {
                 delete embed.description
                 embed.author.name += " deleted"

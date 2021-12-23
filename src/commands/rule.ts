@@ -3,41 +3,53 @@ import Args from "../struct/Args"
 import Command from "../struct/Command"
 import Roles from "../util/roles"
 import quote from "../util/quote"
-import { Brackets, WhereExpressionBuilder } from "typeorm"
+import { Brackets, WhereExpression } from "typeorm"
 import languages from "../util/patchedISO6391"
 import Snippet from "../entities/Snippet"
-import Discord from "discord.js"
+import CommandMessage from "../struct/CommandMessage"
 
 export default new Command({
     name: "rule",
     aliases: ["rules"],
     description: "Get a rule's text.",
     permission: Roles.ANY,
-    usage: "<number | text>",
-    async run(this: Command, client: Client, message: Discord.Message, args: Args) {
-        const query = args.consume().toLowerCase()
+    args: [
+        {
+            name: "number",
+            description: "Rule Number.",
+            optionType: "NUMBER",
+            required: true
+        },
+        {
+            name: "language",
+            description: "Rule language.",
+            optionType: "STRING",
+            required: false
+        }
+    ],
+    async run(this: Command, client: Client, message: CommandMessage, args: Args) {
+        const query = args.consume("number").toLowerCase()
         const number = Number(query)
         //let rule: string
 
         if (Number.isInteger(number) || Number.isFinite(number)) {
             if (number < 1)
-                return client.channel.sendError(
-                    message.channel,
-                    "That's not a valid number."
-                )
+                return client.response.sendError(message, "That's not a valid number.")
 
             const Snippets = Snippet.getRepository()
-            const firstArg = args.consume().toLowerCase()
+            const firstArg = args.consume("language").toLowerCase()
             const languageName = languages.getName(firstArg) || "English"
             const language = languages.validate(firstArg) ? firstArg.toLowerCase() : "en"
 
             if (firstArg.toLowerCase() === "zh")
-                return client.channel.sendError(
-                    message.channel,
+                return client.response.sendError(
+                    message,
                     `Please choose \`zh-s\` (简体中文) or \`zh-t\` (繁體中文)!`
                 )
 
-            const find = (query: WhereExpressionBuilder) =>
+            await message.continue()
+
+            const find = (query: WhereExpression) =>
                 query
                     .where("snippet.name = :name", { name: number })
                     .andWhere("snippet.type = 'rule'")
@@ -60,18 +72,15 @@ export default new Command({
                     .andWhere("snippet.type = 'rule'")
                     .getOne()
                 if (unlocalizedSnippet)
-                    client.channel.sendError(
-                        message.channel,
+                    client.response.sendError(
+                        message,
                         `The **${args.command}** rule hasn't been translated to ${languageName} yet.`
                     )
                 else {
-                    return client.channel.sendError(
-                        message.channel,
-                        `This rule dosent exist.`
-                    )
+                    return client.response.sendError(message, `This rule dosent exist.`)
                 }
             } else {
-                return message.channel
+                return message
                     .send({
                         content: quote(snippet.body),
                         allowedMentions: { parse: [] }
@@ -79,7 +88,7 @@ export default new Command({
                     .catch(() => null)
             }
         } else {
-            return client.channel.sendError(message.channel, `Valid input please!`)
+            return client.response.sendError(message, `Valid input please!`)
         }
     }
 })

@@ -1,17 +1,15 @@
 import Client from "../struct/Client"
 import Command from "../struct/Command"
 import Roles from "../util/roles"
-import Discord from "discord.js"
+import CommandMessage from "../struct/CommandMessage"
 
 export default new Command({
     name: "ping",
     aliases: [],
     description: "Ping pong!",
     permission: Roles.ANY,
-    usage: "",
-    async run(this: Command, _client: Client, message: Discord.Message) {
-        const pinger = await message.channel.send(":ping_pong: Pinging...")
-        const ping = pinger.createdTimestamp - message.createdTimestamp
-        pinger.edit(`:ping_pong: Pong! **${ping.toLocaleString()}ms**.`)
+    async run(this: Command, client: Client, message: CommandMessage) {
+        await message.continue()
+        await message.send({ content: `:ping_pong: Pong! **${client.ws.ping}ms**.` })
     }
 })

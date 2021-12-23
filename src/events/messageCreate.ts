@@ -1,4 +1,5 @@
 import Client from "../struct/Client"
+import CommandMessage from "../struct/CommandMessage"
 import GuildMember from "../struct/discord/GuildMember"
 import Guild from "../struct/discord/Guild"
 import Args from "../struct/Args"
@@ -8,13 +9,13 @@ import languages from "../util/patchedISO6391"
 import Roles from "../util/roles"
 import chalk from "chalk"
 import Discord from "discord.js"
-import { Brackets, WhereExpressionBuilder } from "typeorm"
+import { Brackets, WhereExpression } from "typeorm"
 
 export default async function (this: Client, message: Discord.Message): Promise<unknown> {
     if (message.author.bot) return
     const Snippets = Snippet.getRepository()
 
-    const mainGuild = this.customGuilds.main()
+    const mainGuild = await this.customGuilds.main()
     const main = mainGuild.id === message.guild?.id
     if (main && message.type === "USER_PREMIUM_GUILD_SUBSCRIPTION_TIER_3") {
         await Guild.setVanityCode(
@@ -28,21 +29,20 @@ export default async function (this: Client, message: Discord.Message): Promise<
 
     if (message.content.startsWith(this.config.prefix)) {
         const body = message.content.slice(this.config.prefix.length).trim()
-        const args = new Args(body, message)
-
+        const args = new Args(body, new CommandMessage(message, this))
         const command = this.commands.search(args.command)
         if (!command) {
-            const firstArg = args.consume().toLowerCase()
+            const firstArg = args.consume("").toLowerCase() //before someone kills me, this is guaranteed to be of a normal message as it is in messageCreate, so we strictly dont need an arg name but i am NOT making that an optional arg
             const languageName = languages.getName(firstArg) || "English"
             const language = languages.validate(firstArg) ? firstArg.toLowerCase() : "en"
 
             if (firstArg.toLowerCase() === "zh")
-                return this.channel.sendError(
-                    message.channel,
+                return this.response.sendError(
+                    new CommandMessage(message, this),
                     `Please choose \`zh-s\` (简体中文) or \`zh-t\` (繁體中文)!`
                 )
 
-            const find = (query: WhereExpressionBuilder) =>
+            const find = (query: WhereExpression) =>
                 query
                     .where("snippet.name = :name", { name: args.command })
                     .andWhere("snippet.type = 'snippet'")
@@ -66,8 +66,8 @@ export default async function (this: Client, message: Discord.Message): Promise<
                     .andWhere("snippet.type = 'snippet'")
                     .getOne()
                 if (unlocalizedSnippet)
-                    this.channel.sendError(
-                        message.channel,
+                    this.response.sendError(
+                        new CommandMessage(message, this),
                         `The **${args.command}** snippet hasn't been translated to ${languageName} yet.`
                     )
                 return
@@ -97,10 +97,10 @@ export default async function (this: Client, message: Discord.Message): Promise<
                 : message.author.tag
 
         try {
-            await command.run(this, message, args)
+            await command.run(this, new CommandMessage(message, this), args)
         } catch (error) {
-            this.channel.sendError(
-                message.channel,
+            this.response.sendError(
+                new CommandMessage(message, this),
                 "An unknown error occurred! Please contact one of the bot developers for help."
             )
 
@@ -121,16 +121,20 @@ export default async function (this: Client, message: Discord.Message): Promise<
         suggestions.includes(message.channel.id) &&
         !GuildMember.hasRole(message.member, Roles.MANAGER)
     ) {
-        const error = await this.channel.sendError(
-            message.channel,
+        const error = await this.response.sendError(
+            new CommandMessage(message, this),
             `Please use the \`suggest\` command to post suggestions! (Check \`${this.config.prefix}help suggest\` for help). **Your message will be deleted in 30 seconds.**`
         )
 
         setTimeout(() => message.delete(), 30000)
-        setTimeout(() => error.delete(), 30000)
+        setTimeout(() => {
+            if (error) error.delete()
+        }, 30000)
         return
     }
 
     if (message.content === "donde es server")
         return message.channel.send("hay un server!")
+    const bannedWords = this.filter.findBannedWord(message.content)
+    if (bannedWords.length >= 1) return console.log("lol")
 }

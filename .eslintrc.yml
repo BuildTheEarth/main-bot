@@ -11,3 +11,4 @@ rules:
     "@typescript-eslint/no-inferrable-types": off
 env:
     node: true
+ignorePatterns: ['**/*.js']

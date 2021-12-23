@@ -7,5 +7,6 @@
         "target": "ES2020",
         "outDir": "./dist"
     },
-    "include": ["src/**/*"]
+    "include": ["src/**/*"],
+    "exclude": ["dist/**/*"]
 }
