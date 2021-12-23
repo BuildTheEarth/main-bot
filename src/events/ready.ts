@@ -8,7 +8,11 @@ import Guild from "../struct/discord/Guild"
 import Reminder from "../entities/Reminder"
 
 export default async function ready(this: Client): Promise<void> {
-    const activity = `with ${this.customGuilds.main().memberCount} users`
+    this.logger.debug("Loading commands...")
+    await this.commands.load()
+    this.logger.info("Loaded commands.")
+
+    const activity = `with ${(await this.customGuilds.main()).memberCount} users`
     this.user.setActivity(activity, { type: "PLAYING" })
 
     // schedule punishment undoings, banner queue cycles, and advanced builder removals!
@@ -29,13 +33,13 @@ export default async function ready(this: Client): Promise<void> {
         }
     }
 
-    if (this.customGuilds.main().features.includes("VANITY_URL")) {
-        const current = await this.customGuilds.main().fetchVanityData()
+    if ((await this.customGuilds.main()).features.includes("VANITY_URL")) {
+        const current = await (await this.customGuilds.main()).fetchVanityData()
         const outdated = current?.code !== this.config.vanity
         if (outdated) {
             const reason = "Reached level 3 boosting"
             await Guild.setVanityCode(
-                this.customGuilds.main(),
+                await this.customGuilds.main(),
                 this.config.vanity,
                 reason
             )

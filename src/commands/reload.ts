@@ -4,15 +4,24 @@ import Command from "../struct/Command"
 import Roles from "../util/roles"
 import truncateString from "../util/truncateString"
 import Discord from "discord.js"
+import CommandMessage from "../struct/CommandMessage"
 
 export default new Command({
     name: "reload",
     aliases: ["re"],
     description: "Reload a command/an event handler/the config/a module/all modules.",
     permission: Roles.BOT_DEVELOPER,
-    usage: "<command | event | 'config' | filename | 'all'>",
-    async run(this: Command, client: Client, message: Discord.Message, args: Args) {
-        const name = args.consume()
+    args: [
+        {
+            name: "module",
+            description:
+                "Module to reload (command | event | 'config' | filename | 'all')",
+            required: true,
+            optionType: "STRING"
+        }
+    ],
+    async run(this: Command, client: Client, message: CommandMessage, args: Args) {
+        const name = args.consume("module")
         const command = client.commands.search(name)
         const handler = client.events.get(name)
         const config = name.toLowerCase() === "config"
@@ -26,8 +35,8 @@ export default new Command({
 
         if (!command && !handler && !config && !file && !all) {
             const truncated = truncateString(name, 32, "...")
-            return client.channel.sendError(
-                message.channel,
+            return client.response.sendError(
+                message,
                 `Unknown command, event handler, or module \`${truncated}\`.`
             )
         }
@@ -35,7 +44,7 @@ export default new Command({
         let fullname: string
         if (command) {
             fullname = `\`${command.name}\` command`
-            client.commands.unloadOne(command.name)
+            await client.commands.unloadOne(command.name)
             await client.commands.loadOne(command.name)
         } else if (handler) {
             fullname = `\`${name}\` event handler`
@@ -59,6 +68,6 @@ export default new Command({
             }
         }
 
-        client.channel.sendSuccess(message.channel, `Reloaded ${fullname}.`)
+        client.response.sendSuccess(message, `Reloaded ${fullname}.`)
     }
 })

@@ -12,45 +12,128 @@ import noop from "../util/noop"
 import suggestionStatusActions from "../data/suggestionStatusActions"
 import hexToRGB from "../util/hexToRGB"
 import GuildMember from "../struct/discord/GuildMember"
+import CommandMessage from "../struct/CommandMessage"
 
 export default new Command({
     name: "suggestion",
     aliases: ["suggestions"],
     description: "Manage suggestions.",
     permission: Roles.ANY,
-    usage: "",
     dms: true,
     subcommands: [
         {
             name: "link",
             description: "Link to a suggestion.",
-            usage: "<number>"
+            args: [
+                {
+                    name: "number",
+                    description: "Suggestion number, only to be used if sub-suggesting.",
+                    required: true,
+                    optionType: "STRING"
+                }
+            ]
         },
         {
             name: "edit",
             description: "Edit a suggestion.",
-            usage: "<number> ['title' | 'body' | 'teams'] <text>"
+            args: [
+                {
+                    name: "number",
+                    description: "Suggestion number, only to be used if sub-suggesting.",
+                    required: true,
+                    optionType: "STRING"
+                },
+                {
+                    name: "field",
+                    description: "Field to edit.",
+                    required: true,
+                    optionType: "STRING",
+                    choices: ["title", "body", "teams"]
+                },
+                {
+                    name: "text",
+                    description: "Edited text.",
+                    required: true,
+                    optionType: "STRING"
+                }
+            ]
         },
         {
             name: "delete",
             description: "Delete a suggestion.",
             permission: Roles.ANY,
-            usage: "<number>"
+            args: [
+                {
+                    name: "number",
+                    description: "Suggestion number.",
+                    required: true,
+                    optionType: "STRING"
+                }
+            ]
         },
         {
             name: "status",
             description: "Change the status of a suggestion.",
             permission: [Roles.SUGGESTION_TEAM, Roles.MANAGER],
-            usage: "<number> <status> [reason]"
+            args: [
+                {
+                    name: "number",
+                    description: "Suggestion number.",
+                    required: true,
+                    optionType: "STRING"
+                },
+                {
+                    name: "status",
+                    description: "Suggestion status.",
+                    required: true,
+                    optionType: "STRING",
+                    choices: [
+                        "approved",
+                        "denied",
+                        "duplicate",
+                        "forwarded",
+                        "in-progress",
+                        "information",
+                        "invalid"
+                    ]
+                },
+                {
+                    name: "reason",
+                    description: "Suggestion status reason.",
+                    required: false,
+                    optionType: "STRING"
+                }
+            ]
         },
         {
             name: "search",
             description: "Search for suggestions.",
             permission: Roles.ANY,
-            usage: "['title' | 'body' | 'teams'] | <query> | [status/es]"
+            seperator: "|",
+            args: [
+                {
+                    name: "field",
+                    description: "Field to edit.",
+                    required: false,
+                    optionType: "STRING",
+                    choices: ["title", "body", "teams"]
+                },
+                {
+                    name: "query",
+                    description: "Search query.",
+                    required: true,
+                    optionType: "STRING"
+                },
+                {
+                    name: "status",
+                    description: "Suggestion statuses to search for.",
+                    required: false,
+                    optionType: "STRING"
+                }
+            ]
         }
     ],
-    async run(this: Command, client: Client, message: Discord.Message, args: Args) {
+    async run(this: Command, client: Client, message: CommandMessage, args: Args) {
         const Suggestions = client.db.getRepository(Suggestion)
         const staff = message.guild?.id === client.config.guilds.staff
         const category = staff ? "staff" : "main"
@@ -64,18 +147,20 @@ export default new Command({
             !canManage &&
             message.channel.type !== "DM"
         ) {
-            const errorMessage = await client.channel.sendError(
-                message.channel,
+            const errorMessage = await client.response.sendError(
+                message,
                 `Please run this command in <#${discussionID}>!`
             )
             if (message.channel.id === client.config.suggestions[category]) {
                 message.delete().catch(noop)
-                setTimeout(() => errorMessage.delete().catch(noop), 10000)
+                setTimeout(() => {
+                    if (errorMessage) errorMessage.delete().catch(noop)
+                }, 10000)
             }
             return
         }
 
-        const subcommand = args.consume()
+        const subcommand = args.consumeSubcommand()
         const availableSubcommands = this.subcommands.filter(sub =>
             message.member
                 ? GuildMember.hasRole(message.member, sub.permission || this.permission)
@@ -86,7 +171,7 @@ export default new Command({
         const allSubcommandNames = this.subcommands.map(sub => sub.name)
         if (!allSubcommandNames.includes(subcommand))
             // prettier-ignore
-            return client.channel.sendError(message.channel,
+            return client.response.sendError(message,
                 `You must specify a subcommand! (${humanizeArray(availableSubcommandNames)}).`
             )
 
@@ -99,10 +184,10 @@ export default new Command({
             const PER_PAGE = 10
 
             args.separator = "|"
-            const field = args.consumeIf(["title", "body", "teams"]) || "body"
-            const query = args.consume()
+            const field = args.consumeIf(["title", "body", "teams"], "field") || "body"
+            const query = args.consume("query")
             let statuses = args
-                .consume()
+                .consume("status")
                 .split(/,? ?/)
                 .map(s => s.toLowerCase())
             if (!statuses.length) statuses = Object.keys(SuggestionStatuses)
@@ -125,8 +210,8 @@ export default new Command({
             const paginate = total > PER_PAGE
 
             if (!total)
-                return client.channel.sendError(
-                    message.channel,
+                return client.response.sendError(
+                    message,
                     `No suggestions found for **${cleanQuery}**!`
                 )
 
@@ -152,7 +237,7 @@ export default new Command({
             }
 
             await formatResults(results, embed)
-            if (!paginate) return message.channel.send({ embeds: [embed] })
+            if (!paginate) return message.send({ embeds: [embed] })
 
             const pages = Math.ceil(total / PER_PAGE)
             embed.footer.text = `${total} results total, page 1/${pages}`
@@ -162,25 +247,24 @@ export default new Command({
                     .setLabel(client.config.emojis.right.toString())
                     .setStyle("SUCCESS")
             )
-            const resultsMessage = await message.channel.send({
+            await message.send({
                 embeds: [embed],
                 components: [row]
             })
 
-            const filter = (interaction: Discord.Interaction) =>
-                interaction.isButton() &&
-                [`${message.id}.back`, `${message.id}.forwards`].includes(
-                    interaction.customId
-                )
-            const buttonpress = resultsMessage.createMessageComponentCollector({
-                filter: filter,
-                componentType: "BUTTON"
-            })
-
             let old = 1
             let page = 1
-            buttonpress.on("collect", async interaction => {
-                if (interaction.user.id !== message.author.id)
+            client.on("interactionCreate", async interaction => {
+                if (
+                    !(
+                        interaction.isButton() &&
+                        [`${message.id}.back`, `${message.id}.forwards`].includes(
+                            interaction.customId
+                        )
+                    )
+                )
+                    return
+                if (interaction.user.id !== message.member.id)
                     return interaction.reply({
                         content: `Did you summon that menu?, I think not!`,
                         ephemeral: true
@@ -235,7 +319,13 @@ export default new Command({
                 await (interaction as Discord.ButtonInteraction).update({
                     components: [row]
                 })
-                await resultsMessage.edit({ embeds: [embed] })
+                if (interaction.message instanceof Discord.Message) {
+                    try {
+                        await interaction.message.edit({ embeds: [embed] })
+                    } catch {
+                        interaction.editReply({ embeds: [embed] })
+                    }
+                } else interaction.editReply({ embeds: [embed] })
             })
 
             return
@@ -243,17 +333,17 @@ export default new Command({
 
         /* suggestion management commands from here */
 
-        const identifier = Suggestion.parseIdentifier(args.consume())
+        const identifier = Suggestion.parseIdentifier(args.consume("number"))
         if (!identifier.number)
-            return client.channel.sendError(
-                message.channel,
+            return client.response.sendError(
+                message,
                 "You must specify a suggestion number!"
             )
 
         const suggestion = await Suggestion.findByIdentifier(identifier, staff)
         if (!suggestion)
-            return client.channel.sendError(
-                message.channel,
+            return client.response.sendError(
+                message,
                 "Hmm... That suggestion doesn't exist."
             )
 
@@ -261,8 +351,8 @@ export default new Command({
             .fetch(suggestion.message)
             .catch(() => null)
         if (!suggestionMessage)
-            return client.channel.sendError(
-                message.channel,
+            return client.response.sendError(
+                message,
                 "Can't find the suggestion's message!"
             )
 
@@ -270,42 +360,43 @@ export default new Command({
             const displayNumber = await suggestion.getIdentifier()
             const url = suggestionMessage.url
             if (suggestion.deletedAt) {
-                return client.channel.sendSuccess(
-                    message.channel,
+                return client.response.sendSuccess(
+                    message,
                     `Looks like suggestion **#${displayNumber}** was deleted, but here it is: [*Deleted*](${url})`
                 )
             } else {
-                return client.channel.sendSuccess(
-                    message.channel,
+                return client.response.sendSuccess(
+                    message,
                     `Here's the link to suggestion **#${displayNumber}**: [${suggestion.title}](${url})`
                 )
             }
         } else if (subcommand === "edit") {
-            const field = args.consumeIf(["title", "body", "teams"]) || "body"
+            const field = args.consumeIf(["title", "body", "teams"], "field") || "body"
             if (
-                suggestion.author !== message.author.id &&
+                suggestion.author !== message.member.id &&
                 (field === "body" || !canManage)
             )
-                return client.channel.sendError(
-                    message.channel,
+                return client.response.sendError(
+                    message,
                     "You can't edit other people's suggestions!"
                 )
 
-            let edited = args.consumeRest()
-            if (field === "title") edited = flattenMarkdown(edited, client, message.guild)
+            let edited = args.consumeRest(["text"])
+            if (field === "title")
+                edited = await flattenMarkdown(edited, client, message.guild)
             if (field === "title" && edited.length > 200)
-                return client.channel.sendError(
-                    message.channel,
+                return client.response.sendError(
+                    message,
                     "That title is too long! (max. 200 characters)."
                 )
             if (field === "teams" && edited.length > 255)
-                return client.channel.sendError(
-                    message.channel,
+                return client.response.sendError(
+                    message,
                     "That team is too long! (max. 255 characters)."
                 )
             if (!edited)
-                return client.channel.sendError(
-                    message.channel,
+                return client.response.sendError(
+                    message,
                     "You must provide a new field body!"
                 )
 
@@ -314,40 +405,46 @@ export default new Command({
 
             const embed = await suggestion.displayEmbed(client)
             await suggestionMessage.edit({ embeds: [embed] })
-            return client.channel.sendSuccess(message.channel, "Edited the suggestion!")
+            return client.response.sendSuccess(message, "Edited the suggestion!")
         } else if (subcommand === "delete") {
+<<<<<<< HEAD
             if (suggestion.author !== message.author.id && !canManage && !GuildMember.hasRole(message.member, [Roles.MODERATOR]))
                 return client.channel.sendError(
                     message.channel,
+=======
+            if (suggestion.author !== message.member.id && !canManage)
+                return client.response.sendError(
+                    message,
+>>>>>>> 4aa751b6190aef6916450f0e598e84c13e73ce49
                     "You can't delete other people's suggestions!"
                 )
 
             // BaseEntity#softRemove() doesn't save the deletion date to the object itself
             // and we need it to be saved because Suggestion#displayEmbed() uses it
-            suggestion.deleter = message.author.id
+            suggestion.deleter = message.member.id
             suggestion.deletedAt = new Date()
             await suggestion.save()
 
             const embed = await suggestion.displayEmbed(client)
             await suggestionMessage.edit({ embeds: [embed] })
 
-            client.channel.sendSuccess(message.channel, "Deleted the suggestion!")
+            client.response.sendSuccess(message, "Deleted the suggestion!")
         } else if (subcommand === "status") {
             if (!canManage) return
 
             const oldStatus = suggestion.status
-            const status = args.consume().toLowerCase()
-            const reason = args.consumeRest()
+            const status = args.consume("status").toLowerCase()
+            const reason = args.consumeRest(["reason"])
             if (!(status in suggestionStatusActions)) {
                 const formatted = humanizeArray(Object.keys(suggestionStatusActions))
-                return client.channel.sendError(
-                    message.channel,
+                return client.response.sendError(
+                    message,
                     `You must specify a new suggestion status! (${formatted}).`
                 )
             }
 
             suggestion.status = status as SuggestionStatus
-            suggestion.statusUpdater = message.author.id
+            suggestion.statusUpdater = message.member.id
             suggestion.statusReason = reason || null
 
             await suggestion.save()
@@ -382,7 +479,7 @@ export default new Command({
                 }
             }
 
-            return client.channel.sendSuccess(message.channel, "Updated the suggestion!")
+            return client.response.sendSuccess(message, "Updated the suggestion!")
         }
     }
 })

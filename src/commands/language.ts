@@ -5,7 +5,19 @@ import Command from "../struct/Command"
 import Guild from "../struct/discord/Guild"
 import Roles from "../util/roles"
 import noop from "../util/noop"
+import CommandMessage from "../struct/CommandMessage"
 
+const ROLE_NAMES = [
+    "English",
+    "Español",
+    "Français",
+    "Deutsch",
+    "Pусский",
+    "Português",
+    "Italiana",
+    "Ø",
+    "中文"
+]
 const LANGUAGE_ROLES = {
     english: "English",
     en: "English",
@@ -41,37 +53,49 @@ export default new Command({
     aliases: ["lang"],
     description: "Give a member a language role.",
     permission: Roles.STAFF,
-    usage: "<member> <language>",
-    async run(this: Command, client: Client, message: Discord.Message, args: Args) {
-        const user = await args.consumeUser()
+    args: [
+        {
+            name: "member",
+            description: "Member to give role.",
+            required: true,
+            optionType: "USER"
+        },
+        {
+            name: "language",
+            description: "Language to give.",
+            required: true,
+            optionType: "STRING",
+            choices: ROLE_NAMES //NOTE: To stay under the 25 entry limit and not offend any one language in specific, since it is choices we simply just have the role names only, the normal command will support them all, feel free to suggest a better solution
+        }
+    ],
+    async run(this: Command, client: Client, message: CommandMessage, args: Args) {
+        const user = await args.consumeUser("member")
         if (!user)
-            return client.channel.sendError(
-                message.channel,
+            return client.response.sendError(
+                message,
                 user === undefined
                     ? "You must provide a user to give a language role to!"
                     : "Couldn't find that user."
             )
 
-        const member: Discord.GuildMember = await client.customGuilds
-            .main()
-            .members.fetch({ user, cache: true })
+        const member: Discord.GuildMember = await (
+            await client.customGuilds.main()
+        ).members
+            .fetch({ user, cache: true })
             .catch(noop)
         if (!member)
-            return client.channel.sendError(
-                message.channel,
-                "The user is not in the server!"
-            )
+            return client.response.sendError(message, "The user is not in the server!")
 
-        const languageInput = args.consume().toLowerCase()
+        const languageInput = args.consume("language").toLowerCase()
         const language = LANGUAGE_ROLES[languageInput]
         if (!language)
-            return client.channel.sendError(
-                message.channel,
+            return client.response.sendError(
+                message,
                 languageInput ? "That's not a language!" : "You must provide a language!"
             )
 
-        const role = Guild.role(client.customGuilds.main(), language)
+        const role = Guild.role(await client.customGuilds.main(), language)
         await member.roles.add(role)
-        await client.channel.sendSuccess(message.channel, "Role added!")
+        await client.response.sendSuccess(message, "Role added!")
     }
 })
