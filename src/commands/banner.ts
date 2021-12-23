@@ -5,7 +5,6 @@ import BannerImage from "../entities/BannerImage"
 import Roles from "../util/roles"
 import quote from "../util/quote"
 import hexToRGB from "../util/hexToRGB"
-import Discord from "discord.js"
 import CommandMessage from "../struct/CommandMessage"
 
 export default new Command({
@@ -101,7 +100,7 @@ export default new Command({
                     "That description is too long! (max. 512 characters)."
                 )
 
-            message.continue()
+            await message.continue()
 
             const banner = new BannerImage()
             banner.url = image
@@ -122,7 +121,7 @@ export default new Command({
                     "You must provide the banner ID."
                 )
 
-            message.continue()
+            await message.continue()
 
             const banner = await BannerImage.findOne(Number(id))
             if (!banner)
@@ -134,7 +133,7 @@ export default new Command({
                 `Removed banner **#${id}** from the queue.`
             )
         } else if (subcommand === "queue") {
-            message.continue()
+            await message.continue()
             const banners = await BannerImage.find()
             const formatted = banners.map(banner => banner.format()).join("\n")
             return client.response.sendSuccess(message, {
@@ -149,7 +148,7 @@ export default new Command({
                     "You must provide the banner ID."
                 )
 
-            message.continue()
+            await message.continue()
 
             const banner = await BannerImage.findOne(Number(id))
             if (!banner)
@@ -169,7 +168,7 @@ export default new Command({
                 ]
             })
         } else if (subcommand === "cycle") {
-            message.continue()
+            await message.continue()
             BannerImage.cycle(client)
             await client.response.sendSuccess(message, "Forced a banner queue cycle.")
         }

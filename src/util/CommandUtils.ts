@@ -284,6 +284,7 @@ function addOption(
     builder: SlashCommandSubcommandBuilder | SlashCommandBuilder,
     arg: CommandArgs
 ): SlashCommandSubcommandBuilder | SlashCommandBuilder {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let trueChoices: any = null
     if (arg.choices) {
         trueChoices = []

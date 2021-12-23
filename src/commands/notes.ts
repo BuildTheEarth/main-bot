@@ -4,7 +4,6 @@ import Command from "../struct/Command"
 import Roles from "../util/roles"
 import ModerationNote from "../entities/ModerationNote"
 import formatTimestamp from "../util/formatTimestamp"
-import Discord from "discord.js"
 import CommandMessage from "../struct/CommandMessage"
 
 export default new Command({
@@ -102,7 +101,7 @@ export default new Command({
                 )
         }
 
-        message.continue()
+        await message.continue()
 
         const note = await ModerationNote.findOne(user.id)
 

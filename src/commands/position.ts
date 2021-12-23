@@ -70,7 +70,7 @@ export default new Command({
         if (!member)
             return client.response.sendError(message, "The user is not in the server!")
 
-        message.continue()
+        await message.continue()
 
         const demote = !!args.consumeIf("demote", "promote")
         const method = demote ? "remove" : "add"

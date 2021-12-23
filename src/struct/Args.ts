@@ -15,12 +15,12 @@ export default class Args {
     }
 
     split(argNames: string[]): string[] {
-        if (this.message.message instanceof Discord.Message) {
+        if (this.message.isNormalCommand()) {
             return this.separator
                 ? this.raw.split(this.separator).map(arg => arg.trim())
                 : this.raw.split(/\s/)
         }
-        if (this.message.message instanceof Discord.CommandInteraction) {
+        if (this.message.isSlashCommand()) {
             const returnArgs = []
             argNames.forEach(element =>
                 returnArgs.push(
@@ -34,10 +34,10 @@ export default class Args {
     }
 
     splitMultiple(argNames: string[]): string[] {
-        if (this.message.message instanceof Discord.Message) {
+        if (this.message.isNormalCommand()) {
             return this.separator ? this.split(argNames) : this.raw.split(/\s+/)
         }
-        if (this.message.message instanceof Discord.CommandInteraction) {
+        if (this.message.isSlashCommand()) {
             const returnArgs = []
             argNames.forEach(element =>
                 returnArgs.push(
@@ -53,12 +53,12 @@ export default class Args {
     get(argName: string): string
     get(argName: string, count: number): string[]
     get(argName: string, count?: number): string | string[] {
-        if (this.message.message instanceof Discord.Message) {
+        if (this.message.isNormalCommand()) {
             return count
                 ? this.splitMultiple([argName]).slice(0, count)
                 : this.split([argName])[0]
         }
-        if (this.message.message instanceof Discord.CommandInteraction) {
+        if (this.message.isSlashCommand()) {
             if ((this.message.message as Discord.CommandInteraction).options.get(argName))
                 return (this.message.message as Discord.CommandInteraction).options
                     .get(argName)
@@ -68,10 +68,10 @@ export default class Args {
     }
 
     consumeCommand(): string {
-        if (this.message.message instanceof Discord.Message) {
+        if (this.message.isNormalCommand()) {
             return this.consume("")
         }
-        if (this.message.message instanceof Discord.CommandInteraction) {
+        if (this.message.isSlashCommand()) {
             return this.message.message.commandName
         }
     }
@@ -89,10 +89,10 @@ export default class Args {
         argName: string
     ): string {
         let arg: string = null
-        if (this.message.message instanceof Discord.Message) {
+        if (this.message.isNormalCommand()) {
             arg = this.get(argName)
         }
-        if (this.message.message instanceof Discord.CommandInteraction) {
+        if (this.message.isSlashCommand()) {
             if ((this.message.message as Discord.CommandInteraction).options.get(argName))
                 arg = (this.message.message as Discord.CommandInteraction).options
                     .get(argName)
@@ -115,7 +115,7 @@ export default class Args {
     consumeRest(argNames: string[]): string
     consumeRest(argNames: string[], count: number): string[]
     consumeRest(argNames: string[], count?: number): string | string[] {
-        if (this.message.message instanceof Discord.Message) {
+        if (this.message.isNormalCommand()) {
             if (!count) {
                 const args = this.raw.trim()
                 this.raw = ""
@@ -126,7 +126,7 @@ export default class Args {
                 return args
             }
         }
-        if (this.message.message instanceof Discord.CommandInteraction) {
+        if (this.message.isSlashCommand()) {
             const returnArgs = []
             argNames.forEach(element => {
                 let option: string
@@ -146,7 +146,7 @@ export default class Args {
     }
 
     remove(count: number = 1): string {
-        if (this.message.message instanceof Discord.Message) {
+        if (this.message.isNormalCommand()) {
             if (this.separator) {
                 this.raw = this.raw
                     .split(this.separator)
@@ -160,7 +160,7 @@ export default class Args {
 
             return this.raw
         }
-        if (this.message.message instanceof Discord.CommandInteraction) return ""
+        if (this.message.isSlashCommand()) return ""
     }
 
     removeCodeblock(text: string): string {
@@ -171,7 +171,7 @@ export default class Args {
     }
 
     consumeLength(argName: string): number {
-        if (this.message.message instanceof Discord.Message) {
+        if (this.message.isNormalCommand()) {
             try {
                 const parsed = ms(this.consume(argName))
                 return parsed === undefined ? null : parsed
@@ -179,8 +179,9 @@ export default class Args {
                 return null
             }
         }
-        if (this.message.message instanceof Discord.CommandInteraction) {
+        if (this.message.isSlashCommand()) {
             try {
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 const parsed: any = ms(this.message.message.options.getString(argName))
                 return parsed === undefined ? null : parsed
             } catch {
@@ -190,7 +191,7 @@ export default class Args {
     }
 
     async consumeChannel(argName: string): Promise<Discord.Channel> {
-        if (this.message.message instanceof Discord.Message) {
+        if (this.message.isNormalCommand()) {
             const id = this.raw.match(/^(<#)?(\d{18})>?/)?.[2]
             if (!id) return null
             this.remove()
@@ -200,7 +201,7 @@ export default class Args {
                     .catch(() => null)
             return channel
         }
-        if (this.message.message instanceof Discord.CommandInteraction)
+        if (this.message.isSlashCommand())
             return this.message.message.options.getChannel(argName) as Discord.Channel
     }
 
@@ -208,7 +209,7 @@ export default class Args {
         argName: string,
         allowSpecial: boolean = false
     ): Promise<Discord.User> {
-        if (this.message.message instanceof Discord.Message) {
+        if (this.message.isNormalCommand()) {
             if (allowSpecial) {
                 const special = this.consumeIf(
                     ["me", "you", "yourself", "someone"],
@@ -246,7 +247,7 @@ export default class Args {
                 return undefined
             }
         }
-        if (this.message.message instanceof Discord.CommandInteraction) {
+        if (this.message.isSlashCommand()) {
             return this.message.message.options.getUser(argName)
         }
     }
@@ -254,7 +255,7 @@ export default class Args {
     consumeAttachment(
         check?: (attachment: Discord.MessageAttachment) => boolean
     ): Discord.MessageAttachment {
-        if (this.message.message instanceof Discord.Message) {
+        if (this.message.isNormalCommand()) {
             return check
                 ? this.message.message.attachments.find(check) || null
                 : this.message.message.attachments.first() || null
@@ -262,7 +263,7 @@ export default class Args {
     }
 
     consumeImage(argName: string): string {
-        if (this.message.message instanceof Discord.Message) {
+        if (this.message.isNormalCommand()) {
             const check = (att: Discord.MessageAttachment) =>
                 !!att.name.match(/\.(jpe?g|png|gif)$/i)
             const attachment = this.consumeAttachment(check)
@@ -277,7 +278,7 @@ export default class Args {
 
             return null
         }
-        if (this.message.message instanceof Discord.CommandInteraction) {
+        if (this.message.isSlashCommand()) {
             const url = this.consumeIf(/https?:\/\/(.+)?\.(jpe?g|png|gif)/i, argName)
             if (url)
                 return url.replace(
@@ -290,16 +291,14 @@ export default class Args {
     }
 
     checkSubcommand(compareFromValue: string, compareTo: string): boolean {
-        if (this.message.message instanceof Discord.Message)
-            return compareFromValue === compareTo
-        if (this.message.message instanceof Discord.CommandInteraction)
+        if (this.message.isNormalCommand()) return compareFromValue === compareTo
+        if (this.message.isSlashCommand())
             return this.message.message.options.getSubcommand() === compareTo
     }
 
     checkSubcommandGroup(compareFromValue: string, compareTo: string): boolean {
-        if (this.message.message instanceof Discord.Message)
-            return compareFromValue === compareTo
-        if (this.message.message instanceof Discord.CommandInteraction)
+        if (this.message.isNormalCommand()) return compareFromValue === compareTo
+        if (this.message.isSlashCommand())
             return this.message.message.options.getSubcommandGroup() === compareTo
     }
 
@@ -308,10 +307,10 @@ export default class Args {
     ): string {
         if (equals) {
             let arg: string = null
-            if (this.message.message instanceof Discord.Message) {
+            if (this.message.isNormalCommand()) {
                 arg = this.get("")
             }
-            if (this.message.message instanceof Discord.CommandInteraction) {
+            if (this.message.isSlashCommand()) {
                 try {
                     arg = this.message.message.options.getSubcommand()
                 } catch {
@@ -338,10 +337,10 @@ export default class Args {
     ): string {
         if (equals) {
             let arg: string = null
-            if (this.message.message instanceof Discord.Message) {
+            if (this.message.isNormalCommand()) {
                 arg = this.get("")
             }
-            if (this.message.message instanceof Discord.CommandInteraction) {
+            if (this.message.isSlashCommand()) {
                 try {
                     arg = this.message.message.options.getSubcommandGroup()
                 } catch {
@@ -364,8 +363,8 @@ export default class Args {
     }
 
     consumeSubcommand(): string {
-        if (this.message.message instanceof Discord.Message) return this.consume("")
-        if (this.message.message instanceof Discord.CommandInteraction)
+        if (this.message.isNormalCommand()) return this.consume("")
+        if (this.message.isSlashCommand())
             try {
                 return this.message.message.options.getSubcommand()
             } catch {
@@ -374,8 +373,8 @@ export default class Args {
     }
 
     consumeSubcommandGroup(): string {
-        if (this.message.message instanceof Discord.Message) return this.consume("")
-        if (this.message.message instanceof Discord.CommandInteraction)
+        if (this.message.isNormalCommand()) return this.consume("")
+        if (this.message.isSlashCommand())
             try {
                 return this.message.message.options.getSubcommandGroup()
             } catch {

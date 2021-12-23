@@ -2,7 +2,6 @@ import Client from "../struct/Client"
 import Args from "../struct/Args"
 import Command from "../struct/Command"
 import Roles from "../util/roles"
-import Discord from "discord.js"
 import { Brackets, WhereExpression } from "typeorm"
 import Snippet from "../entities/Snippet"
 import CommandMessage from "../struct/CommandMessage"
@@ -24,7 +23,7 @@ export default new Command({
         const input = args.consumeRest(["team"]).toLowerCase()
         if (!input) return client.response.sendError(message, "Please give a team name")
 
-        message.continue()
+        await message.continue()
 
         const Snippets = Snippet.getRepository()
         const language = "en"

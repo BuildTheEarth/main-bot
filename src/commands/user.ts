@@ -33,7 +33,7 @@ export default new Command({
                     : "Couldn't find that user."
             )
 
-        message.continue()
+        await message.continue()
 
         const member: Discord.GuildMember = await message.guild.members
             .fetch({ user, cache: true })

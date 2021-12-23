@@ -54,7 +54,7 @@ export default new Command({
                 `The avatar size must be one of ${humanizeArray(VALID_IMAGE_SIZES)}.`
             )
 
-        message.continue()
+        await message.continue()
 
         const url = user.displayAvatarURL({
             size: size as Discord.AllowedImageSize,

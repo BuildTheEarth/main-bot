@@ -6,7 +6,6 @@ import quote from "../util/quote"
 import { Brackets, WhereExpression } from "typeorm"
 import languages from "../util/patchedISO6391"
 import Snippet from "../entities/Snippet"
-import Discord from "discord.js"
 import CommandMessage from "../struct/CommandMessage"
 
 export default new Command({
@@ -48,7 +47,7 @@ export default new Command({
                     `Please choose \`zh-s\` (简体中文) or \`zh-t\` (繁體中文)!`
                 )
 
-            message.continue()
+            await message.continue()
 
             const find = (query: WhereExpression) =>
                 query

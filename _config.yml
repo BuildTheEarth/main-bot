@@ -1,6 +1,7 @@
 prefix: ""
 appeal: ""
 vanity: ""
+isDev: false
 
 logging:
     modLogs: ""

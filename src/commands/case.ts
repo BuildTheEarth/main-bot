@@ -4,7 +4,6 @@ import Command from "../struct/Command"
 import ActionLog from "../entities/ActionLog"
 import Roles from "../util/roles"
 import GuildMember from "../struct/discord/GuildMember"
-import Discord from "discord.js"
 import CommandMessage from "../struct/CommandMessage"
 
 export default new Command({
@@ -73,7 +72,7 @@ export default new Command({
         if (Number.isNaN(id))
             return client.response.sendError(message, "You must provide a case ID!")
 
-        message.continue()
+        await message.continue()
 
         const log = await ActionLog.findOne(id, { options: { withDeleted: true } })
         if (!log)

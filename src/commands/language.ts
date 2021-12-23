@@ -94,7 +94,7 @@ export default new Command({
                 languageInput ? "That's not a language!" : "You must provide a language!"
             )
 
-        message.continue()
+        await message.continue()
 
         const role = Guild.role(await client.customGuilds.main(), language)
         await member.roles.add(role)

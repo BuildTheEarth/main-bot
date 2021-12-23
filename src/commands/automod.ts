@@ -1,7 +1,6 @@
 import Client from "../struct/Client"
 import Command from "../struct/Command"
 import Roles from "../util/roles"
-import Discord from "discord.js"
 import CommandMessage from "../struct/CommandMessage"
 import Args from "../struct/Args"
 import humanizeArray from "../util/humanizeArray"

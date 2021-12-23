@@ -5,7 +5,6 @@ import Command from "../struct/Command"
 import GuildMember from "../struct/discord/GuildMember"
 import Roles from "../util/roles"
 import truncateString from "../util/truncateString"
-import humanizeArray from "../util/humanizeArray"
 import CommandMessage from "../struct/CommandMessage"
 import CommandUtils from "../util/CommandUtils"
 export default new Command({

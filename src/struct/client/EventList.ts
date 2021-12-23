@@ -13,7 +13,7 @@ export default class EventList extends Discord.Collection<string, Function> {
     async load(): Promise<void> {
         // eslint-disable-next-line @typescript-eslint/ban-types
         const bind = (func: Function): Function => func.bind(this.client)
-        await loadDir(__dirname + "/../../events/", bind, this)
+        await loadDir(__dirname + "/../../events/", this.client, bind, this)
     }
 
     register(): void {

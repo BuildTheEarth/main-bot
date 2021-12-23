@@ -27,7 +27,7 @@ export default new Command({
         if (!perms.has("VIEW_CHANNEL"))
             return client.response.sendError(message, "You can't see that channel.")
 
-        message.continue()
+        await message.continue()
 
         const manager = Guild.role(message.guild, Roles.MANAGER)
         /*eslint-disable */

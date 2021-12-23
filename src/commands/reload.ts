@@ -3,7 +3,6 @@ import Args from "../struct/Args"
 import Command from "../struct/Command"
 import Roles from "../util/roles"
 import truncateString from "../util/truncateString"
-import Discord from "discord.js"
 import CommandMessage from "../struct/CommandMessage"
 
 export default new Command({
@@ -41,7 +40,7 @@ export default new Command({
             )
         }
 
-        message.continue()
+        await message.continue()
 
         let fullname: string
         if (command) {

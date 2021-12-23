@@ -64,7 +64,7 @@ export default new Command({
         const title = await flattenMarkdown(args.consume("title"), client, message.guild)
         const [body, teams] = [args.consume("body"), args.consume("team")]
 
-        message.continue()
+        await message.continue()
 
         let error: string
         if (extend && !(await Suggestion.findOne({ number: extend.number })))

@@ -3,7 +3,6 @@ import Args from "../struct/Args"
 import Command from "../struct/Command"
 import Roles from "../util/roles"
 import truncateString from "../util/truncateString"
-import Discord from "discord.js"
 import CommandMessage from "../struct/CommandMessage"
 
 export default new Command({
@@ -11,6 +10,7 @@ export default new Command({
     aliases: ["sql"],
     description: "Evaluate an SQL query.",
     permission: Roles.BOT_DEVELOPER,
+    devOnly: true,
     args: [
         {
             name: "query",
@@ -22,7 +22,7 @@ export default new Command({
     async run(this: Command, client: Client, message: CommandMessage, args: Args) {
         const query = args.removeCodeblock(args.consumeRest(["query"]))
 
-        message.continue()
+        await message.continue()
 
         try {
             const out = JSON.stringify(await client.db.query(query), null, 2)

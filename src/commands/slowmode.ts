@@ -52,7 +52,7 @@ export default new Command({
         else if (slowmode > 6 * 60 * 60)
             return client.response.sendError(message, "That is a lot of seconds!")
 
-        message.continue()
+        await message.continue()
 
         const reason = `By ${message.member.user.tag} (${message.member.id})`
 

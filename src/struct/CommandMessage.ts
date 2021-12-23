@@ -1,7 +1,5 @@
-import DiscordEnums from "discord.js/typings/enums"
 import Discord from "discord.js"
 import Client from "../struct/Client"
-import ApiTypes from "discord-api-types/v9"
 
 export default class CommandMessage {
     message: Discord.CommandInteraction | Discord.Message
@@ -26,14 +24,14 @@ export default class CommandMessage {
     }
 
     async send(payload: MessageOptions): Promise<CommandMessage> {
-        if (this.message instanceof Discord.Message) {
+        if (this.isNormalCommand()) {
             if (!payload.allowedMentions) payload.allowedMentions = { repliedUser: false }
             return new CommandMessage(
                 await this.message.reply(payload as Discord.ReplyMessageOptions),
                 this.client
             )
         }
-        if (this.message instanceof Discord.CommandInteraction) {
+        if (this.isSlashCommand()) {
             if (this.message.deferred)
                 await this.message.followUp(payload as Discord.InteractionReplyOptions)
             else await this.message.reply(payload as Discord.InteractionReplyOptions)
@@ -43,9 +41,8 @@ export default class CommandMessage {
     }
 
     async react(emoji: string): Promise<CommandMessage | Discord.MessageReaction> {
-        if (this.message instanceof Discord.Message)
-            return await this.message.react(emoji)
-        if (this.message instanceof Discord.CommandInteraction)
+        if (this.isNormalCommand()) return await this.message.react(emoji)
+        if (this.isSlashCommand())
             return new CommandMessage(
                 (await this.message.followUp({
                     ephemeral: true,
@@ -56,9 +53,9 @@ export default class CommandMessage {
     }
 
     async delete(): Promise<CommandMessage | void> {
-        if (this.message instanceof Discord.Message)
+        if (this.isNormalCommand())
             return new CommandMessage(await this.message.delete(), this.client)
-        if (this.message instanceof Discord.CommandInteraction)
+        if (this.isSlashCommand())
             try {
                 this.message.deleteReply()
             } catch {
@@ -68,28 +65,32 @@ export default class CommandMessage {
     }
 
     async edit(payload: MessageOptions): Promise<CommandMessage> {
-        if (this.message instanceof Discord.Message) {
+        if (this.isNormalCommand()) {
             if (!payload.allowedMentions) payload.allowedMentions = { repliedUser: false }
             return new CommandMessage(
                 await this.message.edit(payload as Discord.ReplyMessageOptions),
                 this.client
             )
         }
-        if (this.message instanceof Discord.CommandInteraction) {
+        if (this.isSlashCommand()) {
             await this.message.editReply(payload as Discord.InteractionReplyOptions)
 
             return this
         }
     }
 
-    isSlashCommand(): this is Discord.CommandInteraction {
+    isSlashCommand(): this is this & { message: Discord.CommandInteraction } {
         if (this.message instanceof Discord.Message) return false
         if (this.message instanceof Discord.CommandInteraction) return true
     }
 
+    isNormalCommand(): this is this & { message: Discord.Message } {
+        if (this.message instanceof Discord.Message) return true
+        if (this.message instanceof Discord.CommandInteraction) return false
+    }
+
     async continue(): Promise<CommandMessage> {
-        if (this.message instanceof Discord.CommandInteraction)
-            await this.message.deferReply()
+        if (this.isSlashCommand()) await this.message.deferReply()
         return this
     }
 }

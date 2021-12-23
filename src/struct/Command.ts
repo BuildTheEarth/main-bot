@@ -14,6 +14,7 @@ export default class Command implements CommandProperties {
     args?: CommandArgs[]
     seperator?: string
     subcommands: SubCommandProperties[]
+    devOnly?: boolean
     run: (client: Client, message: CommandMessage, args: Args) => void | Promise<void>
 
     constructor(properties: CommandProperties) {
@@ -22,6 +23,7 @@ export default class Command implements CommandProperties {
         this.name = properties.name
         this.basesubcommand = properties.basesubcommand || null
         this.inheritGlobalArgs = properties.inheritGlobalArgs || false
+        this.devOnly = properties.devOnly || false
         this.aliases = properties.aliases
         this.description = properties.description
         this.permission = properties.permission
@@ -37,6 +39,7 @@ export default class Command implements CommandProperties {
 export interface CommandProperties extends SubCommandProperties {
     aliases: string[]
     inheritGlobalArgs?: boolean
+    devOnly?: boolean
     subcommands?: SubCommandProperties[]
     permission: string | string[]
     basesubcommand?: string
@@ -68,6 +71,7 @@ export const ArgTypes = {
 export interface CommandArgs {
     name: string
     description: string
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     choices?: Array<any>
     required: boolean
     optionType:

@@ -74,7 +74,7 @@ export default new Command({
         if (!reason)
             return client.response.sendError(message, "You must provide a reason!")
 
-        message.continue()
+        await message.continue()
 
         const mute = await TimedPunishment.findOne({ member: user.id, type: "mute" })
         if (mute) return client.response.sendError(message, "That user is already muted!")

@@ -112,7 +112,7 @@ export default new Command({
                 error = `That's not a valid status! (${statuses}).`
             if (error) return client.response.sendError(message, error)
 
-            message.continue()
+            await message.continue()
 
             const task = new Task()
             task.title = title
@@ -138,7 +138,7 @@ export default new Command({
                     `That's not a valid status! (${statuses}).`
                 )
 
-            message.continue()
+            await message.continue()
 
             const task = await Task.findOne(id)
             task.status = status as TaskStatus
@@ -146,7 +146,7 @@ export default new Command({
 
             await client.response.sendSuccess(message, `Updated task **#${task.id}**!`)
         } else if (subcommand === "list") {
-            message.continue()
+            await message.continue()
 
             const not = ["done", "reported"]
             if (message.guild) not.push("hidden")
@@ -190,7 +190,7 @@ export default new Command({
                 ]
             })
         } else if (subcommand === "report") {
-            message.continue()
+            await message.continue()
 
             const channel =
                 ((await args.consumeChannel("channel")) as Discord.TextBasedChannels) ||

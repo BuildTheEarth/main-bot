@@ -4,7 +4,6 @@ import Command from "../struct/Command"
 import ModpackImage, { ModpackImageKey } from "../entities/ModpackImage"
 import Roles from "../util/roles"
 import isURL from "../util/isURL"
-import Discord from "discord.js"
 import CommandMessage from "../struct/CommandMessage"
 
 export default new Command({
@@ -73,7 +72,7 @@ export default new Command({
             return client.response.sendError(message, "You must specify a subcommand.")
 
         if (subcommand === "list") {
-            message.continue()
+            await message.continue()
 
             const sort = (a: ModpackImage, b: ModpackImage) =>
                 a.key === "logo" ? -1 : Number(a.key) - Number(b.key)
@@ -110,7 +109,7 @@ export default new Command({
                     "You must specify image credit!"
                 )
 
-            message.continue()
+            await message.continue()
 
             const image = new ModpackImage()
             image.key = key as ModpackImageKey
@@ -126,7 +125,7 @@ export default new Command({
             if (!key || !ModpackImage.isValidKey(key))
                 return client.response.sendError(message, "You must specify a valid key!")
 
-            message.continue()
+            await message.continue()
 
             const image = await ModpackImage.findOne({ key: key as ModpackImageKey })
             if (!image)
@@ -135,7 +134,7 @@ export default new Command({
             await image.remove()
             client.response.sendSuccess(message, "Deleted image.")
         } else if (subcommand === "fetch") {
-            message.continue()
+            await message.continue()
 
             const { body } = await ModpackImage.fetch()
             const code = `\`\`\`${JSON.stringify(body, null, 2)}\`\`\``
@@ -144,7 +143,7 @@ export default new Command({
                 `Updated data! Raw JSON response:\n\n${code}`
             )
         } else if (subcommand === "push") {
-            message.continue()
+            await message.continue()
 
             const queue = await ModpackImage.find({ set: "queue" })
             const store = await ModpackImage.find({ set: "store" })

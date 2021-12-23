@@ -5,7 +5,6 @@ import Client from "../Client"
 import CommandUtils from "../../util/CommandUtils"
 import Guild from "../discord/Guild"
 import Roles from "../../util/roles"
-import _ from "lodash"
 
 interface PermsObj {
     [name: string]: Discord.GuildApplicationCommandPermissionData
@@ -22,6 +21,7 @@ export default class CommandList extends Discord.Collection<string, Command> {
     async load(): Promise<void> {
         const commands = await loadDir<Command>(
             __dirname + "/../../commands/",
+            this.client,
             null,
             this
         )
