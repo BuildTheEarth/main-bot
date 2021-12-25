@@ -131,8 +131,6 @@ export default new Command({
             //good question.
             const buf = Buffer.from(JSON.stringify(roleData, null, 4))
             const file = new Discord.MessageAttachment(buf, "roleData.json")
-            //for some reason, this does not work without ts-ignore. Mebrooks and Smarty spent an hour trying to figure out why.
-            // @ts-ignore
             message.send({ files: [file] })
         }
     }

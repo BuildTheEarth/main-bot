@@ -101,4 +101,8 @@ export interface MessageOptions {
     components?: Discord.MessageComponent[]
     content?: string
     allowedMentions?: Discord.MessageMentionOptions
+    files?:
+        | Discord.FileOptions[]
+        | Discord.BufferResolvable[]
+        | Discord.MessageAttachment[]
 }
