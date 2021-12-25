@@ -252,6 +252,24 @@ export default class Args {
         }
     }
 
+    async consumeRole(argName: string): Promise<Discord.Role> {
+        if (this.message.isNormalCommand()) {
+            const id = this.raw.match(/^(<@&)?(\d{18})>?/)?.[2]
+            if (!id) return null
+            this.remove()
+            const role: Discord.Role =
+                (await (await this.message.client.customGuilds.main()).roles
+                    .fetch(id, { force: true })
+                    .catch(() => null)) ||
+                (await (await this.message.client.customGuilds.staff()).roles
+                    .fetch(id, { force: true })
+                    .catch(() => null))
+            return role
+        }
+        if (this.message.isSlashCommand())
+            return this.message.message.options.getRole(argName) as Discord.Role
+    }
+
     consumeAttachment(
         check?: (attachment: Discord.MessageAttachment) => boolean
     ): Discord.MessageAttachment {
