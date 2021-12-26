@@ -8,8 +8,8 @@ import GuildMember from "../struct/discord/GuildMember"
 import Discord from "discord.js"
 
 export default new Command({
-    name: "roleinfo",
-    aliases: ["lol"],
+    name: "role",
+    aliases: ["roleinfo", "downloadmembers", "memberlist"],
     description: "View information about a role.",
     permission: Roles.ANY,
     basesubcommand: "view",
@@ -39,13 +39,13 @@ export default new Command({
     async run(this: Command, client: Client, message: CommandMessage, args: Args) {
         const subcommand = args.consumeSubcommandIf(["view", "download"])
         const role = await args.consumeRole("role")
-        await message.continue()
         if (!role) {
             return client.response.sendError(message, "Please provide a valid role.")
         }
+        await message.continue()
 
         if (!["download"].includes(subcommand)) {
-            message.send({
+            await message.send({
                 embeds: [
                     {
                         color: role.hexColor,
@@ -127,11 +127,10 @@ export default new Command({
                     return container
                 })
             }
-            //how does this work?
-            //good question.
+
             const buf = Buffer.from(JSON.stringify(roleData, null, 4))
             const file = new Discord.MessageAttachment(buf, "roleData.json")
-            message.send({ files: [file] })
+            await message.send({ files: [file] })
         }
     }
 })
