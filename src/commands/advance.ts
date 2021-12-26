@@ -8,6 +8,7 @@ import noop from "../util/noop"
 import AdvancedBuilder from "../entities/AdvancedBuilder"
 import ms from "ms"
 import CommandMessage from "../struct/CommandMessage"
+import errorMessage from "../util/errorMessage"
 
 export default new Command({
     name: "advance",
@@ -35,9 +36,7 @@ export default new Command({
         if (!user)
             return client.response.sendError(
                 message,
-                user === undefined
-                    ? "You must provide a user to manage!"
-                    : "Couldn't find that user."
+                user === undefined ? errorMessage.noUser : errorMessage.invalidUser
             )
 
         const member = await (await client.customGuilds.main()).members
@@ -52,10 +51,7 @@ export default new Command({
         if (remove) {
             const record = await AdvancedBuilder.findOne(user.id)
             if (!record)
-                return client.response.sendError(
-                    message,
-                    "That user is not an advanced builder."
-                )
+                return client.response.sendError(message, errorMessage.notAdvancedBuilder)
             await record.removeBuilder(client)
             return client.response.sendSuccess(message, `Removed ${user}.`)
         } else {

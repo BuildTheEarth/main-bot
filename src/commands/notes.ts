@@ -5,6 +5,7 @@ import Roles from "../util/roles"
 import ModerationNote from "../entities/ModerationNote"
 import formatTimestamp from "../util/formatTimestamp"
 import CommandMessage from "../struct/CommandMessage"
+import errorMessage from "../util/errorMessage"
 
 export default new Command({
     name: "notes",
@@ -83,22 +84,13 @@ export default new Command({
         if (!user)
             return client.response.sendError(
                 message,
-                user === undefined
-                    ? "You must provide a user!"
-                    : "Couldn't find that user."
+                user === undefined ? errorMessage.noUser : errorMessage.invalidUser
             )
         const body = args.consumeRest(["body"])
         if (subcommand && subcommand !== "clear" && subcommand !== "check") {
-            if (!body)
-                return client.response.sendError(
-                    message,
-                    "You must specify a new note body!"
-                )
+            if (!body) return client.response.sendError(message, errorMessage.noBody)
             if (body.length > 1024)
-                return client.response.sendError(
-                    message,
-                    "That note is too long! (max. 1024 characters)."
-                )
+                return client.response.sendError(message, errorMessage.noteTooLong1024)
         }
 
         await message.continue()
@@ -130,11 +122,7 @@ export default new Command({
                 )
             await client.response.sendSuccess(message, embed)
         } else if (!subcommand || subcommand === "add") {
-            if (!body)
-                return client.response.sendError(
-                    message,
-                    "You must specify the note's body!"
-                )
+            if (!body) return client.response.sendError(message, errorMessage.noBody)
 
             if (note) {
                 const tip = body.length <= 1024 ? " (Overwrite it with `note edit`)." : ""

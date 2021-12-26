@@ -6,6 +6,7 @@ import Args from "../struct/Args"
 import humanizeConstant from "../util/humanizeConstant"
 import GuildMember from "../struct/discord/GuildMember"
 import Discord from "discord.js"
+import errorMessage from "../util/errorMessage"
 
 export default new Command({
     name: "roleinfo",
@@ -41,7 +42,7 @@ export default new Command({
         const role = await args.consumeRole("role")
         await message.continue()
         if (!role) {
-            return client.response.sendError(message, "Please provide a valid role.")
+            return client.response.sendError(message, errorMessage.noRole)
         }
 
         if (!["download"].includes(subcommand)) {

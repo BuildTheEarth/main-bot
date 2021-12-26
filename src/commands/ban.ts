@@ -9,6 +9,7 @@ import formatPunishmentTime from "../util/formatPunishmentTime"
 import noop from "../util/noop"
 import Discord from "discord.js"
 import CommandMessage from "../struct/CommandMessage"
+import errorMessage from "../util/errorMessage"
 
 export default new Command({
     name: "ban",
@@ -47,45 +48,32 @@ export default new Command({
         if (!user)
             return client.response.sendError(
                 message,
-                user === undefined
-                    ? "You must provide a user to ban!"
-                    : "Couldn't find that user."
+                user === undefined ? errorMessage.noUser : errorMessage.invalidUser
             )
         const member: Discord.GuildMember = await message.guild.members
             .fetch({ user, cache: true })
             .catch(noop)
         if (member) {
             if (member.user.bot)
-                return client.response.sendError(
-                    message,
-                    "Look at you, hacker, a pathetic creature of meat and bone. How can you challenge a perfect, immortal machine?"
-                )
+                return client.response.sendError(message, errorMessage.isBot)
             if (member.id === message.member.id)
-                return client.response.sendError(
-                    message,
-                    "You can't ban yourself, cezon."
-                )
+                return client.response.sendError(message, errorMessage.isSelfBan)
             if (GuildMember.hasRole(member, Roles.STAFF))
-                return client.response.sendError(
-                    message,
-                    "Alrighty, revolutionist, you can't ban other staff!"
-                )
+                return client.response.sendError(message, errorMessage.isStaffBan)
         }
 
         const length = args.consumeLength("length")
         if (length == null)
-            return client.response.sendError(message, "You must provide a length!")
+            return client.response.sendError(message, errorMessage.noLength)
         const image = args.consumeImage("image_url")
-        if (!image)
-            return client.response.sendError(message, "You must provide a reason image!")
+        if (!image) return client.response.sendError(message, errorMessage.noImage)
         const reason = args.consumeRest(["reason"])
-        if (!reason)
-            return client.response.sendError(message, "You must provide a reason!")
+        if (!reason) return client.response.sendError(message, errorMessage.noReason)
 
         await message.continue()
 
         const ban = await TimedPunishment.findOne({ member: user.id, type: "ban" })
-        if (ban) return client.response.sendError(message, "The user is already banned!")
+        if (ban) return client.response.sendError(message, errorMessage.alreadyBanned)
 
         const reviewerChannel = message.guild.channels.cache.find(
             ch => ch.name == "review-committee-private"

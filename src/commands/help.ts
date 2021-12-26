@@ -7,6 +7,8 @@ import Roles from "../util/roles"
 import truncateString from "../util/truncateString"
 import CommandMessage from "../struct/CommandMessage"
 import CommandUtils from "../util/CommandUtils"
+import errorMessage from "../util/errorMessage"
+
 export default new Command({
     name: "help",
     aliases: [],
@@ -40,10 +42,7 @@ export default new Command({
                     `Unknown command \`${truncateString(commandName, 32, "...")}\`.`
                 )
             if (!GuildMember.hasRole(member, command.permission))
-                return client.response.sendError(
-                    message,
-                    "You don't have permission to use that command!"
-                )
+                return client.response.sendError(message, errorMessage.noPerms)
 
             const embed = CommandUtils.getHelpMessage(
                 command,

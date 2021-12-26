@@ -8,6 +8,7 @@ import Roles from "../util/roles"
 import formatPunishmentTime from "../util/formatPunishmentTime"
 import Discord from "discord.js"
 import CommandMessage from "../struct/CommandMessage"
+import errorMessage from "../util/errorMessage"
 
 export default new Command({
     name: "mute",
@@ -45,39 +46,30 @@ export default new Command({
         if (!user)
             return client.response.sendError(
                 message,
-                user === undefined
-                    ? "You must provide a user to mute!"
-                    : "Couldn't find that user."
+                user === undefined ? errorMessage.noUser : errorMessage.invalidUser
             )
         const member: Discord.GuildMember = await message.guild.members
             .fetch({ user, cache: true })
             .catch(() => null)
         if (member) {
             if (member.user.bot)
-                return client.response.sendError(
-                    message,
-                    "Look at you, hacker, a pathetic creature of meat and bone. How can you challenge a perfect, immortal machine?"
-                )
+                return client.response.sendError(message, errorMessage.isBot)
             if (GuildMember.hasRole(member, Roles.STAFF))
-                return client.response.sendError(
-                    message,
-                    "This is literally 1984. You can't mute other staff!"
-                )
+                return client.response.sendError(message, "")
         }
 
         const length = args.consumeLength("length")
         if (length == null)
-            return client.response.sendError(message, "You must provide a length!")
+            return client.response.sendError(message, errorMessage.invalidLength)
 
         const image = args.consumeImage("image_url")
         const reason = args.consumeRest(["reason"])
-        if (!reason)
-            return client.response.sendError(message, "You must provide a reason!")
+        if (!reason) return client.response.sendError(message, errorMessage.noReason)
 
         await message.continue()
 
         const mute = await TimedPunishment.findOne({ member: user.id, type: "mute" })
-        if (mute) return client.response.sendError(message, "That user is already muted!")
+        if (mute) return client.response.sendError(message, errorMessage.alreadyMuted)
 
         const punishment = new TimedPunishment()
         punishment.member = user.id

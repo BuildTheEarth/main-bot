@@ -5,6 +5,7 @@ import ActionLog from "../entities/ActionLog"
 import Roles from "../util/roles"
 import GuildMember from "../struct/discord/GuildMember"
 import CommandMessage from "../struct/CommandMessage"
+import errorMessage from "../util/errorMessage"
 
 export default new Command({
     name: "case",
@@ -70,7 +71,7 @@ export default new Command({
         const subcommand = args.consumeSubcommandIf(["edit", "delete", "check"])
         const id = Number(args.consume("id"))
         if (Number.isNaN(id))
-            return client.response.sendError(message, "You must provide a case ID!")
+            return client.response.sendError(message, errorMessage.noCaseId)
 
         await message.continue()
 
@@ -85,12 +86,9 @@ export default new Command({
             const image = args.consumeImage("image_url")
             const reason = args.consumeRest(["reason"])
             if (!reason && !image)
-                return client.response.sendError(
-                    message,
-                    "You must provide a new reason/image!"
-                )
+                return client.response.sendError(message, errorMessage.noNewReason)
             if (reason === log.reason && !image)
-                return client.response.sendError(message, "Nothing changed.")
+                return client.response.sendError(message, errorMessage.noChange)
 
             if (image) log.reasonImage = image
             if (reason) log.reason = reason
@@ -100,18 +98,12 @@ export default new Command({
             await client.log(log)
         } else if (subcommand === "delete") {
             if (!GuildMember.hasRole(message.member, Roles.MODERATOR))
-                return client.response.sendError(
-                    message,
-                    "You do not have permission to do this!"
-                )
+                return client.response.sendError(message, errorMessage.noPerms)
             const reason = args.consumeRest(["reason"])
             if (!reason)
-                return client.response.sendError(
-                    message,
-                    "You must provide a deletion reason!"
-                )
+                return client.response.sendError(message, errorMessage.noDeletionReason)
             if (log.deletedAt)
-                return client.response.sendError(message, "That case is already deleted!")
+                return client.response.sendError(message, errorMessage.alreadyDeleted)
 
             log.deletedAt = new Date()
             log.deleter = message.member.user.id

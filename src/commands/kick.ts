@@ -7,6 +7,7 @@ import ActionLog from "../entities/ActionLog"
 import Roles from "../util/roles"
 import noop from "../util/noop"
 import CommandMessage from "../struct/CommandMessage"
+import errorMessage from "../util/errorMessage"
 
 export default new Command({
     name: "kick",
@@ -38,33 +39,22 @@ export default new Command({
         if (!user)
             return client.response.sendError(
                 message,
-                user === undefined
-                    ? "You must provide a user to kick!"
-                    : "Couldn't find that user."
+                user === undefined ? errorMessage.noUser : errorMessage.invalidUser
             )
         const member: Discord.GuildMember = await message.guild.members
             .fetch({ user, cache: true })
             .catch(noop)
-        if (!member)
-            return client.response.sendError(message, "The user is not in the server!")
+        if (!member) return client.response.sendError(message, errorMessage.notInGuild)
 
-        if (member.user.bot)
-            return client.response.sendError(
-                message,
-                "Look at you, hacker, a pathetic creature of meat and bone. How can you challenge a perfect, immortal machine?"
-            )
+        if (member.user.bot) return client.response.sendError(message, errorMessage.isBot)
         if (member.id === message.member.user.id)
-            return client.response.sendError(
-                message,
-                "Okay, sadist, you can't kick yourself."
-            )
+            return client.response.sendError(message, errorMessage.isSelfKick)
         if (GuildMember.hasRole(member, Roles.STAFF))
-            return client.response.sendError(message, "Rude! You can't kick other staff.")
+            return client.response.sendError(message, errorMessage.isStaffKick)
 
         const image = args.consumeImage("image_url")
         const reason = args.consumeRest(["reason"])
-        if (!reason)
-            return client.response.sendError(message, "You must provide a reason!")
+        if (!reason) return client.response.sendError(message, errorMessage.noReason)
 
         await message.continue()
 

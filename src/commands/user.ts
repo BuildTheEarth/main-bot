@@ -9,6 +9,7 @@ import userFlags from "../data/userFlags"
 import activityTypes from "../data/activityTypes"
 import hexToRGB from "../util/hexToRGB"
 import CommandMessage from "../struct/CommandMessage"
+import errorMessage from "../util/errorMessage"
 
 export default new Command({
     name: "user",
@@ -28,9 +29,7 @@ export default new Command({
         if (!user)
             return client.response.sendError(
                 message,
-                user === undefined
-                    ? "You must provide a user!"
-                    : "Couldn't find that user."
+                user === undefined ? errorMessage.noUser : errorMessage.invalidUser
             )
 
         await message.continue()

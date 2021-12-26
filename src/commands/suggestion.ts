@@ -13,6 +13,7 @@ import suggestionStatusActions from "../data/suggestionStatusActions"
 import hexToRGB from "../util/hexToRGB"
 import GuildMember from "../struct/discord/GuildMember"
 import CommandMessage from "../struct/CommandMessage"
+import errorMessage from "../util/errorMessage"
 
 export default new Command({
     name: "suggestion",
@@ -267,7 +268,7 @@ export default new Command({
                     return
                 if (interaction.user.id !== message.member.id)
                     return interaction.reply({
-                        content: `Did you summon that menu?, I think not!`,
+                        content: errorMessage.wrongUser,
                         ephemeral: true
                     })
                 if (
@@ -336,10 +337,7 @@ export default new Command({
 
         const identifier = Suggestion.parseIdentifier(args.consume("number"))
         if (!identifier.number)
-            return client.response.sendError(
-                message,
-                "You must specify a suggestion number!"
-            )
+            return client.response.sendError(message, errorMessage.noSuggestionNumber)
 
         await message.continue()
 
@@ -347,17 +345,14 @@ export default new Command({
         if (!suggestion)
             return client.response.sendError(
                 message,
-                "Hmm... That suggestion doesn't exist."
+                errorMessage.invalidSuggestionNumber
             )
 
         const suggestionMessage: Discord.Message = await suggestions.messages
             .fetch(suggestion.message)
             .catch(() => null)
         if (!suggestionMessage)
-            return client.response.sendError(
-                message,
-                "Can't find the suggestion's message!"
-            )
+            return client.response.sendError(message, errorMessage.utlSuggestion)
 
         if (subcommand === "link") {
             const displayNumber = await suggestion.getIdentifier()
@@ -379,29 +374,16 @@ export default new Command({
                 suggestion.author !== message.member.id &&
                 (field === "body" || !canManage)
             )
-                return client.response.sendError(
-                    message,
-                    "You can't edit other people's suggestions!"
-                )
+                return client.response.sendError(message, errorMessage.editOthers)
 
             let edited = args.consumeRest(["text"])
             if (field === "title")
                 edited = await flattenMarkdown(edited, client, message.guild)
             if (field === "title" && edited.length > 200)
-                return client.response.sendError(
-                    message,
-                    "That title is too long! (max. 200 characters)."
-                )
+                return client.response.sendError(message, errorMessage.titleTooLong200)
             if (field === "teams" && edited.length > 255)
-                return client.response.sendError(
-                    message,
-                    "That team is too long! (max. 255 characters)."
-                )
-            if (!edited)
-                return client.response.sendError(
-                    message,
-                    "You must provide a new field body!"
-                )
+                return client.response.sendError(message, errorMessage.teamsTooLong255)
+            if (!edited) return client.response.sendError(message, errorMessage.noBody)
 
             suggestion[field] = edited
             await suggestion.save()
@@ -411,10 +393,7 @@ export default new Command({
             return client.response.sendSuccess(message, "Edited the suggestion!")
         } else if (subcommand === "delete") {
             if (suggestion.author !== message.member.id && !canManage)
-                return client.response.sendError(
-                    message,
-                    "You can't delete other people's suggestions!"
-                )
+                return client.response.sendError(message, errorMessage.deleteOthers)
 
             // BaseEntity#softRemove() doesn't save the deletion date to the object itself
             // and we need it to be saved because Suggestion#displayEmbed() uses it
