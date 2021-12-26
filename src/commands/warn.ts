@@ -5,6 +5,7 @@ import Command from "../struct/Command"
 import ActionLog from "../entities/ActionLog"
 import Roles from "../util/roles"
 import CommandMessage from "../struct/CommandMessage"
+import errorMessage from "../util/errorMessage"
 
 export default new Command({
     name: "warn",
@@ -37,20 +38,16 @@ export default new Command({
         if (!user)
             return client.response.sendError(
                 message.channel,
-                user === undefined
-                    ? "You must provide a user to warn!"
-                    : "Couldn't find that user."
+                user === undefined ? errorMessage.noUser : errorMessage.invalidUser
             )
 
         const image = args.consumeImage("image_url")
         const reason = args.consumeRest(["reason"])
-        if (!reason)
-            return client.response.sendError(message, "You must provide a reason!")
+        if (!reason) return client.response.sendError(message, errorMessage.noReason)
         const member: Discord.GuildMember = await message.guild.members
             .fetch({ user, cache: true })
             .catch(() => null)
-        if (!member)
-            return client.response.sendError(message, "The user is not in the server!")
+        if (!member) return client.response.sendError(message, errorMessage.notInGuild)
 
         await message.continue()
 

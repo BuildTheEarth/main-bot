@@ -5,6 +5,7 @@ import Roles from "../util/roles"
 import Discord from "discord.js"
 import ApiTypes from "discord-api-types"
 import CommandMessage from "../struct/CommandMessage"
+import errorMessage from "../util/errorMessage"
 
 export default new Command({
     name: "slowmode",
@@ -43,14 +44,11 @@ export default new Command({
         }
 
         if (slowmode < 0)
-            return client.response.sendError(
-                message,
-                "How would that even work? Time travel?"
-            )
+            return client.response.sendError(message, errorMessage.slowmodeTooLow)
         else if (slowmode === 6 * 60 * 60)
-            return client.response.sendError(message, "Please, not this again.")
+            return client.response.sendError(message, errorMessage.slowmodeTooHigh)
         else if (slowmode > 6 * 60 * 60)
-            return client.response.sendError(message, "That is a lot of seconds!")
+            return client.response.sendError(message, errorMessage.slowmodeTooHigh)
 
         await message.continue()
 

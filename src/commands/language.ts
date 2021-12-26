@@ -6,6 +6,7 @@ import Guild from "../struct/discord/Guild"
 import Roles from "../util/roles"
 import noop from "../util/noop"
 import CommandMessage from "../struct/CommandMessage"
+import errorMessage from "../util/errorMessage"
 
 const ROLE_NAMES = [
     "English",
@@ -73,9 +74,7 @@ export default new Command({
         if (!user)
             return client.response.sendError(
                 message,
-                user === undefined
-                    ? "You must provide a user to give a language role to!"
-                    : "Couldn't find that user."
+                user === undefined ? errorMessage.noUser : errorMessage.invalidUser
             )
 
         const member: Discord.GuildMember = await (
@@ -83,15 +82,14 @@ export default new Command({
         ).members
             .fetch({ user, cache: true })
             .catch(noop)
-        if (!member)
-            return client.response.sendError(message, "The user is not in the server!")
+        if (!member) return client.response.sendError(message, errorMessage.notInGuild)
 
         const languageInput = args.consume("language").toLowerCase()
         const language = LANGUAGE_ROLES[languageInput]
         if (!language)
             return client.response.sendError(
                 message,
-                languageInput ? "That's not a language!" : "You must provide a language!"
+                languageInput ? errorMessage.notLang : errorMessage.noLang
             )
 
         await message.continue()

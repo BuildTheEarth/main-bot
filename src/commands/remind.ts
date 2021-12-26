@@ -6,6 +6,7 @@ import Reminder from "../entities/Reminder"
 import formatTimestamp from "../util/formatTimestamp"
 import ApiTypes from "discord-api-types"
 import CommandMessage from "../struct/CommandMessage"
+import errorMessage from "../util/errorMessage"
 
 const remindTimes = ["test", "weekly", "bi-weekly", "monthly", "bi-monthly"]
 
@@ -110,7 +111,7 @@ export default new Command({
         if (subcommand === "add") {
             const channel = await args.consumeChannel("channel")
             if (!channel) {
-                return client.response.sendError(message, "You must provide a channel!")
+                return client.response.sendError(message, errorMessage.noChannel)
             }
 
             const time = args.consume("interval").toLowerCase()
@@ -132,15 +133,11 @@ export default new Command({
                     millis = 1000 * 60 * 60 * 24 * 15 // half a month (1000ms * 60s * 60m * 24h * 15d)
                     break
                 default:
-                    return client.response.sendError(message, "Invalid time length!")
+                    return client.response.sendError(message, errorMessage.invalidTime)
             }
 
             const body = args.consumeRest(["message"])
-            if (!body)
-                return client.response.sendError(
-                    message,
-                    "You must specify a reminder message."
-                )
+            if (!body) return client.response.sendError(message, errorMessage.noReminder)
 
             await message.continue()
 
@@ -158,7 +155,7 @@ export default new Command({
         }
 
         const id = parseInt(args.consume("id"))
-        if (!id) return client.response.sendError(message, "You must specify an ID!")
+        if (!id) return client.response.sendError(message, errorMessage.noID)
 
         await message.continue()
 
@@ -166,12 +163,12 @@ export default new Command({
 
         if (subcommand === "delete") {
             if (!reminder)
-                return client.response.sendError(message, "That reminder doesn't exist!")
+                return client.response.sendError(message, errorMessage.reminderNotFound)
             await reminder.delete()
             return client.response.sendSuccess(message, `Reminder **#${id}** deleted!`)
         } else if (subcommand === "edit") {
             if (!reminder)
-                return client.response.sendError(message, "That reminder doesn't exist!")
+                return client.response.sendError(message, errorMessage.reminderNotFound)
             const body = args.consumeRest(["message"])
             reminder.message = body
             await reminder.save()

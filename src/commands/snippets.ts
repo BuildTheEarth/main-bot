@@ -8,6 +8,7 @@ import hexToRGB from "../util/hexToRGB"
 import GuildMember from "../struct/discord/GuildMember"
 import Discord from "discord.js"
 import CommandMessage from "../struct/CommandMessage"
+import errorMessage from "../util/errorMessage"
 
 const subSnippetTypes = ["team", "rule"]
 
@@ -333,7 +334,7 @@ export default new Command({
                     return
                 if (interaction.user.id !== message.member.id)
                     return interaction.reply({
-                        content: `Did you summon that menu?, I think not!`,
+                        content: errorMessage.wrongUser,
                         ephemeral: true
                     })
                 if (
@@ -397,10 +398,7 @@ export default new Command({
             let subcommand = args.consumeSubcommand()
 
             if (rules) {
-                return client.response.sendError(
-                    message,
-                    "Rules cant have aliases, what did you expect!"
-                )
+                return client.response.sendError(message, errorMessage.ruleAlias)
             }
 
             // eslint-disable-next-line prefer-const
@@ -414,21 +412,11 @@ export default new Command({
                 !GuildMember.hasRole(message.member, editPermissions) &&
                 !(subcommand === "list")
             )
-                return client.response.sendError(
-                    message,
-                    "You do not have permission to do this!"
-                )
+                return client.response.sendError(message, errorMessage.noPermission)
             const languageName = languages.getName(language)
-            if (!name)
-                return client.response.sendError(
-                    message,
-                    "You must specify a snippet name."
-                )
+            if (!name) return client.response.sendError(message, errorMessage.noSnippet)
             if (!languageName && !teams)
-                return client.response.sendError(
-                    message,
-                    "You must specify a valid snippet language."
-                )
+                return client.response.sendError(message, errorMessage.invalidSnippetLang)
             if (languageName && teams) language = "en"
             if (!languageName && teams) language = "en"
 
@@ -436,7 +424,7 @@ export default new Command({
 
             const snippet = await Snippet.findOne({ name, language })
             if (!snippet)
-                return client.response.sendError(message, "That snippet doesn't exist!")
+                return client.response.sendError(message, errorMessage.snippetNotFound)
             if (subcommand === "list") {
                 const list =
                     snippet.aliases.map(alias => `• \u200B \u200B ${alias}`).join("\n") ||
@@ -447,8 +435,7 @@ export default new Command({
             const alias = teams
                 ? args.consumeRest(["alias"]).toLowerCase()
                 : args.consume("alias").toLowerCase()
-            if (!alias)
-                return client.response.sendError(message, "You must specify an alias!")
+            if (!alias) return client.response.sendError(message, errorMessage.noAlias)
             if (subcommand === "add") {
                 if (!snippet.aliases) snippet.aliases = []
                 snippet.aliases.push(alias)
@@ -485,13 +472,9 @@ export default new Command({
         const name = args.consume("name").toLowerCase()
         let language = args.consume("language").toLowerCase()
         const languageName = languages.getName(language)
-        if (!name)
-            return client.response.sendError(message, "You must specify a snippet name.")
+        if (!name) return client.response.sendError(message, errorMessage.noName)
         if (!languageName && !teams)
-            return client.response.sendError(
-                message,
-                "You must specify a valid snippet language."
-            )
+            return client.response.sendError(message, errorMessage.invalidSnippetLang)
         if (languageName && teams) language = "en"
         if (!languageName && teams) language = "en"
 
@@ -509,28 +492,18 @@ export default new Command({
         ) {
             const body = args.consumeRest(["body"])
             let snippet: Snippet
-            if (!body)
-                return client.response.sendError(
-                    message,
-                    "You must specify a snippet body."
-                )
+            if (!body) return client.response.sendError(message, errorMessage.noBody)
 
             if (subcommand === "add") {
                 if (client.commands.search(name))
-                    return client.response.sendError(
-                        message,
-                        "Please not this again, the snippet name is already used by a command."
-                    )
+                    return client.response.sendError(message, errorMessage.alreadyInUse)
                 if (existingSnippet)
-                    return client.response.sendError(
-                        message,
-                        "That snippet already exists!"
-                    )
+                    return client.response.sendError(message, errorMessage.alreadyExists)
                 if (rules) {
                     if (Number.isNaN(Number(name))) {
                         return client.response.sendError(
                             message,
-                            "Rules must have number names (eg. 1, 2, 3, ...)"
+                            errorMessage.invalidRuleName
                         )
                     }
                 }
@@ -546,7 +519,7 @@ export default new Command({
                         "That snippet doesn't exist!"
                     )
                 if (existingSnippet.body === body)
-                    return client.response.sendError(message, "Nothing changed.")
+                    return client.response.sendError(message, errorMessage.noChange)
                 snippet = existingSnippet
             }
 
@@ -558,7 +531,7 @@ export default new Command({
             await client.log(snippet, subcommand, message.member.user)
         } else if (subcommand === "delete" && !subcommandGroup) {
             if (!existingSnippet)
-                return client.response.sendError(message, "That snippet doesn't exist!")
+                return client.response.sendError(message, errorMessage.snippetNotFound)
 
             await existingSnippet.remove()
             // prettier-ignore
@@ -566,7 +539,7 @@ export default new Command({
             await client.log(existingSnippet, "delete", message.member.user)
         } else if (subcommand === "source" && !subcommandGroup) {
             if (!existingSnippet)
-                return client.response.sendError(message, "That snippet doesn't exist!")
+                return client.response.sendError(message, errorMessage.snippetNotFound)
             await message.send({
                 embeds: [
                     {

@@ -6,6 +6,7 @@ import Roles from "../util/roles"
 import ApiTypes from "discord-api-types/v9"
 import Discord from "discord.js"
 import CommandMessage from "../struct/CommandMessage"
+import errorMessage from "../util/errorMessage"
 
 export default new Command({
     name: "access",
@@ -25,7 +26,7 @@ export default new Command({
         const channel = (await args.consumeChannel("channel")) || message.channel
         const perms = (channel as Discord.TextChannel).permissionsFor(message.member)
         if (!perms.has("VIEW_CHANNEL"))
-            return client.response.sendError(message, "You can't see that channel.")
+            return client.response.sendError(message, errorMessage.noChannelPerms)
 
         await message.continue()
 

@@ -5,6 +5,7 @@ import ActionLog from "../entities/ActionLog"
 import Command from "../struct/Command"
 import Roles from "../util/roles"
 import CommandMessage from "../struct/CommandMessage"
+import errorMessage from "../util/errorMessage"
 
 export default new Command({
     name: "unmute",
@@ -31,19 +32,16 @@ export default new Command({
         if (!user)
             return client.response.sendError(
                 message,
-                user === undefined
-                    ? "You must provide a user to unmute!"
-                    : "Couldn't find that user."
+                user === undefined ? errorMessage.noUser : errorMessage.invalidUsers
             )
 
         const reason = args.consumeRest(["reason"])
-        if (!reason)
-            return client.response.sendError(message, "You must provide a reason!")
+        if (!reason) return client.response.sendError(message, errorMessage.noReason)
 
         await message.continue()
 
         const mute = await TimedPunishment.findOne({ member: user.id, type: "mute" })
-        if (!mute) return client.response.sendError(message, "That user is not muted!")
+        if (!mute) return client.response.sendError(message, errorMessage.notMuted)
 
         await mute.undo(client)
 

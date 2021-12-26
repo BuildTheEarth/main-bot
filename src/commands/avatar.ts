@@ -6,6 +6,7 @@ import Roles from "../util/roles"
 import humanizeArray from "../util/humanizeArray"
 import hexToRGB from "../util/hexToRGB"
 import CommandMessage from "../struct/CommandMessage"
+import errorMessage from "../util/errorMessage"
 
 const VALID_IMAGE_SIZES = [16, 32, 64, 128, 256, 512, 1024, 2048, 4096]
 
@@ -44,9 +45,7 @@ export default new Command({
         if (!user)
             return client.response.sendError(
                 message,
-                user === undefined
-                    ? "You must provide a user to check!"
-                    : "Couldn't find that user."
+                user === undefined ? errorMessage.noUser : errorMessage.invalidUser
             )
         if (!VALID_IMAGE_SIZES.includes(size))
             return client.response.sendError(

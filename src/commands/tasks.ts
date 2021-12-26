@@ -11,6 +11,7 @@ import { Brackets } from "typeorm"
 import hexToRGB from "../util/hexToRGB"
 import CommandMessage from "../struct/CommandMessage"
 import ApiTypes from "discord-api-types"
+import errorMessage from "../util/errorMessage"
 
 export default new Command({
     name: "tasks",
@@ -104,10 +105,8 @@ export default new Command({
 
             const statuses = humanizeArray(Object.keys(TaskStatuses))
             let error: string
-            if (title.length > 99)
-                error = "The task's title is too long! (max. 99 characters)."
-            if (!title || !description)
-                error = "You must provide a title and a description!"
+            if (title.length > 99) error = errorMessage.titleTooLong99
+            if (!title || !description) error = errorMessage.noBody
             if (status && !TaskStatuses[status])
                 error = `That's not a valid status! (${statuses}).`
             if (error) return client.response.sendError(message, error)
@@ -129,7 +128,7 @@ export default new Command({
         } else if (subcommand === "status") {
             const id = Number(args.consume("task"))
             if (Number.isNaN(id))
-                return client.response.sendError(message, "You must provide a task ID!")
+                return client.response.sendError(message, errorMessage.noID)
             const status = args.consume("status").toLowerCase()
             const statuses = humanizeArray(Object.keys(TaskStatuses))
             if (!TaskStatuses[status])
@@ -203,7 +202,7 @@ export default new Command({
             })
 
             if (!tasks.length)
-                return client.response.sendError(message, "Your done task list is empty!")
+                return client.response.sendError(message, errorMessage.noTasks)
 
             const report = tasks.map(task => `•   ${task.title}`).join("\n")
             await channel.send(`Task report from <@${message.member.id}>:\n\n${report}`)

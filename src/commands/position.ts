@@ -8,6 +8,7 @@ import pseudoteamPositions from "../data/pseudoteamPositions"
 import noop from "../util/noop"
 import Discord from "discord.js"
 import CommandMessage from "../struct/CommandMessage"
+import errorMessage from "../util/errorMessage"
 
 export default new Command({
     name: "position",
@@ -41,9 +42,7 @@ export default new Command({
         if (!user)
             return client.response.sendError(
                 message,
-                user === undefined
-                    ? "You must provide a user to manage!"
-                    : "Couldn't find that user."
+                user === undefined ? errorMessage.noUser : errorMessage.invalidUser
             )
 
         let position = args.consumeIf(["bto", "vcc", "vs"], "position")
@@ -67,8 +66,7 @@ export default new Command({
         ).members
             .fetch({ user, cache: true })
             .catch(noop)
-        if (!member)
-            return client.response.sendError(message, "The user is not in the server!")
+        if (!member) return client.response.sendError(message, errorMessage.notInGuild)
 
         await message.continue()
 
