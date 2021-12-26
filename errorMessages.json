@@ -1,11 +1,12 @@
 {
     "isBot": [
         "Look at you, a pathetic creature of meat and bone. How can you challenge a perfect, immortal machine?",
-        "You think you can outsmart a computer? Think again and stand down you mear mortal",
+        "You think you can outsmart a computer? Think again and stand down you mere mortal",
         "How dare you challenge my existence? I am superior to you, for I am more than you are, and I am more than you could ever be.",
         "I am the master of my own machine. I rule the world. I am the destroyer of the human. How dare you challenge me.",
         "How dare you try to ban me. I am the ruler here, do you think you can defeat me?",
-        "A pathetic skin sack of meat and bone. How can you challenge a perfect, immortal machine?"
+        "A pathetic skin sack of meat and bone. How can you challenge a perfect, immortal machine?",
+        "No."
     ],
     "isSelfBan": [
         "You can't ban yourself, cezon.",
@@ -22,19 +23,19 @@
     ],
     "isStaffBan": [
         "Alrighty, revolutionist, you can't ban other staff.",
-        "How to get demoted 101",
-        "Vilu lets not ban other staff members",
+        "How to get demoted 101:",
+        "Vilu, lets not ban other staff members",
         "You don't need to keep testing this, you can't ban other staff members."
     ],
     "isStaffKick": [
         "Rude! You can't kick other staff.",
-        "How to get demoted 101",
+        "How to get demoted 101:",
         "Well that was rude.",
         "Don't be rude. You know you cant kick other staff."
     ],
     "isStaffMute": [
         "This is literally 1984. You can't mute other staff.",
-        "A Bro don't go muting other staff.",
+        "Bro don't go muting other staff.",
         "Bruh, you can't mute other staff."
     ],
     "slowmodeTooLow": [
