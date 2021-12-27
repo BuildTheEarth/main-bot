@@ -6,6 +6,7 @@ import AdvancedBuilder from "../entities/AdvancedBuilder"
 import Client from "../struct/Client"
 import Guild from "../struct/discord/Guild"
 import Reminder from "../entities/Reminder"
+import BlunderTracker from "../entities/BlunderTracker"
 
 export default async function ready(this: Client): Promise<void> {
     this.logger.debug("Loading commands...")
@@ -15,11 +16,12 @@ export default async function ready(this: Client): Promise<void> {
     const activity = `with ${(await this.customGuilds.main()).memberCount} users`
     this.user.setActivity(activity, { type: "PLAYING" })
 
-    // schedule punishment undoings, banner queue cycles, and advanced builder removals!
+    // schedule punishment undoings, banner queue cycles, the blunder tracker interval, and advanced builder removals!
     BannerImage.schedule(this)
     for (const punishment of await TimedPunishment.find()) punishment.schedule(this)
     for (const builder of await AdvancedBuilder.find()) builder.schedule(this)
     for (const reminder of await Reminder.find()) reminder.schedule(this)
+    setInterval(() => BlunderTracker.inc(this), 86400000)
 
     // cache reaction role messages
     for (const channelID of Object.keys(this.config.reactionRoles)) {

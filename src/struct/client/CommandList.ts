@@ -105,7 +105,7 @@ export default class CommandList extends Discord.Collection<string, Command> {
                 .commands.set(registerCommands)
             for (const cmd of commands.values())
                 if (registerPermsStaff[cmd.name]) registerPermsStaff[cmd.name].id = cmd.id
-            await this.client.customGuilds.main().commands.permissions.set({
+            await this.client.customGuilds.staff().commands.permissions.set({
                 fullPermissions: Object.values(registerPermsStaff)
             })
         }

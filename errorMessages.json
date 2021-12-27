@@ -71,9 +71,12 @@
     "noName": ["You must specify a snippet name."],
     "noChange": ["Nothing changed."],
     "noTitle": ["You must specify a title."],
+    "noDescription": ["You must provide a description."],
     "noSuggestionNumber": ["You must specify a suggestion number."],
     "noTasks": ["Your task list is empty."],
     "noTeam": ["You must specify a team."],
+    "noSubcommand": ["You must specify a subcommand."],
+    "noBlunderID": ["You must provide a blunder tracker ID"],
     "alreadyBanned": ["The user is already banned."],
     "alreadyDeleted": ["The case is already deleted."],
     "alreadyMuted": ["The user is already muted."],
@@ -93,7 +96,9 @@
     "invalidTeam": [
         "This team does not exist, try searching on build team interactive map or the website (=map)"
     ],
+    "invalidBlunderID": ["A blunder tracker with that ID doesn't exist!"],
     "reminderNotFound": ["That reminder doesn't exist."],
+    "blunderNotFound": ["A blunder tracker for you was not found!"],
     "snippetNotFound": ["That snippet doesn't exist."],
     "descriptionTooLong512": ["That description is too long. (max. 512 characters)."],
     "noteTooLong1024": ["That note is too long. (max. 1024 characters)."],
@@ -106,5 +111,17 @@
     "networkOffline": ["The network is offline."],
     "utlSuggestion": ["Can't find the suggestion's message."],
     "editOthers": ["You can't edit other people's suggestions."],
-    "deleteOthers": ["You can't delete other people's suggestions."]
+    "deleteOthers": ["You can't delete other people's suggestions."],
+    "multipleBlunders": [
+        "There were multiple blunder trackers found for your highest role, please specify one with an ID"
+    ],
+    "blunderCommitted": [
+        "Your mortal human imperfections have been noted 😔",
+        "It's okay, we all make mistakes 🙂 Except for me 🙃",
+        "What happened this time...",
+        "Cleanup on aisle 6",
+        "The one's gotta hurt",
+        "Do tell your manager about this"
+    ],
+    "staffChannelRequired": ["You must provide a channel from the staff server."]
 }
