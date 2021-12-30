@@ -6,7 +6,6 @@ import Roles from "../util/roles"
 import humanizeArray from "../util/humanizeArray"
 import hexToRGB from "../util/hexToRGB"
 import CommandMessage from "../struct/CommandMessage"
-import errorMessage from "../util/errorMessage"
 
 const VALID_IMAGE_SIZES = [16, 32, 64, 128, 256, 512, 1024, 2048, 4096]
 
@@ -45,7 +44,7 @@ export default new Command({
         if (!user)
             return client.response.sendError(
                 message,
-                user === undefined ? errorMessage.noUser : errorMessage.invalidUser
+                user === undefined ? client.messages.noUser : client.messages.invalidUser
             )
         if (!VALID_IMAGE_SIZES.includes(size))
             return client.response.sendError(

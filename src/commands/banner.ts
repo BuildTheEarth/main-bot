@@ -6,7 +6,6 @@ import Roles from "../util/roles"
 import quote from "../util/quote"
 import hexToRGB from "../util/hexToRGB"
 import CommandMessage from "../struct/CommandMessage"
-import errorMessage from "../util/errorMessage"
 
 export default new Command({
     name: "banner",
@@ -98,7 +97,7 @@ export default new Command({
             if (description?.length > 512)
                 return client.response.sendError(
                     message,
-                    errorMessage.descriptionTooLong512
+                    client.messages.descriptionTooLong512
                 )
 
             await message.continue()
@@ -116,7 +115,7 @@ export default new Command({
             )
         } else if (subcommand === "delete") {
             const id = args.consume("id")
-            if (!id) return client.response.sendError(message, errorMessage.noBannerID)
+            if (!id) return client.response.sendError(message, client.messages.noBannerID)
 
             await message.continue()
 
@@ -139,12 +138,13 @@ export default new Command({
             })
         } else if (subcommand === "show") {
             const id = args.consume("id")
-            if (!id) return client.response.sendError(message, errorMessage.noBannerID)
+            if (!id) return client.response.sendError(message, client.messages.noBannerID)
 
             await message.continue()
 
             const banner = await BannerImage.findOne(Number(id))
-            if (!banner) return client.response.sendError(message, errorMessage.noBanner)
+            if (!banner)
+                return client.response.sendError(message, client.messages.noBanner)
 
             await message.send({
                 embeds: [

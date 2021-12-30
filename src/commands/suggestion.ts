@@ -13,7 +13,6 @@ import suggestionStatusActions from "../data/suggestionStatusActions"
 import hexToRGB from "../util/hexToRGB"
 import GuildMember from "../struct/discord/GuildMember"
 import CommandMessage from "../struct/CommandMessage"
-import errorMessage from "../util/errorMessage"
 
 export default new Command({
     name: "suggestion",
@@ -148,14 +147,14 @@ export default new Command({
             !canManage &&
             message.channel.type !== "DM"
         ) {
-            const errorMessage = await client.response.sendError(
+            const messages = await client.response.sendError(
                 message,
                 `Please run this command in <#${discussionID}>!`
             )
             if (message.channel.id === client.config.suggestions[category]) {
                 message.delete().catch(noop)
                 setTimeout(() => {
-                    if (errorMessage) errorMessage.delete().catch(noop)
+                    if (messages) messages.delete().catch(noop)
                 }, 10000)
             }
             return
@@ -268,7 +267,7 @@ export default new Command({
                     return
                 if (interaction.user.id !== message.member.id)
                     return interaction.reply({
-                        content: errorMessage.wrongUser,
+                        content: client.messages.wrongUser,
                         ephemeral: true
                     })
                 if (
@@ -337,7 +336,7 @@ export default new Command({
 
         const identifier = Suggestion.parseIdentifier(args.consume("number"))
         if (!identifier.number)
-            return client.response.sendError(message, errorMessage.noSuggestionNumber)
+            return client.response.sendError(message, client.messages.noSuggestionNumber)
 
         await message.continue()
 
@@ -345,14 +344,14 @@ export default new Command({
         if (!suggestion)
             return client.response.sendError(
                 message,
-                errorMessage.invalidSuggestionNumber
+                client.messages.invalidSuggestionNumber
             )
 
         const suggestionMessage: Discord.Message = await suggestions.messages
             .fetch(suggestion.message)
             .catch(() => null)
         if (!suggestionMessage)
-            return client.response.sendError(message, errorMessage.utlSuggestion)
+            return client.response.sendError(message, client.messages.utlSuggestion)
 
         if (subcommand === "link") {
             const displayNumber = await suggestion.getIdentifier()
@@ -374,16 +373,16 @@ export default new Command({
                 suggestion.author !== message.member.id &&
                 (field === "body" || !canManage)
             )
-                return client.response.sendError(message, errorMessage.editOthers)
+                return client.response.sendError(message, client.messages.editOthers)
 
             let edited = args.consumeRest(["text"])
             if (field === "title")
                 edited = await flattenMarkdown(edited, client, message.guild)
             if (field === "title" && edited.length > 200)
-                return client.response.sendError(message, errorMessage.titleTooLong200)
+                return client.response.sendError(message, client.messages.titleTooLong200)
             if (field === "teams" && edited.length > 255)
-                return client.response.sendError(message, errorMessage.teamsTooLong255)
-            if (!edited) return client.response.sendError(message, errorMessage.noBody)
+                return client.response.sendError(message, client.messages.teamsTooLong255)
+            if (!edited) return client.response.sendError(message, client.messages.noBody)
 
             suggestion[field] = edited
             await suggestion.save()
@@ -393,7 +392,7 @@ export default new Command({
             return client.response.sendSuccess(message, "Edited the suggestion!")
         } else if (subcommand === "delete") {
             if (suggestion.author !== message.member.id && !canManage)
-                return client.response.sendError(message, errorMessage.deleteOthers)
+                return client.response.sendError(message, client.messages.deleteOthers)
 
             // BaseEntity#softRemove() doesn't save the deletion date to the object itself
             // and we need it to be saved because Suggestion#displayEmbed() uses it

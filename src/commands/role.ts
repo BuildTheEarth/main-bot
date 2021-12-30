@@ -40,7 +40,7 @@ export default new Command({
         const subcommand = args.consumeSubcommandIf(["view", "download"])
         const role = await args.consumeRole("role")
         if (!role) {
-            return client.response.sendError(message, "Please provide a valid role.")
+            return client.response.sendError(message, client.messages.noRole)
         }
         await message.continue()
 

@@ -7,7 +7,6 @@ import ActionLog from "../entities/ActionLog"
 import Roles from "../util/roles"
 import noop from "../util/noop"
 import CommandMessage from "../struct/CommandMessage"
-import errorMessage from "../util/errorMessage"
 
 export default new Command({
     name: "kick",
@@ -39,22 +38,23 @@ export default new Command({
         if (!user)
             return client.response.sendError(
                 message,
-                user === undefined ? errorMessage.noUser : errorMessage.invalidUser
+                user === undefined ? client.messages.noUser : client.messages.invalidUser
             )
         const member: Discord.GuildMember = await message.guild.members
             .fetch({ user, cache: true })
             .catch(noop)
-        if (!member) return client.response.sendError(message, errorMessage.notInGuild)
+        if (!member) return client.response.sendError(message, client.messages.notInGuild)
 
-        if (member.user.bot) return client.response.sendError(message, errorMessage.isBot)
+        if (member.user.bot)
+            return client.response.sendError(message, client.messages.isBot)
         if (member.id === message.member.user.id)
-            return client.response.sendError(message, errorMessage.isSelfKick)
+            return client.response.sendError(message, client.messages.isSelfKick)
         if (GuildMember.hasRole(member, Roles.STAFF))
-            return client.response.sendError(message, errorMessage.isStaffKick)
+            return client.response.sendError(message, client.messages.isStaffKick)
 
         const image = args.consumeImage("image_url")
         const reason = args.consumeRest(["reason"])
-        if (!reason) return client.response.sendError(message, errorMessage.noReason)
+        if (!reason) return client.response.sendError(message, client.messages.noReason)
 
         await message.continue()
 

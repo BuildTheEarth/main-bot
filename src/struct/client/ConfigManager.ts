@@ -5,7 +5,11 @@ import Client from "../Client"
 import { SuggestionStatus } from "../../entities/Suggestion"
 import { Action } from "../../entities/ActionLog"
 import { EmojiIdentifierResolvable } from "discord.js"
+import MessagesConfig from "./MessagesConfig"
 
+type ConfigSubmoduleTypes = MessagesConfig
+
+export type Submodules = Record<string, ConfigSubmoduleTypes>
 export type Field<T = string> = { [key: string]: T }
 export type GuildCategories<T = string> = { main: T; staff: T }
 export type SuggestionCategories = Record<SuggestionStatus, string>
@@ -47,14 +51,14 @@ export default class ConfigManager {
     emojis: EmojiList
     colors: ColorPalette & { suggestions: SuggestionCategories }
     assets: AssetList
-    rules: string[]
-    buildTeamInvites: Field
     token: string
     modpackAuth: string
     database: DatabaseInfo
+    submodules: Submodules
 
     constructor(client: Client) {
         this.client = client
+        this.submodules = { messages: new MessagesConfig(this.client) }
     }
 
     async load(): Promise<void> {
@@ -68,13 +72,14 @@ export default class ConfigManager {
             })
 
         for (const [key, value] of Object.entries(config)) this[key] = value
+        for (const submodule of Object.values(this.submodules)) await submodule.load()
     }
 
     unload(): void {
-        for (const key of Object.keys(this)) {
-            if (key !== "client") {
-                delete this[key]
-            }
+        const excemptKeys = ["submodules", "client"]
+        for (const key of Object.keys(this).filter(key => !excemptKeys.includes(key))) {
+            delete this[key]
         }
+        for (const submodule of Object.values(this.submodules)) submodule.unload()
     }
 }

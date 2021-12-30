@@ -9,7 +9,6 @@ import ModerationNote from "../entities/ModerationNote"
 import { FindOptions, Not, IsNull } from "typeorm"
 import noop from "../util/noop"
 import CommandMessage from "../struct/CommandMessage"
-import errorMessage from "../util/errorMessage"
 
 export default new Command({
     name: "check",
@@ -47,7 +46,7 @@ export default new Command({
         if (!user)
             return client.response.sendError(
                 message,
-                user === undefined ? errorMessage.noUser : errorMessage.invalidUser
+                user === undefined ? client.messages.noUser : client.messages.invalidUser
             )
 
         const criteria: FindOptions<ActionLog> = { where: { member: user.id } }

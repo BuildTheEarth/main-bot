@@ -5,7 +5,6 @@ import Roles from "../util/roles"
 import ModerationNote from "../entities/ModerationNote"
 import formatTimestamp from "../util/formatTimestamp"
 import CommandMessage from "../struct/CommandMessage"
-import errorMessage from "../util/errorMessage"
 
 export default new Command({
     name: "notes",
@@ -84,13 +83,13 @@ export default new Command({
         if (!user)
             return client.response.sendError(
                 message,
-                user === undefined ? errorMessage.noUser : errorMessage.invalidUser
+                user === undefined ? client.messages.noUser : client.messages.invalidUser
             )
         const body = args.consumeRest(["body"])
         if (subcommand && subcommand !== "clear" && subcommand !== "check") {
-            if (!body) return client.response.sendError(message, errorMessage.noBody)
+            if (!body) return client.response.sendError(message, client.messages.noBody)
             if (body.length > 1024)
-                return client.response.sendError(message, errorMessage.noteTooLong1024)
+                return client.response.sendError(message, client.messages.noteTooLong1024)
         }
 
         await message.continue()
@@ -122,7 +121,7 @@ export default new Command({
                 )
             await client.response.sendSuccess(message, embed)
         } else if (!subcommand || subcommand === "add") {
-            if (!body) return client.response.sendError(message, errorMessage.noBody)
+            if (!body) return client.response.sendError(message, client.messages.noBody)
 
             if (note) {
                 const tip = body.length <= 1024 ? " (Overwrite it with `note edit`)." : ""

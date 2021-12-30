@@ -5,7 +5,6 @@ import ActionLog from "../entities/ActionLog"
 import Command from "../struct/Command"
 import Roles from "../util/roles"
 import CommandMessage from "../struct/CommandMessage"
-import errorMessage from "../util/errorMessage"
 
 export default new Command({
     name: "unban",
@@ -31,16 +30,16 @@ export default new Command({
         if (!user)
             return client.response.sendError(
                 message,
-                user === undefined ? errorMessage.noUser : errorMessage.invalidUser
+                user === undefined ? client.messages.noUser : client.messages.invalidUser
             )
 
         const reason = args.consumeRest(["reason"])
-        if (!reason) return client.response.sendError(message, errorMessage.noReason)
+        if (!reason) return client.response.sendError(message, client.messages.noReason)
 
         await message.continue()
 
         const ban = await TimedPunishment.findOne({ member: user.id, type: "ban" })
-        if (!ban) return client.response.sendError(message, errorMessage.notBanned)
+        if (!ban) return client.response.sendError(message, client.messages.notBanned)
 
         await ban.undo(client)
         const log = new ActionLog()

@@ -8,7 +8,6 @@ import Roles from "../util/roles"
 import formatPunishmentTime from "../util/formatPunishmentTime"
 import Discord from "discord.js"
 import CommandMessage from "../struct/CommandMessage"
-import errorMessage from "../util/errorMessage"
 
 export default new Command({
     name: "mute",
@@ -46,30 +45,30 @@ export default new Command({
         if (!user)
             return client.response.sendError(
                 message,
-                user === undefined ? errorMessage.noUser : errorMessage.invalidUser
+                user === undefined ? client.messages.noUser : client.messages.invalidUser
             )
         const member: Discord.GuildMember = await message.guild.members
             .fetch({ user, cache: true })
             .catch(() => null)
         if (member) {
             if (member.user.bot)
-                return client.response.sendError(message, errorMessage.isBot)
+                return client.response.sendError(message, client.messages.isBot)
             if (GuildMember.hasRole(member, Roles.STAFF))
                 return client.response.sendError(message, "")
         }
 
         const length = args.consumeLength("length")
         if (length == null)
-            return client.response.sendError(message, errorMessage.invalidLength)
+            return client.response.sendError(message, client.messages.invalidLength)
 
         const image = args.consumeImage("image_url")
         const reason = args.consumeRest(["reason"])
-        if (!reason) return client.response.sendError(message, errorMessage.noReason)
+        if (!reason) return client.response.sendError(message, client.messages.noReason)
 
         await message.continue()
 
         const mute = await TimedPunishment.findOne({ member: user.id, type: "mute" })
-        if (mute) return client.response.sendError(message, errorMessage.alreadyMuted)
+        if (mute) return client.response.sendError(message, client.messages.alreadyMuted)
 
         const punishment = new TimedPunishment()
         punishment.member = user.id

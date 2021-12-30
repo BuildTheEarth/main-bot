@@ -5,4 +5,4 @@ function get(target: unknown, key: string): string {
 }
 
 const proxy = new Proxy({}, { get })
-export default proxy as { [key: string]: string }
+export default proxy as Record<string, string>

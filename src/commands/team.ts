@@ -5,7 +5,6 @@ import Roles from "../util/roles"
 import { Brackets, WhereExpression } from "typeorm"
 import Snippet from "../entities/Snippet"
 import CommandMessage from "../struct/CommandMessage"
-import errorMessage from "../util/errorMessage"
 
 export default new Command({
     name: "team",
@@ -22,7 +21,7 @@ export default new Command({
     ],
     async run(this: Command, client: Client, message: CommandMessage, args: Args) {
         const input = args.consumeRest(["team"]).toLowerCase()
-        if (!input) return client.response.sendError(message, errorMessage.noTeam)
+        if (!input) return client.response.sendError(message, client.messages.noTeam)
 
         await message.continue()
 
@@ -45,7 +44,7 @@ export default new Command({
             .getOne()
 
         if (!snippet) {
-            return client.response.sendError(message, errorMessage.invalidTeam)
+            return client.response.sendError(message, client.messages.invalidTeam)
         } else {
             return message
                 .send({ content: snippet.body, allowedMentions: { parse: [] } })

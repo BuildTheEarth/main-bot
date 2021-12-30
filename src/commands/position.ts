@@ -8,7 +8,6 @@ import pseudoteamPositions from "../data/pseudoteamPositions"
 import noop from "../util/noop"
 import Discord from "discord.js"
 import CommandMessage from "../struct/CommandMessage"
-import errorMessage from "../util/errorMessage"
 
 export default new Command({
     name: "position",
@@ -42,7 +41,7 @@ export default new Command({
         if (!user)
             return client.response.sendError(
                 message,
-                user === undefined ? errorMessage.noUser : errorMessage.invalidUser
+                user === undefined ? client.messages.noUser : client.messages.invalidUser
             )
 
         let position = args.consumeIf(["bto", "vcc", "vs"], "position")
@@ -66,7 +65,7 @@ export default new Command({
         ).members
             .fetch({ user, cache: true })
             .catch(noop)
-        if (!member) return client.response.sendError(message, errorMessage.notInGuild)
+        if (!member) return client.response.sendError(message, client.messages.notInGuild)
 
         await message.continue()
 

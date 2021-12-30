@@ -113,7 +113,7 @@ export default class BannedWordFilter {
  * @property {string} base The "base" word, unmodified, from the word list. For example, `"lol"`.
  * @property {string} raw The actual input as found inside the string. For example, `"l.ol`.
  */
-type BannedWordObj = {
+export type BannedWordObj = {
     index: number
     word: string
     base: string

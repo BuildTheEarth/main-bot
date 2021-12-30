@@ -5,7 +5,6 @@ import Roles from "../util/roles"
 import hexToRGB from "../util/hexToRGB"
 import Discord from "discord.js"
 import CommandMessage from "../struct/CommandMessage"
-import errorMessage from "../util/errorMessage"
 
 export default new Command({
     name: "purge",
@@ -23,9 +22,9 @@ export default new Command({
     async run(this: Command, client: Client, message: CommandMessage, args: Args) {
         const amount = Number(args.consume("amount"))
         if (Number.isNaN(amount))
-            return client.response.sendError(message, errorMessage.invalidAmount)
+            return client.response.sendError(message, client.messages.invalidAmount)
         if (amount > 100)
-            return client.response.sendError(message, errorMessage.purgeLimit)
+            return client.response.sendError(message, client.messages.purgeLimit)
 
         await message.continue()
 

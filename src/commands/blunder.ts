@@ -4,7 +4,7 @@ import Client from "../struct/Client"
 import CommandMessage from "../struct/CommandMessage"
 import Args from "../struct/Args"
 import GuildMember from "../struct/discord/GuildMember"
-import errorMessage from "../util/errorMessage"
+
 import BlunderTracker from "../entities/BlunderTracker"
 import { ChannelType } from "discord-api-types"
 import { GuildTextBasedChannel } from "discord.js"
@@ -80,7 +80,7 @@ export default new Command({
     async run(this: Command, client: Client, message: CommandMessage, args: Args) {
         const subcommand = args.consumeSubcommandIf(["commit", "new", "delete", "list"])
         if (!subcommand)
-            return client.response.sendError(message, errorMessage.noSubcommand)
+            return client.response.sendError(message, client.messages.noSubcommand)
 
         const staffMember = await client.customGuilds
             .staff()
@@ -91,7 +91,7 @@ export default new Command({
             : false
 
         if (subcommand == "commit") {
-            let id = parseInt(args.consume("id"))
+            const id = parseInt(args.consume("id"))
             let blunder: BlunderTracker
             message.continue()
 
@@ -100,16 +100,16 @@ export default new Command({
                 if (!blunder)
                     return client.response.sendError(
                         message,
-                        errorMessage.invalidBlunderID
+                        client.messages.invalidBlunderID
                     )
                 if (!staffMember.roles.cache.has(blunder.role) && !canManage)
-                    return client.response.sendError(message, errorMessage.noPerms)
+                    return client.response.sendError(message, client.messages.noPerms)
             } else {
                 const rolesDescending = staffMember.roles.cache.sort(
                     (roleA, roleB) => roleB.position - roleA.position
                 )
                 for (const role of rolesDescending.values()) {
-                    let blunders = await BlunderTracker.find({
+                    const blunders = await BlunderTracker.find({
                         where: { role: role.id }
                     })
                     console.log(blunders)
@@ -117,47 +117,47 @@ export default new Command({
                     if (blunders.length > 1)
                         return client.response.sendError(
                             message,
-                            errorMessage.multipleBlunders
+                            client.messages.multipleBlunders
                         )
                     blunder = blunders[0]
                     break
                 }
             }
             if (!blunder)
-                return client.response.sendError(message, errorMessage.blunderNotFound)
+                return client.response.sendError(message, client.messages.blunderNotFound)
             await blunder.reset(client)
-            client.response.sendSuccess(message, errorMessage.blunderCommitted)
+            client.response.sendSuccess(message, client.messages.blunderCommitted)
         } else if (subcommand == "new") {
             if (!canManage)
-                return client.response.sendError(message, errorMessage.noPerms)
+                return client.response.sendError(message, client.messages.noPerms)
 
-            let role = await args.consumeRole("team")
+            const role = await args.consumeRole("team")
 
-            let channel = await args.consumeChannel("channel")
+            const channel = await args.consumeChannel("channel")
             if (!channel || !channel.isText())
-                return client.response.sendError(message, errorMessage.noChannel)
+                return client.response.sendError(message, client.messages.noChannel)
             if (
                 (channel as GuildTextBasedChannel).guild?.id !==
                 client.customGuilds.staff().id
             )
                 return client.response.sendError(
                     message,
-                    errorMessage.staffChannelRequired
+                    client.messages.staffChannelRequired
                 )
 
-            let description = args.consumeRest(["description"])
+            const description = args.consumeRest(["description"])
             if (!description)
-                return client.response.sendError(message, errorMessage.noDescription)
+                return client.response.sendError(message, client.messages.noDescription)
 
             message.continue()
 
-            let blunder = new BlunderTracker()
+            const blunder = new BlunderTracker()
             blunder.lastBlunder = null
             blunder.role = role?.id || null
             blunder.channel = channel.id
             blunder.description = description
 
-            let msg = await channel.send(
+            const msg = await channel.send(
                 `\`unknown\` days since ${
                     blunder.role ? (await blunder.roleToTeam(client)) + " " : ""
                 }${blunder.description}`
@@ -167,26 +167,26 @@ export default new Command({
             client.response.sendSuccess(message, "Blunder Tracker created!")
         } else if (subcommand == "delete") {
             if (!canManage)
-                return client.response.sendError(message, errorMessage.noPerms)
+                return client.response.sendError(message, client.messages.noPerms)
 
-            let id = parseInt(args.consume("id"))
+            const id = parseInt(args.consume("id"))
             if (id) {
                 message.continue()
 
-                let blunder = await BlunderTracker.findOne(id)
+                const blunder = await BlunderTracker.findOne(id)
                 if (!blunder)
                     return client.response.sendError(
                         message,
-                        errorMessage.invalidBlunderID
+                        client.messages.invalidBlunderID
                     )
 
-                let msg = await (
+                const msg = await (
                     client.channels.cache.get(blunder.channel) as GuildTextBasedChannel
                 ).messages.fetch(blunder.message)
                 await msg?.delete()
                 await blunder.remove()
                 client.response.sendSuccess(message, `Blunder tracker \`${id}\` deleted!`)
-            } else client.response.sendError(message, errorMessage.noBlunderID)
+            } else client.response.sendError(message, client.messages.noBlunderID)
         } else if (subcommand == "list") {
             let findOptions = {}
             if (!canManage)
@@ -200,7 +200,7 @@ export default new Command({
                 }
             message.continue()
 
-            let blunders = await BlunderTracker.find(findOptions)
+            const blunders = await BlunderTracker.find(findOptions)
 
             client.response.sendSuccess(message, {
                 title: "Blunder Trackers available to you:",

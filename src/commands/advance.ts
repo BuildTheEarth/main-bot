@@ -8,7 +8,6 @@ import noop from "../util/noop"
 import AdvancedBuilder from "../entities/AdvancedBuilder"
 import ms from "ms"
 import CommandMessage from "../struct/CommandMessage"
-import errorMessage from "../util/errorMessage"
 
 export default new Command({
     name: "advance",
@@ -36,7 +35,7 @@ export default new Command({
         if (!user)
             return client.response.sendError(
                 message,
-                user === undefined ? errorMessage.noUser : errorMessage.invalidUser
+                user === undefined ? client.messages.noUser : client.messages.invalidUser
             )
 
         const member = await (await client.customGuilds.main()).members
@@ -51,7 +50,10 @@ export default new Command({
         if (remove) {
             const record = await AdvancedBuilder.findOne(user.id)
             if (!record)
-                return client.response.sendError(message, errorMessage.notAdvancedBuilder)
+                return client.response.sendError(
+                    message,
+                    client.messages.notAdvancedBuilder
+                )
             await record.removeBuilder(client)
             return client.response.sendSuccess(message, `Removed ${user}.`)
         } else {

@@ -6,7 +6,6 @@ import Suggestion from "../entities/Suggestion"
 import Roles from "../util/roles"
 import flattenMarkdown from "../util/flattenMarkdown"
 import CommandMessage from "../struct/CommandMessage"
-import errorMessage from "../util/errorMessage"
 
 export default new Command({
     name: "suggest",
@@ -70,15 +69,15 @@ export default new Command({
         let error: string
         if (extend && !(await Suggestion.findOne({ number: extend.number })))
             error = `The suggestion you're trying to extend (**#${extend}**) doesn't exist!`
-        if (!body) error = errorMessage.noBody
-        if (!title) error = errorMessage.noTitle
-        if (title?.length > 200) error = errorMessage.titleTooLong200
+        if (!body) error = client.messages.noBody
+        if (!title) error = client.messages.noTitle
+        if (title?.length > 200) error = client.messages.titleTooLong200
 
         if (error) {
             if (message.channel.type !== "DM") message.delete().catch(() => null)
-            const errorMessage = await client.response.sendError(message, error)
+            const messages = await client.response.sendError(message, error)
             return setTimeout(() => {
-                if (errorMessage) errorMessage.delete().catch(() => null)
+                if (messages) messages.delete().catch(() => null)
             }, 10000)
         }
 

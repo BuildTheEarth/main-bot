@@ -13,6 +13,8 @@ import WebserverHandler from "./client/WebserverHandler"
 import { REST } from "@discordjs/rest"
 import BannedWord, { bannedTypes } from "../entities/BannedWord"
 import BannedWordFilter from "./client/BannedWordFilter"
+import DutyScheduler from "./client/DutyScheduler"
+import Messages from "./client/Messages"
 
 export default class Client extends Discord.Client {
     guilds: Discord.GuildManager
@@ -28,6 +30,8 @@ export default class Client extends Discord.Client {
     restCommand = new REST({ version: "9" }).setToken(this.config.token)
     filterWordsCached: { banned: bannedTypes; except: Array<string> }
     filter = new BannedWordFilter(this)
+    dutyScheduler = new DutyScheduler(this)
+    messages = new Messages(this).proxy
 
     async initDatabase(): Promise<void> {
         const db = this.config.database

@@ -5,6 +5,7 @@
     "dependencies": {
         "@buildtheearth/bot-logger": "^1.0.3",
         "@discordjs/rest": "^0.1.0-canary.0",
+        "bluebird": "^3.7.2",
         "discord-api-types": "^0.24.0",
         "discord.js": "^13.1.0",
         "express": "^4.17.1",
@@ -16,6 +17,7 @@
         "node-fetch": "^2.0.0",
         "pluralize": "^8.0.0",
         "reflect-metadata": "^0.1.13",
+        "sharp": "^0.29.3",
         "sqlite3": "^5.0.2",
         "string-replace-async": "^2.0.0",
         "typeorm": "^0.3.0-alpha.24 ",
@@ -23,6 +25,7 @@
         "yaml": "^1.10.2"
     },
     "devDependencies": {
+        "@types/bluebird": "^3.5.36",
         "@types/lodash": "^4.14.177",
         "@types/ms": "^0.7.31",
         "@types/node": "^16.11.17",
@@ -40,6 +43,7 @@
     "scripts": {
         "clean": "rimraf dist/",
         "start": "node dist/index.js --unhandled-rejections=strict",
+        "test": "npm run build && npm run start",
         "start:production": "pm2 start ecosystem.yml --env production",
         "pre-commit": "npm run lint && npm run format",
         "build": "npm run clean && tsc",

@@ -41,7 +41,8 @@
     "slowmodeTooLow": [
         "How would that even work? Time travel?",
         "Dont go breaking the space time continuum.",
-        "Time travel is not possible. Try a larger number."
+        "Time travel is not possible. Try a larger number.",
+        "At this point, you know what you are doing wrong."
     ],
     "slowmodeTooHigh": [
         "That is a lot of seconds.",
@@ -58,6 +59,7 @@
     "noBanner": ["That banner doesn't exist."],
     "noBannerId": ["You must provide the banner id."],
     "noLength": ["You must provide a length."],
+    "noTime": ["You must provide a time."],
     "noImage": ["You must provide a reason image."],
     "noReason": ["You must provide a reason."],
     "noNewReason": ["You must provide a new reason/image."],
@@ -123,5 +125,13 @@
         "The one's gotta hurt",
         "Do tell your manager about this"
     ],
-    "staffChannelRequired": ["You must provide a channel from the staff server."]
+    "staffChannelRequired": ["You must provide a channel from the staff server."],
+    "scheduleCancelAuto": ["*Note the existing duty schedule was automatically cancelled.*"],
+    "cannotDuty": [
+        "You cannot be on duty.",
+        "You are either a bot dev, or a Manager without Moderator."
+    ],
+    "toggleScheduled": ["Your duty toggle was scheduled!"],
+    "scheduleCancel": ["Schedule has been cancelled."],
+    "noCancellableSchedule": ["There was no scheduled duty to cancel!"]
 }

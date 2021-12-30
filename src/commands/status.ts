@@ -6,7 +6,6 @@ import noop from "../util/noop"
 import fetch from "node-fetch"
 import MinecraftServerStatus from "../typings/MinecraftServerStatus"
 import CommandMessage from "../struct/CommandMessage"
-import errorMessage from "../util/errorMessage"
 
 const API_URL = "https://api.mcsrvstat.us/2/"
 const JAVA_URL = `${API_URL}network.buildtheearth.net`
@@ -28,7 +27,11 @@ export default new Command({
         const bedrock = await status(BEDROCK_URL)
 
         if (!java?.online) {
-            return client.response.sendError(message, errorMessage.networkOffline, false)
+            return client.response.sendError(
+                message,
+                client.messages.networkOffline,
+                false
+            )
         } else {
             const embed: Discord.MessageEmbedOptions = {
                 description: "The network is online!",

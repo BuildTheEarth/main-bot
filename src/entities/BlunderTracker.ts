@@ -50,11 +50,11 @@ export default class BlunderTracker extends BaseEntity {
     @SnowflakeColumn()
     channel: string
 
-    static async inc(client: Client) {
+    static async inc(client: Client): Promise<void> {
         for (const count of await this.find()) count.update(client)
     }
 
-    async update(client: Client) {
+    async update(client: Client): Promise<void> {
         const channel = (await client.customGuilds.staff()).channels.cache.get(
             this.channel
         ) as TextChannel
@@ -84,7 +84,7 @@ export default class BlunderTracker extends BaseEntity {
         }
     }
 
-    async reset(client: Client) {
+    async reset(client: Client): Promise<void> {
         this.lastBlunder = new Date()
         await this.save()
         await this.update(client)
