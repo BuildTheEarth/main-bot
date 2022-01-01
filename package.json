@@ -7,7 +7,7 @@
         "discord.js": "^13.1.0",
         "express": "^4.17.1",
         "fecha": "^4.2.1",
-        "iso-639-1": "^2.1.9",
+        "iso-639-1": "^2.1.11",
         "minecraft-block-info": "github:XboxBedrock/minecraft-block-info",
         "ms": "^2.1.3",
         "mysql2": "^2.3.0",
