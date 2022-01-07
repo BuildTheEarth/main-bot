@@ -1,10 +1,10 @@
-const fs = require("fs")
-const JSON5 = require("json5")
+import fs from 'fs';
+import JSON5 from 'json5';
 
-const content = fs.readFileSync(__dirname + "/config/config.json5", "UTF-8")
+const content = fs.readFileSync(__dirname + "/config/config.json5", {encoding: "utf-8"})
 const config = JSON5.parse(content)
 
-module.exports = {
+export = {
     type: "mysql",
     host: config.database.host,
     database: config.database.name,

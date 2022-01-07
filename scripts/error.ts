@@ -1,11 +1,11 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
-const fs = require("fs")
-const chalk = require("chalk")
+import fs from "fs"
+import chalk from "chalk"
 
 const logs = fs.readdirSync(`${__dirname}/../logs`)
 const last = logs[logs.length - 1]
 const content = fs
-    .readFileSync(`${__dirname}/../logs/${last}`, "UTF-8")
+    .readFileSync(`${__dirname}/../logs/${last}`, {encoding: "utf-8"})
     .replace(/\r\n/g, "\n")
 
 // i will forget what this regex does in 3 hours
