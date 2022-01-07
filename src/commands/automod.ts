@@ -16,6 +16,7 @@ export default new Command({
         {
             name: "block",
             description: "Manage blocked words",
+            group: true,
             subcommands: [
                 {
                     name: "add",
@@ -70,6 +71,7 @@ export default new Command({
         {
             name: "except",
             description: "Manage exceptions",
+            group: true,
             subcommands: [
                 {
                     name: "add",

@@ -5,6 +5,7 @@ import ModpackImage, { ModpackImageKey } from "../entities/ModpackImage"
 import Roles from "../util/roles"
 import isURL from "../util/isURL"
 import CommandMessage from "../struct/CommandMessage"
+import JSON5 from "json5"
 
 export default new Command({
     name: "modpack",
@@ -137,7 +138,7 @@ export default new Command({
             await message.continue()
 
             const { body } = await ModpackImage.fetch()
-            const code = `\`\`\`${JSON.stringify(body, null, 2)}\`\`\``
+            const code = `\`\`\`${JSON5.stringify(body, null, 2)}\`\`\``
             client.response.sendSuccess(
                 message,
                 `Updated data! Raw JSON response:\n\n${code}`

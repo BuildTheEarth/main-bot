@@ -1,5 +1,5 @@
 import path from "path"
-import YAML from "yaml"
+import JSON5 from "json5"
 import fs from "fs"
 import Client from "../Client"
 import { SuggestionStatus } from "../../entities/Suggestion"
@@ -62,12 +62,14 @@ export default class ConfigManager {
     }
 
     async load(): Promise<void> {
-        const configPath = path.join(__dirname, "../../../config.yml")
+        const configPath = path.join(__dirname, "../../../config/config.json5")
         const config = await fs.promises
             .readFile(configPath, "utf-8")
-            .then(yaml => YAML.parse(yaml))
+            .then(json5 => JSON5.parse(json5))
             .catch((e: Error) => {
-                this.client.logger.error(`Failed to read config.yml: ${e.message}`)
+                this.client.logger.error(
+                    `Failed to read config/config.json5: ${e.message}`
+                )
                 process.exit(1)
             })
 

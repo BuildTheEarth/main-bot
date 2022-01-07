@@ -4,6 +4,7 @@ import Command from "../struct/Command"
 import Roles from "../util/roles"
 import truncateString from "../util/truncateString"
 import CommandMessage from "../struct/CommandMessage"
+import JSON5 from "json5"
 
 export default new Command({
     name: "query",
@@ -25,7 +26,7 @@ export default new Command({
         await message.continue()
 
         try {
-            const out = JSON.stringify(await client.db.query(query), null, 2)
+            const out = JSON5.stringify(await client.db.query(query), null, 2)
             client.response.sendSuccess(message, {
                 author: { name: "Output" },
                 description: `\`\`\`${truncateString(out, 1994)}\`\`\``

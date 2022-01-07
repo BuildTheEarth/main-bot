@@ -6,6 +6,7 @@ import Args from "../struct/Args"
 import humanizeConstant from "../util/humanizeConstant"
 import GuildMember from "../struct/discord/GuildMember"
 import Discord from "discord.js"
+import JSON5 from "json5"
 
 export default new Command({
     name: "role",
@@ -128,7 +129,7 @@ export default new Command({
                 })
             }
 
-            const buf = Buffer.from(JSON.stringify(roleData, null, 4))
+            const buf = Buffer.from(JSON5.stringify(roleData, null, 4))
             const file = new Discord.MessageAttachment(buf, "roleData.json")
             await message.send({ files: [file] })
         }

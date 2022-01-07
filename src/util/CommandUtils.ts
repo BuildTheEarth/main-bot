@@ -15,6 +15,7 @@ import Command, { CommandArgs, SubCommandProperties } from "../struct/Command"
 import _ from "lodash"
 import Discord from "discord.js"
 import Client from "../struct/Client"
+import ApiTypes from "discord-api-types"
 
 export default abstract class CommandUtils {
     public static commandToSlash(command: Command): SlashCommandBuilder[] {
@@ -125,7 +126,12 @@ function argsToStrSubCommand(
 ): string {
     let args = "\n\n**Subcommands**\n"
     const subcommands: Array<SubCommandProperties> = _.cloneDeep(command.subcommands)
-    if (slashcommand && command.basesubcommand) subcommands.push(command)
+    if (slashcommand && command.basesubcommand) {
+        const pushCmd = _.cloneDeep(command)
+        pushCmd.name = command.basesubcommand
+        pushCmd.subcommands = null
+        subcommands.push(pushCmd)
+    }
     subcommands.forEach(subcommand => {
         let trueSeperator = " "
         if (command.seperator === " " && !slashcommand && subcommand.seperator)
@@ -330,7 +336,8 @@ function addOption(
             .setName(arg.name)
             .setDescription(arg.description)
             .setRequired(arg.required)
-        if (arg.channelTypes) tempBuilder.addChannelTypes(arg.channelTypes)
+
+        if (arg.channelTypes) tempBuilder.addChannelTypes(arg.channelTypes as []) //hacky fix, but works
         builder.addChannelOption(tempBuilder)
     } else if (arg.optionType === "ROLE") {
         const tempBuilder = new SlashCommandRoleOption()
@@ -349,7 +356,7 @@ function addOption(
 }
 
 //impl of python rstrip cause there dosent seem to be any good alternative in js, yes I did steal this from stackoveflow and modify it so TS dosent yell at me
-function rstrip(str, characters) {
+function rstrip(str: string, characters: string) {
     let end = str.length - 1
     while (characters.indexOf(str[end]) >= 0) {
         end -= 1

@@ -3,6 +3,19 @@ import Args from "./Args"
 import ApiTypes from "discord-api-types/v9"
 import CommandMessage from "./CommandMessage"
 
+declare const allowedApiTypes: readonly [
+    ApiTypes.ChannelType.GuildText,
+    ApiTypes.ChannelType.GuildVoice,
+    ApiTypes.ChannelType.GuildCategory,
+    ApiTypes.ChannelType.GuildNews,
+    ApiTypes.ChannelType.GuildStore,
+    ApiTypes.ChannelType.GuildNewsThread,
+    ApiTypes.ChannelType.GuildPublicThread,
+    ApiTypes.ChannelType.GuildPrivateThread,
+    ApiTypes.ChannelType.GuildStageVoice
+]
+declare type ApplicationCommandOptionAllowedApiTypes = typeof allowedApiTypes[number]
+
 export default class Command implements CommandProperties {
     name: string
     aliases: string[]
@@ -85,6 +98,6 @@ export interface CommandArgs {
         | "MENTIONABLE"
     channelTypes?: Exclude<
         ApiTypes.ChannelType,
-        ApiTypes.ChannelType.DM | ApiTypes.ChannelType.GroupDM
+        ApiTypes.ChannelType.GroupDM | ApiTypes.ChannelType.DM
     >[]
 }

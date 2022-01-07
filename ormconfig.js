@@ -1,8 +1,8 @@
 const fs = require("fs")
-const YAML = require("yaml")
+const JSON5 = require("json5")
 
-const content = fs.readFileSync(__dirname + "/config.yml", "UTF-8")
-const config = YAML.parse(content)
+const content = fs.readFileSync(__dirname + "/config/config.json5", "UTF-8")
+const config = JSON5.parse(content)
 
 module.exports = {
     type: "mysql",

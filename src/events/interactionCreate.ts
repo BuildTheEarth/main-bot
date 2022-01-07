@@ -6,6 +6,7 @@ import GuildMember from "../struct/discord/GuildMember"
 import Role from "../struct/discord/Role"
 import Roles from "../util/roles"
 import chalk from "chalk"
+import ModerationMenu from "../entities/ModerationMenu"
 
 export default async function (
     this: Client,
@@ -13,7 +14,54 @@ export default async function (
 ): Promise<unknown> {
     if (interaction.member.user.bot) return
 
-    if (interaction.type !== "APPLICATION_COMMAND") return
+    if (interaction.type === "MESSAGE_COMPONENT") {
+        if (interaction.isSelectMenu()) {
+            if (
+                !GuildMember.hasRole(interaction.member as Discord.GuildMember, [
+                    Roles.MODERATOR,
+                    Roles.HELPER,
+                    Roles.MANAGER
+                ])
+            ) {
+                await interaction.deferUpdate()
+                await interaction.followUp({
+                    ephemeral: true,
+                    content: this.messages.noPermsMod
+                })
+                return
+            }
+            await interaction.deferUpdate()
+            await ModerationMenu.updateMenu(
+                interaction.customId.split(".")[1],
+                interaction
+            )
+        }
+        if (interaction.isButton()) {
+            if (!interaction.customId.includes("modmenu.")) return
+            if (
+                interaction.customId.includes("modmenu.") &&
+                !GuildMember.hasRole(interaction.member as Discord.GuildMember, [
+                    Roles.MODERATOR,
+                    Roles.HELPER,
+                    Roles.MANAGER
+                ])
+            ) {
+                await interaction.deferUpdate()
+                await interaction.followUp({
+                    ephemeral: true,
+                    content: this.messages.noPermsMod
+                })
+                return
+            }
+            await interaction.deferUpdate()
+            if (interaction.customId.split(".")[2] === "pardon")
+                await ModerationMenu.pardonConfirm(
+                    interaction.customId.split(".")[1],
+                    interaction,
+                    this
+                )
+        }
+    }
 
     if (interaction.type === "APPLICATION_COMMAND") {
         const args = new Args(
@@ -66,4 +114,6 @@ export default async function (
             return this.logger.info(`${label} ${tag} ran '${command.name}' command.`)
         }
     }
+
+    return
 }

@@ -3,12 +3,12 @@ import Client from "../struct/Client"
 import SnowflakePrimaryColumn from "./decorators/SnowflakePrimaryColumn"
 import milliseconds from "./transformers/milliseconds"
 
-export interface bannedTypes {
-    [name: string]: {
-        punishment_type: "BAN" | "WARN" | "MUTE" | "KICK"
-        reason: string
-        duration: number
-    }
+export type bannedTypes = Map<string, bannedInfo>
+
+export interface bannedInfo {
+    punishment_type: "BAN" | "WARN" | "MUTE" | "KICK"
+    reason: string
+    duration: number
 }
 
 export interface bannedWordsOptions {
@@ -75,7 +75,7 @@ export default class BannedWord extends BaseEntity {
 
     static async loadWords(): Promise<{ banned: bannedTypes; except: Array<string> }> {
         const values = await this.find()
-        const banned: bannedTypes = {}
+        const banned: bannedTypes = new Map<string, bannedInfo>()
         const except: Array<string> = []
         values.forEach(word => {
             if (word.exception) except.push(word.word)

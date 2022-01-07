@@ -79,7 +79,7 @@ export default new Command({
                 embed.fields.push({ name: "Roles", value: formattedRoles })
 
             const permissions = member.permissions
-                .toArray(true)
+                .toArray()
                 .map(name => humanizeConstant(name, ["VAD", "TTS"]))
             if (permissions)
                 embed.fields.push({ name: "Permissions", value: permissions.join(", ") })

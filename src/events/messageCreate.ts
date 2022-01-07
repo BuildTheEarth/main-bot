@@ -10,6 +10,7 @@ import Roles from "../util/roles"
 import chalk from "chalk"
 import Discord from "discord.js"
 import { Brackets, WhereExpression } from "typeorm"
+import ModerationMenu from "../entities/ModerationMenu"
 
 export default async function (this: Client, message: Discord.Message): Promise<unknown> {
     if (message.author.bot) return
@@ -133,8 +134,9 @@ export default async function (this: Client, message: Discord.Message): Promise<
         return
     }
 
-    if (message.content === "donde es server")
+    if (message.content.toLowerCase() === "donde es server")
         return message.channel.send("hay un server!")
     const bannedWords = this.filter.findBannedWord(message.content)
-    if (bannedWords.length >= 1) return console.log("lol")
+    if (bannedWords.length >= 1)
+        return ModerationMenu.createMenu(message, bannedWords, this)
 }

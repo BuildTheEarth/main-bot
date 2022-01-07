@@ -83,7 +83,7 @@ This project follows the [All Contributors][] specification. Contributions of an
 
 ### Configuration
 
-Rename the `_config.yml` file to `config.yml` and fill in all of the fields:
+Rename the `config/_config.json5` file to `config/config.json5` and fill in all of the fields:
 
 -   **prefix**: The command prefix.
 -   **appeal**: The ban appeal message.

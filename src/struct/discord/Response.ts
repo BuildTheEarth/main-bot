@@ -11,7 +11,7 @@ export default class Response {
     }
 
     async sendError(
-        message: CommandMessage | Discord.TextBasedChannels,
+        message: CommandMessage | Discord.TextBasedChannel,
         embed: string | Discord.MessageEmbedOptions,
         ephemeral: boolean = true
     ): Promise<CommandMessage | void> {
@@ -27,7 +27,7 @@ export default class Response {
     }
 
     async sendSuccess(
-        message: CommandMessage | Discord.TextBasedChannels,
+        message: CommandMessage | Discord.TextBasedChannel,
         embed: string | Discord.MessageEmbedOptions,
         ephemeral: boolean = false
     ): Promise<CommandMessage | void> {

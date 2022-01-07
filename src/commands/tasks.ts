@@ -191,7 +191,7 @@ export default new Command({
             await message.continue()
 
             const channel =
-                ((await args.consumeChannel("channel")) as Discord.TextBasedChannels) ||
+                ((await args.consumeChannel("channel")) as Discord.TextBasedChannel) ||
                 message
             const tasks = await Task.find({
                 where: {

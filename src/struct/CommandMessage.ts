@@ -3,7 +3,7 @@ import Client from "../struct/Client"
 
 export default class CommandMessage {
     message: Discord.CommandInteraction | Discord.Message
-    channel: Discord.TextBasedChannels
+    channel: Discord.TextBasedChannel
     member: Discord.GuildMember
     client: Client
     guild: Discord.Guild

@@ -63,30 +63,6 @@ export default class CommandList extends Discord.Collection<string, Command> {
                 if ((await this.client.customGuilds.main()) && permsTemp[0] != Roles.ANY)
                     registerPermsMain[cmd.name] = { id: "", permissions: permsMain }
             }
-            // NOTE: ALSO REGISTER THIS STUFF ACTUALLY
-            //commandToSlash(command).forEach(async cmd =>
-            /*for await (const cmd of commandToSlash(command)) {
-                if (await this.client.customGuilds.main()) {
-                    await this.client.application.commands.permissions.set({
-                        command: await this.client.application.commands.create(
-                            cmd.toJSON(),
-                            this.client.config.guilds.main
-                        ),
-                        guild: this.client.config.guilds.main,
-                        permissions: permsMain
-                    })
-                }
-                if (await this.client.customGuilds.staff()) {
-                    await this.client.application.commands.permissions.set({
-                        command: await this.client.application.commands.create(
-                            cmd.toJSON(),
-                            this.client.config.guilds.staff
-                        ),
-                        guild: this.client.config.guilds.staff,
-                        permissions: permsStaff
-                    })
-                }
-            }*/
         }
         if (this.client.customGuilds.main()) {
             const commands = await this.client.customGuilds
@@ -118,34 +94,69 @@ export default class CommandList extends Discord.Collection<string, Command> {
         })
     }
 
-    //NOTE: fix loadone and unloadone
-
     async unloadOne(name: string): Promise<void> {
-        this.delete(name)
         const path = require.resolve(__dirname + `/../../commands/${name}.js`)
-        const command: Command = (await import(path)).default
-        await this.client.application.commands.delete(
+        const command = this.get(name)
+        console.log(command)
+        console.log(
             this.client.application.commands.cache.find(command => command.name === name)
         )
-        for await (const alias of command.aliases) {
-            await this.client.application.commands.delete(
-                this.client.application.commands.cache.find(
-                    command => command.name === alias
+        if (this.client.customGuilds.main()) {
+            await this.client.customGuilds
+                .main()
+                .commands.delete(
+                    this.client.customGuilds
+                        .main()
+                        .commands.cache.find(command => command.name === name)
                 )
-            )
+            for await (const alias of command.aliases) {
+                await this.client.customGuilds
+                    .main()
+                    .commands.delete(
+                        this.client.customGuilds
+                            .main()
+                            .commands.cache.find(command => command.name === alias)
+                    )
+            }
         }
+
+        if (this.client.customGuilds.staff()) {
+            await this.client.customGuilds
+                .staff()
+                .commands.delete(
+                    this.client.customGuilds
+                        .staff()
+                        .commands.cache.find(command => command.name === name)
+                )
+            for await (const alias of command.aliases) {
+                await this.client.customGuilds
+                    .staff()
+                    .commands.delete(
+                        this.client.customGuilds
+                            .staff()
+                            .commands.cache.find(command => command.name === alias)
+                    )
+            }
+        }
+
         delete require.cache[path]
+        this.delete(name)
     }
 
     async loadOne(name: string): Promise<void> {
+        let registerPermsMain: Discord.ApplicationCommandPermissionData[] = null
+        let registerPermsStaff: Discord.ApplicationCommandPermissionData[] = null
+
+        const registerCommands = []
         const path = __dirname + `/../../commands/${name}.js`
         const command: Command = (await import(path)).default
         this.set(command.name, command)
-        let permsTemp
+        let permsTemp: string[]
         const permsMain: Array<Discord.ApplicationCommandPermissionData> = []
         const permsStaff: Array<Discord.ApplicationCommandPermissionData> = []
         if (typeof command.permission === "string") permsTemp = [command.permission]
         else permsTemp = command.permission
+        permsTemp.push("Bot Developer")
         for await (const perm of permsTemp) {
             const roleMain = Guild.role(await this.client.customGuilds.main(), perm)
             const roleStaff = Guild.role(await this.client.customGuilds.staff(), perm)
@@ -156,22 +167,36 @@ export default class CommandList extends Discord.Collection<string, Command> {
         }
 
         for await (const cmd of CommandUtils.commandToSlash(command)) {
-            await this.client.application.commands.permissions.add({
-                command: await this.client.application.commands.create(
-                    cmd.toJSON(),
-                    this.client.config.guilds.main
-                ),
-                guild: this.client.config.guilds.main,
-                permissions: permsMain
-            })
-            await this.client.application.commands.permissions.add({
-                command: await this.client.application.commands.create(
-                    cmd.toJSON(),
-                    this.client.config.guilds.staff
-                ),
-                guild: this.client.config.guilds.staff,
-                permissions: permsStaff
-            })
+            const pushCmd = cmd
+            console.log(cmd.name)
+            if (permsTemp[0] == Roles.ANY) pushCmd.setDefaultPermission(true)
+            registerCommands.push(pushCmd.toJSON())
+            if ((await this.client.customGuilds.staff()) && permsTemp[0] != Roles.ANY)
+                registerPermsStaff = permsStaff
+            if ((await this.client.customGuilds.main()) && permsTemp[0] != Roles.ANY)
+                registerPermsMain = permsMain
+        }
+
+        if (this.client.customGuilds.main()) {
+            for (const cmd of registerCommands) {
+                const commandRegistered: Discord.ApplicationCommand =
+                    await this.client.customGuilds.main().commands.create(cmd)
+                if (registerPermsMain !== null)
+                    await commandRegistered.permissions.set({
+                        permissions: registerPermsMain
+                    })
+            }
+        }
+
+        if (this.client.customGuilds.staff()) {
+            for (const cmd of registerCommands) {
+                const commandRegistered: Discord.ApplicationCommand =
+                    await this.client.customGuilds.staff().commands.create(cmd)
+                if (registerPermsStaff !== null)
+                    await commandRegistered.permissions.set({
+                        permissions: registerPermsStaff
+                    })
+            }
         }
     }
 }
