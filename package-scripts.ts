@@ -1,4 +1,4 @@
-/// <reference types="./src/typings/npsUtils" />
+/// <reference types="./src/typings/nps-utils" />
 
 import npsUtils = require('nps-utils')
 
