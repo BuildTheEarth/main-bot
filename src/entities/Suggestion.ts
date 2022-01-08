@@ -89,7 +89,7 @@ export default class Suggestion extends BaseEntity {
                 staff: staff,
                 extends: null
             },
-            options: { withDeleted: true }
+            withDeleted: true
         })
 
         return existing + client.config.suggestionOffset[field]

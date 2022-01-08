@@ -1,4 +1,4 @@
-import { PrimaryColumn, ColumnOptions } from "typeorm"
+import { PrimaryColumn, PrimaryColumnOptions, ColumnOptions } from "typeorm"
 
 export default function SnowflakePrimaryColumn(
     options?: ColumnOptions
@@ -7,5 +7,5 @@ export default function SnowflakePrimaryColumn(
         ...options,
         type: "varchar",
         length: "18"
-    } as ColumnOptions)
+    } as PrimaryColumnOptions)
 }

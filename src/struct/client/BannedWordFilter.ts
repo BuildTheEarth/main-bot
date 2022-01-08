@@ -114,8 +114,8 @@ export default class BannedWordFilter {
  * @property {string} raw The actual input as found inside the string. For example, `"l.ol`.
  */
 export type BannedWordObj = {
-    index: number
-    word: string
-    base: string
-    raw: string
+    index?: number
+    word?: string
+    base?: string
+    raw?: string
 }

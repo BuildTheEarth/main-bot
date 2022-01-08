@@ -6,7 +6,7 @@ import Roles from "../util/roles"
 import ActionLog, { Action } from "../entities/ActionLog"
 import TimedPunishment from "../entities/TimedPunishment"
 import ModerationNote from "../entities/ModerationNote"
-import { FindOptions, Not, IsNull } from "typeorm"
+import { Not, IsNull } from "typeorm"
 import noop from "../util/noop"
 import CommandMessage from "../struct/CommandMessage"
 
@@ -49,11 +49,10 @@ export default new Command({
                 user === undefined ? client.messages.noUser : client.messages.invalidUser
             )
 
-        const criteria: FindOptions<ActionLog> = { where: { member: user.id } }
+        const criteria : Record<any, any> = { where: { member: user.id } }
         if (showDeleted) {
-            // @ts-ignore: Property 'deletedAt' does not exist on type 'string'.
             criteria.where.deletedAt = Not(IsNull())
-            // @ts-enable
+            
             criteria.options.withDeleted = true
         }
 

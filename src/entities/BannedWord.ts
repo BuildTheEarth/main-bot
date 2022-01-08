@@ -1,4 +1,4 @@
-import { Entity, Column, BaseEntity } from "typeorm"
+import { Entity, Column, BaseEntity, AfterLoad } from "typeorm"
 import Client from "../struct/Client"
 import SnowflakePrimaryColumn from "./decorators/SnowflakePrimaryColumn"
 import milliseconds from "./transformers/milliseconds"
@@ -12,11 +12,11 @@ export interface bannedInfo {
 }
 
 export interface bannedWordsOptions {
-    word: string
-    punishment_type: "BAN" | "WARN" | "MUTE" | "KICK"
-    reason: string
-    duration: number
-    exception: boolean
+    word?: string
+    punishment_type?: "BAN" | "WARN" | "MUTE" | "KICK"
+    reason?: string
+    duration?: number
+    exception?: boolean
 }
 
 @Entity({ name: "banned_words" })
@@ -30,11 +30,13 @@ export default class BannedWord extends BaseEntity {
         client?: Client
     ) {
         super()
-        this.word = word
-        this.punishment_type = punishment_type
-        this.reason = reason
-        this.duration = duration
-        this.exception = exception
+        this.init()
+        if (word) this.word = word
+        if (punishment_type) this.punishment_type = punishment_type
+        if (reason) this.reason = reason
+        if (duration) this.duration = duration
+        if (exception) this.exception = exception
+        if (client) {
         if (exception) client.filterWordsCached.except.push(word)
         else
             client.filterWordsCached.banned[word] = {
@@ -42,7 +44,13 @@ export default class BannedWord extends BaseEntity {
                 reason: reason,
                 duration: duration
             }
+        }
     }
+
+    @AfterLoad()
+    init(): void {
+        return
+    }  
 
     static async createBannedWord(
         options: bannedWordsOptions,
@@ -59,19 +67,19 @@ export default class BannedWord extends BaseEntity {
     }
 
     @SnowflakePrimaryColumn()
-    word: string
+    word!: string
 
     @Column({ nullable: true })
-    punishment_type: "BAN" | "WARN" | "MUTE" | "KICK"
+    punishment_type!: "BAN" | "WARN" | "MUTE" | "KICK"
 
     @Column({ length: 1024, nullable: true })
-    reason: string
+    reason!: string
 
     @Column({ nullable: true, transformer: milliseconds })
     duration?: number
 
     @Column()
-    exception: boolean
+    exception!: boolean
 
     static async loadWords(): Promise<{ banned: bannedTypes; except: Array<string> }> {
         const values = await this.find()
