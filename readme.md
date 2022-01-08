@@ -5,6 +5,7 @@
 # main bot
 
 _The main bot for the BuildTheEarth Discord servers._
+[![build](https://github.com/BuildTheEarth/main-bot/actions/workflows/build.yml/badge.svg)] [![nps friendly](https://img.shields.io/badge/nps-friendly-blue.svg?style=flat-square)](https://github.com/sezna/nps) 
 
 </div>
 
@@ -145,8 +146,6 @@ Rename the `config/_config.json5` file to `config/config.json5` and fill in all 
         -   **ban**
         -   **unmute**
         -   **unban**
--   **rules:** A list of rules for the server (used by the `rule` command).
--   **buildTeamInvites:** A list of build team invites (map `name` -> `invite`), used by the `team` command. For a list scraped from our website, check out [build-team-invite-scraper](https://github.com/BuildTheEarth/build-team-invite-scraper) (make sure to indent them one level).
 -   **token**: The Discord bot's token.
 -   **modpackAuth**: The key for our modpack image API (required for the `modpack` command).
 -   **database**: The information/credentials for connecting to the database.
