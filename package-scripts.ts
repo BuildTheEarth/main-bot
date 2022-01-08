@@ -29,7 +29,7 @@ export = {
     },
     start: {
       default: 'node dist/index.js --unhandled-rejections=strict',
-      production: 'pm2 start ecosystem.yml --env production'
+      production: 'pm2 start ecosystem.json --env production'
     },
     test: seriesNPS('build', 'start'),
     preCommit: seriesNPS('lint', 'format'),
