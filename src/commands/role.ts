@@ -33,6 +33,12 @@ export default new Command({
                     description: "The role to download.",
                     required: true,
                     optionType: "ROLE"
+                },
+                {
+                    name: "extended",
+                    description: "Whether to include extended role information.",
+                    required: false,
+                    optionType: "STRING"
                 }
             ]
         }
@@ -109,6 +115,28 @@ export default new Command({
             if (!GuildMember.hasRole(message.member, Roles.SUBTEAM_LEAD || Roles.MANAGER))
                 return
             await role.guild.members.fetch()
+            const extended = args.consume("extended")
+
+            
+
+            let members 
+            if (extended === "extended") {
+                members = role.members.map(m => {
+                    const container = {}
+                    container["tag"] = m.user.tag
+                    container["id"] = m.user.id
+                    container["roles"] = message.guild.roles.cache.filter((elem, key) => m["_roles"].includes(key)).sort((a, b) => b.position - a.position).mapValues(elem => elem.name)
+                    return container})
+            } else {
+                members = role.members.map(m => {
+                    const container = {}
+                    container["tag"] = m.user.tag
+                    container["id"] = m.user.id
+                    return container})
+            }
+            
+            
+
             const roleData = {
                 name: role.name,
                 id: role.id,
@@ -121,15 +149,10 @@ export default new Command({
                 mentionable: role.mentionable,
                 managed: role.managed,
                 permissions: role.permissions.toArray(),
-                members: role.members.map(m => {
-                    const container = {}
-                    container["tag"] = m.user.tag
-                    container["id"] = m.user.id
-                    return container
-                })
+                members: members
             }
 
-            const buf = Buffer.from(JSON5.stringify(roleData, null, 4))
+            const buf = Buffer.from(JSON.stringify(roleData, null, 4))
             const file = new Discord.MessageAttachment(buf, "roleData.json")
             await message.send({ files: [file] })
         }
