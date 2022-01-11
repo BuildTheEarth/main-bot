@@ -28,17 +28,17 @@ require("../../typings/requireJSON5")
 
 import LANGUAGES_LIST = require("../../../config/extensions/languages.json5")
 
-export default class ISO6391 {
+export default class iso6391 {
     static getLanguages(codes: Array<string> = []): IndependentLanguageData[] {
         return codes.map(code => ({
             code,
-            name: ISO6391.getName(code),
-            nativeName: ISO6391.getNativeName(code)
+            name: iso6391.getName(code),
+            nativeName: iso6391.getNativeName(code)
         }))
     }
 
     static getName(code: string): string {
-        return ISO6391.validate(code) ? LANGUAGES_LIST[code].name : ""
+        return iso6391.validate(code) ? LANGUAGES_LIST[code].name : ""
     }
 
     static getAllNames(): Array<string> {
@@ -46,7 +46,7 @@ export default class ISO6391 {
     }
 
     static getNativeName(code: string): string {
-        return ISO6391.validate(code) ? LANGUAGES_LIST[code].nativeName : ""
+        return iso6391.validate(code) ? LANGUAGES_LIST[code].nativeName : ""
     }
 
     static getAllNativeNames(): Array<string> {
