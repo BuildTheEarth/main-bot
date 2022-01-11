@@ -1,4 +1,4 @@
-import Placeholder from "../../entities/placeholder"
+import Placeholder from "../../entities/Placeholder"
 import Client from "../Client"
 
 export default class PlaceholderHandler {

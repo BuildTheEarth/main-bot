@@ -15,7 +15,7 @@ import BannedWordFilter from "./client/BannedWordFilter"
 import DutyScheduler from "./client/DutyScheduler"
 import Messages from "./client/Messages"
 import PlaceholderHandler from "./client/PlaceholderHandler"
-import Placeholder from "../entities/placeholder"
+import Placeholder from "../entities/Placeholder"
 
 export default class Client extends Discord.Client {
     guilds: Discord.GuildManager
