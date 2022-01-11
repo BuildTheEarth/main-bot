@@ -1,7 +1,7 @@
 import { Entity, Column, PrimaryGeneratedColumn, BaseEntity } from "typeorm"
 import Discord from "discord.js"
 import Client from "../struct/Client"
-import languages from "../struct/Client/ISO6391"
+import languages from "../struct/Client/iso6391"
 import hexToRGB from "../util/hexToRGB"
 
 @Entity({ name: "snippets" })

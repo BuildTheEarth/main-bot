@@ -4,7 +4,7 @@ import Command from "../struct/Command"
 import Roles from "../util/roles"
 import quote from "../util/quote"
 import { Brackets, WhereExpression } from "typeorm"
-import languages from "../struct/Client/ISO6391"
+import languages from "../struct/Client/iso6391"
 import Snippet from "../entities/Snippet"
 import CommandMessage from "../struct/CommandMessage"
 
