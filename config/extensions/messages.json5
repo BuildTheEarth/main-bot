@@ -93,6 +93,7 @@
     notMuted: ["The user is not muted."],
     invalidUser: ["Couldn't find that user."],
     invalidAmount: ["Please provide a valid amount."],
+    invalidLength: ["Please provide a valid lenght."],
     invalidTime: ["Please provide a valid time."],
     invalidSnippetLang: ["Please provide a valid snippet language."],
     invalidRuleName: ["Rules must have number names (eg. 1, 2, 3, ...)"],

@@ -6,7 +6,7 @@ import Guild from "../struct/discord/Guild"
 import Roles from "../util/roles"
 import noop from "../util/noop"
 import AdvancedBuilder from "../entities/AdvancedBuilder"
-import ms from "ms"
+import ms from "../util/ms"
 import CommandMessage from "../struct/CommandMessage"
 
 export default new Command({

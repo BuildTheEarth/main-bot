@@ -15,7 +15,6 @@ import Command, { CommandArgs, SubCommandProperties } from "../struct/Command"
 import _ from "lodash"
 import Discord from "discord.js"
 import Client from "../struct/Client"
-import ApiTypes from "discord-api-types"
 
 export default abstract class CommandUtils {
     public static commandToSlash(command: Command): SlashCommandBuilder[] {

@@ -6,7 +6,6 @@ import Args from "../struct/Args"
 import humanizeConstant from "../util/humanizeConstant"
 import GuildMember from "../struct/discord/GuildMember"
 import Discord from "discord.js"
-import JSON5 from "json5"
 
 export default new Command({
     name: "role",
@@ -38,7 +37,8 @@ export default new Command({
                     name: "extended",
                     description: "Whether to include extended role information.",
                     required: false,
-                    optionType: "STRING"
+                    optionType: "STRING",
+                    choices: ["extended"]
                 }
             ]
         }
@@ -117,25 +117,27 @@ export default new Command({
             await role.guild.members.fetch()
             const extended = args.consume("extended")
 
-            
+            let members: Array<Record<string, string | Array<string>>>
 
-            let members 
             if (extended === "extended") {
                 members = role.members.map(m => {
-                    const container = {}
-                    container["tag"] = m.user.tag
-                    container["id"] = m.user.id
-                    container["roles"] = message.guild.roles.cache.filter((elem, key) => m["_roles"].includes(key)).sort((a, b) => b.position - a.position).mapValues(elem => elem.name)
-                    return container})
+                    return {
+                        tag: m.user.tag,
+                        id: m.user.id,
+                        roles: m.roles.cache
+                            .sort((a, b) => b.position - a.position)
+                            .map(role => role.name)
+                            .filter(role => role !== "@everyone")
+                    }
+                })
             } else {
                 members = role.members.map(m => {
                     const container = {}
                     container["tag"] = m.user.tag
                     container["id"] = m.user.id
-                    return container})
+                    return container
+                })
             }
-            
-            
 
             const roleData = {
                 name: role.name,

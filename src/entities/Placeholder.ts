@@ -4,8 +4,8 @@ import Client from "../struct/Client"
 import languages from "../struct/Client/ISO6391"
 import hexToRGB from "../util/hexToRGB"
 
-@Entity({ name: "snippets" })
-export default class Snippet extends BaseEntity {
+@Entity({ name: "placeholders" })
+export default class Placeholder extends BaseEntity {
     @PrimaryGeneratedColumn()
     id: number
 
@@ -18,18 +18,21 @@ export default class Snippet extends BaseEntity {
     @Column({ length: 2000 })
     body: string
 
-    @Column()
-    type: "snippet" | "rule" | "team"
-
-    @Column("simple-array")
-    aliases: string[]
-
     displayEmbed(client: Client): Discord.MessageEmbedOptions {
         const language = languages.getName(this.language)
         return {
             color: hexToRGB(client.config.colors.success),
-            author: { name: `'${this.name}' snippet in ${language}` },
+            author: { name: `'${this.name}' placeholder in ${language}` },
             description: this.body
         }
+    }
+
+    static async loadPlaceholders(): Promise<Map<string, Placeholder>> {
+        const values = await this.find()
+        const placeholders = new Map<string, Placeholder>()
+        values.forEach(word => {
+            placeholders[word.name + " " + word.language] = word
+        })
+        return placeholders
     }
 }

@@ -6,11 +6,10 @@ import Client from "../struct/Client"
 import { BannedWordObj } from "../struct/client/BannedWordFilter"
 import formatPunishmentTime from "../util/formatPunishmentTime"
 import truncateString from "../util/truncateString"
-import BannedWord, { bannedWordsOptions } from "./BannedWord"
+import { bannedWordsOptions } from "./BannedWord"
 import SnowflakeColumn from "./decorators/SnowflakeColumn"
 import SnowflakePrimaryColumn from "./decorators/SnowflakePrimaryColumn"
 import JSON5 from "json5"
-import { APIActionRowComponent } from "discord-api-types"
 
 function getDuration(duration: number): string {
     if (duration === null) return "Indefinite"

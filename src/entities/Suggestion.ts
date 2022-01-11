@@ -10,7 +10,7 @@ import {
 import SnowflakeColumn from "./decorators/SnowflakeColumn"
 import Discord from "discord.js"
 import Client from "../struct/Client"
-import replaceAsync from "string-replace-async"
+import replaceAsync from "../util/replaceAsync"
 import suggestionStatusActions from "../data/suggestionStatusActions"
 import hexToRGB from "../util/hexToRGB"
 

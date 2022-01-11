@@ -1,18 +1,9 @@
-import NoImplError from "../../util/errors/NoImplError"
 import Client from "../Client"
 
-export default class ConfigSubmodule {
+export default interface ConfigSubmodule {
     client: Client
 
-    constructor(client: Client) {
-        this.client = client
-    }
+    load(): void | Promise<void>
 
-    public load(): void | Promise<void> {
-        throw new NoImplError("load")
-    }
-
-    public unload(): void | Promise<void> {
-        throw new NoImplError("unload")
-    }
+    unload(): void | Promise<void>
 }

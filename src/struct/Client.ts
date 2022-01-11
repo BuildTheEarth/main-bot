@@ -10,11 +10,12 @@ import hexToRGB from "../util/hexToRGB"
 import GuildManager from "./discord/GuildManager"
 import Response from "./discord/Response"
 import WebserverHandler from "./client/WebserverHandler"
-import { REST } from "@discordjs/rest"
 import BannedWord, { bannedInfo, bannedTypes } from "../entities/BannedWord"
 import BannedWordFilter from "./client/BannedWordFilter"
 import DutyScheduler from "./client/DutyScheduler"
 import Messages from "./client/Messages"
+import PlaceholderHandler from "./client/PlaceholderHandler"
+import Placeholder from "../entities/placeholder"
 
 export default class Client extends Discord.Client {
     guilds: Discord.GuildManager
@@ -27,18 +28,22 @@ export default class Client extends Discord.Client {
     aliases = new Discord.Collection()
     response = new Response(this)
     webserver = new WebserverHandler(this)
-    restCommand = new REST({ version: "9" }).setToken(this.config.token)
-    filterWordsCached: { banned: bannedTypes; except: Array<string> } = { banned: new Map<string, bannedInfo>(), except: new Array<string>() }
+    filterWordsCached: { banned: bannedTypes; except: Array<string> } = {
+        banned: new Map<string, bannedInfo>(),
+        except: new Array<string>()
+    }
     filter = new BannedWordFilter(this)
     dutyScheduler = new DutyScheduler(this)
     messages = new Messages(this).proxy
+    placeholder = new PlaceholderHandler(this)
 
     async initDatabase(): Promise<void> {
         const db = this.config.database
         const options: Partial<ConnectionOptions> = {
             type: db.type,
             entities: [__dirname + "/../entities/*.js"],
-            synchronize: process.env.NODE_ENV !== "production"
+            synchronize: process.env.NODE_ENV !== "production",
+            logging: "all"
         }
 
         if (!["mariadb", "mysql", "sqlite"].includes(db.type)) {
@@ -61,6 +66,7 @@ export default class Client extends Discord.Client {
 
         this.db = await createConnection(options as ConnectionOptions) // non-Partial
         this.filterWordsCached = await BannedWord.loadWords()
+        this.placeholder.cache = await Placeholder.loadPlaceholders()
     }
 
     login(): Promise<string> {

@@ -37,20 +37,20 @@ export default class BannedWord extends BaseEntity {
         if (duration) this.duration = duration
         if (exception) this.exception = exception
         if (client) {
-        if (exception) client.filterWordsCached.except.push(word)
-        else
-            client.filterWordsCached.banned[word] = {
-                punishment_type: punishment_type,
-                reason: reason,
-                duration: duration
-            }
+            if (exception) client.filterWordsCached.except.push(word)
+            else
+                client.filterWordsCached.banned[word] = {
+                    punishment_type: punishment_type,
+                    reason: reason,
+                    duration: duration
+                }
         }
     }
 
     @AfterLoad()
     init(): void {
         return
-    }  
+    }
 
     static async createBannedWord(
         options: bannedWordsOptions,

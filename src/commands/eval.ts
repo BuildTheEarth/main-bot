@@ -23,7 +23,7 @@ import isURL from "../util/isURL"
 import loadDir from "../util/loadDir"
 import noop from "../util/noop"
 import pastTense from "../util/pastTense"
-import patchedISO6391 from "../util/patchedISO6391"
+import languages from "../struct/Client/ISO6391"
 import Roles from "../util/roles"
 import stringifyAnything from "../util/stringifyAnything"
 import truncateString from "../util/truncateString"
@@ -31,7 +31,7 @@ import CommandMessage from "../struct/CommandMessage"
 
 // prettier-ignore
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-const _ = { Args, Client, Command, BannerImage, ActionLog, ModerationNote, ModpackImage, Snippet, Suggestion, TimedPunishment, CommandList, ConfigManager, EventList, flattenMarkdown, formatPunishmentTime, formatTimestamp, humanizeArray, humanizeConstant, isURL, loadDir, noop, pastTense, patchedISO6391, Roles, stringifyAnything, truncateString }
+const _ = { Args, Client, Command, BannerImage, ActionLog, ModerationNote, ModpackImage, Snippet, Suggestion, TimedPunishment, CommandList, ConfigManager, EventList, flattenMarkdown, formatPunishmentTime, formatTimestamp, humanizeArray, humanizeConstant, isURL, loadDir, noop, pastTense, languages, Roles, stringifyAnything, truncateString }
 
 export default new Command({
     name: "eval",

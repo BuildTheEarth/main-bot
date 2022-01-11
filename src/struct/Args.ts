@@ -1,4 +1,4 @@
-import ms from "ms"
+import ms from "../util/ms"
 import Discord from "discord.js"
 import CommandMessage from "./CommandMessage"
 
@@ -133,14 +133,15 @@ export default class Args {
                 if (
                     (this.message.message as Discord.CommandInteraction).options
                         .get(element)
-                        .value.toString()
+                        ?.value.toString()
                 )
                     option = (this.message.message as Discord.CommandInteraction).options
                         .get(element)
                         .value.toString()
                 if (option) returnArgs.push(option)
             })
-            if (returnArgs.length == 1) return returnArgs[0]
+            if (returnArgs.length === 1) return returnArgs[0]
+            if (returnArgs.length === 0) return null
             else return returnArgs
         }
     }

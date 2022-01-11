@@ -9,7 +9,7 @@ import {
     JoinColumn
 } from "typeorm"
 import SnowflakeColumn from "./decorators/SnowflakeColumn"
-import ms from "ms"
+import ms from "../util/ms"
 import Discord from "discord.js"
 import Client from "../struct/Client"
 import TimedPunishment from "./TimedPunishment"

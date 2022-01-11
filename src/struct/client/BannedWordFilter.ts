@@ -1,5 +1,5 @@
 // Literally all of this code is taken from https://github.com/cAttte/fanum so thank him
-import pluralize from "pluralize"
+import pluralize, { isSingular } from "../../util/pluralize"
 import duplicateChars from "../../data/duplicateChars"
 import Client from "../Client"
 
@@ -14,7 +14,7 @@ export default class BannedWordFilter {
         let profanities = []
         for (const word of Object.keys(this.client.filterWordsCached.banned)) {
             if (word.length > text.length) continue
-            if (pluralize.isSingular(word)) {
+            if (isSingular(word)) {
                 const plural = pluralize(word)
                 const pluralMatches = this.findWord.bind(this)(text, plural, word)
                 profanities = profanities.concat(pluralMatches)
