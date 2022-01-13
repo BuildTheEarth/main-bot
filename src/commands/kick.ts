@@ -3,10 +3,10 @@ import Discord from "discord.js"
 import Args from "../struct/Args"
 import Command from "../struct/Command"
 import GuildMember from "../struct/discord/GuildMember"
-import ActionLog from "../entities/ActionLog"
 import Roles from "../util/roles"
 import noop from "../util/noop"
 import CommandMessage from "../struct/CommandMessage"
+import punish from "../util/punish"
 
 export default new Command({
     name: "kick",
@@ -58,21 +58,9 @@ export default new Command({
 
         await message.continue()
 
-        const log = new ActionLog()
-        log.action = "kick"
-        log.member = user.id
-        log.executor = message.member.user.id
-        log.reason = reason
-        log.reasonImage = image
-        log.channel = message.channel.id
-        log.message = message.id
-        log.length = null
-        await log.save()
+        const length = null
+        const log = await punish(client, message, member, "kick", reason, image, length)
 
-        await log.notifyMember(client)
-        await member.kick(
-            reason.length <= 512 ? reason : (await log.contextUrl(client)).href
-        )
         await client.response.sendSuccess(message, `Kicked ${user} (**#${log.id}**).`)
         await client.log(log)
     }
