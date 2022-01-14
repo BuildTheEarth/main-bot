@@ -74,8 +74,8 @@ export default new Command({
         if (title?.length > 200) error = client.messages.titleTooLong200
 
         if (error) {
-            if (message.channel.type !== "DM") message.delete().catch(() => null)
             const messages = await client.response.sendError(message, error)
+            if (message.channel.type !== "DM") message.delete().catch(() => null)
             return setTimeout(() => {
                 if (messages) messages.delete().catch(() => null)
             }, 10000)
@@ -105,6 +105,17 @@ export default new Command({
         const embed = await suggestion.displayEmbed(client)
         const suggestionMessage = await suggestions.send({ embeds: [embed] })
         suggestion.message = suggestionMessage.id
+
+        const newIdentifier = await suggestion.getIdentifier()
+        const thread = await (
+            suggestionMessage.channel as Discord.TextChannel
+        ).threads.create({
+            name: `${newIdentifier} - ${title}`,
+            autoArchiveDuration: "MAX",
+            startMessage: suggestionMessage
+        })
+        await thread.setRateLimitPerUser(1)
+        suggestion.thread = thread.id
         await suggestion.save()
 
         await suggestionMessage.react(client.config.emojis.upvote)

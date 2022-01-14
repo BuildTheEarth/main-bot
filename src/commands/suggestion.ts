@@ -353,6 +353,10 @@ export default new Command({
         if (!suggestionMessage)
             return client.response.sendError(message, client.messages.utlSuggestion)
 
+        const thread = await (
+            client.channels.cache.get(discussionID) as Discord.TextChannel
+        ).threads.fetch(suggestion.thread)
+
         if (subcommand === "link") {
             const displayNumber = await suggestion.getIdentifier()
             const url = suggestionMessage.url
@@ -402,6 +406,10 @@ export default new Command({
 
             const embed = await suggestion.displayEmbed(client)
             await suggestionMessage.edit({ embeds: [embed] })
+            await thread.setName("deleted suggestion")
+            await thread.send("**This suggestion has been deleted.**")
+            await thread.setLocked(true)
+            await thread.setArchived(true)
 
             client.response.sendSuccess(message, "Deleted the suggestion!")
         } else if (subcommand === "status") {
@@ -425,6 +433,31 @@ export default new Command({
             await suggestion.save()
             const embed = await suggestion.displayEmbed(client)
             await suggestionMessage.edit({ embeds: [embed] })
+
+            if (thread.locked && !thread.archived) await thread.setLocked(false)
+            if (
+                (["approved", "denied", "duplicate", "invalid"].includes(status) &&
+                    !thread.locked &&
+                    !thread.archived) ||
+                (["approved", "denied", "duplicate", "invalid"].includes(status) &&
+                    status !== oldStatus)
+            ) {
+                await thread.send(
+                    `**This suggestion has been marked as \`${status}\`**\nIf you feel this suggestion discussion must be reopened, contact a Suggestions Team member or a manager.`
+                )
+                await thread.setLocked(true)
+                await thread.setArchived(true)
+            } else if (
+                ["forwarded", "in-progress", "information"].includes(status) &&
+                thread.locked &&
+                thread.archived
+            ) {
+                await thread.send(
+                    `**This suggestion has been marked as \`${status}\`**\nFor this reason, the suggestion discussion thread has been reopened.`
+                )
+                await thread.setLocked(false)
+                await thread.setArchived(false)
+            }
 
             if (status !== oldStatus) {
                 const author: Discord.User = await client.users

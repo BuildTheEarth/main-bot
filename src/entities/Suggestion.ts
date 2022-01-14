@@ -70,6 +70,9 @@ export default class Suggestion extends BaseEntity {
     @SnowflakeColumn()
     message: string
 
+    @SnowflakeColumn()
+    thread: string
+
     @Column()
     staff: boolean
 
