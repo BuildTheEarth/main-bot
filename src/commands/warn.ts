@@ -2,9 +2,9 @@ import Discord from "discord.js"
 import Client from "../struct/Client"
 import Args from "../struct/Args"
 import Command from "../struct/Command"
-import ActionLog from "../entities/ActionLog"
 import Roles from "../util/roles"
 import CommandMessage from "../struct/CommandMessage"
+import punish from "../util/punish"
 
 export default new Command({
     name: "warn",
@@ -50,18 +50,9 @@ export default new Command({
 
         await message.continue()
 
-        const log = new ActionLog()
-        log.action = "warn"
-        log.member = user.id
-        log.executor = message.member.id
-        log.reason = reason
-        log.reasonImage = image
-        log.channel = message.channel.id
-        log.message = message.id
-        log.length = null
-        await log.save()
+        const length = null
+        const log = await punish(client, message, member, "warn", reason, image, length)
 
-        await log.notifyMember(client)
         const formattedUser = user.id === message.member.id ? "*you*" : user.toString()
         await client.response.sendSuccess(
             message,

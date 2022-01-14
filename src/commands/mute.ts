@@ -1,13 +1,13 @@
 import Client from "../struct/Client"
 import Args from "../struct/Args"
 import TimedPunishment from "../entities/TimedPunishment"
-import ActionLog from "../entities/ActionLog"
 import Command from "../struct/Command"
 import GuildMember from "../struct/discord/GuildMember"
 import Roles from "../util/roles"
 import formatPunishmentTime from "../util/formatPunishmentTime"
 import Discord from "discord.js"
 import CommandMessage from "../struct/CommandMessage"
+import punish from "../util/punish"
 
 export default new Command({
     name: "mute",
@@ -54,7 +54,7 @@ export default new Command({
             if (member.user.bot)
                 return client.response.sendError(message, client.messages.isBot)
             if (GuildMember.hasRole(member, Roles.STAFF))
-                return client.response.sendError(message, "")
+                return client.response.sendError(message, client.messages.isStaffMute)
         }
 
         const length = args.consumeLength("length")
@@ -70,27 +70,8 @@ export default new Command({
         const mute = await TimedPunishment.findOne({ member: user.id, type: "mute" })
         if (mute) return client.response.sendError(message, client.messages.alreadyMuted)
 
-        const punishment = new TimedPunishment()
-        punishment.member = user.id
-        punishment.type = "mute"
-        punishment.length = length
-        await punishment.save()
-        punishment.schedule(client)
+        const log = await punish(client, message, member, "mute", reason, image, length)
 
-        const log = new ActionLog()
-        log.action = "mute"
-        log.member = user.id
-        log.executor = message.member.id
-        log.reason = reason
-        log.reasonImage = image
-        log.length = length
-        log.channel = message.channel.id
-        log.message = message.id
-        log.punishment = punishment
-        await log.save()
-
-        await log.notifyMember(client)
-        if (member) await GuildMember.mute(member, reason)
         const away = member ? "" : ", though they're not in the server"
         const formattedLength = formatPunishmentTime(length)
         const formattedUser = user.id === message.member.id ? "*you*" : user.toString()

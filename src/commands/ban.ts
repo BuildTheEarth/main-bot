@@ -1,7 +1,6 @@
 import Client from "../struct/Client"
 import Args from "../struct/Args"
 import TimedPunishment from "../entities/TimedPunishment"
-import ActionLog from "../entities/ActionLog"
 import Command from "../struct/Command"
 import GuildMember from "../struct/discord/GuildMember"
 import Roles from "../util/roles"
@@ -9,6 +8,7 @@ import formatPunishmentTime from "../util/formatPunishmentTime"
 import noop from "../util/noop"
 import Discord from "discord.js"
 import CommandMessage from "../struct/CommandMessage"
+import punish from "../util/punish"
 
 export default new Command({
     name: "ban",
@@ -74,38 +74,8 @@ export default new Command({
         const ban = await TimedPunishment.findOne({ member: user.id, type: "ban" })
         if (ban) return client.response.sendError(message, client.messages.alreadyBanned)
 
-        const reviewerChannel = message.guild.channels.cache.find(
-            ch => ch.name == "review-committee-private"
-        ) as Discord.TextChannel
-        if (member && GuildMember.hasRole(member, Roles.BUILDER) && reviewerChannel)
-            client.response.sendSuccess(
-                reviewerChannel,
-                `Builder ${user} (${user.id}) was banned!`
-            )
+        const log = await punish(client, message, member, "ban", reason, image, length)
 
-        const punishment = new TimedPunishment()
-        punishment.member = user.id
-        punishment.type = "ban"
-        punishment.length = length
-        await punishment.save()
-        punishment.schedule(client)
-
-        const log = new ActionLog()
-        log.action = "ban"
-        log.member = user.id
-        log.executor = message.member.id
-        log.reason = reason
-        log.reasonImage = image
-        log.length = length
-        log.channel = message.channel.id
-        log.message = message.id
-        log.punishment = punishment
-        await log.save()
-
-        await log.notifyMember(client)
-        await message.guild.members.ban(user, {
-            reason: reason.length <= 512 ? reason : (await log.contextUrl(client)).href
-        })
         const formattedLength = formatPunishmentTime(length)
         await client.response.sendSuccess(
             message,
