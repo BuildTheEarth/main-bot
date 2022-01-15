@@ -74,7 +74,7 @@ export default async function (this: Client, message: Discord.Message): Promise<
                 return
             }
 
-            return message.channel.send(snippet.body).catch(() => null)
+            return await message.channel.send(snippet.body).catch(() => null)
         }
 
         const member = (
@@ -100,7 +100,7 @@ export default async function (this: Client, message: Discord.Message): Promise<
         try {
             await command.run(this, new CommandMessage(message, this), args)
         } catch (error) {
-            this.response.sendError(
+            await this.response.sendError(
                 new CommandMessage(message, this),
                 "An unknown error occurred! Please contact one of the bot developers for help."
             )
@@ -135,8 +135,8 @@ export default async function (this: Client, message: Discord.Message): Promise<
     }
 
     if (message.content.toLowerCase() === "donde es server")
-        return message.channel.send("hay un server!")
+        return await message.channel.send("hay un server!")
     const bannedWords = this.filter.findBannedWord(message.content)
-    if (bannedWords.length >= 1)
+    if (bannedWords.length >= 1 && message.guild.id !== this.config.guilds.staff)
         return ModerationMenu.createMenu(message, bannedWords, this)
 }

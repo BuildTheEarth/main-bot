@@ -60,6 +60,12 @@ export default async function (
                     interaction,
                     this
                 )
+            if (interaction.customId.split(".")[2] === "punish")
+                await ModerationMenu.punishConfirm(
+                    interaction.customId.split(".")[1],
+                    interaction,
+                    this
+                )
         }
     }
 

@@ -41,7 +41,7 @@ export default class Client extends Discord.Client {
         const db = this.config.database
         const options: Partial<ConnectionOptions> = {
             type: db.type,
-            entities: [__dirname + "/../entities/*.js"],
+            entities: [__dirname + "/../entities/*.{js,ts}"],
             synchronize: process.env.NODE_ENV !== "production",
             logging: "all"
         }

@@ -10,6 +10,11 @@ import { bannedWordsOptions } from "./BannedWord"
 import SnowflakeColumn from "./decorators/SnowflakeColumn"
 import SnowflakePrimaryColumn from "./decorators/SnowflakePrimaryColumn"
 import JSON5 from "json5"
+import punish from "../util/punish"
+import noop from "../util/noop"
+import TimedPunishment from "./TimedPunishment"
+import Roles from "../util/roles"
+import GuildMember from "../struct/discord/GuildMember"
 
 function getDuration(duration: number): string {
     if (duration === null) return "Indefinite"
@@ -216,6 +221,150 @@ export default class ModerationMenu extends BaseEntity {
         modMenu.current_word = punishment.word
         await modMenu.save()
     }
+    public static async punishPerson(
+        id: string,
+        interaction: Discord.ButtonInteraction,
+        client: Client,
+        replyInteraction: Discord.ButtonInteraction
+    ): Promise<void> {
+        const messages = {
+            alreadyPunished: "Invalid error message for context"
+        }
+
+        const modMenu = await ModerationMenu.findOne({ member: id })
+
+        if (!modMenu) return null
+
+        const punishment: bannedWordsOptions = modMenu.punishments.find(
+            punishment => punishment.word === modMenu.current_word
+        )
+
+        console.log(punishment)
+
+        if (punishment.punishment_type === "BAN") {
+            messages.alreadyPunished = client.messages.alreadyBanned
+        }
+
+        if (punishment.punishment_type === "MUTE") {
+            messages.alreadyPunished = client.messages.alreadyMuted
+        }
+
+        const user = client.users.cache.get(modMenu.member)
+
+        if (!user) {
+            replyInteraction.update({
+                content:
+                    user === undefined
+                        ? client.messages.noUser
+                        : client.messages.invalidUser,
+            })
+
+            return
+        }
+        const member: Discord.GuildMember = await interaction.guild.members
+            .fetch({ user, cache: true })
+            .catch(noop)
+        if (member) {
+            if (member.user.bot) {
+                await replyInteraction.editReply({
+                    content: client.messages.isBot
+                })
+                return
+            }
+            if (member.id === interaction.user.id) {
+                await replyInteraction.editReply({
+                    content: client.messages.isSelfBan
+                })
+                return
+            }
+            if (GuildMember.hasRole(member, Roles.STAFF)) {
+                replyInteraction.editReply({
+                    content: client.messages.isStaffBan
+                })
+                return
+            }
+        }
+
+        if (
+            punishment.punishment_type === "MUTE" ||
+            punishment.punishment_type === "BAN"
+        ) {
+            const punish = await TimedPunishment.findOne({
+                member: user.id,
+                type: punishment.punishment_type.toLowerCase() as "mute" | "ban"
+            })
+            if (punish) {
+                await replyInteraction.update({
+                    content: messages.alreadyPunished
+                })
+                return
+            }
+        }
+
+
+        const log = await punish(
+            client,
+            interaction,
+            member,
+            punishment.punishment_type.toLowerCase() as "mute" | "ban" | "warn" | "kick",
+            punishment.reason,
+            null,
+            punishment.duration,
+            modMenu.message
+        )
+
+        let formattedPunishment: string
+
+        switch (punishment.punishment_type.toLowerCase()) {
+            case "mute": {
+                formattedPunishment = "Muted"
+                break
+            }
+
+            case "ban": {
+                formattedPunishment = "Banned"
+                break
+            }
+            case "warn": {
+                formattedPunishment = "Warned"
+                break
+            }
+            case "kick": {
+                formattedPunishment = "Kicked"
+                break
+            }
+        }
+
+        const formattedLength = formatPunishmentTime(punishment.duration)
+        await replyInteraction.editReply({
+            content: `${formattedPunishment} ${user} ${formattedLength} (**#${log.id}**).`
+        })
+        await client.log(log)
+
+        const embed = new Discord.MessageEmbed().addFields([
+            { name: "User", value: `<@${modMenu.member}> (${modMenu.member})` },
+            {
+                name: "Message",
+                value: truncateString(
+                    modMenu.message_text,
+                    1024,
+                    " (Check logs for the remaining content)"
+                )
+            },
+            { name: "Offenses", value: modMenu.offenses.toString() },
+            {
+                name: "Punished",
+                value: `This user has been punished by <@${interaction.user.id}> (${interaction.user.id}) at case **#${log.id}**`
+            }
+        ])
+
+        await (interaction.message as Discord.Message).edit({
+            embeds: [embed],
+            components: []
+        })
+
+        await modMenu.remove()
+    }
 
     public static async pardon(
         id: string,
@@ -299,6 +448,60 @@ export default class ModerationMenu extends BaseEntity {
             if (interactionCurr.customId === `no.${interaction.id}.modmenu`) {
                 await interactionCurr.update({
                     content: "Cancelled the pardon!",
+                    components: []
+                })
+            }
+        })
+    }
+
+    public static async punishConfirm(
+        id: string,
+        interaction: Discord.ButtonInteraction,
+        client: Client
+    ): Promise<void> {
+        const components = [
+            new Discord.MessageActionRow().addComponents(
+                new Discord.MessageButton()
+                    .setCustomId(`yes.${interaction.id}.modmenu`)
+                    .setStyle("PRIMARY")
+                    .setLabel("Punish"),
+                new Discord.MessageButton()
+                    .setCustomId(`no.${interaction.id}.modmenu`)
+                    .setStyle("DANGER")
+                    .setLabel("No")
+            )
+        ]
+        const followMessage = await interaction.followUp({
+            content: "Are you sure you want to punish this user?",
+            components: components,
+            fetchReply: true,
+            ephemeral: true
+        })
+
+        console.log(followMessage)
+
+        client.on("interactionCreate", async (interactionCurr: Discord.Interaction) => {
+            if (
+                !(
+                    interactionCurr.isButton() &&
+                    [
+                        `yes.${interaction.id}.modmenu`,
+                        `no.${interaction.id}.modmenu`
+                    ].includes(interactionCurr.customId)
+                )
+            )
+                return
+
+            if (interactionCurr.customId === `yes.${interaction.id}.modmenu`) {
+                await interactionCurr.update({
+                    content: "Punishing the user...",
+                    components: []
+                })
+                await ModerationMenu.punishPerson(id, interaction, client, interactionCurr)
+            }
+            if (interactionCurr.customId === `no.${interaction.id}.modmenu`) {
+                await interactionCurr.update({
+                    content: "Cancelled the punish!",
                     components: []
                 })
             }

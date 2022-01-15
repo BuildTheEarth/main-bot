@@ -46,6 +46,16 @@ async function main() {
     //moved command loading to ready
 }
 
+globalThis.fileExtension = "js"
+
+try {
+    if (process[Symbol.for("ts-node.register.instance")]) {
+        globalThis.fileExtension = "ts"
+    }
+} finally {
+    null
+}
+
 main()
 
 process.on("uncaughtException", (error: Error) => {

@@ -11,3 +11,13 @@ export default async function loadJSON5(filename: string): Promise<any> {
         throw err
     }
 }
+
+export function loadSyncJSON5(filename: string): any {
+    const content = fs.readFileSync(filename, "utf8")
+    try {
+        return JSON5.parse(content)
+    } catch (err) {
+        err.message = filename + ": " + err.message
+        throw err
+    }
+}

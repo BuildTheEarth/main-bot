@@ -24,9 +24,13 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-require("../../typings/requireJSON5")
+import path from "path"
 
-import LANGUAGES_LIST = require("../../../config/extensions/languages.json5")
+import { loadSyncJSON5 } from "../../util/loadJSON5"
+
+const LANGUAGES_LIST: Record<string, Record<string, string>> = loadSyncJSON5(
+    path.join(__dirname + "../../../../config/extensions/languages.json5")
+)
 
 export default class iso6391 {
     static getLanguages(codes: Array<string> = []): IndependentLanguageData[] {

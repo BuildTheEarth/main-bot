@@ -104,7 +104,7 @@ export default new Command({
             ]
         }
     ],
-    permission: [Roles.MODERATOR, Roles.MANAGER],
+    permission: [Roles.MODERATOR, Roles.MANAGER, Roles.ANY],
     async run(this: Command, client: Client, message: CommandMessage, args: Args) {
         const subcommandGroup = args.consumeSubcommandGroupIf(["block", "except"])
         if (!subcommandGroup)
@@ -158,6 +158,8 @@ export default new Command({
                         message,
                         `This word is already banned!`
                     )
+
+                console.log(duration)
                 await BannedWord.createBannedWord(
                     {
                         word: word,
