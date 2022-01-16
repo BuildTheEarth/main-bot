@@ -11,7 +11,7 @@
     "js-yaml": "4.1.0",
     "json5": "2.2.0",
     "minecraft-block-info": "github:XboxBedrock/minecraft-block-info",
-    "mysql2": "2.3.0",
+    "mysql2": "2.3.3",
     "node-fetch": "2.0.0",
     "nps-utils": "1.7.0",
     "reflect-metadata": "0.1.13",
