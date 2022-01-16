@@ -50,4 +50,11 @@ export default async function ready(this: Client): Promise<void> {
             this.logger.info(`Set vanity code to ${pink(this.config.vanity)}.`)
         }
     }
+    if (this.config.jenkinsEnv) {
+        this.logger.info("Jenkins run successful")
+        process.exit(0)
+    }
+
+
+    
 }

@@ -21,6 +21,8 @@ export default new Command({
     ],
     async run(this: Command, client: Client, message: CommandMessage, args: Args) {
         const amount = Number(args.consume("amount"))
+        if (!amount)
+            return client.response.sendError(message, client.messages.invalidAmount)
         if (Number.isNaN(amount))
             return client.response.sendError(message, client.messages.invalidAmount)
         if (amount > 100)

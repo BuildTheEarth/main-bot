@@ -256,7 +256,7 @@ export default class ModerationMenu extends BaseEntity {
                 content:
                     user === undefined
                         ? client.messages.noUser
-                        : client.messages.invalidUser,
+                        : client.messages.invalidUser
             })
 
             return
@@ -300,7 +300,6 @@ export default class ModerationMenu extends BaseEntity {
                 return
             }
         }
-
 
         const log = await punish(
             client,
@@ -497,7 +496,12 @@ export default class ModerationMenu extends BaseEntity {
                     content: "Punishing the user...",
                     components: []
                 })
-                await ModerationMenu.punishPerson(id, interaction, client, interactionCurr)
+                await ModerationMenu.punishPerson(
+                    id,
+                    interaction,
+                    client,
+                    interactionCurr
+                )
             }
             if (interactionCurr.customId === `no.${interaction.id}.modmenu`) {
                 await interactionCurr.update({
