@@ -6,6 +6,13 @@
 
 _The main bot for the BuildTheEarth Discord servers._
 
+![build](https://github.com/BuildTheEarth/main-bot/actions/workflows/build.yml/badge.svg)
+[![chat](https://img.shields.io/discord/706317564904472627.svg?color=768AD4&label=discord&logo=https%3A%2F%2Fdiscordapp.com%2Fassets%2F8c9701b98ad4372b58f13fd9f65f966e.svg)](https://discord.gg/rCszwHjre5)
+[![donate](https://img.shields.io/endpoint.svg?url=https%3A%2F%2Fshieldsio-patreon.vercel.app%2Fapi%3Fusername%3Dbuildtheearth%26type%3Dpatrons&style=flat)](https://patreon.com/buildtheearth)
+[![TypeScript](https://img.shields.io/badge/%3C%2F%3E-TypeScript-%230074c1.svg)](http://www.typescriptlang.org/)
+[![license: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![nps friendly](https://img.shields.io/badge/nps-friendly-blue.svg?style=flat)](https://www.npmjs.com/package/nps)
+
 </div>
 
 -   [BuildTheEarth](#BuildTheEarth)
@@ -83,7 +90,7 @@ This project follows the [All Contributors][] specification. Contributions of an
 
 ### Configuration
 
-Rename the `_config.yml` file to `config.yml` and fill in all of the fields:
+Rename the `config/_config.json5` file to `config/config.json5` and fill in all of the fields:
 
 -   **prefix**: The command prefix.
 -   **appeal**: The ban appeal message.
@@ -145,8 +152,6 @@ Rename the `_config.yml` file to `config.yml` and fill in all of the fields:
         -   **ban**
         -   **unmute**
         -   **unban**
--   **rules:** A list of rules for the server (used by the `rule` command).
--   **buildTeamInvites:** A list of build team invites (map `name` -> `invite`), used by the `team` command. For a list scraped from our website, check out [build-team-invite-scraper](https://github.com/BuildTheEarth/build-team-invite-scraper) (make sure to indent them one level).
 -   **token**: The Discord bot's token.
 -   **modpackAuth**: The key for our modpack image API (required for the `modpack` command).
 -   **database**: The information/credentials for connecting to the database.

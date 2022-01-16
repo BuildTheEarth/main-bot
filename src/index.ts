@@ -27,15 +27,6 @@ async function main() {
     await client.config.load()
     client.logger.info("Loaded config.")
 
-    client.logger.debug("Loading commands...")
-    await client.commands.load()
-    client.logger.info("Loaded commands.")
-
-    client.logger.debug("Registering events...")
-    await client.events.load()
-    client.events.register()
-    client.logger.info("Registered events.")
-
     client.logger.debug("Registering webserver...")
     await client.webserver.load()
     client.logger.info("Registered webserver.")
@@ -44,9 +35,26 @@ async function main() {
     await client.initDatabase()
     client.logger.info("Connected to database.")
 
+    client.logger.debug("Registering events...")
+    await client.events.load()
+    client.events.register()
+    client.logger.info("Registered events.")
+
     client.logger.debug("Logging in to Discord...")
     await client.login()
     client.logger.info("Logged in to Discord.")
+
+    //moved command loading to ready
+}
+
+globalThis.fileExtension = "js"
+
+try {
+    if (process[Symbol.for("ts-node.register.instance")]) {
+        globalThis.fileExtension = "ts"
+    }
+} finally {
+    null
 }
 
 main()

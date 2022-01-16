@@ -6,8 +6,9 @@ import Roles from "../util/roles"
 import ActionLog, { Action } from "../entities/ActionLog"
 import TimedPunishment from "../entities/TimedPunishment"
 import ModerationNote from "../entities/ModerationNote"
-import { FindManyOptions, Not, IsNull } from "typeorm"
+import { Not, IsNull, FindManyOptions } from "typeorm"
 import noop from "../util/noop"
+import CommandMessage from "../struct/CommandMessage"
 
 export default new Command({
     name: "check",
@@ -20,29 +21,42 @@ export default new Command({
         Roles.SUPPORT,
         Roles.PR_SUBTEAM_LEADS
     ],
-    usage: "<user> ['deleted']",
-    async run(this: Command, client: Client, message: Discord.Message, args: Args) {
-        const user = await args.consumeUser(true)
-        const showDeleted = args.consume().toLowerCase() === "deleted"
-        const member = await client.customGuilds
-            .main()
-            .members.fetch({ user })
+    args: [
+        {
+            name: "user",
+            description: "User to get records of",
+            optionType: "USER",
+            required: true
+        },
+        {
+            name: "deleted",
+            description: "Optional arg to check for deleted cases",
+            optionType: "STRING",
+            required: false,
+            choices: ["deleted"]
+        }
+    ],
+    async run(this: Command, client: Client, message: CommandMessage, args: Args) {
+        const user = await args.consumeUser("user", true)
+        const showDeleted = args.consume("deleted").toLowerCase() === "deleted"
+        const member = await (await client.customGuilds.main()).members
+            .fetch({ user })
             .catch(noop)
 
         if (!user)
-            return client.channel.sendError(
-                message.channel,
-                user === undefined
-                    ? "You must provide a user to check!"
-                    : "Couldn't find that user."
+            return client.response.sendError(
+                message,
+                user === undefined ? client.messages.noUser : client.messages.invalidUser
             )
 
-        const criteria: FindManyOptions = { where: { member: user.id } }
+        let criteria: FindManyOptions<ActionLog> = { where: { member: user.id } }
         if (showDeleted) {
-            // @ts-ignore: Property 'deletedAt' does not exist on type 'string'.
-            criteria.where.deletedAt = Not(IsNull())
+            criteria = { where: { member: user.id, deletedAt: Not<ActionLog>(IsNull()) } }
+
             criteria.withDeleted = true
         }
+
+        await message.continue()
 
         const actionLogs = await ActionLog.find(criteria)
         const categorizedLogs: Record<Action, ActionLog[]> = {
@@ -95,6 +109,6 @@ export default new Command({
         if (notes) embed.fields.push({ name: "Notes", value: notes.body, inline: true })
         if (!member) embed.footer = { text: "This user is not in the server." }
 
-        await client.channel.sendSuccess(message.channel, embed)
+        await client.response.sendSuccess(message, embed)
     }
 })

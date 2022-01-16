@@ -6,6 +6,7 @@ dist/
 
 # Config + Database Files
 config.yml
+config/config.json5
 *.sqlite
 
 # Logs

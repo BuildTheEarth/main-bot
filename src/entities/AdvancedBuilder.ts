@@ -17,10 +17,9 @@ export default class AdvancedBuilder extends BaseEntity {
 
     async removeBuilder(client: Client): Promise<void> {
         clearTimeout(this.removalTimeout)
-        const role = Guild.role(client.customGuilds.main(), Roles.ADVANCED_BUILDER)
-        const member = await client.customGuilds
-            .main()
-            .members.fetch({ user: this.builder, cache: true })
+        const role = Guild.role(await client.customGuilds.main(), Roles.ADVANCED_BUILDER)
+        const member = await (await client.customGuilds.main()).members
+            .fetch({ user: this.builder, cache: true })
             .catch(noop)
         if (!member) return
 

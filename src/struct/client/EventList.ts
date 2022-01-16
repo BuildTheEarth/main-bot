@@ -13,7 +13,7 @@ export default class EventList extends Discord.Collection<string, Function> {
     async load(): Promise<void> {
         // eslint-disable-next-line @typescript-eslint/ban-types
         const bind = (func: Function): Function => func.bind(this.client)
-        await loadDir(__dirname + "/../../events/", bind, this)
+        await loadDir(__dirname + "/../../events/", this.client, bind, this)
     }
 
     register(): void {
@@ -23,7 +23,9 @@ export default class EventList extends Discord.Collection<string, Function> {
 
     unloadOne(name: string): void {
         this.delete(name)
-        const path = require.resolve(__dirname + `/../../events/${name}.js`)
+        const path = require.resolve(
+            __dirname + `/../../events/${name}.${globalThis.fileExtension}`
+        )
         delete require.cache[path]
     }
 
@@ -33,7 +35,7 @@ export default class EventList extends Discord.Collection<string, Function> {
     }
 
     async loadOne(name: string): Promise<void> {
-        const path = __dirname + `/../../events/${name}.js`
+        const path = __dirname + `/../../events/${name}.${globalThis.fileExtension}`
         const handler: (...args: unknown[]) => unknown = (await import(path)).default
         this.set(name, handler)
     }

@@ -1,7 +1,7 @@
 import { MigrationInterface, QueryRunner } from "typeorm"
 import Discord from "discord.js"
 import Client from "../struct/Client"
-import ms from "ms"
+import ms from "../util/ms"
 import chalk from "chalk"
 import { promisify } from "util"
 
@@ -91,7 +91,7 @@ CREATE TABLE \`action_logs\` (
         await queryRunner.query("ALTER TABLE Logs DROP COLUMN Value")
         const logs = await queryRunner.query("SELECT * FROM Logs ORDER BY ID ASC")
         for (const log of logs) {
-            const msLength = log.Length === null ? 0 : ms(<string>log.Length) || 0
+            const msLength = log.Length === null ? 0 : ms(log.Length) || 0
             let length = Math.round(msLength / 1000)
             // (MAX_INT as seconds is equal to 24,855 days!)
             if (length > MAX_INT) length = 0 // (-> permanent)

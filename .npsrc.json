@@ -1,0 +1,4 @@
+{
+    "require": "ts-node/register",
+    "config": "./package-scripts.ts"
+}

@@ -5,63 +5,102 @@ import BannerImage from "../entities/BannerImage"
 import Roles from "../util/roles"
 import quote from "../util/quote"
 import hexToRGB from "../util/hexToRGB"
-import Discord from "discord.js"
+import CommandMessage from "../struct/CommandMessage"
 
 export default new Command({
     name: "banner",
     aliases: [],
     description: "Manage the banner queue.",
     permission: [Roles.MANAGER, Roles.BUILDER_COUNCIL],
-    usage: "",
     subcommands: [
         {
             name: "add",
             description: "Add a banner to the queue.",
-            usage: "<image URL | attachment> | <location> | <credit> | [description]"
+            args: [
+                {
+                    name: "image_url",
+                    description: "Image URL (required if used as slashcommand).",
+                    required: true,
+                    optionType: "STRING"
+                },
+                {
+                    name: "location",
+                    description: "Location of build.",
+                    required: true,
+                    optionType: "STRING"
+                },
+                {
+                    name: "credit",
+                    description: "Build credit.",
+                    required: true,
+                    optionType: "STRING"
+                },
+                {
+                    name: "description",
+                    description: "Build description.",
+                    required: false,
+                    optionType: "STRING"
+                }
+            ]
         },
         {
             name: "delete",
             description: "Delete a banner from the queue.",
-            usage: "<id>"
+            args: [
+                {
+                    name: "id",
+                    description: "Queued banner ID",
+                    required: true,
+                    optionType: "STRING"
+                }
+            ]
         },
         {
             name: "queue",
-            description: "List the current banner queue.",
-            usage: ""
+            description: "List the current banner queue."
         },
         {
             name: "show",
             description: "Show info on a specific queued banner.",
-            usage: "<id>"
+            args: [
+                {
+                    name: "id",
+                    description: "Queued banner ID",
+                    required: true,
+                    optionType: "STRING"
+                }
+            ]
         },
         {
             name: "cycle",
-            description: "Force the banner queue to cycle to the next banner.",
-            usage: ""
+            description: "Force the banner queue to cycle to the next banner."
         }
     ],
-    async run(this: Command, client: Client, message: Discord.Message, args: Args) {
-        const subcommand = args.consumeIf(this.subcommands.map(sub => sub.name))
+    async run(this: Command, client: Client, message: CommandMessage, args: Args) {
+        const subcommand = args.consumeSubcommandIf(this.subcommands.map(sub => sub.name))
 
         if (subcommand === "add" || !subcommand) {
             args.separator = "|"
-            const image = args.consumeImage()
-            const [location, credit, description] = args.consume(3)
+            const image = args.consumeImage("image_url")
+            const [location, credit, description] = [
+                args.consume("location"),
+                args.consume("credit"),
+                args.consume("description")
+            ]
 
             let missing: string
             if (!image) missing = "the banner image"
             else if (!location) missing = "the location of the build"
             else if (!credit) missing = "the image credit"
             if (missing)
-                return client.channel.sendError(
-                    message.channel,
-                    `You must provide ${missing}!`
-                )
+                return client.response.sendError(message, `You must provide ${missing}!`)
             if (description?.length > 512)
-                return client.channel.sendError(
-                    message.channel,
-                    "That description is too long! (max. 512 characters)."
+                return client.response.sendError(
+                    message,
+                    client.messages.descriptionTooLong512
                 )
+
+            await message.continue()
 
             const banner = new BannerImage()
             banner.url = image
@@ -70,51 +109,44 @@ export default new Command({
             if (description) banner.description = description
             await banner.save()
 
-            await client.channel.sendSuccess(
-                message.channel,
+            await client.response.sendSuccess(
+                message,
                 `Queued the banner! (**#${banner.id}**).`
             )
         } else if (subcommand === "delete") {
-            const id = args.consume()
-            if (!id)
-                return client.channel.sendError(
-                    message.channel,
-                    "You must provide the banner ID."
-                )
+            const id = args.consume("id")
+            if (!id) return client.response.sendError(message, client.messages.noBannerID)
+
+            await message.continue()
+
             const banner = await BannerImage.findOne(Number(id))
             if (!banner)
-                return client.channel.sendError(
-                    message.channel,
-                    "That banner doesn't exist."
-                )
+                return client.response.sendError(message, "That banner doesn't exist.")
 
             await banner.remove()
-            await client.channel.sendSuccess(
-                message.channel,
+            await client.response.sendSuccess(
+                message,
                 `Removed banner **#${id}** from the queue.`
             )
         } else if (subcommand === "queue") {
+            await message.continue()
             const banners = await BannerImage.find()
             const formatted = banners.map(banner => banner.format()).join("\n")
-            return client.channel.sendSuccess(message.channel, {
+            return client.response.sendSuccess(message, {
                 author: { name: "Banner queue" },
                 description: formatted || "*Empty.*"
             })
         } else if (subcommand === "show") {
-            const id = args.consume()
-            if (!id)
-                return client.channel.sendError(
-                    message.channel,
-                    "You must provide the banner ID."
-                )
+            const id = args.consume("id")
+            if (!id) return client.response.sendError(message, client.messages.noBannerID)
+
+            await message.continue()
+
             const banner = await BannerImage.findOne(Number(id))
             if (!banner)
-                return client.channel.sendError(
-                    message.channel,
-                    "That banner doesn't exist."
-                )
+                return client.response.sendError(message, client.messages.noBanner)
 
-            await message.channel.send({
+            await message.send({
                 embeds: [
                     {
                         author: { name: `Banner #${banner.id}` },
@@ -128,11 +160,9 @@ export default new Command({
                 ]
             })
         } else if (subcommand === "cycle") {
+            await message.continue()
             BannerImage.cycle(client)
-            await client.channel.sendSuccess(
-                message.channel,
-                "Forced a banner queue cycle."
-            )
+            await client.response.sendSuccess(message, "Forced a banner queue cycle.")
         }
     }
 })

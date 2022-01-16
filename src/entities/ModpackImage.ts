@@ -78,6 +78,7 @@ export default class ModpackImage extends BaseEntity {
         const response: Response = await fetch(this.API_URL, {
             method: "POST",
             headers: { Authorization: `Bearer ${token}` },
+            //Using json as I doubt the api supports JSON5 *yet*
             body: JSON.stringify(object)
         })
 

@@ -9,4 +9,4 @@ jobs:
             - uses: actions/checkout@v2
             - uses: actions/setup-node@v2
             - run: npm i
-            - run: npm run lint
+            - run: npm start lint

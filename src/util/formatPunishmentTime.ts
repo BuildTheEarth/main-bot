@@ -1,4 +1,4 @@
-import ms from "ms"
+import ms from "../util/ms"
 
 export default function formatPunishmentTime(
     length: number,

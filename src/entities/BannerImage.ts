@@ -36,7 +36,7 @@ export default class BannerImage extends BaseEntity {
     private static cycleTimeout: NodeJS.Timeout
 
     static async cycle(client: Client): Promise<void> {
-        if (!client.customGuilds.main().features.includes("BANNER")) return
+        if (!(await client.customGuilds.main()).features.includes("BANNER")) return
         const next = await this.findOne({ order: { id: "ASC" } })
 
         if (!next) {
@@ -44,12 +44,10 @@ export default class BannerImage extends BaseEntity {
             return
         }
 
-        await client.customGuilds.main().setBanner(next.url)
-        const updates = client.customGuilds
-            .main()
-            .channels.cache.find(
-                channel => channel.name === "updates"
-            ) as Discord.TextChannel
+        await (await client.customGuilds.main()).setBanner(next.url)
+        const updates = (await client.customGuilds.main()).channels.cache.find(
+            channel => channel.name === "updates"
+        ) as Discord.TextChannel
 
         const embed: Discord.MessageEmbedOptions = {
             author: { name: "New banner!" },
@@ -59,7 +57,7 @@ export default class BannerImage extends BaseEntity {
 
         if (next.description) embed.description += `\n\n${quote(next.description)}`
 
-        await client.channel.sendSuccess(updates, embed)
+        await client.response.sendSuccess(updates, embed)
         await next.softRemove()
         client.logger.info("Updated banner with first image in queue.")
         this.schedule(client)

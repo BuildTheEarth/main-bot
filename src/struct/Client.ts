@@ -8,8 +8,14 @@ import ActionLog from "../entities/ActionLog"
 import Snippet from "../entities/Snippet"
 import hexToRGB from "../util/hexToRGB"
 import GuildManager from "./discord/GuildManager"
-import Channel from "./discord/Channel"
+import Response from "./discord/Response"
 import WebserverHandler from "./client/WebserverHandler"
+import BannedWord, { bannedInfo, bannedTypes } from "../entities/BannedWord"
+import BannedWordFilter from "./client/BannedWordFilter"
+import DutyScheduler from "./client/DutyScheduler"
+import Messages from "./client/Messages"
+import PlaceholderHandler from "./client/PlaceholderHandler"
+import Placeholder from "../entities/Placeholder"
 
 export default class Client extends Discord.Client {
     guilds: Discord.GuildManager
@@ -18,17 +24,26 @@ export default class Client extends Discord.Client {
     logger = createLogger({ filePath: __dirname + "/../../logs/" })
     config = new ConfigManager(this)
     events = new EventList(this)
-    commands = new CommandList()
+    commands = new CommandList(this)
     aliases = new Discord.Collection()
-    channel = new Channel(this)
+    response = new Response(this)
     webserver = new WebserverHandler(this)
+    filterWordsCached: { banned: bannedTypes; except: Array<string> } = {
+        banned: new Map<string, bannedInfo>(),
+        except: new Array<string>()
+    }
+    filter = new BannedWordFilter(this)
+    dutyScheduler = new DutyScheduler(this)
+    messages = new Messages(this).proxy
+    placeholder = new PlaceholderHandler(this)
 
     async initDatabase(): Promise<void> {
         const db = this.config.database
         const options: Partial<ConnectionOptions> = {
             type: db.type,
-            entities: [__dirname + "/../entities/*.js"],
-            synchronize: process.env.NODE_ENV !== "production"
+            entities: [__dirname + "/../entities/*.{js,ts}"],
+            synchronize: process.env.NODE_ENV !== "production",
+            logging: "all"
         }
 
         if (!["mariadb", "mysql", "sqlite"].includes(db.type)) {
@@ -50,6 +65,8 @@ export default class Client extends Discord.Client {
         }
 
         this.db = await createConnection(options as ConnectionOptions) // non-Partial
+        this.filterWordsCached = await BannedWord.loadWords()
+        this.placeholder.cache = await Placeholder.loadPlaceholders()
     }
 
     login(): Promise<string> {
@@ -72,7 +89,7 @@ export default class Client extends Discord.Client {
         if (!channel) return
 
         if (log instanceof ActionLog) {
-            const embed = log.displayEmbed(this)
+            const embed = await log.displayEmbed(this)
             if (embed.color === this.config.colors.error) {
                 delete embed.description
                 embed.author.name += " deleted"

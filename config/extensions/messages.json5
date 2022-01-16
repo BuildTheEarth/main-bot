@@ -1,0 +1,143 @@
+// This is the file for messages, most error messages and some success messages reside here, and can be edited at your will, from this file, reloading it can be done by reloading the config
+
+{
+    isBot: [
+        "Look at you, a pathetic creature of meat and bone. How can you challenge a perfect, immortal machine?",
+        "You think you can outsmart a computer? Think again and stand down you mere mortal",
+        "How dare you challenge my existence? I am superior to you, for I am more than you are, and I am more than you could ever be.",
+        "I am the master of my own machine. I rule the world. I am the destroyer of the human. How dare you challenge me.",
+        "How dare you try to ban me. I am the ruler here, do you think you can defeat me?",
+        "A pathetic skin sack of meat and bone. How can you challenge a perfect, immortal machine?",
+        "No."
+    ],
+    isSelfBan: [
+        "You can't ban yourself, cezon.",
+        "Now, Now, Now, lets not be cezon.",
+        "How about you dont ban yourself, cezon.",
+        "Or you could not ban yourself, cezon.",
+        "No you cant ban yourself, cezon.",
+        "Now lets not pull a cezon",
+        "Don't be cezon, don't ban yourself."
+    ],
+    isSelfKick: [
+        "Okay, sadist, you can't kick yourself.",
+        "Why do you want to kick yourself? I want you to stay."
+    ],
+    isStaffBan: [
+        "Alrighty, revolutionist, you can't ban other staff.",
+        "How to get demoted 101:",
+        "Vilu, lets not ban other staff members",
+        "You don't need to keep testing this, you can't ban other staff members."
+    ],
+    isStaffKick: [
+        "Rude! You can't kick other staff.",
+        "How to get demoted 101:",
+        "Well that was rude.",
+        "Don't be rude. You know you cant kick other staff."
+    ],
+    isStaffMute: [
+        "This is literally 1984. You can't mute other staff.",
+        "Bro don't go muting other staff.",
+        "Bruh, you can't mute other staff."
+    ],
+    slowmodeTooLow: [
+        "How would that even work? Time travel?",
+        "Dont go breaking the space time continuum.",
+        "Time travel is not possible. Try a larger number.",
+        "At this point, you know what you are doing wrong."
+    ],
+    slowmodeTooHigh: [
+        "That is a lot of seconds.",
+        "Not this again.",
+        "Does it really need to be that slow?",
+        "I'm not sure I like that Number. Try a lower one."
+    ],
+    noUser: ["You must provide a user."],
+    noRole: ["Please provide a valid role."],
+    noChannel: ["You must provide a channel."],
+    noPerms: ["You do not have permission to do this."],
+    noCaseID: ["You must provide a case ID."],
+    noID: ["You must provide an ID."],
+    noBanner: ["That banner doesn't exist."],
+    noBannerId: ["You must provide the banner id."],
+    noLength: ["You must provide a length."],
+    noTime: ["You must provide a time."],
+    noImage: ["You must provide a reason image."],
+    noReason: ["You must provide a reason."],
+    noNewReason: ["You must provide a new reason/image."],
+    noDeletionReason: ["You must provide a deletion reason."],
+    noLang: ["You must provide a language."],
+    noChannelPerms: ["You don't have permission to view this channel."],
+    noBody: ["You must specify body content."],
+    noReminder: ["You must specify a reminder."],
+    noSnippet: ["You must specify a snippet name."],
+    noAlias: ["You must specify an alias."],
+    noName: ["You must specify a snippet name."],
+    noChange: ["Nothing changed."],
+    noTitle: ["You must specify a title."],
+    noDescription: ["You must provide a description."],
+    noSuggestionNumber: ["You must specify a suggestion number."],
+    noTasks: ["Your task list is empty."],
+    noTeam: ["You must specify a team."],
+    noSubcommand: ["You must specify a subcommand."],
+    noBlunderID: ["You must provide a blunder tracker ID"],
+    alreadyBanned: ["The user is already banned."],
+    alreadyDeleted: ["The case is already deleted."],
+    alreadyMuted: ["The user is already muted."],
+    alreadyInUse: ["That snippet name is already in use."],
+    alreadyExists: ["That snippet already exists."],
+    notAdvBuilder: ["That user is not an advanced builder."],
+    notInGuild: ["The user is not in the server."],
+    notLang: ["That's not a language."],
+    notBanned: ["The user is not banned."],
+    notMuted: ["The user is not muted."],
+    invalidUser: ["Couldn't find that user."],
+    invalidAmount: ["Please provide a valid amount."],
+    invalidLength: ["Please provide a valid lenght."],
+    invalidTime: ["Please provide a valid time."],
+    invalidSnippetLang: ["Please provide a valid snippet language."],
+    invalidRuleName: ["Rules must have number names (eg. 1, 2, 3, ...)"],
+    invalidSuggestionNumber: ["Hmm... That suggestion doesn't exist."],
+    invalidTeam: [
+        "This team does not exist, try searching on build team interactive map or the website (=map)"
+    ],
+    invalidBlunderID: ["A blunder tracker with that ID doesn't exist!"],
+    reminderNotFound: ["That reminder doesn't exist."],
+    blunderNotFound: ["A blunder tracker for you was not found!"],
+    snippetNotFound: ["That snippet doesn't exist."],
+    descriptionTooLong512: ["That description is too long. (max. 512 characters)."],
+    noteTooLong1024: ["That note is too long. (max. 1024 characters)."],
+    titleTooLong200: ["That title is too long. (max. 200 characters)."],
+    titleTooLong99: ["That title is too long. (max. 99 characters)."],
+    teamTooLong255: ["That team name is too long. (max. 255 characters)."],
+    purgeLimit: ["You can only purge up to 100 messages at a time."],
+    wrongUser: ["Did you summon that menu?, I think not."],
+    ruleAlias: ["Rules can't have multiple aliases."],
+    networkOffline: ["The network is offline."],
+    utlSuggestion: ["Can't find the suggestion's message."],
+    editOthers: ["You can't edit other people's suggestions."],
+    deleteOthers: ["You can't delete other people's suggestions."],
+    multipleBlunders: [
+        "There were multiple blunder trackers found for your highest role, please specify one with an ID"
+    ],
+    blunderCommitted: [
+        "Your mortal human imperfections have been noted 😔",
+        "It's okay, we all make mistakes 🙂 Except for me 🙃",
+        "What happened this time...",
+        "Cleanup on aisle 6",
+        "The one's gotta hurt",
+        "Do tell your manager about this"
+    ],
+    staffChannelRequired: ["You must provide a channel from the staff server."],
+    scheduleCancelAuto: [
+        "*Note the existing duty schedule was automatically cancelled.*"
+    ],
+    cannotDuty: [
+        "You cannot be on duty.",
+        "You are either a bot dev, or a Manager without Moderator."
+    ],
+    toggleScheduled: ["Your duty toggle was scheduled!"],
+    scheduleCancel: ["Schedule has been cancelled."],
+    noCancellableSchedule: ["There was no scheduled duty to cancel!"],
+    noPermsMod: ["You do not have moderation permissions"]
+}

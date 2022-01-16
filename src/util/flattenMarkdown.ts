@@ -1,11 +1,12 @@
 import Client from "../struct/Client"
 import Discord from "discord.js"
 
-export default function flattenMarkdown(
+export default async function flattenMarkdown(
     string: string,
     client: Client,
-    guild: Discord.Guild = client.customGuilds.main()
-): string {
+    guild: Discord.Guild
+): Promise<string> {
+    if (!guild) guild = await client.customGuilds.main()
     return string.replace(
         /(^|[^\\])<(@|@!|@&|#)(\d{18})>/g,
         replacer.bind(null, client, guild)
