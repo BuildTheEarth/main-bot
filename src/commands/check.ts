@@ -6,7 +6,7 @@ import Roles from "../util/roles"
 import ActionLog, { Action } from "../entities/ActionLog"
 import TimedPunishment from "../entities/TimedPunishment"
 import ModerationNote from "../entities/ModerationNote"
-import { Not, IsNull, FindOperator } from "typeorm"
+import { Not, IsNull, FindManyOptions } from "typeorm"
 import noop from "../util/noop"
 import CommandMessage from "../struct/CommandMessage"
 
@@ -49,14 +49,11 @@ export default new Command({
                 user === undefined ? client.messages.noUser : client.messages.invalidUser
             )
 
-        const criteria: Record<
-            string,
-            Record<string, FindOperator<ActionLog> | string | boolean>
-        > = { where: { member: user.id } }
+        let criteria: FindManyOptions<ActionLog> = { where: { member: user.id } }
         if (showDeleted) {
-            criteria.where.deletedAt = Not<ActionLog>(IsNull())
+            criteria = { where: { member: user.id, deletedAt: Not<ActionLog>(IsNull()) } }
 
-            criteria.options.withDeleted = true
+            criteria.withDeleted = true
         }
 
         await message.continue()

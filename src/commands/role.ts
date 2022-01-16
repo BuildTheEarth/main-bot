@@ -117,7 +117,7 @@ export default new Command({
             await role.guild.members.fetch()
             const extended = args.consume("extended")
 
-            let members: Array<Record<string, string | Array<string>>>
+            let members: Array<Record<string, string | Array<string> | number>>
 
             if (extended === "extended") {
                 members = role.members.map(m => {
@@ -127,15 +127,16 @@ export default new Command({
                         roles: m.roles.cache
                             .sort((a, b) => b.position - a.position)
                             .map(role => role.name)
-                            .filter(role => role !== "@everyone")
+                            .filter(role => role !== "@everyone"),
+                        joinDate: m.user.createdTimestamp
                     }
                 })
             } else {
                 members = role.members.map(m => {
-                    const container = {}
-                    container["tag"] = m.user.tag
-                    container["id"] = m.user.id
-                    return container
+                    return {
+                        tage: m.user.tag,
+                        id: m.user.id
+                    }
                 })
             }
 

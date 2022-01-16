@@ -18,7 +18,8 @@ const client = new Client({
         Discord.Intents.FLAGS.DIRECT_MESSAGES,
         Discord.Intents.FLAGS.DIRECT_MESSAGE_REACTIONS
     ],
-    partials: ["CHANNEL"]
+    partials: ["CHANNEL"],
+    restRequestTimeout: 900000
 })
 
 async function main() {
@@ -44,6 +45,16 @@ async function main() {
     client.logger.info("Logged in to Discord.")
 
     //moved command loading to ready
+}
+
+globalThis.fileExtension = "js"
+
+try {
+    if (process[Symbol.for("ts-node.register.instance")]) {
+        globalThis.fileExtension = "ts"
+    }
+} finally {
+    null
 }
 
 main()

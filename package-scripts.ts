@@ -29,9 +29,10 @@ export = {
     },
     start: {
       default: 'node dist/index.js --unhandled-rejections=strict',
-      production: 'pm2 start ecosystem.json --env production'
+      production: 'pm2 start ecosystem.json --env production',
     },
-    test: seriesNPS('build', 'start'),
+    test: 'ts-node src/index.ts --unhandled-rejections=strict',
+    build_start: seriesNPS('build', 'start'),
     preCommit: seriesNPS('lint', 'format'),
     build: 'npm start clean && tsc',
     watch: 'tsc --watch',

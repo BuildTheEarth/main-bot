@@ -22,20 +22,21 @@ export interface bannedWordsOptions {
 @Entity({ name: "banned_words" })
 export default class BannedWord extends BaseEntity {
     private constructor(
-        word?: string,
+        word: string = null,
         punishment_type?: "BAN" | "WARN" | "MUTE" | "KICK",
-        reason?: string,
-        duration?: number,
-        exception?: boolean,
+        reason: string  = null,
+        duration: number = null,
+        exception: boolean = null,
         client?: Client
     ) {
         super()
-        this.init()
-        if (word) this.word = word
+        console.log(duration)
+        if (word !== null) this.word = word
         if (punishment_type) this.punishment_type = punishment_type
-        if (reason) this.reason = reason
-        if (duration) this.duration = duration
-        if (exception) this.exception = exception
+        if (reason !== null) this.reason = reason
+        if (duration !== null) this.duration = duration
+        if (exception !== null) this.exception = exception
+        console.log(this.duration)
         if (client) {
             if (exception) client.filterWordsCached.except.push(word)
             else
@@ -47,15 +48,11 @@ export default class BannedWord extends BaseEntity {
         }
     }
 
-    @AfterLoad()
-    init(): void {
-        return
-    }
-
     static async createBannedWord(
         options: bannedWordsOptions,
         client: Client
     ): Promise<BannedWord> {
+        console.log(options.duration)
         return await new BannedWord(
             options.word,
             options.punishment_type,
@@ -78,8 +75,8 @@ export default class BannedWord extends BaseEntity {
     @Column({ nullable: true, transformer: milliseconds })
     duration?: number
 
-    @Column()
-    exception!: boolean
+    @Column({default: false})
+    exception: boolean = false
 
     static async loadWords(): Promise<{ banned: bannedTypes; except: Array<string> }> {
         const values = await this.find()

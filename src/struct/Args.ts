@@ -174,8 +174,9 @@ export default class Args {
     consumeLength(argName: string): number {
         if (this.message.isNormalCommand()) {
             try {
-                const parsed = ms(this.consume(argName))
-                return parsed === undefined ? null : parsed
+                let parsed = ms(this.consume(argName))
+                if (parsed === undefined) parsed = Number(parsed)
+                return Number.isNaN(parsed) ? null : parsed
             } catch {
                 return null
             }
@@ -183,8 +184,9 @@ export default class Args {
         if (this.message.isSlashCommand()) {
             try {
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                const parsed: any = ms(this.message.message.options.getString(argName))
-                return parsed === undefined ? null : parsed
+                let parsed: any = ms(this.message.message.options.getString(argName))
+                if (parsed === undefined) parsed = Number(parsed)
+                return Number.isNaN(parsed) ? null : parsed
             } catch {
                 return null
             }

@@ -5,6 +5,7 @@ import Client from "../Client"
 import CommandUtils from "../../util/CommandUtils"
 import Guild from "../discord/Guild"
 import Roles from "../../util/roles"
+import pathModule from "path"
 
 interface PermsObj {
     [name: string]: Discord.GuildApplicationCommandPermissionData
@@ -95,7 +96,11 @@ export default class CommandList extends Discord.Collection<string, Command> {
     }
 
     async unloadOne(name: string): Promise<void> {
-        const path = require.resolve(__dirname + `/../../commands/${name}.js`)
+        const path = require.resolve(
+            pathModule.join(
+                __dirname + `/../../commands/${name}.${globalThis.fileExtension}`
+            )
+        )
         const command = this.get(name)
         console.log(command)
         console.log(
@@ -148,7 +153,7 @@ export default class CommandList extends Discord.Collection<string, Command> {
         let registerPermsStaff: Discord.ApplicationCommandPermissionData[] = null
 
         const registerCommands = []
-        const path = __dirname + `/../../commands/${name}.js`
+        const path = __dirname + `/../../commands/${name}.${globalThis.fileExtension}`
         const command: Command = (await import(path)).default
         this.set(command.name, command)
         let permsTemp: string[]
