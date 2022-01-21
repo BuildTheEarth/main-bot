@@ -128,6 +128,7 @@ export default new Command({
                         message,
                         `Please specify a word.`
                     )
+                await message.continue()
                 const punishment = args.consume("punishment").toUpperCase()
                 console.log(punishment)
                 if (!punishmentTypes.includes(punishment))
@@ -180,8 +181,70 @@ export default new Command({
                         message,
                         `Please specify a word.`
                     )
+                await message.continue()
                 const isThere = await BannedWord.findOne({
                     exception: false,
+                    word: word
+                })
+                if (!isThere)
+                    return client.response.sendError(
+                        message,
+                        `I can't unban a word that is not banned!`
+                    )
+                await isThere.deleteWord(client)
+                return await client.response.sendSuccess(
+                    message,
+                    `The word has been deleted!`
+                )
+            }
+        }
+        if (subcommandGroup === "except") {
+            const validSubcommands = ["add", "remove", "list"]
+            const subcommand = args.consumeSubcommandIf(validSubcommands)
+            if (!subcommand || subcommand === "list") {
+                client.response.sendSuccess(message, `The word has been deleted!`)
+            }
+            if (subcommand === "add") {
+                const word = args.consume("word")
+                if (!word)
+                    return await client.response.sendError(
+                        message,
+                        `Please specify a word.`
+                    )
+                await message.continue()
+                const isAlreadyThere = await BannedWord.findOne({
+                    exception: true,
+                    word: word
+                })
+                if (isAlreadyThere)
+                    return await client.response.sendError(
+                        message,
+                        `This word is already banned!`
+                    )
+
+                await BannedWord.createBannedWord(
+                    {
+                        word: word,
+                        punishment_type: null,
+                        reason: null,
+                        duration: null,
+                        exception: true
+                    },
+                    client
+                )
+
+                return await client.response.sendSuccess(message, `Added the word!`)
+            }
+            if (subcommand === "remove") {
+                const word = args.consume("word")
+                if (!word)
+                    return await client.response.sendError(
+                        message,
+                        `Please specify a word.`
+                    )
+                await message.continue()
+                const isThere = await BannedWord.findOne({
+                    exception: true,
                     word: word
                 })
                 if (!isThere)
