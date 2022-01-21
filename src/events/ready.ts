@@ -54,7 +54,4 @@ export default async function ready(this: Client): Promise<void> {
         this.logger.info("Jenkins run successful")
         process.exit(0)
     }
-
-
-    
 }
