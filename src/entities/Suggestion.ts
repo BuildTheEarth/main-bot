@@ -70,7 +70,7 @@ export default class Suggestion extends BaseEntity {
     @SnowflakeColumn()
     message: string
 
-    @SnowflakeColumn()
+    @SnowflakeColumn({ nullable: true })
     thread: string
 
     @Column()

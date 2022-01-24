@@ -72,13 +72,27 @@ export default new Command({
         if (!body) error = client.messages.noBody
         if (!title) error = client.messages.noTitle
         if (title?.length > 200) error = client.messages.titleTooLong200
+        if (
+            extend &&
+            (await Suggestion.find({ where: { extends: extend.number } })).some(
+                async suggestion =>
+                    (await suggestion.getIdentifier()).match(/\d+(?<l>[a-z])/).groups.l ==
+                    extend.extension
+            )
+        )
+            error = client.messages.alreadyExistsSubsuggestion
 
         if (error) {
-            const messages = await client.response.sendError(message, error)
-            if (message.channel.type !== "DM") message.delete().catch(() => null)
-            return setTimeout(() => {
-                if (messages) messages.delete().catch(() => null)
-            }, 10000)
+            try {
+                const messages = await client.response.sendError(message, error)
+                if (message.channel.type !== "DM" && message.isNormalCommand())
+                    message.delete().catch(() => null)
+                return setTimeout(() => {
+                    if (messages) messages.delete().catch(() => null)
+                }, 10000)
+            } catch {
+                return null
+            }
         }
 
         // delete message asap if suggestion is anonymous
@@ -106,17 +120,32 @@ export default new Command({
         const suggestionMessage = await suggestions.send({ embeds: [embed] })
         suggestion.message = suggestionMessage.id
 
-        const newIdentifier = await suggestion.getIdentifier()
-        const thread = await (
-            suggestionMessage.channel as Discord.TextChannel
-        ).threads.create({
-            name: `${newIdentifier} - ${title}`,
-            autoArchiveDuration: "MAX",
-            startMessage: suggestionMessage
-        })
-        await thread.setRateLimitPerUser(1)
-        suggestion.thread = thread.id
-        await suggestion.save()
+        if (extend?.extension) {
+            const old = await Suggestion.findOne({ number: extend.number })
+            const thread = await (
+                client.channels.cache.get(
+                    client.config.suggestions.discussion[staff ? "staff" : "main"]
+                ) as Discord.TextChannel
+            ).threads.fetch(old.thread)
+            client.response.sendSuccess(thread, {
+                description: `**New subsuggestion:** [${title}](${suggestion.getURL(
+                    client
+                )})`
+            })
+            await suggestion.save()
+        } else {
+            const newIdentifier = await suggestion.getIdentifier()
+            const thread = await (
+                suggestionMessage.channel as Discord.TextChannel
+            ).threads.create({
+                name: `${newIdentifier} - ${title}`,
+                autoArchiveDuration: "MAX",
+                startMessage: suggestionMessage
+            })
+            await thread.setRateLimitPerUser(1)
+            suggestion.thread = thread.id
+            await suggestion.save()
+        }
 
         await suggestionMessage.react(client.config.emojis.upvote)
         await suggestionMessage.react(client.config.emojis.downvote)

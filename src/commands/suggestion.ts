@@ -406,10 +406,12 @@ export default new Command({
 
             const embed = await suggestion.displayEmbed(client)
             await suggestionMessage.edit({ embeds: [embed] })
-            await thread.setName("deleted suggestion")
-            await thread.send("**This suggestion has been deleted.**")
-            await thread.setLocked(true)
-            await thread.setArchived(true)
+            if (thread) {
+                await thread.setName(`${identifier} - deleted suggestion`)
+                await thread.send("**This suggestion has been deleted.**")
+                await thread.setLocked(true)
+                await thread.setArchived(true)
+            }
 
             client.response.sendSuccess(message, "Deleted the suggestion!")
         } else if (subcommand === "status") {
@@ -434,11 +436,12 @@ export default new Command({
             const embed = await suggestion.displayEmbed(client)
             await suggestionMessage.edit({ embeds: [embed] })
 
-            if (thread.locked && !thread.archived) await thread.setLocked(false)
+            if (thread?.locked && !thread?.archived) await thread.setLocked(false)
             if (
-                (["approved", "denied", "duplicate", "invalid"].includes(status) &&
-                    !thread.locked &&
-                    !thread.archived) ||
+                (thread &&
+                    ["approved", "denied", "duplicate", "invalid"].includes(status) &&
+                    !thread?.locked &&
+                    !thread?.archived) ||
                 (["approved", "denied", "duplicate", "invalid"].includes(status) &&
                     status !== oldStatus)
             ) {
@@ -449,8 +452,8 @@ export default new Command({
                 await thread.setArchived(true)
             } else if (
                 ["forwarded", "in-progress", "information"].includes(status) &&
-                thread.locked &&
-                thread.archived
+                thread?.locked &&
+                thread?.archived
             ) {
                 await thread.send(
                     `**This suggestion has been marked as \`${status}\`**\nFor this reason, the suggestion discussion thread has been reopened.`

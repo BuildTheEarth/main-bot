@@ -86,6 +86,7 @@
     alreadyMuted: ["The user is already muted."],
     alreadyInUse: ["That snippet name is already in use."],
     alreadyExists: ["That snippet already exists."],
+    alreadyExistsSubsuggestion: ["That subsuggestion already exists."],
     alreadyOpen: ["That thread is already open."],
     notAdvBuilder: ["That user is not an advanced builder."],
     notInGuild: ["The user is not in the server."],
