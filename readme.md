@@ -6,6 +6,13 @@
 
 _The main bot for the BuildTheEarth Discord servers._
 
+![build](https://github.com/BuildTheEarth/main-bot/actions/workflows/build.yml/badge.svg)
+[![chat](https://img.shields.io/discord/706317564904472627.svg?color=768AD4&label=discord&logo=https%3A%2F%2Fdiscordapp.com%2Fassets%2F8c9701b98ad4372b58f13fd9f65f966e.svg)](https://discord.gg/rCszwHjre5)
+[![donate](https://img.shields.io/endpoint.svg?url=https%3A%2F%2Fshieldsio-patreon.vercel.app%2Fapi%3Fusername%3Dbuildtheearth%26type%3Dpatrons&style=flat)](https://patreon.com/buildtheearth)
+[![TypeScript](https://img.shields.io/badge/%3C%2F%3E-TypeScript-%230074c1.svg)](http://www.typescriptlang.org/)
+[![license: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![nps friendly](https://img.shields.io/badge/nps-friendly-blue.svg?style=flat)](https://www.npmjs.com/package/nps)
+
 </div>
 
 -   [BuildTheEarth](#BuildTheEarth)
@@ -53,6 +60,7 @@ This project originated as a complete rewrite of our old bot, an extension of th
     <td align="center"><a href="https://github.com/evilpauwse1"><img src="https://avatars3.githubusercontent.com/u/40669563?v=4?s=100" width="100px;" alt=""/><br /><sub><b>evil</b></sub></a><br /><a href="https://github.com/BuildTheEarth/main-bot/commits?author=evilpauwse1" title="Code">💻</a></td>
     <td align="center"><a href="https://github.com/Mr-Smarty"><img src="https://avatars0.githubusercontent.com/u/69656599?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Mr-Smarty</b></sub></a><br /><a href="https://github.com/BuildTheEarth/main-bot/commits?author=Mr-Smarty" title="Code">💻</a></td>
     <td align="center"><a href="https://www.youtube.com/channel/UCxiYE392PghWtHEQaTN81oA"><img src="https://avatars.githubusercontent.com/u/53976867?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Fionn</b></sub></a><br /><a href="#infra-fnionn" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a> <a href="https://github.com/BuildTheEarth/main-bot/commits?author=fnionn" title="Code">💻</a></td>
+    <td align="center"><a href="https://github.com/mebrooks01"><img src="https://avatars.githubusercontent.com/u/39204478?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Malachi Brooks</b></sub></a><br /><a href="https://github.com/BuildTheEarth/main-bot/commits?author=mebrooks01" title="Code">💻</a></td>
   </tr>
 </table>
 
@@ -82,7 +90,7 @@ This project follows the [All Contributors][] specification. Contributions of an
 
 ### Configuration
 
-Rename the `_config.yml` file to `config.yml` and fill in all of the fields:
+Rename the `config/_config.json5` file to `config/config.json5` and fill in all of the fields:
 
 -   **prefix**: The command prefix.
 -   **appeal**: The ban appeal message.
@@ -144,8 +152,6 @@ Rename the `_config.yml` file to `config.yml` and fill in all of the fields:
         -   **ban**
         -   **unmute**
         -   **unban**
--   **rules:** A list of rules for the server (used by the `rule` command).
--   **buildTeamInvites:** A list of build team invites (map `name` -> `invite`), used by the `team` command. For a list scraped from our website, check out [build-team-invite-scraper](https://github.com/BuildTheEarth/build-team-invite-scraper) (make sure to indent them one level).
 -   **token**: The Discord bot's token.
 -   **modpackAuth**: The key for our modpack image API (required for the `modpack` command).
 -   **database**: The information/credentials for connecting to the database.

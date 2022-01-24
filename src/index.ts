@@ -18,22 +18,14 @@ const client = new Client({
         Discord.Intents.FLAGS.DIRECT_MESSAGES,
         Discord.Intents.FLAGS.DIRECT_MESSAGE_REACTIONS
     ],
-    partials: ["CHANNEL"]
+    partials: ["CHANNEL"],
+    restRequestTimeout: 900000
 })
 
 async function main() {
     client.logger.debug("Loading config...")
     await client.config.load()
     client.logger.info("Loaded config.")
-
-    client.logger.debug("Loading commands...")
-    await client.commands.load()
-    client.logger.info("Loaded commands.")
-
-    client.logger.debug("Registering events...")
-    await client.events.load()
-    client.events.register()
-    client.logger.info("Registered events.")
 
     client.logger.debug("Registering webserver...")
     await client.webserver.load()
@@ -43,9 +35,26 @@ async function main() {
     await client.initDatabase()
     client.logger.info("Connected to database.")
 
+    client.logger.debug("Registering events...")
+    await client.events.load()
+    client.events.register()
+    client.logger.info("Registered events.")
+
     client.logger.debug("Logging in to Discord...")
     await client.login()
     client.logger.info("Logged in to Discord.")
+
+    //moved command loading to ready
+}
+
+globalThis.fileExtension = "js"
+
+try {
+    if (process[Symbol.for("ts-node.register.instance")]) {
+        globalThis.fileExtension = "ts"
+    }
+} finally {
+    null
 }
 
 main()

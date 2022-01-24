@@ -4,83 +4,116 @@ import Command from "../struct/Command"
 import ActionLog from "../entities/ActionLog"
 import Roles from "../util/roles"
 import GuildMember from "../struct/discord/GuildMember"
-import Discord from "discord.js"
+import CommandMessage from "../struct/CommandMessage"
 
 export default new Command({
     name: "case",
     aliases: ["log", "record"],
     description: "Check specific info on a case.",
     permission: [Roles.HELPER, Roles.MODERATOR, Roles.MANAGER],
-    usage: "<id>",
+    basesubcommand: "check",
+    args: [
+        {
+            name: "id",
+            description: "Case ID",
+            required: true,
+            optionType: "STRING"
+        }
+    ],
     subcommands: [
         {
             name: "edit",
             description: "Edit a case.",
             permission: [Roles.HELPER, Roles.MODERATOR, Roles.MANAGER],
-            usage: "<id> [image URL | attachment] <new reason>"
+            args: [
+                {
+                    name: "id",
+                    description: "Case ID",
+                    required: true,
+                    optionType: "STRING"
+                },
+                {
+                    name: "image_url",
+                    description: "Image URL (required if used as slashcommand).",
+                    required: true,
+                    optionType: "STRING"
+                },
+                {
+                    name: "reason",
+                    description: "New case Reason",
+                    required: true,
+                    optionType: "STRING"
+                }
+            ]
         },
         {
             name: "delete",
             description: "Delete a case.",
             permission: [Roles.MODERATOR, Roles.MANAGER],
-            usage: "<id> <reason>"
+            args: [
+                {
+                    name: "id",
+                    description: "Case ID",
+                    required: true,
+                    optionType: "STRING"
+                },
+                {
+                    name: "reason",
+                    description: "Deletion Reason",
+                    required: true,
+                    optionType: "STRING"
+                }
+            ]
         }
     ],
-    async run(this: Command, client: Client, message: Discord.Message, args: Args) {
-        const subcommand = args.consumeIf(["edit", "delete"])
-        const id = Number(args.consume())
+    async run(this: Command, client: Client, message: CommandMessage, args: Args) {
+        const subcommand = args.consumeSubcommandIf(["edit", "delete", "check"])
+        const id = Number(args.consume("id"))
         if (Number.isNaN(id))
-            return client.channel.sendError(
-                message.channel,
-                "You must provide a case ID!"
-            )
+            return client.response.sendError(message, client.messages.noCaseId)
 
-        const log = await ActionLog.findOne(id, { withDeleted: true })
+        await message.continue()
+
+        const log = await ActionLog.findOne({
+            where: { id: id, options: { withDeleted: true } }
+        })
         if (!log)
-            return client.channel.sendError(
-                message.channel,
-                `Couldn't find case **#${id}**.`
-            )
+            return client.response.sendError(message, `Couldn't find case **#${id}**.`)
 
         if (!["edit", "delete"].includes(subcommand)) {
-            const embed = log.displayEmbed(client)
-            await message.channel.send({ embeds: [embed] })
+            const embed = await log.displayEmbed(client)
+            await message.send({ embeds: [embed] })
         } else if (subcommand === "edit") {
-            const image = args.consumeImage()
-            const reason = args.consumeRest()
+            const image = args.consumeImage("image_url")
+            const reason = args.consumeRest(["reason"])
             if (!reason && !image)
-                return client.channel.sendError(
-                    message.channel,
-                    "You must provide a new reason/image!"
-                )
+                return client.response.sendError(message, client.messages.noNewReason)
             if (reason === log.reason && !image)
-                return client.channel.sendError(message.channel, "Nothing changed.")
+                return client.response.sendError(message, client.messages.noChange)
 
             if (image) log.reasonImage = image
             if (reason) log.reason = reason
             await log.save()
             await log.updateNotification(client)
-            await client.channel.sendError(message.channel, `Edited case **#${id}**.`)
+            await client.response.sendError(message, `Edited case **#${id}**.`, false)
             await client.log(log)
         } else if (subcommand === "delete") {
-            if (!GuildMember.hasRole(message.member, Roles.MODERATOR)) return
-            const reason = args.consumeRest()
+            if (!GuildMember.hasRole(message.member, Roles.MODERATOR))
+                return client.response.sendError(message, client.messages.noPerms)
+            const reason = args.consumeRest(["reason"])
             if (!reason)
-                return client.channel.sendError(
-                    message.channel,
-                    "You must provide a deletion reason!"
+                return client.response.sendError(
+                    message,
+                    client.messages.noDeletionReason
                 )
             if (log.deletedAt)
-                return client.channel.sendError(
-                    message.channel,
-                    "That case is already deleted!"
-                )
+                return client.response.sendError(message, client.messages.alreadyDeleted)
 
             log.deletedAt = new Date()
-            log.deleter = message.author.id
+            log.deleter = message.member.user.id
             log.deleteReason = reason
             await log.save()
-            await client.channel.sendSuccess(message.channel, `Deleted case **#${id}**.`)
+            await client.response.sendSuccess(message, `Deleted case **#${id}**.`)
             await client.log(log)
         }
     }

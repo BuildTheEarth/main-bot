@@ -10,7 +10,7 @@ import {
 import SnowflakeColumn from "./decorators/SnowflakeColumn"
 import Discord from "discord.js"
 import Client from "../struct/Client"
-import replaceAsync from "string-replace-async"
+import replaceAsync from "../util/replaceAsync"
 import suggestionStatusActions from "../data/suggestionStatusActions"
 import hexToRGB from "../util/hexToRGB"
 
@@ -70,6 +70,9 @@ export default class Suggestion extends BaseEntity {
     @SnowflakeColumn()
     message: string
 
+    @SnowflakeColumn({ nullable: true })
+    thread: string
+
     @Column()
     staff: boolean
 
@@ -85,7 +88,10 @@ export default class Suggestion extends BaseEntity {
     static async findNumber(staff: boolean, client: Client): Promise<number> {
         const field = staff ? "staff" : "main"
         const existing = await this.count({
-            where: { staff, extends: null },
+            where: {
+                staff: staff,
+                extends: null
+            },
             withDeleted: true
         })
 

@@ -9,7 +9,7 @@ import {
     JoinColumn
 } from "typeorm"
 import SnowflakeColumn from "./decorators/SnowflakeColumn"
-import ms from "ms"
+import ms from "../util/ms"
 import Discord from "discord.js"
 import Client from "../struct/Client"
 import TimedPunishment from "./TimedPunishment"
@@ -20,6 +20,7 @@ import milliseconds from "./transformers/milliseconds"
 import past from "../util/pastTense"
 import noop from "../util/noop"
 import hexToRGB from "../util/hexToRGB"
+import { URL } from "url"
 
 export type Action = keyof typeof Actions
 export enum Actions {
@@ -98,10 +99,7 @@ export default class ActionLog extends BaseEntity {
         return formatted
     }
 
-    displayEmbed(client: Client): Discord.MessageEmbedOptions {
-        const messageLink = `https://discord.com/channels/${
-            client.customGuilds.main().id
-        }/${this.channel}/${this.message}`
+    async displayEmbed(client: Client): Promise<Discord.MessageEmbedOptions> {
         const length =
             this.length !== null ? formatPunishmentTime(this.length, true) : "\u200B"
         const embed: Discord.MessageEmbedOptions = {
@@ -113,7 +111,7 @@ export default class ActionLog extends BaseEntity {
                 { name: this.length !== null ? "Length" : "\u200B", value: length },
                 { name: "Reason", value: this.reason || "*None provided.*" },
                 { name: "Moderator", value: `<@${this.executor}>` },
-                { name: "Context", value: `[Link](${messageLink})` },
+                { name: "Context", value: `[Link](${await this.contextUrl(client)})` },
                 { name: "Date", value: formatTimestamp(this.createdAt, "d") }
             ].map(field => ({ ...field, inline: true }))
         }
@@ -187,5 +185,13 @@ export default class ActionLog extends BaseEntity {
         })
         const embed = this.displayNotification(client)
         await notification.edit({ embeds: [embed] }).catch(noop)
+    }
+
+    async contextUrl(client: Client): Promise<URL> {
+        return new URL(
+            `https://discord.com/channels/${(await client.customGuilds.main()).id}/${
+                this.channel
+            }/${this.message}`
+        )
     }
 }

@@ -1,3 +1,5 @@
+import JSON5 from "json5"
+
 export default function stringifyAnything(
     thing: unknown,
     indent: number = 0,
@@ -7,7 +9,7 @@ export default function stringifyAnything(
     if (typeof thing === "string" && thing.includes("\n"))
         return `\`${thing.replace(/`/g, "\\`")}\``
     if (typeof thing === "function" || typeof thing === "symbol") return String(thing)
-    if (typeof thing !== "object" || thing == null) return String(JSON.stringify(thing))
+    if (typeof thing !== "object" || thing == null) return String(JSON5.stringify(thing))
 
     const omit = currentDepth > depth
     const space = " ".repeat(indent)

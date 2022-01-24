@@ -10,6 +10,6 @@ jobs:
             - uses: actions/setup-node@v2
             - run: npm i
             - id: format
-              run: "echo ::set-output name=prettier_output::$(npm run format)"
+              run: "echo ::set-output name=prettier_output::$(npm start format)"
             - if: "contains(steps.format.outputs.prettier_output, 'Code style issues fixed in the above file')"
               run: "echo ::error::Code style is inconsistent."

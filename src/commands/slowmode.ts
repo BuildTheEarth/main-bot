@@ -3,44 +3,61 @@ import Args from "../struct/Args"
 import Command from "../struct/Command"
 import Roles from "../util/roles"
 import Discord from "discord.js"
+import ApiTypes from "discord-api-types"
+import CommandMessage from "../struct/CommandMessage"
 
 export default new Command({
     name: "slowmode",
     aliases: ["cooldown", "ratelimit"],
     description: "Set the slowmode.",
     permission: [Roles.HELPER, Roles.MODERATOR, Roles.MANAGER],
-    usage: "[seconds | 'show'] [channel]",
-    async run(this: Command, client: Client, message: Discord.Message, args: Args) {
-        const firstArg = args.consume()
+    args: [
+        {
+            name: "time",
+            description: "Slowmode duration in seconds.",
+            optionType: "NUMBER",
+            required: false
+        },
+        {
+            name: "channel",
+            description: "The channel to activate slowmode in",
+            required: false,
+            optionType: "CHANNEL",
+            channelTypes: [ApiTypes.ChannelType.GuildText]
+        }
+    ],
+    async run(this: Command, client: Client, message: CommandMessage, args: Args) {
+        const firstArg = args.consume("time")
         const slowmode = Math.round(Number(firstArg))
         const channel =
-            (await args.consumeChannel()) || (message.channel as Discord.TextChannel)
+            (await args.consumeChannel("channel")) ||
+            (message.channel as Discord.TextChannel)
         if (isNaN(slowmode)) {
-            const current = channel.rateLimitPerUser
+            const current = (channel as Discord.TextChannel).rateLimitPerUser
             const s = current === 1 ? "" : "s"
             const formatted = current === 0 ? "disabled" : `${current} second${s}`
-            return client.channel.sendSuccess(
-                message.channel,
+            return client.response.sendSuccess(
+                message,
                 `The slowmode is currently ${formatted}.`
             )
         }
 
         if (slowmode < 0)
-            return client.channel.sendError(
-                message.channel,
-                "How would that even work? Time travel?"
-            )
+            return client.response.sendError(message, client.messages.slowmodeTooLow)
         else if (slowmode === 6 * 60 * 60)
-            return client.channel.sendError(message.channel, "Please, not this again.")
+            return client.response.sendError(message, client.messages.slowmodeTooHigh)
         else if (slowmode > 6 * 60 * 60)
-            return client.channel.sendError(message.channel, "That is a lot of seconds!")
+            return client.response.sendError(message, client.messages.slowmodeTooHigh)
 
-        const reason = `By ${message.author.tag} (${message.author.id})`
-        channel.setRateLimitPerUser(slowmode, reason)
+        await message.continue()
+
+        const reason = `By ${message.member.user.tag} (${message.member.id})`
+
+        ;(channel as Discord.TextChannel).setRateLimitPerUser(slowmode, reason)
 
         const s = slowmode === 1 ? "" : "s"
-        client.channel.sendSuccess(
-            message.channel,
+        client.response.sendSuccess(
+            message,
             slowmode === 0
                 ? `Disabled slowmode in ${channel}.`
                 : `Set slowmode in ${channel} to ${slowmode} second${s}.`

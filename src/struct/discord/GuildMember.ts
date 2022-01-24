@@ -24,6 +24,57 @@ export default class GuildMember {
         return user
     }
 
+    static async addRole(
+        user: Discord.GuildMember,
+        roles: string | string[],
+        reason: string
+    ): Promise<Discord.GuildMember> {
+        if (typeof roles === "string") roles = [roles]
+        for (const role of roles) {
+            await user.roles.add(Guild.role(user.guild, role), reason)
+        }
+        return user
+    }
+
+    static async removeRole(
+        user: Discord.GuildMember,
+        roles: string | string[],
+        reason: string
+    ): Promise<Discord.GuildMember> {
+        if (typeof roles === "string") roles = [roles]
+        for (const role of roles) {
+            await user.roles.remove(Guild.role(user.guild, role), reason)
+        }
+        return user
+    }
+
+    static async toggleRole(
+        user: Discord.GuildMember,
+        roles: string | string[],
+        reason: string
+    ): Promise<boolean> {
+        if (typeof roles === "string") roles = [roles]
+        const shouldAdd: boolean[] = []
+        for (const role of roles) {
+            shouldAdd.push(!GuildMember.hasRole(user, role, false))
+        }
+        if (shouldAdd.includes(false)) {
+            for await (const role of roles) {
+                if (GuildMember.hasRole(user, role, false)) {
+                    await GuildMember.removeRole(user, role, reason)
+                }
+            }
+            return false
+        } else {
+            for await (const role of roles) {
+                if (!GuildMember.hasRole(user, role, false)) {
+                    await GuildMember.addRole(user, role, reason)
+                }
+            }
+            return true
+        }
+    }
+
     static async unmute(
         user: Discord.GuildMember,
         reason: string

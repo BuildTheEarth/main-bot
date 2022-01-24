@@ -1,4 +1,4 @@
-import { PrimaryColumn, ColumnOptions, PrimaryColumnOptions } from "typeorm"
+import { PrimaryColumn, PrimaryColumnOptions, ColumnOptions } from "typeorm"
 
 export default function SnowflakePrimaryColumn(
     options?: ColumnOptions

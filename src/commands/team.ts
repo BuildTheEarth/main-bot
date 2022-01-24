@@ -2,23 +2,32 @@ import Client from "../struct/Client"
 import Args from "../struct/Args"
 import Command from "../struct/Command"
 import Roles from "../util/roles"
-import Discord from "discord.js"
-import { Brackets, WhereExpressionBuilder } from "typeorm"
+import { Brackets, WhereExpression } from "typeorm"
 import Snippet from "../entities/Snippet"
+import CommandMessage from "../struct/CommandMessage"
 
 export default new Command({
     name: "team",
     aliases: ["buildteam", "bt", "invite"],
     description: "Get an invite for a build team.",
     permission: Roles.ANY,
-    usage: "<team>",
-    async run(this: Command, client: Client, message: Discord.Message, args: Args) {
-        const input = args.consumeRest().toLowerCase()
-        if (!input)
-            return client.channel.sendError(message.channel, "Please give a team name")
+    args: [
+        {
+            name: "team",
+            description: "Team to get",
+            required: true,
+            optionType: "STRING"
+        }
+    ],
+    async run(this: Command, client: Client, message: CommandMessage, args: Args) {
+        const input = args.consumeRest(["team"]).toLowerCase()
+        if (!input) return client.response.sendError(message, client.messages.noTeam)
+
+        await message.continue()
+
         const Snippets = Snippet.getRepository()
         const language = "en"
-        const find = (query: WhereExpressionBuilder) =>
+        const find = (query: WhereExpression) =>
             query
                 .where("snippet.name = :name", { name: input })
                 .andWhere("snippet.type = 'team'")
@@ -35,12 +44,9 @@ export default new Command({
             .getOne()
 
         if (!snippet) {
-            return client.channel.sendError(
-                message.channel,
-                `This team does not exist, try searching on build team interactive map or the website (=map)`
-            )
+            return client.response.sendError(message, client.messages.invalidTeam)
         } else {
-            return message.channel
+            return message
                 .send({ content: snippet.body, allowedMentions: { parse: [] } })
                 .catch(() => null)
         }
