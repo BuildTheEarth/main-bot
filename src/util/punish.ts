@@ -32,9 +32,11 @@ async function log(
 
     await log.notifyMember(client)
     if (type === "ban") {
-        const reviewerChannel = client.customGuilds.main().channels.cache.find(
-            ch => ch.name == "review-committee-private"
-        ) as Discord.TextChannel
+        const reviewerChannel = client.customGuilds
+            .main()
+            .channels.cache.find(
+                ch => ch.name == "review-committee-private"
+            ) as Discord.TextChannel
         if (member && GuildMember.hasRole(member, Roles.BUILDER) && reviewerChannel)
             await client.response.sendSuccess(
                 reviewerChannel,

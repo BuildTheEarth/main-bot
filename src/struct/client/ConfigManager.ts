@@ -42,6 +42,7 @@ export default class ConfigManager {
     appeal: string
     vanity: string
     isDev: boolean
+    jenkinsEnv: boolean
     logging: LoggingConfig
     guilds: GuildCategories
     suggestions: GuildCategories & { discussion: GuildCategories }

@@ -12,6 +12,6 @@ export = {
     username: config.database.user,
     password: config.database.pass,
 
-    migrations: ["dist/migrations/*.js"],
+    migrations: ["dist/migrations/*.{js,ts}"],
     cli: { migrationsDir: "src/migrations" }
 } as ConnectionOptions

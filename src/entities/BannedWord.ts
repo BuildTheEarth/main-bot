@@ -24,7 +24,7 @@ export default class BannedWord extends BaseEntity {
     private constructor(
         word: string = null,
         punishment_type?: "BAN" | "WARN" | "MUTE" | "KICK",
-        reason: string  = null,
+        reason: string = null,
         duration: number = null,
         exception: boolean = null,
         client?: Client
@@ -75,7 +75,7 @@ export default class BannedWord extends BaseEntity {
     @Column({ nullable: true, transformer: milliseconds })
     duration?: number
 
-    @Column({default: false})
+    @Column({ default: false })
     exception: boolean = false
 
     static async loadWords(): Promise<{ banned: bannedTypes; except: Array<string> }> {
