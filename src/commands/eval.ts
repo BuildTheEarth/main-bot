@@ -35,7 +35,7 @@ const _ = { Args, Client, Command, BannerImage, ActionLog, ModerationNote, Modpa
 
 export default new Command({
     name: "eval",
-    aliases: ["run"],
+    aliases: [],
     description: "Evaluate JavaScript code.",
     permission: Roles.BOT_DEVELOPER,
     devOnly: true,

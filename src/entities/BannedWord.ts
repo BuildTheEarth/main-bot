@@ -1,9 +1,10 @@
+import _ from "lodash"
 import { Entity, Column, BaseEntity, AfterLoad } from "typeorm"
 import Client from "../struct/Client"
 import SnowflakePrimaryColumn from "./decorators/SnowflakePrimaryColumn"
 import milliseconds from "./transformers/milliseconds"
 
-export type bannedTypes = Map<string, bannedInfo>
+export type bannedTypes = Map<string, BannedWord>
 
 export interface bannedInfo {
     punishment_type: "BAN" | "WARN" | "MUTE" | "KICK"
@@ -17,6 +18,26 @@ export interface bannedWordsOptions {
     reason?: string
     duration?: number
     exception?: boolean
+}
+
+interface bannedInfoException {
+    word: string
+    exception: boolean
+}
+
+interface bannedInfoTimed {
+    word: string
+    exception: boolean
+    punishment_type: "BAN" | "WARN" | "MUTE" | "KICK"
+    reason: string
+    duration: number
+}
+
+interface bannedInfoNotTimed {
+    word: string
+    exception: boolean
+    punishment_type: "BAN" | "WARN" | "MUTE" | "KICK"
+    reason: string
 }
 
 @Entity({ name: "banned_words" })
@@ -34,7 +55,7 @@ export default class BannedWord extends BaseEntity {
         if (word !== null) this.word = word
         if (punishment_type) this.punishment_type = punishment_type
         if (reason !== null) this.reason = reason
-        if (duration !== null) this.duration = duration
+        if (duration !== undefined) this.duration = duration
         if (exception !== null) this.exception = exception
         console.log(this.duration)
         if (client) {
@@ -80,16 +101,11 @@ export default class BannedWord extends BaseEntity {
 
     static async loadWords(): Promise<{ banned: bannedTypes; except: Array<string> }> {
         const values = await this.find()
-        const banned: bannedTypes = new Map<string, bannedInfo>()
+        const banned: bannedTypes = new Map<string, BannedWord>()
         const except: Array<string> = []
         values.forEach(word => {
             if (word.exception) except.push(word.word)
-            else
-                banned[word.word] = {
-                    punishment_type: word.punishment_type,
-                    reason: word.reason,
-                    duration: word.duration
-                }
+            else banned[word.word] = word
         })
         return { banned: banned, except: except }
     }

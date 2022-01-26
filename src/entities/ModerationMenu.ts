@@ -15,6 +15,7 @@ import noop from "../util/noop"
 import TimedPunishment from "./TimedPunishment"
 import Roles from "../util/roles"
 import GuildMember from "../struct/discord/GuildMember"
+import hexToRGB from "../util/hexToRGB"
 
 function getDuration(duration: number): string {
     if (duration === null) return "Indefinite"
@@ -64,7 +65,7 @@ export default class ModerationMenu extends BaseEntity {
                 },
                 { name: "Reason", value: existingMenu.punishments[0].reason },
                 { name: "Trigger", value: existingMenu.punishments[0].word }
-            ])
+            ]).setColor(hexToRGB(client.config.colors.error))
 
             const punishmentOptions = existingMenu.punishments.map(punishment => {
                 const punish = {
@@ -139,7 +140,7 @@ export default class ModerationMenu extends BaseEntity {
             },
             { name: "Reason", value: modMenu.punishments[0].reason },
             { name: "Trigger", value: modMenu.punishments[0].word }
-        ])
+        ]).setColor(hexToRGB(client.config.colors.error))
 
         const punishmentOptions = modMenu.punishments.map(punishment => {
             const punish = {
@@ -187,7 +188,8 @@ export default class ModerationMenu extends BaseEntity {
 
     public static async updateMenu(
         id: string,
-        interaction: Discord.SelectMenuInteraction
+        interaction: Discord.SelectMenuInteraction,
+        client: Client
     ): Promise<ModerationMenu> {
         const modMenu = await ModerationMenu.findOne({ member: id })
 
@@ -215,7 +217,7 @@ export default class ModerationMenu extends BaseEntity {
             },
             { name: "Reason", value: punishment.reason },
             { name: "Trigger", value: punishment.word }
-        ])
+        ]).setColor(hexToRGB(client.config.colors.error))
 
         interaction.editReply({ embeds: [embed] })
         modMenu.current_word = punishment.word
@@ -355,7 +357,7 @@ export default class ModerationMenu extends BaseEntity {
                 name: "Punished",
                 value: `This user has been punished by <@${interaction.user.id}> (${interaction.user.id}) at case **#${log.id}**`
             }
-        ])
+        ]).setColor(hexToRGB(client.config.colors.success))
 
         await (interaction.message as Discord.Message).edit({
             embeds: [embed],
@@ -367,7 +369,8 @@ export default class ModerationMenu extends BaseEntity {
 
     public static async pardon(
         id: string,
-        interaction: Discord.ButtonInteraction
+        interaction: Discord.ButtonInteraction,
+        client: Client
     ): Promise<void> {
         const modMenu = await ModerationMenu.findOne({ member: id })
 
@@ -388,7 +391,7 @@ export default class ModerationMenu extends BaseEntity {
                 name: "Pardoned",
                 value: `This user has been pardoned by <@${interaction.user.id}> (${interaction.user.id})`
             }
-        ])
+        ]).setColor(hexToRGB(client.config.colors.success))
 
         await (interaction.message as Discord.Message).edit({
             embeds: [embed],
@@ -442,7 +445,7 @@ export default class ModerationMenu extends BaseEntity {
                     components: []
                 })
 
-                await ModerationMenu.pardon(id, interaction)
+                await ModerationMenu.pardon(id, interaction, client)
             }
             if (interactionCurr.customId === `no.${interaction.id}.modmenu`) {
                 await interactionCurr.update({

@@ -8,7 +8,7 @@ import CommandMessage from "../struct/CommandMessage"
 
 export default new Command({
     name: "notes",
-    aliases: ["note", "modnotes", "modnote"],
+    aliases: ["note"],
     description: "Read and manage moderation notes.",
     permission: [Roles.HELPER, Roles.MODERATOR, Roles.MANAGER],
     args: [
