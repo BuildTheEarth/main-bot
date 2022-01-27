@@ -52,6 +52,10 @@ export default new Command({
         const member: Discord.GuildMember = await message.guild.members
             .fetch({ user, cache: true })
             .catch(noop)
+
+        if (!member)
+            return client.response.sendError(message, client.messages.invalidUser)
+
         if (member) {
             if (member.user.bot)
                 return client.response.sendError(message, client.messages.isBot)

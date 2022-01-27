@@ -33,7 +33,8 @@ export default async function (
             await interaction.deferUpdate()
             await ModerationMenu.updateMenu(
                 interaction.customId.split(".")[1],
-                interaction
+                interaction,
+                this
             )
         }
         if (interaction.isButton()) {

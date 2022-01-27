@@ -52,7 +52,71 @@ export default new Command({
         await message.continue()
 
         if (!["download"].includes(subcommand)) {
-            await message.send({
+            const roleMessage = await message.send({
+                embeds: [
+                    {
+                        color: role.hexColor,
+                        title: role.name,
+                        thumbnail: {
+                            url: role.iconURL()
+                        },
+                        fields: [
+                            {
+                                name: "Members",
+                                value:
+                                    role.members.size.toString() +
+                                    " (Fetching better results...)",
+                                inline: true
+                            },
+                            {
+                                name: "Position",
+                                value: role.position.toString(),
+                                inline: true
+                            },
+                            {
+                                name: "Color",
+                                value: role.hexColor,
+                                inline: true
+                            },
+                            {
+                                name: "Mentionable",
+                                value: role.mentionable.toString(),
+                                inline: true
+                            },
+                            {
+                                name: "Hoisted",
+                                value: role.hoist.toString(),
+                                inline: true
+                            },
+                            {
+                                name: "Managed",
+                                value: role.managed.toString(),
+                                inline: true
+                            },
+                            {
+                                name: "Permissions",
+                                value:
+                                    role.permissions.toArray().length === 0
+                                        ? "None"
+                                        : role.permissions
+                                              .toArray()
+                                              .map(
+                                                  perm => `\`${humanizeConstant(perm)}\``
+                                              )
+                                              .join(", ")
+                            }
+                        ],
+                        footer: {
+                            text: `Role ID: ${role.id} • Created on`
+                        },
+                        timestamp: role.createdAt
+                    }
+                ]
+            })
+
+            await role.guild.members.fetch()
+
+            await roleMessage.edit({
                 embeds: [
                     {
                         color: role.hexColor,

@@ -8,7 +8,7 @@ import JSON5 from "json5"
 
 export default new Command({
     name: "query",
-    aliases: ["sql"],
+    aliases: [],
     description: "Evaluate an SQL query.",
     permission: Roles.BOT_DEVELOPER,
     devOnly: true,

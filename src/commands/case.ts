@@ -8,7 +8,7 @@ import CommandMessage from "../struct/CommandMessage"
 
 export default new Command({
     name: "case",
-    aliases: ["log", "record"],
+    aliases: ["record"],
     description: "Check specific info on a case.",
     permission: [Roles.HELPER, Roles.MODERATOR, Roles.MANAGER],
     basesubcommand: "check",

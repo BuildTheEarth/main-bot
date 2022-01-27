@@ -9,7 +9,7 @@ import CommandMessage from "../struct/CommandMessage"
 
 export default new Command({
     name: "block",
-    aliases: ["blocks", "material", "mcblock"],
+    aliases: ["blocks"],
     description: "Find a minecraft block! (currently only 1.12.2)",
     permission: Roles.ANY,
     basesubcommand: "block",
