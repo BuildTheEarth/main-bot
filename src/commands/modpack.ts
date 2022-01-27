@@ -6,6 +6,8 @@ import Roles from "../util/roles"
 import isURL from "../util/isURL"
 import CommandMessage from "../struct/CommandMessage"
 import JSON5 from "json5"
+import fetch from "node-fetch"
+import sizeOf from "buffer-image-size"
 
 export default new Command({
     name: "modpack",
@@ -111,6 +113,21 @@ export default new Command({
                 )
 
             await message.continue()
+
+            let buff: Buffer
+            try {
+                const response = await fetch(url)
+                const arrayBuffer = await response.arrayBuffer()
+                buff = Buffer.from(arrayBuffer)
+            } catch {
+                return client.response.sendError(
+                    message,
+                    client.messages.requestIncomplete
+                )
+            }
+            const dimensions = sizeOf(buff)
+            if (dimensions.width / dimensions.height !== 16 / 9)
+                return client.response.sendError(message, client.messages.not16To9)
 
             const image = new ModpackImage()
             image.key = key as ModpackImageKey
