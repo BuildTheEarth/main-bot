@@ -6,6 +6,7 @@ import Roles from "../util/roles"
 import quote from "../util/quote"
 import hexToRGB from "../util/hexToRGB"
 import CommandMessage from "../struct/CommandMessage"
+import fetch from "node-fetch"
 
 export default new Command({
     name: "banner",
@@ -101,6 +102,25 @@ export default new Command({
                 )
 
             await message.continue()
+
+            let isBig: boolean
+            try {
+                let res = (await fetch(image, { method: "HEAD" })).headers.get(
+                    "content-length"
+                )
+                if (res == undefined) throw new Error()
+                isBig = res > 10485760
+            } catch {
+                return client.response.sendError(
+                    message,
+                    client.messages.requestIncomplete
+                )
+            }
+            if (isBig)
+                return client.response.sendError(
+                    message,
+                    client.messages.contentTooLarge10MB
+                )
 
             const banner = new BannerImage()
             banner.url = image

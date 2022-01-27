@@ -3,6 +3,7 @@ import Command from "../struct/Command"
 import Roles from "../util/roles"
 import CommandMessage from "../struct/CommandMessage"
 import Args from "../struct/Args"
+// @ts-ignore
 import packageJson from "../../package.json"
 import Discord from "discord.js"
 import currentEnv from "../util/currentEnv"
@@ -28,6 +29,6 @@ export default new Command({
             .setThumbnail(client.user.displayAvatarURL())
             .setColor(hexToRGB(client.config.colors.info))
 
-        await message.send({embeds: [embed]})
+        await message.send({ embeds: [embed] })
     }
 })
