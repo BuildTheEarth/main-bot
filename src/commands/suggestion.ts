@@ -1,4 +1,4 @@
-import Discord from "discord.js"
+import Discord, { FetchedThreads } from "discord.js"
 import Client from "../struct/Client"
 import Args from "../struct/Args"
 import Command from "../struct/Command"
@@ -353,9 +353,10 @@ export default new Command({
         if (!suggestionMessage)
             return client.response.sendError(message, client.messages.utlSuggestion)
 
-        const thread = await (
+        let thread = await (
             client.channels.cache.get(discussionID) as Discord.TextChannel
         ).threads.fetch(suggestion.thread)
+        if ((thread as unknown as FetchedThreads).threads) thread = null
 
         if (subcommand === "link") {
             const displayNumber = await suggestion.getIdentifier()
@@ -437,13 +438,17 @@ export default new Command({
             await suggestionMessage.edit({ embeds: [embed] })
 
             if (thread?.locked && !thread?.archived) await thread.setLocked(false)
+
+            const CLOSE_STATUS = ["approved", "denied", "duplicate", "invalid"]
+            const OPEN_STATUS = ["forwarded", "in-progress", "information"]
             if (
-                (thread &&
-                    ["approved", "denied", "duplicate", "invalid"].includes(status) &&
+                // prettier-ignore
+                thread && (( // thread must stay outside parentheses
+                    CLOSE_STATUS.includes(status) &&
                     !thread?.locked &&
                     !thread?.archived) ||
-                (["approved", "denied", "duplicate", "invalid"].includes(status) &&
-                    status !== oldStatus)
+                (CLOSE_STATUS.includes(status) &&
+                    status !== oldStatus))
             ) {
                 await thread.send(
                     `**This suggestion has been marked as \`${status}\`**\nIf you feel this suggestion discussion must be reopened, contact a Suggestions Team member or a manager.`
@@ -451,7 +456,7 @@ export default new Command({
                 await thread.setLocked(true)
                 await thread.setArchived(true)
             } else if (
-                ["forwarded", "in-progress", "information"].includes(status) &&
+                OPEN_STATUS.includes(status) &&
                 thread?.locked &&
                 thread?.archived
             ) {
