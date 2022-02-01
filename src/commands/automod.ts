@@ -204,7 +204,7 @@ export default new Command({
                 await getList(true, message, client)
             }
             if (subcommand === "add") {
-                const word = args.consume("word")
+                const word = args.consumeRest(["word"])
                 if (!word)
                     return await client.response.sendError(
                         message,
@@ -232,7 +232,7 @@ export default new Command({
                 return await client.response.sendSuccess(message, `Added the word!`)
             }
             if (subcommand === "remove") {
-                const word = args.consume("word")
+                const word = args.consumeRest(["word"])
                 if (!word)
                     return await client.response.sendError(
                         message,
