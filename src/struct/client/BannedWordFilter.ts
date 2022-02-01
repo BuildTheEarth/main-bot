@@ -27,9 +27,7 @@ export default class BannedWordFilter {
             let passes = !indices.includes(profanities[i].index)
             indices.push(profanities[i].index)
 
-            const exceptions = this.client.filterWordsCached.except.filter(ele =>
-                ele.includes(match.word)
-            )
+            const exceptions = this.client.filterWordsCached.except
             if (exceptions) {
                 const wordExceptions = exceptions.filter(e => typeof e === "string")
                 const isException = this.findException(match, text, wordExceptions)
