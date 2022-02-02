@@ -100,6 +100,7 @@ To install and configure this bot see our [installation guide](installation.md)
 #### Standards
 
 Format the codebase with [Prettier][] using `npm start format`.
+
 Lint the codebase with [ESLint][] using `npm start lint`.
 
 ## Changelog
