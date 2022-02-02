@@ -25,7 +25,6 @@ export = {
     clean: clean,
     default: {
       default: 'node dist/index.js --unhandled-rejections=strict',
-      pm2: 'pm2 start ecosystem.yml --env production',
       production: 'npm start docker.production'
     },
     docker: {
@@ -36,7 +35,7 @@ export = {
     },
     start: {
       default: 'node dist/index.js --unhandled-rejections=strict',
-      production: 'pm2 start ecosystem.json --env production',
+      production: 'docker run buildtheearth/main-bot -d',
     },
     test: 'ts-node src/index.ts --unhandled-rejections=strict',
     build_start: seriesNPS('build', 'start'),
