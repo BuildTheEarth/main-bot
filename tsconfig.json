@@ -6,6 +6,7 @@
         "module": "commonjs",
         "target": "es2021",
         "outDir": "./dist",
+        "noImplicitUseStrict": true,
     },
     "include": [
         "src/**/*",
