@@ -11,11 +11,11 @@ import truncateString from "../util/truncateString"
 import hexToRGB from "../util/hexToRGB"
 import Discord from "discord.js"
 
-const punishmentTypes = ["BAN", "MUTE", "KICK", "WARN"]
+const punishmentTypes = ["BAN", "MUTE", "KICK", "WARN", "DELETE"]
 
 export default new Command({
     name: "automod",
-    aliases: ["blockword", "blockedwords"],
+    aliases: ["blockword", "blockedwords", "am"],
     description: "Manage banned words",
     subcommands: [
         {
@@ -135,7 +135,6 @@ export default new Command({
                     )
                 await message.continue()
                 const punishment = args.consume("punishment").toUpperCase()
-                console.log(punishment)
                 if (!punishmentTypes.includes(punishment))
                     return await client.response.sendError(
                         message,
@@ -144,13 +143,13 @@ export default new Command({
                         )}`
                     )
                 const reason = args.consume("reason")
-                if (!reason)
+                if (!reason && punishment !== "DELETE")
                     return await client.response.sendError(
                         message,
                         `Please specify a reason.`
                     )
                 const duration = args.consumeLength("duration")
-                if (duration === null && punishment !== "WARN" && punishment !== "KICK")
+                if (duration === null && punishment !== "WARN" && punishment !== "KICK" && punishment !== "DELETE")
                     return await client.response.sendError(
                         message,
                         "You must provide a duration for Mutes and Bans!"
@@ -162,11 +161,10 @@ export default new Command({
                         `This word is already banned!`
                     )
 
-                console.log(duration)
                 await BannedWord.createBannedWord(
                     {
                         word: word,
-                        punishment_type: punishment as "BAN" | "MUTE" | "WARN",
+                        punishment_type: punishment as "BAN" | "MUTE" | "WARN" | "KICK" | "DELETE",
                         reason: reason,
                         duration: isNaN(duration) ? null : duration,
                         exception: false

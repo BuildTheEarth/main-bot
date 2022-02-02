@@ -31,6 +31,29 @@ export default class ModerationMenu extends BaseEntity {
     ): Promise<ModerationMenu> {
         await message.delete()
 
+        const truePunishments = getMostSevereList(filterResponse, client)
+        
+        if (truePunishments[0].punishment_type === "DELETE") {
+            const embed = new Discord.MessageEmbed().addFields([
+                { name: "User", value: `<@${message.member.id}> (${message.member.id})` },
+                {
+                    name: "Message",
+                    value: truncateString(
+                        message.content,
+                        1024,
+                        " (Check logs for the remaining content)"
+                    )
+                },
+                { name: "Trigger", value: truePunishments[0].word}
+            ]).setColor(hexToRGB(client.config.colors.error))
+
+            const channel = (await client.channels.fetch(
+                client.config.logging.modLogs
+            )) as Discord.TextChannel
+            await channel.send({ embeds: [embed]})
+            return
+        }
+
         const existingMenu = await ModerationMenu.findOne({ member: message.author.id })
 
         if (existingMenu) {
@@ -113,11 +136,10 @@ export default class ModerationMenu extends BaseEntity {
 
             return existingMenu
         }
-
+        
         const modMenu = new ModerationMenu()
         modMenu.member = message.member.id
         modMenu.message_text = message.content
-        const truePunishments = getMostSevereList(filterResponse, client)
         modMenu.punishments = truePunishments
         modMenu.offenses = 1
         modMenu.current_word = modMenu.punishments[0].word
@@ -240,8 +262,6 @@ export default class ModerationMenu extends BaseEntity {
         const punishment: bannedWordsOptions = modMenu.punishments.find(
             punishment => punishment.word === modMenu.current_word
         )
-
-        console.log(punishment)
 
         if (punishment.punishment_type === "BAN") {
             messages.alreadyPunished = client.messages.alreadyBanned

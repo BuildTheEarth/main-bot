@@ -7,14 +7,14 @@ import milliseconds from "./transformers/milliseconds"
 export type bannedTypes = Map<string, BannedWord>
 
 export interface bannedInfo {
-    punishment_type: "BAN" | "WARN" | "MUTE" | "KICK"
+    punishment_type: "BAN" | "WARN" | "MUTE" | "KICK" | "DELETE"
     reason: string
     duration: number
 }
 
 export interface bannedWordsOptions {
     word?: string
-    punishment_type?: "BAN" | "WARN" | "MUTE" | "KICK"
+    punishment_type?: "BAN" | "WARN" | "MUTE" | "KICK" | "DELETE"
     reason?: string
     duration?: number
     exception?: boolean
@@ -28,7 +28,7 @@ interface bannedInfoException {
 interface bannedInfoTimed {
     word: string
     exception: boolean
-    punishment_type: "BAN" | "WARN" | "MUTE" | "KICK"
+    punishment_type: "BAN" | "WARN" | "MUTE" | "KICK" | "DELETE"
     reason: string
     duration: number
 }
@@ -36,7 +36,7 @@ interface bannedInfoTimed {
 interface bannedInfoNotTimed {
     word: string
     exception: boolean
-    punishment_type: "BAN" | "WARN" | "MUTE" | "KICK"
+    punishment_type: "BAN" | "WARN" | "MUTE" | "KICK" | "DELETE"
     reason: string
 }
 
@@ -44,20 +44,18 @@ interface bannedInfoNotTimed {
 export default class BannedWord extends BaseEntity {
     private constructor(
         word: string = null,
-        punishment_type?: "BAN" | "WARN" | "MUTE" | "KICK",
+        punishment_type?: "BAN" | "WARN" | "MUTE" | "KICK" | "DELETE",
         reason: string = null,
         duration: number = null,
         exception: boolean = null,
         client?: Client
     ) {
         super()
-        console.log(duration)
         if (word !== null) this.word = word
         if (punishment_type) this.punishment_type = punishment_type
         if (reason !== null) this.reason = reason
         if (duration !== undefined) this.duration = duration
         if (exception !== null) this.exception = exception
-        console.log(this.duration)
         if (client) {
             if (exception) client.filterWordsCached.except.push(word)
             else
@@ -88,7 +86,7 @@ export default class BannedWord extends BaseEntity {
     word!: string
 
     @Column({ nullable: true })
-    punishment_type!: "BAN" | "WARN" | "MUTE" | "KICK"
+    punishment_type!: "BAN" | "WARN" | "MUTE" | "KICK" | "DELETE"
 
     @Column({ length: 1024, nullable: true })
     reason!: string
