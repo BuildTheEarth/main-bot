@@ -79,7 +79,7 @@ This project follows the [All Contributors][] specification. Contributions of an
 -   It uses **[discord.js][]** for interacting with Discord's API;
 -   **[TypeORM][]** for object–relational mapping;
 -   And it follows object-oriented and modularization principles.
--   For version control, it follows a superset of the **[Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/)** specification.
+-   For version control, it follows a superset of the **[Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/)** specification, hwoever this does not to be strictly followed.
 
 ### Cloning
 
