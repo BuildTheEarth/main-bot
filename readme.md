@@ -182,7 +182,7 @@ Start the bot, from the compiled `dist/` folder.
 
 #### start:production
 
-Start the bot for production with [PM2][], which sets the environment variable `NODE_ENV` to `production` (see [`ecosystem.yml`](ecosystem.yml)).
+Start the bot for production with [Docker][], which sets the environment variable `NODE_ENV` to `production` (see [`dockerfile`](Dockerfile)).
 
 #### format
 
@@ -208,6 +208,6 @@ All of our bots are licensed under the [MIT License](license).
 [typescript]: https://www.typescriptlang.org/
 [discord.js]: http://discord.js.org/
 [typeorm]: https://typeorm.io/
-[pm2]: https://pm2.io/
+[docker]: https://docker.com/
 [prettier]: https://prettier.io/
 [eslint]: https://eslint.org/
