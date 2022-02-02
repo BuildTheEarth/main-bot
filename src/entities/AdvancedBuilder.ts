@@ -1,10 +1,11 @@
-import { Entity, CreateDateColumn, BaseEntity } from "typeorm"
+import { Entity, CreateDateColumn, BaseEntity, Column } from "typeorm"
 import SnowflakePrimaryColumn from "./decorators/SnowflakePrimaryColumn"
 import Client from "../struct/Client"
 import Guild from "../struct/discord/Guild"
-import Roles from "../util/roles"
 import noop from "../util/noop"
-
+import Roles from "../util/roles"
+import { RoleResolvable } from "discord.js"
+import { collapseTextChangeRangesAcrossMultipleVersions } from "typescript"
 @Entity({ name: "advanced_builders" })
 export default class AdvancedBuilder extends BaseEntity {
     @SnowflakePrimaryColumn()
@@ -13,11 +14,14 @@ export default class AdvancedBuilder extends BaseEntity {
     @CreateDateColumn({ name: "given_at" })
     givenAt: Date
 
+    @Column({name: "role_name", default:"ADVANCED_BUILDER", nullable: false})
+    roleName: "ADVANCED_BUILDER" | "COOL_BUILD"
+
     private removalTimeout: NodeJS.Timeout
 
     async removeBuilder(client: Client): Promise<void> {
         clearTimeout(this.removalTimeout)
-        const role = Guild.role(await client.customGuilds.main(), Roles.ADVANCED_BUILDER)
+        const role = Guild.role(await client.customGuilds.main(), Roles[this.roleName])
         const member = await (await client.customGuilds.main()).members
             .fetch({ user: this.builder, cache: true })
             .catch(noop)

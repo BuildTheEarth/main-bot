@@ -85,6 +85,12 @@ This project follows the [All Contributors][] specification. Contributions of an
 
 If you wish to help by contributing to this project we greatly appreciate it but there are a few things you need to do first. To begin all of your contributions must follow our [Code Of Conduct](code_of_conduct.md) and we ask that you check with a member of the bot development team before working on and proposing any major changes.
 
+-   The bot is written in **[TypeScript][]**, a statically-typed superset of JavaScript;
+-   It uses **[discord.js][]** for interacting with Discord's API;
+-   **[TypeORM][]** for object–relational mapping;
+-   And it follows object-oriented and modularization principles.
+-   For version control, it follows a superset of the **[Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/)** specification, hwoever this does not to be strictly followed.
+
 #### Setup
 
 To install and configure this bot see our [installation guide](installation.md)
@@ -114,5 +120,6 @@ This bot is licensed under the [MIT License](license).
 [docker]: https://www.docker.com/
 [Conventional Commits]: https://www.conventionalcommits.org/en/v1.0.0/
 [pm2]: https://pm2.io/
+[docker]: https://docker.com/
 [prettier]: https://prettier.io/
 [eslint]: https://eslint.org/

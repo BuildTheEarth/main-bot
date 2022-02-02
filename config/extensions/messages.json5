@@ -144,5 +144,7 @@
     scheduleCancel: ["Schedule has been cancelled."],
     noCancellableSchedule: ["There was no scheduled duty to cancel!"],
     noPermsMod: ["You do not have moderation permissions"],
-    requestIncomplete: ["The request to this URL could not be completed."]
+    requestIncomplete: ["The request to this URL could not be completed."],
+    noBuilder: ["That user is not a builder."],
+    notAdvancedBuilder: ["That user is not an advanced builder."]
 }
