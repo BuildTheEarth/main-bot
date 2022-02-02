@@ -81,8 +81,6 @@
             unban: "https://i.imgur.com/PfrLhuO.png"
         }
     },
-    rules: [],
-    buildTeamInvites: {},
     token: "",
     modpackAuth: "",
     database: {
