@@ -163,7 +163,7 @@ Rename the `config/_config.json5` file to `config/config.json5` and fill in all 
         -   **name**: The name of the database.
         -   **user**: The username to connect with.
         -   **pass**: The password of the user to connect with.
-    -   If using SQLite (recommended for easier development and testing):
+    -   If using SQLite (currently broken):
         -   **path**: The path to the database file.
 
 ### Scripts
