@@ -51,7 +51,7 @@ This project originated as a complete rewrite of our servers old bot, an extensi
 - **[TypeORM][]** for object–relational mapping;
 - And it follows object-oriented and modularization principles.
 - For version control, it follows a superset of the **[Conventional Commits][]** specification.
-- **[Docker][]** is used for running the bot.
+- **[Docker][]** is used for containerization and deployment.
 
 ### Contributors
 
@@ -103,8 +103,8 @@ To install and configure this bot see our [installation guide](installation.md)
 
 #### Standards
 
-Format the codebase with [Prettier][].
-Lint the codebase with [ESLint][].
+Format the codebase with [Prettier][] using `npm start format`.
+Lint the codebase with [ESLint][] using `npm start lint`.
 
 ## Changelog
 
