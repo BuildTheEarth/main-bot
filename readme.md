@@ -56,31 +56,27 @@ This project originated as a complete rewrite of our servers old bot, an extensi
 ### Contributors
 
 <!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
-
 <!-- prettier-ignore-start -->
-
 <!-- markdownlint-disable -->
-
 <table>
   <tr>
-    <td align="center"><a href="https://github.com/cAttte"><img src="https://avatars0.githubusercontent.com/u/26514199?v=4?s=100" width="100px;" alt=""/><br /><sub><b>cAttte</b></sub></a><br /><a href="https://github.com/BuildTheEarth/main-bot/commits?author=cAttte" title="Code">?��</a> <a href="#projectManagement-cAttte" title="Project Management">?��</a></td>
-    <td align="center"><a href="https://github.com/vicrobex"><img src="https://avatars1.githubusercontent.com/u/56770982?v=4?s=100" width="100px;" alt=""/><br /><sub><b>vicrobex</b></sub></a><br /><a href="#design-vicrobex" title="Design">?��</a></td>
-    <td align="center"><a href="https://github.com/arc25275"><img src="https://avatars2.githubusercontent.com/u/55003876?v=4?s=100" width="100px;" alt=""/><br /><sub><b>arc25275</b></sub></a><br /><a href="#ideas-arc25275" title="Ideas, Planning, & Feedback">?�?</a></td>
-    <td align="center"><a href="http://sky.shiiyu.moe"><img src="https://avatars0.githubusercontent.com/u/43897385?v=4?s=100" width="100px;" alt=""/><br /><sub><b>metalcupcake5</b></sub></a><br /><a href="https://github.com/BuildTheEarth/main-bot/commits?author=metalcupcake5" title="Code">?��</a></td>
-    <td align="center"><a href="http://noahhusby.com"><img src="https://avatars3.githubusercontent.com/u/32528627?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Noah Husby</b></sub></a><br /><a href="#projectManagement-noahhusby" title="Project Management">?��</a></td>
-    <td align="center"><a href="https://github.com/olivephio"><img src="https://avatars1.githubusercontent.com/u/76128526?v=4?s=100" width="100px;" alt=""/><br /><sub><b>olivephio</b></sub></a><br /><a href="#ideas-olivephio" title="Ideas, Planning, & Feedback">?�?</a> <a href="#design-olivephio" title="Design">?��</a></td>
+    <td align="center"><a href="https://github.com/cAttte"><img src="https://avatars0.githubusercontent.com/u/26514199?v=4?s=100" width="100px;" alt=""/><br /><sub><b>cAttte</b></sub></a><br /><a href="https://github.com/BuildTheEarth/main-bot/commits?author=cAttte" title="Code">💻</a> <a href="#projectManagement-cAttte" title="Project Management">📆</a></td>
+    <td align="center"><a href="https://github.com/vicrobex"><img src="https://avatars1.githubusercontent.com/u/56770982?v=4?s=100" width="100px;" alt=""/><br /><sub><b>vicrobex</b></sub></a><br /><a href="#design-vicrobex" title="Design">🎨</a></td>
+    <td align="center"><a href="https://github.com/arc25275"><img src="https://avatars2.githubusercontent.com/u/55003876?v=4?s=100" width="100px;" alt=""/><br /><sub><b>arc25275</b></sub></a><br /><a href="#ideas-arc25275" title="Ideas, Planning, & Feedback">🤔</a></td>
+    <td align="center"><a href="http://sky.shiiyu.moe"><img src="https://avatars0.githubusercontent.com/u/43897385?v=4?s=100" width="100px;" alt=""/><br /><sub><b>metalcupcake5</b></sub></a><br /><a href="https://github.com/BuildTheEarth/main-bot/commits?author=metalcupcake5" title="Code">💻</a></td>
+    <td align="center"><a href="http://noahhusby.com"><img src="https://avatars3.githubusercontent.com/u/32528627?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Noah Husby</b></sub></a><br /><a href="#projectManagement-noahhusby" title="Project Management">📆</a></td>
+    <td align="center"><a href="https://github.com/olivephio"><img src="https://avatars1.githubusercontent.com/u/76128526?v=4?s=100" width="100px;" alt=""/><br /><sub><b>olivephio</b></sub></a><br /><a href="#ideas-olivephio" title="Ideas, Planning, & Feedback">🤔</a> <a href="#design-olivephio" title="Design">🎨</a></td>
   </tr>
   <tr>
-    <td align="center"><a href="https://github.com/XboxBedrock"><img src="https://avatars2.githubusercontent.com/u/68715625?v=4?s=100" width="100px;" alt=""/><br /><sub><b>XboxBedrock</b></sub></a><br /><a href="https://github.com/BuildTheEarth/main-bot/commits?author=XboxBedrock" title="Code">?��</a></td>
-    <td align="center"><a href="https://github.com/evilpauwse1"><img src="https://avatars3.githubusercontent.com/u/40669563?v=4?s=100" width="100px;" alt=""/><br /><sub><b>evil</b></sub></a><br /><a href="https://github.com/BuildTheEarth/main-bot/commits?author=evilpauwse1" title="Code">?��</a></td>
-    <td align="center"><a href="https://github.com/Mr-Smarty"><img src="https://avatars0.githubusercontent.com/u/69656599?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Mr-Smarty</b></sub></a><br /><a href="https://github.com/BuildTheEarth/main-bot/commits?author=Mr-Smarty" title="Code">?��</a></td>
-    <td align="center"><a href="https://www.youtube.com/channel/UCxiYE392PghWtHEQaTN81oA"><img src="https://avatars.githubusercontent.com/u/53976867?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Fionn</b></sub></a><br /><a href="#infra-fnionn" title="Infrastructure (Hosting, Build-Tools, etc)">?��</a> <a href="https://github.com/BuildTheEarth/main-bot/commits?author=fnionn" title="Code">?��</a></td>
-    <td align="center"><a href="https://github.com/mebrooks01"><img src="https://avatars.githubusercontent.com/u/39204478?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Malachi Brooks</b></sub></a><br /><a href="https://github.com/BuildTheEarth/main-bot/commits?author=mebrooks01" title="Code">?��</a></td>
+    <td align="center"><a href="https://github.com/XboxBedrock"><img src="https://avatars2.githubusercontent.com/u/68715625?v=4?s=100" width="100px;" alt=""/><br /><sub><b>XboxBedrock</b></sub></a><br /><a href="https://github.com/BuildTheEarth/main-bot/commits?author=XboxBedrock" title="Code">💻</a> <a href="https://github.com/BuildTheEarth/main-bot/commits?author=XboxBedrock" title="Documentation">📖</a></td>
+    <td align="center"><a href="https://github.com/evilpauwse1"><img src="https://avatars3.githubusercontent.com/u/40669563?v=4?s=100" width="100px;" alt=""/><br /><sub><b>evil</b></sub></a><br /><a href="https://github.com/BuildTheEarth/main-bot/commits?author=evilpauwse1" title="Code">💻</a></td>
+    <td align="center"><a href="https://github.com/Mr-Smarty"><img src="https://avatars0.githubusercontent.com/u/69656599?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Mr-Smarty</b></sub></a><br /><a href="https://github.com/BuildTheEarth/main-bot/commits?author=Mr-Smarty" title="Code">💻</a></td>
+    <td align="center"><a href="https://www.youtube.com/channel/UCxiYE392PghWtHEQaTN81oA"><img src="https://avatars.githubusercontent.com/u/53976867?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Fionn</b></sub></a><br /><a href="#infra-fnionn" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a> <a href="https://github.com/BuildTheEarth/main-bot/commits?author=fnionn" title="Code">💻</a></td>
+    <td align="center"><a href="https://github.com/mebrooks01"><img src="https://avatars.githubusercontent.com/u/39204478?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Malachi Brooks</b></sub></a><br /><a href="https://github.com/BuildTheEarth/main-bot/commits?author=mebrooks01" title="Code">💻</a></td>
   </tr>
 </table>
 
 <!-- markdownlint-restore -->
-
 <!-- prettier-ignore-end -->
 
 <!-- ALL-CONTRIBUTORS-LIST:END -->
