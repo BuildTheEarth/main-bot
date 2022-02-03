@@ -105,7 +105,7 @@ export default new Command({
 
             let isBig: boolean
             try {
-                let res = (await fetch(image, { method: "HEAD" })).headers.get(
+                const res = (await fetch(image, { method: "HEAD" })).headers.get(
                     "content-length"
                 )
                 if (res == undefined) throw new Error()

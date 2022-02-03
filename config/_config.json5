@@ -41,6 +41,8 @@
         downvote: "👎",
         left: "🡐",
         right: "🡒",
+        delete: '❌',
+        pin: '📌',
         text: {
             online: "🟢",
             idle: "🌙",

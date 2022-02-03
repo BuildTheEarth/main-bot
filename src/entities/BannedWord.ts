@@ -1,5 +1,4 @@
-import _ from "lodash"
-import { Entity, Column, BaseEntity, AfterLoad } from "typeorm"
+import { Entity, Column, BaseEntity} from "typeorm"
 import Client from "../struct/Client"
 import SnowflakePrimaryColumn from "./decorators/SnowflakePrimaryColumn"
 import milliseconds from "./transformers/milliseconds"
@@ -18,26 +17,6 @@ export interface bannedWordsOptions {
     reason?: string
     duration?: number
     exception?: boolean
-}
-
-interface bannedInfoException {
-    word: string
-    exception: boolean
-}
-
-interface bannedInfoTimed {
-    word: string
-    exception: boolean
-    punishment_type: "BAN" | "WARN" | "MUTE" | "KICK" | "DELETE"
-    reason: string
-    duration: number
-}
-
-interface bannedInfoNotTimed {
-    word: string
-    exception: boolean
-    punishment_type: "BAN" | "WARN" | "MUTE" | "KICK" | "DELETE"
-    reason: string
 }
 
 @Entity({ name: "banned_words" })

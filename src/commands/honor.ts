@@ -42,10 +42,18 @@ export default new Command({
         const user = await args.consumeUser("user")
         const type = args.consumeIf(["advanced", "cool_build"], "type")
         if (!type) {
-            return client.response.sendError(message, `Please choose the type from one of ${humanizeArray(["advanced", "cool_build"], true, "or")}`)
+            return client.response.sendError(
+                message,
+                `Please choose the type from one of ${humanizeArray(
+                    ["advanced", "cool_build"],
+                    true,
+                    "or"
+                )}`
+            )
         }
 
-        const roleName = (type.toLowerCase() === "cool_build")? "COOL_BUILD":"ADVANCED_BUILDER"
+        const roleName =
+            type.toLowerCase() === "cool_build" ? "COOL_BUILD" : "ADVANCED_BUILDER"
 
         const remove = !!args.consumeIf("remove", "demote")
         if (!user)
@@ -64,7 +72,9 @@ export default new Command({
         await message.continue()
 
         if (remove) {
-            const record = await AdvancedBuilder.findOne(user.id, {where: {roleName: roleName}})
+            const record = await AdvancedBuilder.findOne(user.id, {
+                where: { roleName: roleName }
+            })
             if (!record)
                 return client.response.sendError(
                     message,
@@ -90,26 +100,29 @@ export default new Command({
             } else {
                 const record = new AdvancedBuilder()
                 record.builder = user.id
-                record.roleName = roleName as ("COOL_BUILD" | "ADVANCED_BUILDER")
+                record.roleName = roleName as "COOL_BUILD" | "ADVANCED_BUILDER"
                 await record.save()
                 record.schedule(client)
                 await member.roles.add(role)
 
                 if (Roles[roleName] === Roles.COOL_BUILD) {
                     let progressChannel = client.customGuilds
-                    .main()
-                    .channels.cache.find(
-                        ch => ch.name == "progress"
-                    ) as Discord.TextChannel
-                    if (!progressChannel) {
-                        progressChannel = client.customGuilds
                         .main()
                         .channels.cache.find(
-                            ch => ch.name == "pogress"
+                            ch => ch.name == "progress"
                         ) as Discord.TextChannel
+                    if (!progressChannel) {
+                        progressChannel = client.customGuilds
+                            .main()
+                            .channels.cache.find(
+                                ch => ch.name == "pogress"
+                            ) as Discord.TextChannel
                     }
                     if (progressChannel) {
-                        client.response.sendSuccess(progressChannel, `<@${user.id}> has been awarded for their cool build! Congratulations and great work!`)
+                        client.response.sendSuccess(
+                            progressChannel,
+                            `<@${user.id}> has been awarded for their cool build! Congratulations and great work!`
+                        )
                     }
                     return client.response.sendSuccess(
                         message,
@@ -118,7 +131,6 @@ export default new Command({
                 }
 
                 if (Roles[roleName] === Roles.ADVANCED_BUILDER) {
-
                     await user
                         .createDM()
                         .then(dms =>

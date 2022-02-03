@@ -2,7 +2,6 @@ import Client from "../struct/Client"
 import Command from "../struct/Command"
 import Roles from "../util/roles"
 import CommandMessage from "../struct/CommandMessage"
-import Args from "../struct/Args"
 // @ts-ignore
 import packageJson from "../../package.json"
 import Discord from "discord.js"
@@ -15,7 +14,7 @@ export default new Command({
     aliases: ["uptime"],
     description: "Get info about the bot!",
     permission: Roles.ANY,
-    async run(this: Command, client: Client, message: CommandMessage, args: Args) {
+    async run(this: Command, client: Client, message: CommandMessage) {
         const embed = new Discord.MessageEmbed()
             .addFields([
                 { name: "Environment", value: currentEnv() },

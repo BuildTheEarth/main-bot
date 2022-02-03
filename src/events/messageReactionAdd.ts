@@ -19,6 +19,12 @@ export default async function messageReactionAdd(
         if (member && role) await member.roles.add(role).catch(noop)
         const channel = reaction.message.channel as Discord.TextChannel
 
+        const channelRaw = reaction.message.channel
+
+        const logChannel = (await this.channels.fetch(
+            this.config.logging.modLogs
+        )) as Discord.TextChannel
+
         if (
             guild.id === this.config.guilds.staff &&
             channel.name === "weekly-updates" &&
@@ -39,6 +45,53 @@ export default async function messageReactionAdd(
             ) as Discord.TextChannel
 
             await updates.send(update)
+            await this.response.sendSuccess(
+                logChannel,
+                `<@${member.id}> published message with id ${reaction.message.id} (https://discord.com/channels/${this.config.guilds.staff}/${channel.id}/${reaction.message.id})`
+            )
+        }
+
+        if (
+            guild.id === this.config.guilds.main &&
+            channelRaw.isThread() &&
+            channelRaw.parent.id === this.config.suggestions.main &&
+            reaction.emoji.name === this.config.emojis.delete &&
+            GuildMember.hasRole(member, [
+                Roles.MODERATOR,
+                Roles.MANAGER,
+                Roles.HELPER,
+                Roles.SUGGESTION_TEAM
+            ])
+        ) {
+            await reaction.message.delete()
+            await this.response.sendError(
+                logChannel,
+                `<@${member.id}> deleted message with id ${reaction.message.id} in suggestions thread <#${channelRaw.id}> (https://discord.com/channels/${this.config.guilds.main}/${channelRaw.id}/${reaction.message.id})`
+            )
+        }
+
+        if (
+            guild.id === this.config.guilds.main &&
+            channelRaw.isThread() &&
+            channelRaw.parent.id === this.config.suggestions.main &&
+            reaction.emoji.name === this.config.emojis.pin &&
+            GuildMember.hasRole(member, [
+                Roles.MODERATOR,
+                Roles.MANAGER,
+                Roles.HELPER,
+                Roles.SUGGESTION_TEAM
+            ])
+        ) {
+            try {
+                await reaction.message.pin()
+            } catch {
+                return
+            } finally {
+                await this.response.sendSuccess(
+                    logChannel,
+                    `<@${member.id}> pinned message with id ${reaction.message.id} in suggestions thread <#${channelRaw.id}> (https://discord.com/channels/${this.config.guilds.main}/${channelRaw.id}/${reaction.message.id})`
+                )
+            }
         }
     }
 }

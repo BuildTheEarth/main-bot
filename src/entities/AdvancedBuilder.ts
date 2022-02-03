@@ -4,8 +4,6 @@ import Client from "../struct/Client"
 import Guild from "../struct/discord/Guild"
 import noop from "../util/noop"
 import Roles from "../util/roles"
-import { RoleResolvable } from "discord.js"
-import { collapseTextChangeRangesAcrossMultipleVersions } from "typescript"
 @Entity({ name: "advanced_builders" })
 export default class AdvancedBuilder extends BaseEntity {
     @SnowflakePrimaryColumn()
@@ -14,7 +12,7 @@ export default class AdvancedBuilder extends BaseEntity {
     @CreateDateColumn({ name: "given_at" })
     givenAt: Date
 
-    @Column({name: "role_name", default:"ADVANCED_BUILDER", nullable: false})
+    @Column({ name: "role_name", default: "ADVANCED_BUILDER", nullable: false })
     roleName: "ADVANCED_BUILDER" | "COOL_BUILD"
 
     private removalTimeout: NodeJS.Timeout

@@ -12,6 +12,7 @@ export default async function loadJSON5(filename: string): Promise<any> {
     }
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function loadSyncJSON5(filename: string): any {
     const content = fs.readFileSync(filename, "utf8")
     try {

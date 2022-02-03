@@ -149,7 +149,12 @@ export default new Command({
                         `Please specify a reason.`
                     )
                 const duration = args.consumeLength("duration")
-                if (duration === null && punishment !== "WARN" && punishment !== "KICK" && punishment !== "DELETE")
+                if (
+                    duration === null &&
+                    punishment !== "WARN" &&
+                    punishment !== "KICK" &&
+                    punishment !== "DELETE"
+                )
                     return await client.response.sendError(
                         message,
                         "You must provide a duration for Mutes and Bans!"
@@ -164,7 +169,12 @@ export default new Command({
                 await BannedWord.createBannedWord(
                     {
                         word: word,
-                        punishment_type: punishment as "BAN" | "MUTE" | "WARN" | "KICK" | "DELETE",
+                        punishment_type: punishment as
+                            | "BAN"
+                            | "MUTE"
+                            | "WARN"
+                            | "KICK"
+                            | "DELETE",
                         reason: reason,
                         duration: isNaN(duration) ? null : duration,
                         exception: false

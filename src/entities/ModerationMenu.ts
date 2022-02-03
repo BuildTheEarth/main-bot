@@ -32,25 +32,30 @@ export default class ModerationMenu extends BaseEntity {
         await message.delete()
 
         const truePunishments = getMostSevereList(filterResponse, client)
-        
+
         if (truePunishments[0].punishment_type === "DELETE") {
-            const embed = new Discord.MessageEmbed().addFields([
-                { name: "User", value: `<@${message.member.id}> (${message.member.id})` },
-                {
-                    name: "Message",
-                    value: truncateString(
-                        message.content,
-                        1024,
-                        " (Check logs for the remaining content)"
-                    )
-                },
-                { name: "Trigger", value: truePunishments[0].word}
-            ]).setColor(hexToRGB(client.config.colors.error))
+            const embed = new Discord.MessageEmbed()
+                .addFields([
+                    {
+                        name: "User",
+                        value: `<@${message.member.id}> (${message.member.id})`
+                    },
+                    {
+                        name: "Message",
+                        value: truncateString(
+                            message.content,
+                            1024,
+                            " (Check logs for the remaining content)"
+                        )
+                    },
+                    { name: "Trigger", value: truePunishments[0].word }
+                ])
+                .setColor(hexToRGB(client.config.colors.error))
 
             const channel = (await client.channels.fetch(
                 client.config.logging.modLogs
             )) as Discord.TextChannel
-            await channel.send({ embeds: [embed]})
+            await channel.send({ embeds: [embed] })
             return
         }
 
@@ -64,31 +69,33 @@ export default class ModerationMenu extends BaseEntity {
             existingMenu.current_word = existingMenu.punishments[0].word
             existingMenu.save()
 
-            const embed = new Discord.MessageEmbed().addFields([
-                {
-                    name: "User",
-                    value: `<@${existingMenu.member}> (${existingMenu.member})`
-                },
-                {
-                    name: "Message",
-                    value: truncateString(
-                        existingMenu.message_text,
-                        1024,
-                        " (Check logs for the remaining content)"
-                    )
-                },
-                { name: "Offenses", value: existingMenu.offenses.toString() },
-                {
-                    name: "Punishment",
-                    value: existingMenu.punishments[0].punishment_type
-                },
-                {
-                    name: "Duration",
-                    value: getDuration(existingMenu.punishments[0].duration)
-                },
-                { name: "Reason", value: existingMenu.punishments[0].reason },
-                { name: "Trigger", value: existingMenu.punishments[0].word }
-            ]).setColor(hexToRGB(client.config.colors.error))
+            const embed = new Discord.MessageEmbed()
+                .addFields([
+                    {
+                        name: "User",
+                        value: `<@${existingMenu.member}> (${existingMenu.member})`
+                    },
+                    {
+                        name: "Message",
+                        value: truncateString(
+                            existingMenu.message_text,
+                            1024,
+                            " (Check logs for the remaining content)"
+                        )
+                    },
+                    { name: "Offenses", value: existingMenu.offenses.toString() },
+                    {
+                        name: "Punishment",
+                        value: existingMenu.punishments[0].punishment_type
+                    },
+                    {
+                        name: "Duration",
+                        value: getDuration(existingMenu.punishments[0].duration)
+                    },
+                    { name: "Reason", value: existingMenu.punishments[0].reason },
+                    { name: "Trigger", value: existingMenu.punishments[0].word }
+                ])
+                .setColor(hexToRGB(client.config.colors.error))
 
             const punishmentOptions = existingMenu.punishments.map(punishment => {
                 const punish = {
@@ -136,7 +143,7 @@ export default class ModerationMenu extends BaseEntity {
 
             return existingMenu
         }
-        
+
         const modMenu = new ModerationMenu()
         modMenu.member = message.member.id
         modMenu.message_text = message.content
@@ -144,25 +151,27 @@ export default class ModerationMenu extends BaseEntity {
         modMenu.offenses = 1
         modMenu.current_word = modMenu.punishments[0].word
 
-        const embed = new Discord.MessageEmbed().addFields([
-            { name: "User", value: `<@${modMenu.member}> (${modMenu.member})` },
-            {
-                name: "Message",
-                value: truncateString(
-                    modMenu.message_text,
-                    1024,
-                    " (Check logs for the remaining content)"
-                )
-            },
-            { name: "Offenses", value: modMenu.offenses.toString() },
-            { name: "Punishment", value: modMenu.punishments[0].punishment_type },
-            {
-                name: "Duration",
-                value: getDuration(modMenu.punishments[0].duration)
-            },
-            { name: "Reason", value: modMenu.punishments[0].reason },
-            { name: "Trigger", value: modMenu.punishments[0].word }
-        ]).setColor(hexToRGB(client.config.colors.error))
+        const embed = new Discord.MessageEmbed()
+            .addFields([
+                { name: "User", value: `<@${modMenu.member}> (${modMenu.member})` },
+                {
+                    name: "Message",
+                    value: truncateString(
+                        modMenu.message_text,
+                        1024,
+                        " (Check logs for the remaining content)"
+                    )
+                },
+                { name: "Offenses", value: modMenu.offenses.toString() },
+                { name: "Punishment", value: modMenu.punishments[0].punishment_type },
+                {
+                    name: "Duration",
+                    value: getDuration(modMenu.punishments[0].duration)
+                },
+                { name: "Reason", value: modMenu.punishments[0].reason },
+                { name: "Trigger", value: modMenu.punishments[0].word }
+            ])
+            .setColor(hexToRGB(client.config.colors.error))
 
         const punishmentOptions = modMenu.punishments.map(punishment => {
             const punish = {
@@ -221,25 +230,27 @@ export default class ModerationMenu extends BaseEntity {
             punishment => punishment.word === interaction.values[0]
         )
 
-        const embed = new Discord.MessageEmbed().addFields([
-            { name: "User", value: `<@${modMenu.member}> (${modMenu.member})` },
-            {
-                name: "Message",
-                value: truncateString(
-                    modMenu.message_text,
-                    1024,
-                    " (Check logs for the remaining content)"
-                )
-            },
-            { name: "Offenses", value: modMenu.offenses.toString() },
-            { name: "Punishment", value: punishment.punishment_type },
-            {
-                name: "Duration",
-                value: getDuration(punishment.duration)
-            },
-            { name: "Reason", value: punishment.reason },
-            { name: "Trigger", value: punishment.word }
-        ]).setColor(hexToRGB(client.config.colors.error))
+        const embed = new Discord.MessageEmbed()
+            .addFields([
+                { name: "User", value: `<@${modMenu.member}> (${modMenu.member})` },
+                {
+                    name: "Message",
+                    value: truncateString(
+                        modMenu.message_text,
+                        1024,
+                        " (Check logs for the remaining content)"
+                    )
+                },
+                { name: "Offenses", value: modMenu.offenses.toString() },
+                { name: "Punishment", value: punishment.punishment_type },
+                {
+                    name: "Duration",
+                    value: getDuration(punishment.duration)
+                },
+                { name: "Reason", value: punishment.reason },
+                { name: "Trigger", value: punishment.word }
+            ])
+            .setColor(hexToRGB(client.config.colors.error))
 
         interaction.editReply({ embeds: [embed] })
         modMenu.current_word = punishment.word
@@ -362,22 +373,24 @@ export default class ModerationMenu extends BaseEntity {
         })
         await client.log(log)
 
-        const embed = new Discord.MessageEmbed().addFields([
-            { name: "User", value: `<@${modMenu.member}> (${modMenu.member})` },
-            {
-                name: "Message",
-                value: truncateString(
-                    modMenu.message_text,
-                    1024,
-                    " (Check logs for the remaining content)"
-                )
-            },
-            { name: "Offenses", value: modMenu.offenses.toString() },
-            {
-                name: "Punished",
-                value: `This user has been punished by <@${interaction.user.id}> (${interaction.user.id}) at case **#${log.id}**`
-            }
-        ]).setColor(hexToRGB(client.config.colors.success))
+        const embed = new Discord.MessageEmbed()
+            .addFields([
+                { name: "User", value: `<@${modMenu.member}> (${modMenu.member})` },
+                {
+                    name: "Message",
+                    value: truncateString(
+                        modMenu.message_text,
+                        1024,
+                        " (Check logs for the remaining content)"
+                    )
+                },
+                { name: "Offenses", value: modMenu.offenses.toString() },
+                {
+                    name: "Punished",
+                    value: `This user has been punished by <@${interaction.user.id}> (${interaction.user.id}) at case **#${log.id}**`
+                }
+            ])
+            .setColor(hexToRGB(client.config.colors.success))
 
         await (interaction.message as Discord.Message).edit({
             embeds: [embed],
@@ -396,22 +409,24 @@ export default class ModerationMenu extends BaseEntity {
 
         if (!modMenu) return null
 
-        const embed = new Discord.MessageEmbed().addFields([
-            { name: "User", value: `<@${modMenu.member}> (${modMenu.member})` },
-            {
-                name: "Message",
-                value: truncateString(
-                    modMenu.message_text,
-                    1024,
-                    " (Check logs for the remaining content)"
-                )
-            },
-            { name: "Offenses", value: modMenu.offenses.toString() },
-            {
-                name: "Pardoned",
-                value: `This user has been pardoned by <@${interaction.user.id}> (${interaction.user.id})`
-            }
-        ]).setColor(hexToRGB(client.config.colors.success))
+        const embed = new Discord.MessageEmbed()
+            .addFields([
+                { name: "User", value: `<@${modMenu.member}> (${modMenu.member})` },
+                {
+                    name: "Message",
+                    value: truncateString(
+                        modMenu.message_text,
+                        1024,
+                        " (Check logs for the remaining content)"
+                    )
+                },
+                { name: "Offenses", value: modMenu.offenses.toString() },
+                {
+                    name: "Pardoned",
+                    value: `This user has been pardoned by <@${interaction.user.id}> (${interaction.user.id})`
+                }
+            ])
+            .setColor(hexToRGB(client.config.colors.success))
 
         await (interaction.message as Discord.Message).edit({
             embeds: [embed],
