@@ -98,7 +98,7 @@ export default new Command({
             let page = new Discord.MessageEmbed()
                 .setTitle(`Page ${pageNum + 1}`)
                 .setImage(file)
-                .setFooter(`Page ${pageNum + 1}/${results.length}`)
+                .setFooter({text: `Page ${pageNum + 1}/${results.length}`})
             const sentMessage = await message.send({
                 embeds: [page],
                 components: [row]
@@ -177,7 +177,7 @@ export default new Command({
                     page = new Discord.MessageEmbed()
                         .setTitle(`Page ${pageNum + 1}`)
                         .setImage(file)
-                        .setFooter(`Page ${pageNum + 1}/${results.length}`)
+                        .setFooter({text: `Page ${pageNum + 1}/${results.length}`})
                         .setColor(hexToRGB(client.config.colors.info))
                 } else {
                     page = new Discord.MessageEmbed()
@@ -187,7 +187,7 @@ export default new Command({
                                 `${message.id}/image${pageNum}.png`
                             )
                         )
-                        .setFooter(`Page ${pageNum + 1}/${results.length}`)
+                        .setFooter({text: `Page ${pageNum + 1}/${results.length}`})
                         .setColor(hexToRGB(client.config.colors.info))
                 }
                 await (interaction as Discord.ButtonInteraction).update({
