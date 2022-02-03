@@ -248,14 +248,15 @@ export default new Command({
                     .setLabel(client.config.emojis.right.toString())
                     .setStyle("SUCCESS")
             )
-            await message.send({
+            const sentMessage = await message.send({
                 embeds: [embed],
                 components: [row]
             })
 
             let old = 1
             let page = 1
-            client.on("interactionCreate", async interaction => {
+
+            const interactionFunc = async interaction => {
                 if (
                     !(
                         interaction.isButton() &&
@@ -327,7 +328,14 @@ export default new Command({
                         interaction.editReply({ embeds: [embed] })
                     }
                 } else interaction.editReply({ embeds: [embed] })
-            })
+            }
+
+            client.on("interactionCreate", interactionFunc)
+
+            setTimeout(async () => {
+                await sentMessage.edit({content: "Expired", components: []})
+                client.off("interactionCreate", interactionFunc)
+            }, 600000)
 
             return
         }

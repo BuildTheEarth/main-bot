@@ -462,7 +462,7 @@ export default class ModerationMenu extends BaseEntity {
 
         console.log(followMessage)
 
-        client.on("interactionCreate", async (interactionCurr: Discord.Interaction) => {
+        const interactionFunc = async (interactionCurr: Discord.Interaction) => {
             if (
                 !(
                     interactionCurr.isButton() &&
@@ -488,8 +488,20 @@ export default class ModerationMenu extends BaseEntity {
                     components: []
                 })
             }
-        })
+        }
+
+
+        client.on("interactionCreate", interactionFunc)
+
+        
+
+        setTimeout(async () => {
+            
+            await interaction.webhook.editMessage(followMessage.id ,{content: "Expired", components: []})
+            client.off("interactionCreate", interactionFunc)
+        }, 300000)
     }
+    
 
     public static async punishConfirm(
         id: string,
@@ -517,7 +529,7 @@ export default class ModerationMenu extends BaseEntity {
 
         console.log(followMessage)
 
-        client.on("interactionCreate", async (interactionCurr: Discord.Interaction) => {
+        const interactionFunc = async (interactionCurr: Discord.Interaction) => {
             if (
                 !(
                     interactionCurr.isButton() &&
@@ -547,7 +559,16 @@ export default class ModerationMenu extends BaseEntity {
                     components: []
                 })
             }
-        })
+        }
+
+        client.on("interactionCreate", interactionFunc)
+
+        
+
+        setTimeout(async () => {
+            await interaction.webhook.editMessage(followMessage.id ,{content: "Expired", components: []})
+            client.off("interactionCreate", interactionFunc)
+        }, 300000)
     }
 
     @SnowflakePrimaryColumn()

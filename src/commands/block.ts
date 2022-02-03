@@ -99,11 +99,12 @@ export default new Command({
                 .setTitle(`Page ${pageNum + 1}`)
                 .setImage(file)
                 .setFooter(`Page ${pageNum + 1}/${results.length}`)
-            await message.send({
+            const sentMessage = await message.send({
                 embeds: [page],
                 components: [row]
             })
-            client.on("interactionCreate", async interaction => {
+
+            const interactionFunc = async interaction => {
                 if (
                     !(
                         interaction.isButton() &&
@@ -199,7 +200,14 @@ export default new Command({
                         interaction.editReply({ embeds: [page] })
                     }
                 } else interaction.editReply({ embeds: [page] })
-            })
+            }
+
+            client.on("interactionCreate", interactionFunc)
+
+            setTimeout(async () => {
+                await sentMessage.edit({content: "Expired", components: []})
+                client.off("interactionCreate", interactionFunc)
+            }, 600000)
         }
     }
 })

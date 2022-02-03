@@ -325,7 +325,7 @@ async function getList(
             .setLabel(client.config.emojis.right.toString())
             .setStyle("SUCCESS")
     )
-    await message.send({
+    const sentMessage = await message.send({
         embeds: [wordEmbeds[0]],
         components: [row]
     })
@@ -333,7 +333,7 @@ async function getList(
     let page = 1
     let old = 1
 
-    client.on("interactionCreate", async interaction => {
+    const interactionFunc = async interaction => {
         if (
             !(
                 interaction.isButton() &&
@@ -400,5 +400,11 @@ async function getList(
                 interaction.editReply({ embeds: [embed] })
             }
         } else interaction.editReply({ embeds: [embed] })
-    })
+    }
+
+    client.on("interactionCreate", interactionFunc)
+    setTimeout(async () => {
+        await sentMessage.edit({content: "Expired", components: []})
+        client.off("interactionCreate", interactionFunc)
+    }, 600000)
 }
