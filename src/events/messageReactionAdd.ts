@@ -72,6 +72,14 @@ export default async function messageReactionAdd(
 
         if (
             guild.id === this.config.guilds.main &&
+            channel.id === this.config.suggestions.main &&
+            (reaction.emoji.name !== this.config.emojis.downvote || reaction.emoji !== this.config.emojis.upvote)
+        ) {
+            await reaction.users.remove(user)
+        }
+
+        if (
+            guild.id === this.config.guilds.main &&
             channelRaw.isThread() &&
             channelRaw.parent.id === this.config.suggestions.main &&
             reaction.emoji.name === this.config.emojis.pin &&
