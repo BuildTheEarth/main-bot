@@ -9,6 +9,7 @@ export default async function messageReactionAdd(
     reaction: Discord.MessageReaction,
     user: Discord.User
 ): Promise<void> {
+    if (reaction.partial) await reaction.fetch().catch(noop)
     const channel = this.config.reactionRoles?.[reaction.message.channel.id]
     const role = channel?.[reaction.message.id]?.[reaction.emoji.name]
     const guild = reaction.message.guild
@@ -73,11 +74,10 @@ export default async function messageReactionAdd(
         if (
             guild.id === this.config.guilds.main &&
             channelRaw.id === this.config.suggestions.main &&
-            (reaction.emoji.name !== this.config.emojis.downvote || reaction.emoji.name !== this.config.emojis.upvote)
-        ) {
-            console.log("yes")
+            reaction.emoji.name !== this.config.emojis.downvote &&
+            reaction.emoji.name !== this.config.emojis.upvote
+        )
             await reaction.users.remove(user)
-        }
 
         if (
             guild.id === this.config.guilds.main &&
