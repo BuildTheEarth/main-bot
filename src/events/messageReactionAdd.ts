@@ -75,6 +75,7 @@ export default async function messageReactionAdd(
             channelRaw.id === this.config.suggestions.main &&
             (reaction.emoji.name !== this.config.emojis.downvote || reaction.emoji.name !== this.config.emojis.upvote)
         ) {
+            console.log("yes")
             await reaction.users.remove(user)
         }
 
