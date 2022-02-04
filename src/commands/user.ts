@@ -1,12 +1,14 @@
 import Discord from "discord.js"
 import Client from "../struct/Client"
 import Args from "../struct/Args"
+import { loadSyncJSON5 } from "../util/loadJSON5"
 import Command from "../struct/Command"
+import path from "path"
 import Roles from "../util/roles"
 import humanizeConstant from "../util/humanizeConstant"
 import formatTimestamp from "../util/formatTimestamp"
-import userFlags from "../data/userFlags"
-import activityTypes from "../data/activityTypes"
+const userFlags = loadSyncJSON5(path.join(__dirname + "../../../config/extensions/userFlags.json5"))
+const activityTypes = loadSyncJSON5(path.join(__dirname + "../../../config/extensions/activityTypes.json5"))
 import hexToRGB from "../util/hexToRGB"
 import CommandMessage from "../struct/CommandMessage"
 

@@ -1,6 +1,8 @@
 // Literally all of this code is taken from https://github.com/cAttte/fanum so thank him
+import path from "path"
+import { loadSyncJSON5 } from "../../util/loadJSON5"
 import pluralize, { isSingular } from "../../util/pluralize"
-import duplicateChars from "../../data/duplicateChars"
+const duplicateChars = loadSyncJSON5(path.join(__dirname + "../../../../config/extensions/activityTypes.json5"))
 import Client from "../Client"
 
 export default class BannedWordFilter {

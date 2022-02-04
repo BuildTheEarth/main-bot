@@ -1,7 +1,4 @@
-// http://qaz.wtf/u/convert.cgi
-//eslint makes this a literal mess
-/* eslint-disable */
-export default {
+{
     a: [
         "a",
         "A",
@@ -1158,4 +1155,3 @@ export default {
         "﻿"
     ]
 }
-/* eslint-enable */

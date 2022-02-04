@@ -1,13 +1,16 @@
 import Client from "../struct/Client"
+import { loadSyncJSON5 } from "../util/loadJSON5"
 import Args from "../struct/Args"
+import path from "path"
 import Command from "../struct/Command"
 import GuildMember from "../struct/discord/GuildMember"
 import Guild from "../struct/discord/Guild"
 import Roles from "../util/roles"
-import pseudoteamPositions from "../data/pseudoteamPositions"
+const pseudoteamPositions: Record<string, Record<string, string>> = loadSyncJSON5(path.join(__dirname + "../../../config/extensions/pseudoteamPositions.json5"))
 import noop from "../util/noop"
 import Discord from "discord.js"
 import CommandMessage from "../struct/CommandMessage"
+
 
 export default new Command({
     name: "position",

@@ -1,7 +1,9 @@
 import Discord from "discord.js"
 import _ from "lodash"
+import path from "path"
 import { Entity, Column, BaseEntity } from "typeorm"
-import punishmentValues from "../data/punishmentValues"
+import { loadSyncJSON5 } from "../util/loadJSON5"
+const punishmentValues = loadSyncJSON5(path.join(__dirname + "../../../config/extensions/punishmentValues.json5"))
 import Client from "../struct/Client"
 import { BannedWordObj } from "../struct/client/BannedWordFilter"
 import formatPunishmentTime from "../util/formatPunishmentTime"

@@ -9,9 +9,11 @@ import {
 } from "typeorm"
 import SnowflakeColumn from "./decorators/SnowflakeColumn"
 import Discord from "discord.js"
+import path from "path"
 import Client from "../struct/Client"
+import { loadSyncJSON5 } from "../util/loadJSON5"
 import replaceAsync from "../util/replaceAsync"
-import suggestionStatusActions from "../data/suggestionStatusActions"
+const suggestionStatusActions = loadSyncJSON5(path.join(__dirname + "../../../config/extensions/suggestionStatusActions.json5"))
 import hexToRGB from "../util/hexToRGB"
 
 export type SuggestionStatus = keyof typeof SuggestionStatuses
