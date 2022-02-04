@@ -3,6 +3,7 @@
     appeal: "",
     vanity: "",
     isDev: false,
+    developers: [],
     jenkinsEnv: false,
     logging: {
         modLogs: "",
