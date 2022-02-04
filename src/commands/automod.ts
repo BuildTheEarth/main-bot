@@ -185,7 +185,7 @@ export default new Command({
                 return await client.response.sendSuccess(message, `Added the word!`)
             }
             if (subcommand === "remove") {
-                const word = args.consume("word")
+                const word = args.consumeRest(["word"])
                 if (!word)
                     return await client.response.sendError(
                         message,
@@ -198,7 +198,7 @@ export default new Command({
                         message,
                         `I can't unban a word that is not banned!`
                     )
-                await isThere.deleteWord(client)
+                await isThere?.deleteWord(client)
                 return await client.response.sendSuccess(
                     message,
                     `The word has been deleted!`
