@@ -268,7 +268,7 @@ export default class ModerationMenu extends BaseEntity {
 
         const modMenu = await ModerationMenu.findOne({ member: id })
 
-        if (!modMenu) return null
+        if (!modMenu) return
 
         const punishment: bannedWordsOptions = modMenu.punishments.find(
             punishment => punishment.word === modMenu.current_word
@@ -285,7 +285,7 @@ export default class ModerationMenu extends BaseEntity {
         const user = client.users.cache.get(modMenu.member)
 
         if (!user) {
-            replyInteraction.update({
+            replyInteraction.editReply({
                 content:
                     user === undefined
                         ? client.messages.noUser
@@ -327,7 +327,7 @@ export default class ModerationMenu extends BaseEntity {
                 type: punishment.punishment_type.toLowerCase() as "mute" | "ban"
             })
             if (punish) {
-                await replyInteraction.update({
+                await replyInteraction.editReply({
                     content: messages.alreadyPunished
                 })
                 return
@@ -523,7 +523,6 @@ export default class ModerationMenu extends BaseEntity {
         const followMessage = await interaction.followUp({
             content: "Are you sure you want to punish this user?",
             components: components,
-            fetchReply: true,
             ephemeral: true
         })
 
