@@ -103,7 +103,7 @@ export default new Command({
         const suggestion = new Suggestion()
         if (extend?.number) suggestion.extends = extend.number
         else suggestion.number = await Suggestion.findNumber(staff, client)
-        suggestion.author = message.member.id
+        suggestion.author = message.author.id
         suggestion.anonymous = anon
         suggestion.title = title
         suggestion.body = body

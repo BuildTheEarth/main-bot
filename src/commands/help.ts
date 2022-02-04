@@ -52,10 +52,18 @@ export default new Command({
             return client.response.sendSuccess(message, embed)
         }
 
-        const allowedCommands = client.commands.filter(command =>
-            GuildMember.hasRole(member, command.permission)
+        console.log(client.commands)
+        let allowedCommands
+        if (message.channel.type !== "DM"){
+            allowedCommands = client.commands.filter(command =>
+                GuildMember.hasRole(member, command.permission)
         )
-
+        }
+        if (message.channel.type === "DM"){
+            allowedCommands = client.commands.filter(command =>
+                command.dms === true
+            )
+        }
         const formattedCommands = allowedCommands
             .map(command => `• **${command.name}:** ${command.description}`)
             .join("\n")
