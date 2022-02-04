@@ -74,9 +74,12 @@ export default new Command({
 
         await message.continue()
 
-        const log = await ActionLog.findOne({
-            where: { id: id, options: { withDeleted: true } }
-        })
+        const log = await ActionLog.getRepository()
+            .createQueryBuilder()
+            .withDeleted()
+            .andWhere({id: id})
+            .getOne()
+
         if (!log)
             return client.response.sendError(message, `Couldn't find case **#${id}**.`)
 
