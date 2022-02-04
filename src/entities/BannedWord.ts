@@ -32,7 +32,7 @@ export default class BannedWord extends BaseEntity {
         super()
         if (word !== null) this.word = word
         if (punishment_type) this.punishment_type = punishment_type
-        if (reason !== null) this.reason = reason
+        if (reason !== undefined) this.reason = reason
         if (duration !== undefined) this.duration = duration
         if (exception !== null) this.exception = exception
         if (client) {
