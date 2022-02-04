@@ -1,10 +1,11 @@
-import Discord from "discord.js"
+import Discord, { CommandInteraction } from "discord.js"
 import Client from "../struct/Client"
 
 export default class CommandMessage {
     message: Discord.CommandInteraction | Discord.Message
     channel: Discord.TextBasedChannel
     member: Discord.GuildMember
+    author: Discord.User
     client: Client
     guild: Discord.Guild
     id: Discord.Snowflake
@@ -21,6 +22,9 @@ export default class CommandMessage {
         if (this.message instanceof Discord.Message) this.member = this.message.member
         if (this.message instanceof Discord.CommandInteraction)
             this.member = this.message.member as Discord.GuildMember
+        if (this.message instanceof Discord.Message) this.author = this.message.author
+        if (this.message instanceof Discord.CommandInteraction)
+            this.author = this.message.user as Discord.User
     }
 
     async send(payload: MessageOptions): Promise<CommandMessage> {
