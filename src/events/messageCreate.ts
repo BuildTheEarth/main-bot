@@ -85,7 +85,8 @@ export default async function (this: Client, message: Discord.Message): Promise<
                       .catch(() => null)
         ) as Discord.GuildMember
 
-        const hasPermission = member && GuildMember.hasRole(member, command.permission)
+        const hasPermission =
+            member && GuildMember.hasRole(member, command.permission, this)
         if (message.channel.type === "DM" && !command.dms) return
         if (command.permission !== Roles.ANY && !hasPermission) return
 
@@ -120,7 +121,7 @@ export default async function (this: Client, message: Discord.Message): Promise<
     const suggestions = Object.values(this.config.suggestions)
     if (
         suggestions.includes(message.channel.id) &&
-        !GuildMember.hasRole(message.member, Roles.MANAGER)
+        !GuildMember.hasRole(message.member, Roles.MANAGER, this)
     ) {
         const error = await this.response.sendError(
             new CommandMessage(message, this),

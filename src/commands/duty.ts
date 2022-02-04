@@ -123,13 +123,14 @@ export default new Command({
             if (!role) roleReal = ["SUPPORT", "MODERATOR"]
             else roleReal = [role.toUpperCase()]
             const dutyArray = roleReal.filter(role =>
-                GuildMember.hasRole(memberReal, Roles[role], false)
+                GuildMember.hasRole(memberReal, Roles[role], client, false)
             )
             if (dutyArray.length === 0)
                 return client.response.sendError(message, client.messages.cannotDuty)
             const toggle = await toggleDutyRole(
                 memberReal,
-                dutyArray as ("MODERATOR" | "SUPPORT")[]
+                dutyArray as ("MODERATOR" | "SUPPORT")[],
+                client
             )
             return client.response.sendSuccess(
                 message,
@@ -165,7 +166,7 @@ export default new Command({
             if (!role) roleReal = ["SUPPORT", "MODERATOR"]
             else roleReal = [role.toUpperCase()]
             const dutyArray = roleReal.filter(role =>
-                GuildMember.hasRole(memberReal, Roles[role], false)
+                GuildMember.hasRole(memberReal, Roles[role], client, false)
             )
             if (dutyArray.length === 0)
                 return client.response.sendError(message, client.messages.cannotDuty)

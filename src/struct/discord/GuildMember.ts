@@ -1,16 +1,19 @@
 import Discord from "discord.js"
 import Guild from "./Guild"
 import Roles from "../../util/roles"
+import Client from "../Client"
 
 export default class GuildMember {
     static hasRole(
         user: Discord.GuildMember,
         roles: string | string[],
+        client: Client,
         botDevBypass = true
     ): boolean {
         if (roles === Roles.ANY) return true
         if (typeof roles === "string") roles = [roles]
-        if (botDevBypass) roles.push(Roles.BOT_DEVELOPER)
+        if (botDevBypass && client.config.developers.includes(user.id))
+            roles.push(Roles.BOT_DEVELOPER)
         for (const role of roles)
             if (user.roles.cache.find(r => r.name === role)) return true
         return false
@@ -51,23 +54,24 @@ export default class GuildMember {
     static async toggleRole(
         user: Discord.GuildMember,
         roles: string | string[],
-        reason: string
+        reason: string,
+        client: Client
     ): Promise<boolean> {
         if (typeof roles === "string") roles = [roles]
         const shouldAdd: boolean[] = []
         for (const role of roles) {
-            shouldAdd.push(!GuildMember.hasRole(user, role, false))
+            shouldAdd.push(!GuildMember.hasRole(user, role, client, false))
         }
         if (shouldAdd.includes(false)) {
             for await (const role of roles) {
-                if (GuildMember.hasRole(user, role, false)) {
+                if (GuildMember.hasRole(user, role, client, false)) {
                     await GuildMember.removeRole(user, role, reason)
                 }
             }
             return false
         } else {
             for await (const role of roles) {
-                if (!GuildMember.hasRole(user, role, false)) {
+                if (!GuildMember.hasRole(user, role, client, false)) {
                     await GuildMember.addRole(user, role, reason)
                 }
             }

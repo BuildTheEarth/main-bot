@@ -53,7 +53,7 @@ export default new Command({
         if (member) {
             if (member.user.bot)
                 return client.response.sendError(message, client.messages.isBot)
-            if (GuildMember.hasRole(member, Roles.STAFF))
+            if (GuildMember.hasRole(member, Roles.STAFF, client))
                 return client.response.sendError(message, client.messages.isStaffMute)
         }
 

@@ -139,7 +139,11 @@ export default new Command({
         const category = staff ? "staff" : "main"
         const discussionID = client.config.suggestions.discussion[category]
         const canManage = message.member
-            ? GuildMember.hasRole(message.member, [Roles.SUGGESTION_TEAM, Roles.MANAGER])
+            ? GuildMember.hasRole(
+                  message.member,
+                  [Roles.SUGGESTION_TEAM, Roles.MANAGER],
+                  client
+              )
             : false
 
         if (
@@ -163,7 +167,11 @@ export default new Command({
         const subcommand = args.consumeSubcommand()
         const availableSubcommands = this.subcommands.filter(sub =>
             message.member
-                ? GuildMember.hasRole(message.member, sub.permission || this.permission)
+                ? GuildMember.hasRole(
+                      message.member,
+                      sub.permission || this.permission,
+                      client
+                  )
                 : false
         )
 
@@ -333,7 +341,7 @@ export default new Command({
             client.on("interactionCreate", interactionFunc)
 
             setTimeout(async () => {
-                await sentMessage.edit({content: "Expired", components: []})
+                await sentMessage.edit({ content: "Expired", components: [] })
                 client.off("interactionCreate", interactionFunc)
             }, 600000)
 

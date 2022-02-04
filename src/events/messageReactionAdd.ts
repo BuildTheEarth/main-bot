@@ -30,7 +30,7 @@ export default async function messageReactionAdd(
             guild.id === this.config.guilds.staff &&
             channel.name === "weekly-updates" &&
             reaction.emoji.name === "📣" &&
-            GuildMember.hasRole(member, Roles.MANAGER)
+            GuildMember.hasRole(member, Roles.MANAGER, this)
         ) {
             await reaction.users.remove(user)
             let update = reaction.message.content
@@ -56,13 +56,17 @@ export default async function messageReactionAdd(
             guild.id === this.config.guilds.main &&
             channelRaw.isThread() &&
             channelRaw.parent.id === this.config.suggestions.main &&
-            ((reaction.emoji.identifier === this.config.emojis.delete.toString().replaceAll("<", "").replaceAll(">", "")) != (reaction.emoji.name === this.config.emojis.delete))  &&
-            GuildMember.hasRole(member, [
-                Roles.MODERATOR,
-                Roles.MANAGER,
-                Roles.HELPER,
-                Roles.SUGGESTION_TEAM
-            ])
+            (reaction.emoji.identifier ===
+                this.config.emojis.delete
+                    .toString()
+                    .replaceAll("<", "")
+                    .replaceAll(">", "")) !=
+                (reaction.emoji.name === this.config.emojis.delete) &&
+            GuildMember.hasRole(
+                member,
+                [Roles.MODERATOR, Roles.MANAGER, Roles.HELPER, Roles.SUGGESTION_TEAM],
+                this
+            )
         ) {
             await reaction.message.delete()
             await this.response.sendError(
@@ -74,8 +78,18 @@ export default async function messageReactionAdd(
         if (
             guild.id === this.config.guilds.main &&
             channelRaw.id === this.config.suggestions.main &&
-            ((reaction.emoji.identifier === this.config.emojis.downvote.toString().replaceAll("<", "").replaceAll(">", "")) != (reaction.emoji.name === this.config.emojis.downvote))  &&
-            ((reaction.emoji.identifier === this.config.emojis.upvote.toString().replaceAll("<", "").replaceAll(">", "")) != (reaction.emoji.name === this.config.emojis.upvote)) 
+            (reaction.emoji.identifier ===
+                this.config.emojis.downvote
+                    .toString()
+                    .replaceAll("<", "")
+                    .replaceAll(">", "")) !=
+                (reaction.emoji.name === this.config.emojis.downvote) &&
+            (reaction.emoji.identifier ===
+                this.config.emojis.upvote
+                    .toString()
+                    .replaceAll("<", "")
+                    .replaceAll(">", "")) !=
+                (reaction.emoji.name === this.config.emojis.upvote)
         )
             await reaction.users.remove(user)
 
@@ -83,13 +97,17 @@ export default async function messageReactionAdd(
             guild.id === this.config.guilds.main &&
             channelRaw.isThread() &&
             channelRaw.parent.id === this.config.suggestions.main &&
-            ((reaction.emoji.identifier === this.config.emojis.pin.toString().replaceAll("<", "").replaceAll(">", "")) != (reaction.emoji.name === this.config.emojis.pin))  &&
-            GuildMember.hasRole(member, [
-                Roles.MODERATOR,
-                Roles.MANAGER,
-                Roles.HELPER,
-                Roles.SUGGESTION_TEAM
-            ])
+            (reaction.emoji.identifier ===
+                this.config.emojis.pin
+                    .toString()
+                    .replaceAll("<", "")
+                    .replaceAll(">", "")) !=
+                (reaction.emoji.name === this.config.emojis.pin) &&
+            GuildMember.hasRole(
+                member,
+                [Roles.MODERATOR, Roles.MANAGER, Roles.HELPER, Roles.SUGGESTION_TEAM],
+                this
+            )
         ) {
             try {
                 await reaction.message.pin()

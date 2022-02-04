@@ -396,7 +396,7 @@ export default new Command({
             client.on("interactionCreate", interactionFunc)
 
             setTimeout(async () => {
-                await sentMessage.edit({content: "Expired", components: []})
+                await sentMessage.edit({ content: "Expired", components: [] })
                 client.off("interactionCreate", interactionFunc)
             }, 600000)
         } else if (subcommandGroup === "aliases") {
@@ -415,7 +415,7 @@ export default new Command({
                 Roles.PR_TRANSLATION_TEAM
             ]
             if (
-                !GuildMember.hasRole(message.member, editPermissions) &&
+                !GuildMember.hasRole(message.member, editPermissions, client) &&
                 !(subcommand === "list")
             )
                 return client.response.sendError(message, client.messages.noPermission)
@@ -472,11 +472,11 @@ export default new Command({
         const editPermissions = [Roles.SUPPORT, Roles.MANAGER, Roles.PR_TRANSLATION_TEAM]
         const deletePermissions = [Roles.SUPPORT, Roles.MANAGER]
         if (
-            !GuildMember.hasRole(message.member, editPermissions) &&
+            !GuildMember.hasRole(message.member, editPermissions, client) &&
             subcommand !== "source"
         )
             return
-        const canDelete = GuildMember.hasRole(message.member, deletePermissions)
+        const canDelete = GuildMember.hasRole(message.member, deletePermissions, client)
         if (subcommand === "delete" && !canDelete) return
 
         const name = args.consume("name").toLowerCase()

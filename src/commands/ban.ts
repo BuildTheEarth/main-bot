@@ -61,7 +61,7 @@ export default new Command({
                 return client.response.sendError(message, client.messages.isBot)
             if (member.id === message.member.id)
                 return client.response.sendError(message, client.messages.isSelfBan)
-            if (GuildMember.hasRole(member, Roles.STAFF))
+            if (GuildMember.hasRole(member, Roles.STAFF, client))
                 return client.response.sendError(message, client.messages.isStaffBan)
         }
 

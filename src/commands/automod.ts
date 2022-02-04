@@ -404,7 +404,7 @@ async function getList(
 
     client.on("interactionCreate", interactionFunc)
     setTimeout(async () => {
-        await sentMessage.edit({content: "Expired", components: []})
+        await sentMessage.edit({ content: "Expired", components: [] })
         client.off("interactionCreate", interactionFunc)
     }, 600000)
 }

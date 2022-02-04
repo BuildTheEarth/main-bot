@@ -1,4 +1,4 @@
-import { Entity, Column, BaseEntity} from "typeorm"
+import { Entity, Column, BaseEntity } from "typeorm"
 import Client from "../struct/Client"
 import SnowflakePrimaryColumn from "./decorators/SnowflakePrimaryColumn"
 import milliseconds from "./transformers/milliseconds"

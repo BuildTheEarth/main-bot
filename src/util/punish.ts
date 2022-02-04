@@ -37,7 +37,11 @@ async function log(
             .channels.cache.find(
                 ch => ch.name == "review-committee-private"
             ) as Discord.TextChannel
-        if (member && GuildMember.hasRole(member, Roles.BUILDER) && reviewerChannel)
+        if (
+            member &&
+            GuildMember.hasRole(member, Roles.BUILDER, client) &&
+            reviewerChannel
+        )
             await client.response.sendSuccess(
                 reviewerChannel,
                 `Builder ${member.user} (${member.id}) was banned!`

@@ -87,12 +87,16 @@ export default new Command({
             .members.fetch(message.member.id)
 
         const canManage = message.member
-            ? GuildMember.hasRole(staffMember, [
-                  Roles.MANAGER,
-                  Roles.LEAD_DEVELOPER,
-                  Roles.PR_SUBTEAM_LEAD,
-                  Roles.COMMUNITY_SUBTEAM_LEAD
-              ])
+            ? GuildMember.hasRole(
+                  staffMember,
+                  [
+                      Roles.MANAGER,
+                      Roles.LEAD_DEVELOPER,
+                      Roles.PR_SUBTEAM_LEAD,
+                      Roles.COMMUNITY_SUBTEAM_LEAD
+                  ],
+                  client
+              )
             : false
 
         if (subcommand == "commit") {

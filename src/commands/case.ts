@@ -98,7 +98,7 @@ export default new Command({
             await client.response.sendError(message, `Edited case **#${id}**.`, false)
             await client.log(log)
         } else if (subcommand === "delete") {
-            if (!GuildMember.hasRole(message.member, Roles.MODERATOR))
+            if (!GuildMember.hasRole(message.member, Roles.MODERATOR, client))
                 return client.response.sendError(message, client.messages.noPerms)
             const reason = args.consumeRest(["reason"])
             if (!reason)

@@ -40,7 +40,7 @@ export default new Command({
                     message,
                     `Unknown command \`${truncateString(commandName, 32, "...")}\`.`
                 )
-            if (!GuildMember.hasRole(member, command.permission))
+            if (!GuildMember.hasRole(member, command.permission, client))
                 return client.response.sendError(message, client.messages.noPerms)
 
             const embed = CommandUtils.getHelpMessage(
@@ -54,15 +54,13 @@ export default new Command({
 
         console.log(client.commands)
         let allowedCommands
-        if (message.channel.type !== "DM"){
+        if (message.channel.type !== "DM") {
             allowedCommands = client.commands.filter(command =>
-                GuildMember.hasRole(member, command.permission)
-        )
-        }
-        if (message.channel.type === "DM"){
-            allowedCommands = client.commands.filter(command =>
-                command.dms === true
+                GuildMember.hasRole(member, command.permission, client)
             )
+        }
+        if (message.channel.type === "DM") {
+            allowedCommands = client.commands.filter(command => command.dms === true)
         }
         const formattedCommands = allowedCommands
             .map(command => `• **${command.name}:** ${command.description}`)

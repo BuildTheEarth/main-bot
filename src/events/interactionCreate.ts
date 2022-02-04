@@ -17,11 +17,11 @@ export default async function (
     if (interaction.type === "MESSAGE_COMPONENT") {
         if (interaction.isSelectMenu()) {
             if (
-                !GuildMember.hasRole(interaction.member as Discord.GuildMember, [
-                    Roles.MODERATOR,
-                    Roles.HELPER,
-                    Roles.MANAGER
-                ])
+                !GuildMember.hasRole(
+                    interaction.member as Discord.GuildMember,
+                    [Roles.MODERATOR, Roles.HELPER, Roles.MANAGER],
+                    this
+                )
             ) {
                 await interaction.deferUpdate()
                 await interaction.followUp({
@@ -41,11 +41,11 @@ export default async function (
             if (!interaction.customId.includes("modmenu.")) return
             if (
                 interaction.customId.includes("modmenu.") &&
-                !GuildMember.hasRole(interaction.member as Discord.GuildMember, [
-                    Roles.MODERATOR,
-                    Roles.HELPER,
-                    Roles.MANAGER
-                ])
+                !GuildMember.hasRole(
+                    interaction.member as Discord.GuildMember,
+                    [Roles.MODERATOR, Roles.HELPER, Roles.MANAGER],
+                    this
+                )
             ) {
                 await interaction.deferUpdate()
                 await interaction.followUp({
@@ -81,7 +81,8 @@ export default async function (
                 interaction.member &&
                 GuildMember.hasRole(
                     interaction.member as Discord.GuildMember,
-                    command.permission
+                    command.permission,
+                    this
                 )
             if (interaction.channel.type === "DM" && !command.dms) return
             if (command.permission !== Roles.ANY && !hasPermission) return

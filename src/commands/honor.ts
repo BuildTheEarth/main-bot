@@ -65,7 +65,7 @@ export default new Command({
         const member = await (await client.customGuilds.main()).members
             .fetch({ user, cache: true })
             .catch(noop)
-        if (!member || !GuildMember.hasRole(member, Roles.BUILDER))
+        if (!member || !GuildMember.hasRole(member, Roles.BUILDER, client))
             return client.response.sendError(message, client.messages.noBuilder)
         const role = Guild.role(await client.customGuilds.main(), Roles[roleName])
 

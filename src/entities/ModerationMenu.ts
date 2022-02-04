@@ -310,7 +310,7 @@ export default class ModerationMenu extends BaseEntity {
                 })
                 return
             }
-            if (GuildMember.hasRole(member, Roles.STAFF)) {
+            if (GuildMember.hasRole(member, Roles.STAFF, client)) {
                 replyInteraction.editReply({
                     content: client.messages.isStaffBan
                 })
@@ -490,18 +490,16 @@ export default class ModerationMenu extends BaseEntity {
             }
         }
 
-
         client.on("interactionCreate", interactionFunc)
 
-        
-
         setTimeout(async () => {
-            
-            await interaction.webhook.editMessage(followMessage.id ,{content: "Expired", components: []})
+            await interaction.webhook.editMessage(followMessage.id, {
+                content: "Expired",
+                components: []
+            })
             client.off("interactionCreate", interactionFunc)
         }, 300000)
     }
-    
 
     public static async punishConfirm(
         id: string,
@@ -562,10 +560,11 @@ export default class ModerationMenu extends BaseEntity {
 
         client.on("interactionCreate", interactionFunc)
 
-        
-
         setTimeout(async () => {
-            await interaction.webhook.editMessage(followMessage.id ,{content: "Expired", components: []})
+            await interaction.webhook.editMessage(followMessage.id, {
+                content: "Expired",
+                components: []
+            })
             client.off("interactionCreate", interactionFunc)
         }, 300000)
     }

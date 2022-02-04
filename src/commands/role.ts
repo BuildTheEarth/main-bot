@@ -176,7 +176,13 @@ export default new Command({
                 ]
             })
         } else if (subcommand === "download") {
-            if (!GuildMember.hasRole(message.member, Roles.SUBTEAM_LEAD || Roles.MANAGER))
+            if (
+                !GuildMember.hasRole(
+                    message.member,
+                    Roles.SUBTEAM_LEAD || Roles.MANAGER,
+                    client
+                )
+            )
                 return
             await role.guild.members.fetch()
             const extended = args.consume("extended")

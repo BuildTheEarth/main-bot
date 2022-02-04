@@ -47,13 +47,13 @@ export default new Command({
         let position = args.consumeIf(["bto", "vcc", "vs"], "position")
         if (!position)
             for (const [team, lead] of Object.entries(pseudoteamPositions.leads))
-                if (GuildMember.hasRole(message.member, lead)) position = team
+                if (GuildMember.hasRole(message.member, lead, client)) position = team
         if (!position) return
 
         const lead = pseudoteamPositions.leads[position]
         const expanded = pseudoteamPositions.expansions[position]
 
-        if (!GuildMember.hasRole(message.member, lead))
+        if (!GuildMember.hasRole(message.member, lead, client))
             return client.response.sendError(
                 message,
                 `You can't manage members in the **${expanded}** team!`

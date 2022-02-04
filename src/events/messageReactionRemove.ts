@@ -26,13 +26,17 @@ export default async function messageReactionRemove(
             guild.id === this.config.guilds.main &&
             channelRaw.isThread() &&
             channelRaw.parent.id === this.config.suggestions.main &&
-            ((reaction.emoji.identifier === this.config.emojis.pin.toString().replaceAll("<", "").replaceAll(">", "")) != (reaction.emoji.name === this.config.emojis.pin)) &&
-            GuildMember.hasRole(member, [
-                Roles.MODERATOR,
-                Roles.MANAGER,
-                Roles.HELPER,
-                Roles.SUGGESTION_TEAM
-            ])
+            (reaction.emoji.identifier ===
+                this.config.emojis.pin
+                    .toString()
+                    .replaceAll("<", "")
+                    .replaceAll(">", "")) !=
+                (reaction.emoji.name === this.config.emojis.pin) &&
+            GuildMember.hasRole(
+                member,
+                [Roles.MODERATOR, Roles.MANAGER, Roles.HELPER, Roles.SUGGESTION_TEAM],
+                this
+            )
         ) {
             try {
                 await reaction.message.unpin()

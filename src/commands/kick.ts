@@ -49,7 +49,7 @@ export default new Command({
             return client.response.sendError(message, client.messages.isBot)
         if (member.id === message.member.user.id)
             return client.response.sendError(message, client.messages.isSelfKick)
-        if (GuildMember.hasRole(member, Roles.STAFF))
+        if (GuildMember.hasRole(member, Roles.STAFF, client))
             return client.response.sendError(message, client.messages.isStaffKick)
 
         const image = args.consumeImage("image_url")
