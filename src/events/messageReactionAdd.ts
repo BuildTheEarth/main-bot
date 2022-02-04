@@ -56,7 +56,7 @@ export default async function messageReactionAdd(
             guild.id === this.config.guilds.main &&
             channelRaw.isThread() &&
             channelRaw.parent.id === this.config.suggestions.main &&
-            ((reaction.emoji.identifier === this.config.emojis.delete) != (reaction.emoji.name === this.config.emojis.delete))  &&
+            ((reaction.emoji.identifier === this.config.emojis.delete.toString().replaceAll("<", "").replaceAll(">", "")) != (reaction.emoji.name === this.config.emojis.delete))  &&
             GuildMember.hasRole(member, [
                 Roles.MODERATOR,
                 Roles.MANAGER,
@@ -74,8 +74,8 @@ export default async function messageReactionAdd(
         if (
             guild.id === this.config.guilds.main &&
             channelRaw.id === this.config.suggestions.main &&
-            ((reaction.emoji.identifier === this.config.emojis.downvote) != (reaction.emoji.name === this.config.emojis.downvote))  &&
-            ((reaction.emoji.identifier === this.config.emojis.upvote) != (reaction.emoji.name === this.config.emojis.upvote)) 
+            ((reaction.emoji.identifier === this.config.emojis.downvote.toString().replaceAll("<", "").replaceAll(">", "")) != (reaction.emoji.name === this.config.emojis.downvote))  &&
+            ((reaction.emoji.identifier === this.config.emojis.upvote.toString().replaceAll("<", "").replaceAll(">", "")) != (reaction.emoji.name === this.config.emojis.upvote)) 
         )
             await reaction.users.remove(user)
 
@@ -83,7 +83,7 @@ export default async function messageReactionAdd(
             guild.id === this.config.guilds.main &&
             channelRaw.isThread() &&
             channelRaw.parent.id === this.config.suggestions.main &&
-            ((reaction.emoji.identifier === this.config.emojis.pin) != (reaction.emoji.name === this.config.emojis.pin))  &&
+            ((reaction.emoji.identifier === this.config.emojis.pin.toString().replaceAll("<", "").replaceAll(">", "")) != (reaction.emoji.name === this.config.emojis.pin))  &&
             GuildMember.hasRole(member, [
                 Roles.MODERATOR,
                 Roles.MANAGER,
