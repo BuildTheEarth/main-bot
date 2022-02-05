@@ -8,11 +8,13 @@ import Snippet from "../entities/Snippet"
 import languages from "../struct/client/iso6391"
 import Roles from "../util/roles"
 import chalk from "chalk"
+import noop from "../util/noop"
 import Discord from "discord.js"
 import { Brackets, WhereExpression } from "typeorm"
 import ModerationMenu from "../entities/ModerationMenu"
 
 export default async function (this: Client, message: Discord.Message): Promise<unknown> {
+    if (message.partial) await message.fetch().catch(noop)
     if (message.author.bot) return
     const Snippets = Snippet.getRepository()
 

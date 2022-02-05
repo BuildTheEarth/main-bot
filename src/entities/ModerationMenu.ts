@@ -3,7 +3,9 @@ import _ from "lodash"
 import path from "path"
 import { Entity, Column, BaseEntity } from "typeorm"
 import { loadSyncJSON5 } from "../util/loadJSON5"
-const punishmentValues = loadSyncJSON5(path.join(__dirname + "../../../config/extensions/punishmentValues.json5"))
+const punishmentValues = loadSyncJSON5(
+    path.join(__dirname + "../../../config/extensions/punishmentValues.json5")
+)
 import Client from "../struct/Client"
 import { BannedWordObj } from "../struct/client/BannedWordFilter"
 import formatPunishmentTime from "../util/formatPunishmentTime"
@@ -31,7 +33,11 @@ export default class ModerationMenu extends BaseEntity {
         filterResponse: BannedWordObj[],
         client: Client
     ): Promise<ModerationMenu> {
-        await message.delete()
+        try {
+            await message.delete()
+        } catch (e) {
+            //Do nothing
+        }
 
         const truePunishments = getMostSevereList(filterResponse, client)
 
