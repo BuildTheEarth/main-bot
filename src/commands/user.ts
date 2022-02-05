@@ -7,8 +7,12 @@ import path from "path"
 import Roles from "../util/roles"
 import humanizeConstant from "../util/humanizeConstant"
 import formatTimestamp from "../util/formatTimestamp"
-const userFlags = loadSyncJSON5(path.join(__dirname + "../../../config/extensions/userFlags.json5"))
-const activityTypes = loadSyncJSON5(path.join(__dirname + "../../../config/extensions/activityTypes.json5"))
+const userFlags = loadSyncJSON5(
+    path.join(__dirname + "../../../config/extensions/userFlags.json5")
+)
+const activityTypes = loadSyncJSON5(
+    path.join(__dirname + "../../../config/extensions/activityTypes.json5")
+)
 import hexToRGB from "../util/hexToRGB"
 import CommandMessage from "../struct/CommandMessage"
 

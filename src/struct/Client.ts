@@ -43,7 +43,7 @@ export default class Client extends Discord.Client {
             type: db.type,
             entities: [__dirname + "/../entities/*.{js,ts}"],
             synchronize: process.env.NODE_ENV !== "production",
-            logging: process.env.NODE_ENV !== "production"? "all": false
+            logging: process.env.NODE_ENV !== "production" ? "all" : false
         }
 
         if (!["mariadb", "mysql", "sqlite"].includes(db.type)) {

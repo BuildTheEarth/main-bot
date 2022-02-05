@@ -41,7 +41,7 @@ export default new Command({
                 user === undefined ? client.messages.noUser : client.messages.invalidUser
             )
         const member: Discord.GuildMember = await message.guild.members
-            .fetch({ user, cache: true })
+            .fetch({ user, cache: false })
             .catch(noop)
         if (!member) return client.response.sendError(message, client.messages.notInGuild)
 
@@ -59,7 +59,7 @@ export default new Command({
         await message.continue()
 
         const length = null
-        const log = await punish(client, message, member, "kick", reason, image, length)
+        const log = await punish(client, message, user, "kick", reason, image, length)
 
         await client.response.sendSuccess(message, `Kicked ${user} (**#${log.id}**).`)
         await client.log(log)

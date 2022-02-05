@@ -5,11 +5,12 @@ import TimedPunishment from "../entities/TimedPunishment"
 import ActionLog from "../entities/ActionLog"
 import GuildMember from "../struct/discord/GuildMember"
 import Roles from "../util/roles"
+import noop from "./noop"
 
 async function log(
     client: Client,
     message: CommandMessage | ButtonInteraction,
-    member: Discord.GuildMember,
+    user: Discord.User,
     type: "warn" | "mute" | "kick" | "ban",
     reason: string,
     image: string,
@@ -19,7 +20,7 @@ async function log(
 ): Promise<ActionLog> {
     const log = new ActionLog()
     log.action = type
-    log.member = member.id
+    log.member = user.id
     log.executor = message.member.user.id
     log.reason = reason
     log.reasonImage = image
@@ -29,6 +30,10 @@ async function log(
     log.message = messageId
     if (type === ("ban" || "mute")) log.punishment = punishment
     await log.save()
+
+    const member: Discord.GuildMember = await message.guild.members
+        .fetch({ user, cache: true })
+        .catch(noop)
 
     await log.notifyMember(client)
     if (type === "ban") {
@@ -46,7 +51,7 @@ async function log(
                 reviewerChannel,
                 `Builder ${member.user} (${member.id}) was banned!`
             )
-        await client.customGuilds.main().members.ban(member.user, {
+        await client.customGuilds.main().members.ban(user, {
             reason: reason.length <= 512 ? reason : (await log.contextUrl(client)).href
         })
     }
@@ -54,9 +59,10 @@ async function log(
         if (member) await GuildMember.mute(member, reason)
     }
     if (type === "kick") {
-        await member.kick(
-            reason.length <= 512 ? reason : (await log.contextUrl(client)).href
-        )
+        if (member)
+            await member.kick(
+                reason.length <= 512 ? reason : (await log.contextUrl(client)).href
+            )
     }
 
     return log
@@ -64,7 +70,7 @@ async function log(
 
 async function timedPunishment(
     client: Client,
-    member: Discord.GuildMember,
+    member: Discord.User,
     type: "mute" | "ban",
     length: number
 ) {
@@ -81,7 +87,7 @@ async function timedPunishment(
 export default async function punish(
     client: Client,
     message: CommandMessage | ButtonInteraction,
-    member: Discord.GuildMember,
+    member: Discord.User,
     type: "warn" | "mute" | "kick" | "ban",
     reason: string,
     image: string,

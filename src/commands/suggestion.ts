@@ -11,7 +11,9 @@ import { loadSyncJSON5 } from "../util/loadJSON5"
 import flattenMarkdown from "../util/flattenMarkdown"
 import { Brackets } from "typeorm"
 import noop from "../util/noop"
-const suggestionStatusActions = loadSyncJSON5(path.join(__dirname + "../../../config/extensions/suggestionStatusActions.json5"))
+const suggestionStatusActions = loadSyncJSON5(
+    path.join(__dirname + "../../../config/extensions/suggestionStatusActions.json5")
+)
 import hexToRGB from "../util/hexToRGB"
 import GuildMember from "../struct/discord/GuildMember"
 import CommandMessage from "../struct/CommandMessage"

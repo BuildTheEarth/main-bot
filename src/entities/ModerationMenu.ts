@@ -290,7 +290,7 @@ export default class ModerationMenu extends BaseEntity {
             messages.alreadyPunished = client.messages.alreadyMuted
         }
 
-        const user = client.users.cache.get(modMenu.member)
+        const user = await client.users.fetch(modMenu.member)
 
         if (!user) {
             replyInteraction.editReply({
@@ -303,21 +303,34 @@ export default class ModerationMenu extends BaseEntity {
             return
         }
         const member: Discord.GuildMember = await interaction.guild.members
-            .fetch({ user, cache: true })
+            .fetch({ user, cache: false })
             .catch(noop)
+
+        if (
+            (!member && punishment.punishment_type === "KICK") ||
+            (!member && punishment.punishment_type === "WARN")
+        ) {
+            await replyInteraction.editReply({
+                content: client.messages.notInGuild
+            })
+            return
+        }
+
+        if (user.bot) {
+            await replyInteraction.editReply({
+                content: client.messages.isBot
+            })
+            return
+        }
+
+        if (user.id === interaction.user.id) {
+            await replyInteraction.editReply({
+                content: client.messages.isSelfBan
+            })
+            return
+        }
+
         if (member) {
-            if (member.user.bot) {
-                await replyInteraction.editReply({
-                    content: client.messages.isBot
-                })
-                return
-            }
-            if (member.id === interaction.user.id) {
-                await replyInteraction.editReply({
-                    content: client.messages.isSelfBan
-                })
-                return
-            }
             if (GuildMember.hasRole(member, Roles.STAFF, client)) {
                 replyInteraction.editReply({
                     content: client.messages.isStaffBan
@@ -345,7 +358,7 @@ export default class ModerationMenu extends BaseEntity {
         const log = await punish(
             client,
             interaction,
-            member,
+            user,
             punishment.punishment_type.toLowerCase() as "mute" | "ban" | "warn" | "kick",
             punishment.reason,
             null,

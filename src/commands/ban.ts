@@ -50,11 +50,8 @@ export default new Command({
                 user === undefined ? client.messages.noUser : client.messages.invalidUser
             )
         const member: Discord.GuildMember = await message.guild.members
-            .fetch({ user, cache: true })
+            .fetch({ user, cache: false })
             .catch(noop)
-
-        if (!member)
-            return client.response.sendError(message, client.messages.invalidUser)
 
         if (member) {
             if (member.user.bot)
@@ -78,7 +75,7 @@ export default new Command({
         const ban = await TimedPunishment.findOne({ member: user.id, type: "ban" })
         if (ban) return client.response.sendError(message, client.messages.alreadyBanned)
 
-        const log = await punish(client, message, member, "ban", reason, image, length)
+        const log = await punish(client, message, user, "ban", reason, image, length)
 
         const formattedLength = formatPunishmentTime(length)
         await client.response.sendSuccess(

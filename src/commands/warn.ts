@@ -44,14 +44,14 @@ export default new Command({
         const reason = args.consumeRest(["reason"])
         if (!reason) return client.response.sendError(message, client.messages.noReason)
         const member: Discord.GuildMember = await message.guild.members
-            .fetch({ user, cache: true })
+            .fetch({ user, cache: false })
             .catch(() => null)
         if (!member) return client.response.sendError(message, client.messages.notInGuild)
 
         await message.continue()
 
         const length = null
-        const log = await punish(client, message, member, "warn", reason, image, length)
+        const log = await punish(client, message, user, "warn", reason, image, length)
 
         const formattedUser = user.id === message.member.id ? "*you*" : user.toString()
         await client.response.sendSuccess(

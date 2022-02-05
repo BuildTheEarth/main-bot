@@ -8,6 +8,7 @@ import formatPunishmentTime from "../util/formatPunishmentTime"
 import Discord from "discord.js"
 import CommandMessage from "../struct/CommandMessage"
 import punish from "../util/punish"
+import noop from "../util/noop"
 
 export default new Command({
     name: "mute",
@@ -48,8 +49,8 @@ export default new Command({
                 user === undefined ? client.messages.noUser : client.messages.invalidUser
             )
         const member: Discord.GuildMember = await message.guild.members
-            .fetch({ user, cache: true })
-            .catch(() => null)
+            .fetch({ user, cache: false })
+            .catch(noop)
         if (member) {
             if (member.user.bot)
                 return client.response.sendError(message, client.messages.isBot)
@@ -70,7 +71,7 @@ export default new Command({
         const mute = await TimedPunishment.findOne({ member: user.id, type: "mute" })
         if (mute) return client.response.sendError(message, client.messages.alreadyMuted)
 
-        const log = await punish(client, message, member, "mute", reason, image, length)
+        const log = await punish(client, message, user, "mute", reason, image, length)
 
         const away = member ? "" : ", though they're not in the server"
         const formattedLength = formatPunishmentTime(length)

@@ -77,7 +77,7 @@ export default new Command({
         const log = await ActionLog.getRepository()
             .createQueryBuilder()
             .withDeleted()
-            .andWhere({id: id})
+            .andWhere({ id: id })
             .getOne()
 
         if (!log)
