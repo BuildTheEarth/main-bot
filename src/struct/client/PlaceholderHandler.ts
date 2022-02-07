@@ -1,4 +1,6 @@
-import _ from "lodash"
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import Placeholder from "../../entities/Placeholder"
 import Client from "../Client"
 import iso6391 from "./iso6391"
@@ -32,7 +34,7 @@ export default class PlaceholderHandler {
         if (this.cache.has(name + " " + language)) return
         if (!iso6391.validate(language)) return
 
-        const placeholder = await Placeholder.findOne({name: name, language: language})
+        const placeholder = await Placeholder.findOne({ name: name, language: language })
 
         if (placeholder) {
             placeholder.body = newBody
@@ -45,7 +47,7 @@ export default class PlaceholderHandler {
         if (this.cache.has(name + " " + language)) return
         if (!iso6391.validate(language)) return
 
-        const placeholder = await Placeholder.findOne({name: name, language: language})
+        const placeholder = await Placeholder.findOne({ name: name, language: language })
 
         if (placeholder) {
             await placeholder.remove()
@@ -56,13 +58,15 @@ export default class PlaceholderHandler {
     replacePlaceholders(text: string) {
         if (!text) return text
 
-        return text.replaceAll(/{{.*?}}/g, (substring: string, ...args: any[]): string => {
-            let trimmedString = trimSides(substring, "{{", "}}").trim()
-            if (trimmedString.split(" ").length > 2) return substring
-            if (trimmedString.split(" ").length == 1) trimmedString += " en"
+        return text.replaceAll(
+            /{{.*?}}/g,
+            (substring: string, ...args: any[]): string => {
+                let trimmedString = trimSides(substring, "{{", "}}").trim()
+                if (trimmedString.split(" ").length > 2) return substring
+                if (trimmedString.split(" ").length == 1) trimmedString += " en"
 
-            return this.cache[trimmedString]?.body || substring
-        })
+                return this.cache[trimmedString]?.body || substring
+            }
+        )
     }
 }
-

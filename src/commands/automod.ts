@@ -142,7 +142,9 @@ export default new Command({
                             punishmentTypes
                         )}`
                     )
-                const reason = client.placeholder.replacePlaceholders(args.consume("reason"))
+                const reason = client.placeholder.replacePlaceholders(
+                    args.consume("reason")
+                )
                 if (!reason && punishment !== "DELETE")
                     return await client.response.sendError(
                         message,

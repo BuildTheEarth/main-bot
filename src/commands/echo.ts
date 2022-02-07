@@ -12,14 +12,17 @@ export default new Command({
     description: "Why are you using this.",
     permission: Roles.MANAGER,
     devOnly: true,
-    args: [{
-        name: "echo",
-        description: "text to echo",
-        optionType: "STRING",
-        required: true
-    }],
+    args: [
+        {
+            name: "echo",
+            description: "text to echo",
+            optionType: "STRING",
+            required: true
+        }
+    ],
     async run(this: Command, client: Client, message: CommandMessage, args: Args) {
-        const date = new Date()
-        await message.send({content: client.placeholder.replacePlaceholders(args.consumeRest(['echo']))})
+        await message.send({
+            content: client.placeholder.replacePlaceholders(args.consumeRest(["echo"]))
+        })
     }
 })

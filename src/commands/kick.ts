@@ -53,7 +53,9 @@ export default new Command({
             return client.response.sendError(message, client.messages.isStaffKick)
 
         const image = args.consumeImage("image_url")
-        const reason = client.placeholder.replacePlaceholders(args.consumeRest(["reason"]))
+        const reason = client.placeholder.replacePlaceholders(
+            args.consumeRest(["reason"])
+        )
         if (!reason) return client.response.sendError(message, client.messages.noReason)
 
         await message.continue()

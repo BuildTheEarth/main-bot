@@ -88,7 +88,9 @@ export default new Command({
             await message.send({ embeds: [embed] })
         } else if (subcommand === "edit") {
             const image = args.consumeImage("image_url")
-            const reason = client.placeholder.replacePlaceholders(args.consumeRest(["reason"]))
+            const reason = client.placeholder.replacePlaceholders(
+                args.consumeRest(["reason"])
+            )
             if (!reason && !image)
                 return client.response.sendError(message, client.messages.noNewReason)
             if (reason === log.reason && !image)

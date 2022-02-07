@@ -67,7 +67,9 @@ export default new Command({
             return client.response.sendError(message, client.messages.noLength)
         const image = args.consumeImage("image_url")
         if (!image) return client.response.sendError(message, client.messages.noImage)
-        const reason = client.placeholder.replacePlaceholders(args.consumeRest(["reason"]))
+        const reason = client.placeholder.replacePlaceholders(
+            args.consumeRest(["reason"])
+        )
         if (!reason) return client.response.sendError(message, client.messages.noReason)
 
         await message.continue()

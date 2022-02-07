@@ -33,7 +33,14 @@ export default class ModerationMenu extends BaseEntity {
         filterResponse: BannedWordObj[],
         client: Client
     ): Promise<ModerationMenu> {
-        if (GuildMember.hasRole(message.member, [Roles.HELPER, Roles.MODERATOR, Roles.MANAGER], client)) return
+        if (
+            GuildMember.hasRole(
+                message.member,
+                [Roles.HELPER, Roles.MODERATOR, Roles.MANAGER],
+                client
+            )
+        )
+            return
 
         await message.delete().catch(noop)
 

@@ -154,11 +154,11 @@ export default new Command({
                 message,
                 `Please run this command in another channel!`
             )
-                message.delete().catch(noop)
-                setTimeout(() => {
-                    if (messages) messages.delete().catch(noop)
-                }, 10000)
-                return
+            message.delete().catch(noop)
+            setTimeout(() => {
+                if (messages) messages.delete().catch(noop)
+            }, 10000)
+            return
         }
 
         const subcommand = args.consumeSubcommand()
@@ -367,7 +367,9 @@ export default new Command({
             return client.response.sendError(message, client.messages.utlSuggestion)
 
         let thread = await (
-            client.channels.cache.get(client.config.suggestions.discussion[category]) as Discord.TextChannel
+            client.channels.cache.get(
+                client.config.suggestions.discussion[category]
+            ) as Discord.TextChannel
         ).threads.fetch(suggestion.thread)
         if ((thread as unknown as FetchedThreads).threads) thread = null
 
