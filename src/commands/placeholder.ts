@@ -170,6 +170,11 @@ export default new Command({
                     message,
                     client.messages.invalidPlaceholderLang
                 )
+            if (name.match(/{+|}+/g))
+                return client.response.sendError(
+                    message,
+                    client.messages.invalidPlaceholderName
+                )
             await client.placeholder.addPlaceholder(name, language, body)
             await client.response.sendSuccess(
                 message,
