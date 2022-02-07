@@ -33,11 +33,9 @@ export default class ModerationMenu extends BaseEntity {
         filterResponse: BannedWordObj[],
         client: Client
     ): Promise<ModerationMenu> {
-        try {
-            await message.delete()
-        } catch (e) {
-            //Do nothing
-        }
+        if (GuildMember.hasRole(message.member, [Roles.HELPER, Roles.MODERATOR, Roles.MANAGER], client)) return
+
+        await message.delete().catch(noop)
 
         const truePunishments = getMostSevereList(filterResponse, client)
 
