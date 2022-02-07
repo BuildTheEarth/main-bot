@@ -33,7 +33,7 @@ export default new Command({
                 user === undefined ? client.messages.noUser : client.messages.invalidUser
             )
 
-        const reason = args.consumeRest(["reason"])
+        const reason = client.placeholder.replacePlaceholders(args.consumeRest(["reason"]))
         if (!reason) return client.response.sendError(message, client.messages.noReason)
 
         await message.continue()

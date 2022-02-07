@@ -117,7 +117,7 @@ export default new Command({
 
         await message.continue()
         const placeholders = await client.placeholder.cache
-        if (subcommand === "list") {
+        if (subcommand === "list" || !subcommand) {
             const tidy: Record<string, { languages: string[] }> = {}
 
             for (const placeholder of Object.values(placeholders)) {

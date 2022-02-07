@@ -82,6 +82,7 @@ export default class Args {
         const args = this.get(argName, count)
         this.remove(count)
         return args
+
     }
 
     consumeIf(

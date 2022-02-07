@@ -54,12 +54,14 @@ export default class PlaceholderHandler {
     }
 
     replacePlaceholders(text: string) {
-        return text.replaceAll(/{{.+}}/g, (substring: string, ...args: any[]): string => {
-            let trimmedString = trimSides(substring, "{{", "}}")
+        if (!text) return text
+
+        return text.replaceAll(/{{.*?}}/g, (substring: string, ...args: any[]): string => {
+            let trimmedString = trimSides(substring, "{{", "}}").trim()
             if (trimmedString.split(" ").length > 2) return substring
             if (trimmedString.split(" ").length == 1) trimmedString += " en"
 
-            return this.cache[trimmedString] || substring
+            return this.cache[trimmedString]?.body || substring
         })
     }
 }

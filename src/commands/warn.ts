@@ -41,7 +41,7 @@ export default new Command({
             )
 
         const image = args.consumeImage("image_url")
-        const reason = args.consumeRest(["reason"])
+        const reason = client.placeholder.replacePlaceholders(args.consumeRest(["reason"]))
         if (!reason) return client.response.sendError(message, client.messages.noReason)
         const member: Discord.GuildMember = await message.guild.members
             .fetch({ user, cache: false })
