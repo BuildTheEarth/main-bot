@@ -74,13 +74,13 @@ export default class Client extends Discord.Client {
     }
 
     async log(
-        log: ActionLog | Snippet | Discord.MessageEmbedOptions,
+        log: ActionLog | Snippet | Placeholder | Discord.MessageEmbedOptions,
         action?: "add" | "edit" | "delete",
         executor?: Discord.User
     ): Promise<void> {
         const channel: Discord.TextChannel = await this.channels
             .fetch(
-                log instanceof Snippet
+                log instanceof Snippet || log instanceof Placeholder
                     ? this.config.logging.snippetLogs
                     : this.config.logging.modLogs,
                 { force: true }
@@ -98,7 +98,7 @@ export default class Client extends Discord.Client {
             }
 
             await channel.send({ embeds: [embed] })
-        } else if (log instanceof Snippet) {
+        } else if (log instanceof Snippet || log instanceof Placeholder) {
             const embed = log.displayEmbed(this)
             embed.thumbnail = {
                 url: executor.displayAvatarURL({ format: "png", dynamic: true, size: 64 })

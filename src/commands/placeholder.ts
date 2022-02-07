@@ -10,7 +10,7 @@ export default new Command({
     name: "placeholder",
     aliases: ["placeholders"],
     description: "List and manage placeholders.",
-    permission: [Roles.MODERATOR, Roles.HELPER, Roles.MANAGER],
+    permission: [Roles.MODERATOR, Roles.HELPER, Roles.MANAGER, Roles.PR_TRANSLATION_TEAM],
     subcommands: [
         {
             name: "list",
@@ -109,10 +109,10 @@ export default new Command({
             "delete",
             "info"
         ])
-        const name = args.consume("name")
+        const name = args.consume("name").toLowerCase()
         if (name.length > 32)
             return client.response.sendError(message, client.messages.nameTooLong32)
-        const language = args.consume("language")
+        const language = args.consume("language").toLowerCase()
         const body = args.consumeRest(["body"])
 
         await message.continue()
@@ -180,6 +180,7 @@ export default new Command({
                 message,
                 `Added placeholder ${name} (${language})`
             )
+            client.log(placeholders[name + " " + language], "add", message.member.user)
         } else if (subcommand === "edit") {
             if (!body) return client.response.sendError(message, client.messages.noBody)
             if (!name)
@@ -194,11 +195,12 @@ export default new Command({
                     message,
                     client.messages.placeholderNotFound
                 )
-            client.placeholder.editPlaceholder(name, language, body)
+            await client.placeholder.editPlaceholder(name, language, body)
             await client.response.sendSuccess(
                 message,
                 `Edited placeholder ${name} (${language})`
             )
+            client.log(placeholders[name + " " + language], "edit", message.member.user)
         } else if (subcommand === "delete") {
             if (!name)
                 return client.response.sendError(
@@ -217,6 +219,7 @@ export default new Command({
                 message,
                 `Deleted placeholder ${name} (${language})`
             )
+            client.log(placeholders[name + " " + language], "delete", message.member.user)
         } else if (subcommand === "info") {
             if (!name)
                 return client.response.sendError(
