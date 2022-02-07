@@ -102,6 +102,7 @@
     invalidTime: ["Please provide a valid time."],
     invalidSnippetLang: ["Please provide a valid snippet language."],
     invalidPlaceholderLang: ["Please provide a valid placeholder language."],
+    invalidPlaceholderName: ["Please provide a valid placeholder name."],
     invalidRuleName: ["Rules must have number names (eg. 1, 2, 3, ...)"],
     invalidSuggestionNumber: ["Hmm... That suggestion doesn't exist."],
     invalidTeam: [
