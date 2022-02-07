@@ -141,7 +141,6 @@ export default new Command({
         const Suggestions = client.db.getRepository(Suggestion)
         const staff = message.guild?.id === client.config.guilds.staff
         const category = staff ? "staff" : "main"
-        const discussionID = client.config.suggestions.discussion[category]
         const canManage = message.member
             ? GuildMember.hasRole(
                   message.member,
@@ -150,22 +149,16 @@ export default new Command({
               )
             : false
 
-        if (
-            message.channel.id !== discussionID &&
-            !canManage &&
-            message.channel.type !== "DM"
-        ) {
+        if (message.channel.id === client.config.suggestions[category] && !canManage) {
             const messages = await client.response.sendError(
                 message,
-                `Please run this command in <#${discussionID}>!`
+                `Please run this command in another channel!`
             )
-            if (message.channel.id === client.config.suggestions[category]) {
                 message.delete().catch(noop)
                 setTimeout(() => {
                     if (messages) messages.delete().catch(noop)
                 }, 10000)
-            }
-            return
+                return
         }
 
         const subcommand = args.consumeSubcommand()
@@ -278,7 +271,7 @@ export default new Command({
                     )
                 )
                     return
-                if (interaction.user.id !== message.member.id)
+                if (interaction.user.id !== message.author.id)
                     return interaction.reply({
                         content: client.messages.wrongUser,
                         ephemeral: true
@@ -374,7 +367,7 @@ export default new Command({
             return client.response.sendError(message, client.messages.utlSuggestion)
 
         let thread = await (
-            client.channels.cache.get(discussionID) as Discord.TextChannel
+            client.channels.cache.get(client.config.suggestions.discussion[category]) as Discord.TextChannel
         ).threads.fetch(suggestion.thread)
         if ((thread as unknown as FetchedThreads).threads) thread = null
 
@@ -395,7 +388,7 @@ export default new Command({
         } else if (subcommand === "edit") {
             const field = args.consumeIf(["title", "body", "teams"], "field") || "body"
             if (
-                suggestion.author !== message.member.id &&
+                suggestion.author !== message.author.id &&
                 (field === "body" || !canManage)
             )
                 return client.response.sendError(message, client.messages.editOthers)
@@ -416,19 +409,20 @@ export default new Command({
             await suggestionMessage.edit({ embeds: [embed] })
             return client.response.sendSuccess(message, "Edited the suggestion!")
         } else if (subcommand === "delete") {
-            if (suggestion.author !== message.member.id && !canManage)
+            if (suggestion.author !== message.author.id && !canManage)
                 return client.response.sendError(message, client.messages.deleteOthers)
 
             // BaseEntity#softRemove() doesn't save the deletion date to the object itself
             // and we need it to be saved because Suggestion#displayEmbed() uses it
-            suggestion.deleter = message.member.id
+            suggestion.deleter = message.author.id
             suggestion.deletedAt = new Date()
             await suggestion.save()
 
             const embed = await suggestion.displayEmbed(client)
             await suggestionMessage.edit({ embeds: [embed] })
+            console.log(identifier)
             if (thread) {
-                await thread.setName(`${identifier} - deleted suggestion`)
+                await thread.setName(`${identifier.number} - deleted suggestion`)
                 await thread.send("**This suggestion has been deleted.**")
                 await thread.setLocked(true)
                 await thread.setArchived(true)
@@ -450,7 +444,7 @@ export default new Command({
             }
 
             suggestion.status = status as SuggestionStatus
-            suggestion.statusUpdater = message.member.id
+            suggestion.statusUpdater = message.author.id
             suggestion.statusReason = reason || null
 
             await suggestion.save()

@@ -16,10 +16,6 @@
     suggestions: {
         main: "",
         staff: "",
-        discussion: {
-            main: "",
-            staff: ""
-        }
     },
     suggestionOffset: {
         main: 0,
