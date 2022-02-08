@@ -1,5 +1,4 @@
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import Discord, { CommandInteraction } from "discord.js"
+import Discord from "discord.js"
 import Client from "../struct/Client"
 
 export default class CommandMessage {
