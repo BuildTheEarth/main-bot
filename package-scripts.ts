@@ -28,7 +28,8 @@ export = {
       production: 'npm start docker.production'
     },
     docker: {
-      default: seriesNPS('docker.build', 'docker.run'),
+      default: seriesNPS('docker.build', 'docker.compose'),
+      compose: "docker compose up",
       build: "docker build . -t buildtheearth/main-bot",
       run: "docker run buildtheearth/main-bot",
       production: "docker run buildtheearth/main-bot -d"

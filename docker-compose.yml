@@ -1,0 +1,12 @@
+version: '1'
+services:
+  main-bot-service:
+    image: buildtheearth/main-bot
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: test
+    volumes:
+      - type: bind
+        source: ./config
+        target: /home/bots/main-bot/config

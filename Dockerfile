@@ -2,7 +2,7 @@ FROM node:16-alpine3.15
 
 WORKDIR /home/bots/main-bot
 
-COPY package*.json ./
+COPY package*.json .
 
 RUN npm install
 

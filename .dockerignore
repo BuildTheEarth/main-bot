@@ -12,3 +12,5 @@ images/
 
 #Docker
 docker_env/
+
+config/
