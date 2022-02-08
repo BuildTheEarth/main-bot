@@ -5,7 +5,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: test
+    container_name: main-bot
     volumes:
       - type: bind
         source: ./config
