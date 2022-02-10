@@ -13,7 +13,7 @@ export default class GuildMember {
         if (roles === Roles.ANY) return true
         if (typeof roles === "string") roles = [roles]
         if (botDevBypass && client.config.developers.includes(user.id))
-            roles.push(Roles.BOT_DEVELOPER)
+            return true
         for (const role of roles)
             if (user.roles.cache.find(r => r.name === role)) return true
         return false
