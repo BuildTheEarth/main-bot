@@ -22,7 +22,9 @@
                 "code",
                 "maintenance",
                 "infra",
-                "plugin"
+                "plugin",
+                "doc",
+                "ideas"
             ]
         },
         {
@@ -58,7 +60,8 @@
             "contributions": [
                 "code",
                 "maintenance",
-                "doc"
+                "doc",
+                "ideas"
             ]
         },
         {
@@ -78,16 +81,6 @@
             "profile": "http://sky.shiiyu.moe",
             "contributions": [
                 "code"
-            ]
-        },
-        {
-            "login": "fnionn",
-            "name": "Fionn",
-            "avatar_url": "https://avatars.githubusercontent.com/u/53976867?v=4",
-            "profile": "https://www.youtube.com/channel/UCxiYE392PghWtHEQaTN81oA",
-            "contributions": [
-                "code",
-                "infra"
             ]
         },
         {
