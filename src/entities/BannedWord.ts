@@ -40,8 +40,8 @@ export default class BannedWord extends BaseEntity {
             else
                 client.filterWordsCached.banned[word] = {
                     punishment_type: punishment_type,
-                    reason: reason,
-                    duration: duration
+                    reason: reason === null ? "none" : reason,
+                    duration: duration === null ? 0 : duration
                 }
         }
     }
