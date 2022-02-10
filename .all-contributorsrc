@@ -1,126 +1,128 @@
 {
-  "files": [
-    "readme.md"
-  ],
-  "contributors": [
-    {
-      "login": "cAttte",
-      "name": "cAttte",
-      "avatar_url": "https://avatars0.githubusercontent.com/u/26514199?v=4",
-      "profile": "https://github.com/cAttte",
-      "contributions": [
-        "code",
-        "projectManagement"
-      ]
-    },
-    {
-      "login": "vicrobex",
-      "name": "vicrobex",
-      "avatar_url": "https://avatars1.githubusercontent.com/u/56770982?v=4",
-      "profile": "https://github.com/vicrobex",
-      "contributions": [
-        "design"
-      ]
-    },
-    {
-      "login": "arc25275",
-      "name": "arc25275",
-      "avatar_url": "https://avatars2.githubusercontent.com/u/55003876?v=4",
-      "profile": "https://github.com/arc25275",
-      "contributions": [
-        "ideas",
-        "code",
-        "maintenance"
-      ]
-    },
-    {
-      "login": "metalcupcake5",
-      "name": "metalcupcake5",
-      "avatar_url": "https://avatars0.githubusercontent.com/u/43897385?v=4",
-      "profile": "http://sky.shiiyu.moe",
-      "contributions": [
-        "code"
-      ]
-    },
-    {
-      "login": "noahhusby",
-      "name": "Noah Husby",
-      "avatar_url": "https://avatars3.githubusercontent.com/u/32528627?v=4",
-      "profile": "http://noahhusby.com",
-      "contributions": [
-        "projectManagement"
-      ]
-    },
-    {
-      "login": "olivephio",
-      "name": "olivephio",
-      "avatar_url": "https://avatars1.githubusercontent.com/u/76128526?v=4",
-      "profile": "https://github.com/olivephio",
-      "contributions": [
-        "ideas",
-        "design"
-      ]
-    },
-    {
-      "login": "XboxBedrock",
-      "name": "XboxBedrock",
-      "avatar_url": "https://avatars2.githubusercontent.com/u/68715625?v=4",
-      "profile": "https://github.com/XboxBedrock",
-      "contributions": [
-        "code",
-        "doc",
-        "ideas",
-        "infra",
-        "maintenance",
-        "projectManagement"
-      ]
-    },
-    {
-      "login": "evilpauwse1",
-      "name": "evil",
-      "avatar_url": "https://avatars3.githubusercontent.com/u/40669563?v=4",
-      "profile": "https://github.com/evilpauwse1",
-      "contributions": [
-        "code"
-      ]
-    },
-    {
-      "login": "Mr-Smarty",
-      "name": "Mr-Smarty",
-      "avatar_url": "https://avatars0.githubusercontent.com/u/69656599?v=4",
-      "profile": "https://github.com/Mr-Smarty",
-      "contributions": [
-        "code",
-        "ideas"
-      ]
-    },
-    {
-      "login": "fnionn",
-      "name": "Fionn",
-      "avatar_url": "https://avatars.githubusercontent.com/u/53976867?v=4",
-      "profile": "https://www.youtube.com/channel/UCxiYE392PghWtHEQaTN81oA",
-      "contributions": [
-        "infra",
-        "code"
-      ]
-    },
-    {
-      "login": "mebrooks01",
-      "name": "Malachi Brooks",
-      "avatar_url": "https://avatars.githubusercontent.com/u/39204478?v=4",
-      "profile": "https://github.com/mebrooks01",
-      "contributions": [
-        "code",
-        "doc",
-        "ideas",
-        "maintenance"
-      ]
-    }
-  ],
-  "projectName": "main-bot",
-  "projectOwner": "BuildTheEarth",
-  "repoType": "github",
-  "repoHost": "https://github.com",
-  "skipCi": true,
-  "contributorsPerLine": 6
+    "files": [
+        "readme.md"
+    ],
+    "contributors": [
+        {
+            "login": "noahhusby",
+            "name": "Noah Husby",
+            "avatar_url": "https://avatars3.githubusercontent.com/u/32528627?v=4",
+            "profile": "http://noahhusby.com",
+            "contributions": [
+                "projectManagement"
+            ]
+        },
+        {
+            "login": "cAttte",
+            "name": "cAttte",
+            "avatar_url": "https://avatars0.githubusercontent.com/u/26514199?v=4",
+            "profile": "https://github.com/cAttte",
+            "contributions": [
+                "projectManagement",
+                "code",
+                "maintenance",
+                "infra",
+                "plugin"
+            ]
+        },
+        {
+            "login": "XboxBedrock",
+            "name": "XboxBedrock",
+            "avatar_url": "https://avatars2.githubusercontent.com/u/68715625?v=4",
+            "profile": "https://github.com/XboxBedrock",
+            "contributions": [
+                "projectManagement",
+                "code",
+                "maintenance",
+                "infra",
+                "doc",
+                "ideas"
+            ]
+        },
+        {
+            "login": "arc25275",
+            "name": "arc25275",
+            "avatar_url": "https://avatars2.githubusercontent.com/u/55003876?v=4",
+            "profile": "https://github.com/arc25275",
+            "contributions": [
+                "code",
+                "maintenance",
+                "ideas"
+            ]
+        },
+        {
+            "login": "mebrooks01",
+            "name": "Malachi Brooks",
+            "avatar_url": "https://avatars.githubusercontent.com/u/39204478?v=4",
+            "profile": "https://github.com/mebrooks01",
+            "contributions": [
+                "code",
+                "maintenance",
+                "doc"
+            ]
+        },
+        {
+            "login": "Mr-Smarty",
+            "name": "Mr-Smarty",
+            "avatar_url": "https://avatars0.githubusercontent.com/u/69656599?v=4",
+            "profile": "https://github.com/Mr-Smarty",
+            "contributions": [
+                "code",
+                "ideas"
+            ]
+        },
+        {
+            "login": "metalcupcake5",
+            "name": "metalcupcake5",
+            "avatar_url": "https://avatars0.githubusercontent.com/u/43897385?v=4",
+            "profile": "http://sky.shiiyu.moe",
+            "contributions": [
+                "code"
+            ]
+        },
+        {
+            "login": "fnionn",
+            "name": "Fionn",
+            "avatar_url": "https://avatars.githubusercontent.com/u/53976867?v=4",
+            "profile": "https://www.youtube.com/channel/UCxiYE392PghWtHEQaTN81oA",
+            "contributions": [
+                "code",
+                "infra"
+            ]
+        },
+        {
+            "login": "evilpauwse1",
+            "name": "evil",
+            "avatar_url": "https://avatars3.githubusercontent.com/u/40669563?v=4",
+            "profile": "https://github.com/evilpauwse1",
+            "contributions": [
+                "code"
+            ]
+        },
+        {
+            "login": "olivephio",
+            "name": "olivephio",
+            "avatar_url": "https://avatars1.githubusercontent.com/u/76128526?v=4",
+            "profile": "https://github.com/olivephio",
+            "contributions": [
+                "design",
+                "ideas"
+            ]
+        },
+        {
+            "login": "vicrobex",
+            "name": "vicrobex",
+            "avatar_url": "https://avatars1.githubusercontent.com/u/56770982?v=4",
+            "profile": "https://github.com/vicrobex",
+            "contributions": [
+                "design"
+            ]
+        }
+    ],
+    "projectName": "main-bot",
+    "projectOwner": "BuildTheEarth",
+    "repoType": "github",
+    "repoHost": "https://github.com",
+    "skipCi": true,
+    "contributorsPerLine": 6
 }
