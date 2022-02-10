@@ -51,7 +51,7 @@ export default class ModerationMenu extends BaseEntity {
                 .addFields([
                     {
                         name: "User",
-                        value: `<@${message.member.id}> (${message.member.id})`
+                        value: `<@${message.author.id}> (${message.author.id})`
                     },
                     {
                         name: "Message",
@@ -112,7 +112,7 @@ export default class ModerationMenu extends BaseEntity {
 
             const punishmentOptions = existingMenu.punishments.map(punishment => {
                 const punish = {
-                    label: truncateString(punishment.reason, 15),
+                    label: truncateString(punishment.reason, 15).trim().length <= 0? "No reason": truncateString(punishment.reason, 15) ,
                     description: `${punishment.punishment_type} for ${getDuration(
                         punishment.duration
                     )}, Word is ${punishment.word}`,
@@ -158,7 +158,7 @@ export default class ModerationMenu extends BaseEntity {
         }
 
         const modMenu = new ModerationMenu()
-        modMenu.member = message.member.id
+        modMenu.member = message.author.id
         modMenu.message_text = message.content
         modMenu.punishments = truePunishments
         modMenu.offenses = 1
