@@ -68,7 +68,9 @@
       "contributions": [
         "code",
         "doc",
-        "ideas"
+        "ideas",
+        "infra",
+        "maintenance"
       ]
     },
     {
