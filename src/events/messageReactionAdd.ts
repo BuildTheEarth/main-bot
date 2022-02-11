@@ -3,6 +3,7 @@ import Client from "../struct/Client"
 import GuildMember from "../struct/discord/GuildMember"
 import Roles from "../util/roles"
 import noop from "../util/noop"
+import trimSides from "../util/trimSides"
 
 export default async function messageReactionAdd(
     this: Client,
@@ -75,23 +76,42 @@ export default async function messageReactionAdd(
             )
         }
 
+        const upvoteEmoji = this.emojis.cache.find(
+            emoji =>
+                emoji.identifier ===
+                trimSides(this.config.emojis.upvote.toString(), "<:", ">")
+        )
+
+        const downvoteEmoji = this.emojis.cache.find(
+            emoji =>
+                emoji.identifier ===
+                trimSides(this.config.emojis.downvote.toString(), "<:", ">")
+        )
+
+        // I hope this is at least slightly more readable than previously
+        // I am embarrased that this code is not explainable without comments
+
         if (
             guild.id === this.config.guilds.main &&
             channelRaw.id === this.config.suggestions.main &&
-            (reaction.emoji.identifier ===
-                this.config.emojis.downvote
-                    .toString()
-                    .replaceAll("<", "")
-                    .replaceAll(">", "")) !=
-                (reaction.emoji.name === this.config.emojis.downvote) &&
-            (reaction.emoji.identifier ===
-                this.config.emojis.upvote
-                    .toString()
-                    .replaceAll("<", "")
-                    .replaceAll(">", "")) !=
-                (reaction.emoji.name === this.config.emojis.upvote)
-        )
-            await reaction.users.remove(user)
+            this.emojis.resolveId(reaction.emoji) !== "769792970407936032" // BTE Globe emoji in the main server (:BTEi:)
+        ) {
+            // checking if the name matches on upvote
+            if (
+                (reaction.emoji.name !== this.config.emojis.upvote) && (reaction.emoji.name !== this.config.emojis.downvote)
+            ) {
+                // checking if the id matches
+                if (
+                    (this.emojis.resolveId(reaction.emoji) !==
+                        downvoteEmoji.id) &&
+                    (this.emojis.resolveId(reaction.emoji) !==
+                        upvoteEmoji.id)
+                ) {
+                    await reaction.users.remove(user)
+                }
+               
+            } 
+        }
 
         if (
             guild.id === this.config.guilds.main &&
