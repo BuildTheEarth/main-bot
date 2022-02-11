@@ -52,7 +52,6 @@ export default new Command({
             return client.response.sendSuccess(message, embed)
         }
 
-        console.log(client.commands)
         let allowedCommands
         if (message.channel.type !== "DM") {
             allowedCommands = client.commands.filter(command =>

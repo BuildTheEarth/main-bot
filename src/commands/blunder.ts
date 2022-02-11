@@ -121,7 +121,6 @@ export default new Command({
                     const blunders = await BlunderTracker.find({
                         where: { role: role.id }
                     })
-                    console.log(blunders)
                     if (blunders.length == 0) continue
                     if (blunders.length > 1)
                         return client.response.sendError(

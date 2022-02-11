@@ -422,7 +422,6 @@ export default new Command({
 
             const embed = await suggestion.displayEmbed(client)
             await suggestionMessage.edit({ embeds: [embed] })
-            console.log(identifier)
             if (thread) {
                 await thread.setName(`${identifier.number} - deleted suggestion`)
                 await thread.send("**This suggestion has been deleted.**")

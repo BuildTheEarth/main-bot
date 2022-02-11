@@ -50,7 +50,6 @@ export default class BannedWord extends BaseEntity {
         options: bannedWordsOptions,
         client: Client
     ): Promise<BannedWord> {
-        console.log(options.duration)
         return await new BannedWord(
             options.word,
             options.punishment_type,

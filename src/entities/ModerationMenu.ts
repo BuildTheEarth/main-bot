@@ -486,8 +486,6 @@ export default class ModerationMenu extends BaseEntity {
             ephemeral: true
         })
 
-        console.log(followMessage)
-
         const interactionFunc = async (interactionCurr: Discord.Interaction) => {
             if (
                 !(
@@ -549,8 +547,6 @@ export default class ModerationMenu extends BaseEntity {
             components: components,
             ephemeral: true
         })
-
-        console.log(followMessage)
 
         const interactionFunc = async (interactionCurr: Discord.Interaction) => {
             if (
