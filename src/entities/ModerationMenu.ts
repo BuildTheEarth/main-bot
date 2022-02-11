@@ -112,7 +112,10 @@ export default class ModerationMenu extends BaseEntity {
 
             const punishmentOptions = existingMenu.punishments.map(punishment => {
                 const punish = {
-                    label: truncateString(punishment.reason, 15).trim().length <= 0? "No reason": truncateString(punishment.reason, 15) ,
+                    label:
+                        truncateString(punishment.reason, 15).trim().length <= 0
+                            ? "No reason"
+                            : truncateString(punishment.reason, 15),
                     description: `${punishment.punishment_type} for ${getDuration(
                         punishment.duration
                     )}, Word is ${punishment.word}`,

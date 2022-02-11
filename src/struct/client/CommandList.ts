@@ -27,14 +27,11 @@ export default class CommandList extends Discord.Collection<string, Command> {
             this
         )
 
-        //const oldCommands = await (await this.client.application.commands.fetch()).map((cmd) => cmd.name)
         const registerPermsMain: PermsObj = {}
         const registerPermsStaff: PermsObj = {}
         const registerCommands = []
 
         for await (const command of commands.values()) {
-            ///if (command.name in oldCommands ) continue
-            //for (const tmp in command.aliases) if (tmp in oldCommands) continue
             let permsTemp
             const permsMain: Array<Discord.ApplicationCommandPermissionData> = []
             const permsStaff: Array<Discord.ApplicationCommandPermissionData> = []
@@ -54,16 +51,14 @@ export default class CommandList extends Discord.Collection<string, Command> {
                 if (roleStaff && permsTemp[0] != Roles.ANY)
                     permsStaff.push({ id: roleStaff.id, type: "ROLE", permission: true })
             }
-            for await (const cmd of CommandUtils.commandToSlash(command)) {
-                const pushCmd = cmd
-                console.log(cmd.name)
-                if (permsTemp[0] == Roles.ANY) pushCmd.setDefaultPermission(true)
-                registerCommands.push(pushCmd.toJSON())
-                if ((await this.client.customGuilds.staff()) && permsTemp[0] != Roles.ANY)
-                    registerPermsStaff[cmd.name] = { id: "", permissions: permsStaff }
-                if ((await this.client.customGuilds.main()) && permsTemp[0] != Roles.ANY)
-                    registerPermsMain[cmd.name] = { id: "", permissions: permsMain }
-            }
+            const cmd = CommandUtils.commandToSlash(command)
+            const pushCmd = cmd
+            if (permsTemp[0] == Roles.ANY) pushCmd.setDefaultPermission(true)
+            registerCommands.push(pushCmd.toJSON())
+            if ((await this.client.customGuilds.staff()) && permsTemp[0] != Roles.ANY)
+                registerPermsStaff[cmd.name] = { id: "", permissions: permsStaff }
+            if ((await this.client.customGuilds.main()) && permsTemp[0] != Roles.ANY)
+                registerPermsMain[cmd.name] = { id: "", permissions: permsMain }
         }
         if (this.client.customGuilds.main()) {
             const commands = await this.client.customGuilds
@@ -101,11 +96,6 @@ export default class CommandList extends Discord.Collection<string, Command> {
                 __dirname + `/../../commands/${name}.${globalThis.fileExtension}`
             )
         )
-        const command = this.get(name)
-        console.log(command)
-        console.log(
-            this.client.application.commands.cache.find(command => command.name === name)
-        )
         if (this.client.customGuilds.main()) {
             await this.client.customGuilds
                 .main()
@@ -114,15 +104,6 @@ export default class CommandList extends Discord.Collection<string, Command> {
                         .main()
                         .commands.cache.find(command => command.name === name)
                 )
-            for await (const alias of command.aliases) {
-                await this.client.customGuilds
-                    .main()
-                    .commands.delete(
-                        this.client.customGuilds
-                            .main()
-                            .commands.cache.find(command => command.name === alias)
-                    )
-            }
         }
 
         if (this.client.customGuilds.staff()) {
@@ -133,15 +114,6 @@ export default class CommandList extends Discord.Collection<string, Command> {
                         .staff()
                         .commands.cache.find(command => command.name === name)
                 )
-            for await (const alias of command.aliases) {
-                await this.client.customGuilds
-                    .staff()
-                    .commands.delete(
-                        this.client.customGuilds
-                            .staff()
-                            .commands.cache.find(command => command.name === alias)
-                    )
-            }
         }
 
         delete require.cache[path]
@@ -163,24 +135,22 @@ export default class CommandList extends Discord.Collection<string, Command> {
         else permsTemp = command.permission
         permsTemp.push("Bot Developer")
         for await (const perm of permsTemp) {
-            const roleMain = Guild.role(await this.client.customGuilds.main(), perm)
-            const roleStaff = Guild.role(await this.client.customGuilds.staff(), perm)
+            const roleMain = Guild.role(this.client.customGuilds.main(), perm)
+            const roleStaff = Guild.role(this.client.customGuilds.staff(), perm)
             if (roleMain)
                 permsMain.push({ id: roleMain.id, type: "ROLE", permission: true })
             if (roleStaff)
                 permsStaff.push({ id: roleStaff.id, type: "ROLE", permission: true })
         }
 
-        for await (const cmd of CommandUtils.commandToSlash(command)) {
-            const pushCmd = cmd
-            console.log(cmd.name)
-            if (permsTemp[0] == Roles.ANY) pushCmd.setDefaultPermission(true)
-            registerCommands.push(pushCmd.toJSON())
-            if ((await this.client.customGuilds.staff()) && permsTemp[0] != Roles.ANY)
-                registerPermsStaff = permsStaff
-            if ((await this.client.customGuilds.main()) && permsTemp[0] != Roles.ANY)
-                registerPermsMain = permsMain
-        }
+        const cmd = CommandUtils.commandToSlash(command)
+        const pushCmd = cmd
+        if (permsTemp[0] == Roles.ANY) pushCmd.setDefaultPermission(true)
+        registerCommands.push(pushCmd.toJSON())
+        if ((await this.client.customGuilds.staff()) && permsTemp[0] != Roles.ANY)
+            registerPermsStaff = permsStaff
+        if ((await this.client.customGuilds.main()) && permsTemp[0] != Roles.ANY)
+            registerPermsMain = permsMain
 
         if (this.client.customGuilds.main()) {
             for (const cmd of registerCommands) {

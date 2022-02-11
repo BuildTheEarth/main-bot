@@ -9,7 +9,7 @@ export default class Guild {
     }
 
     static role(guild: Discord.Guild, name: string): Discord.Role {
-        return guild.roles.cache.find(role => role.name === name) as Discord.Role
+        return guild?.roles?.cache?.find(role => role.name === name)
     }
 
     static async setVanityCode(
