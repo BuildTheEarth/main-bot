@@ -94,7 +94,7 @@ export default async function messageReactionAdd(
         if (
             guild.id === this.config.guilds.main &&
             channelRaw.id === this.config.suggestions.main &&
-            this.emojis.resolveId(reaction.emoji) !== "769792970407936032" // BTE Globe emoji in the main server (:BTEi:)
+            this.emojis.resolveId(reaction.emoji) !== "704728617997041675" // BTE Globe emoji in the main server (:BTEi:)
         ) {
             // checking if the name matches on upvote
             if (
