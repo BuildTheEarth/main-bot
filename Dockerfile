@@ -1,6 +1,6 @@
 FROM node:16-alpine3.15
 
-WORKDIR /home/bots/main-bot
+WORKDIR /etc/buildtheearth/main-bot
 
 COPY package*.json ./
 
