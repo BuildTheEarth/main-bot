@@ -6,6 +6,4 @@ services:
     environment:
         CONFIG_FOLDER: "/etc/buildtheearth/main-bot/config"
     volumes:
-      - type: bind
-        source: "${CONFIG_FOLDER}"
-        target: /etc/buildtheearth/main-bot/config
+      - "${CONFIG_FOLDER}":/etc/buildtheearth/main-bot/config
