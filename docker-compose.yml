@@ -1,12 +1,11 @@
-version: '1'
+version: "3.9"
 services:
-  main-bot-service:
-    image: buildtheearth/main-bot
-    build:
-      context: .
-      dockerfile: Dockerfile
+  main-bot:
     container_name: main-bot
+    build: .
+    environment:
+      - "CONFIG_FOLDER=/etc/buildtheearth/main-bot/config"
     volumes:
       - type: bind
-        source: ./config
-        target: /home/bots/main-bot/config
+        source: "${CONFIG_FOLDER}"
+        target: /etc/buildtheearth/main-bot/config
