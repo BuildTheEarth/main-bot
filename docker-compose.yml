@@ -4,7 +4,8 @@ services:
     container_name: main-bot
     build: .
     networks:
-      - bot-network
+      bot-network:
+        external: true
     environment:
         CONFIG_FOLDER: "/etc/buildtheearth/main-bot/config"
     volumes:
