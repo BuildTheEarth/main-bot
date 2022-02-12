@@ -106,7 +106,7 @@ export default async function (this: Client, message: Discord.Message): Promise<
             await this.response.sendError(
                 new CommandMessage(message, this),
                 "An unknown error occurred! Please contact one of the bot developers for help."
-            )
+            ).catch(noop)
 
             const stack = (error.stack as string)
                 .split("\n")

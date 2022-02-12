@@ -52,6 +52,11 @@
         "Does it really need to be that slow?",
         "I'm not sure I like that Number. Try a lower one."
     ],
+    purgeTooLow: [
+        "How would that even work? Time travel?",
+        "I cant create messages like that...",
+        "At this point, you know what you are doing wrong."
+    ],
     noUser: ["You must provide a user."],
     noRole: ["Please provide a valid role."],
     noChannel: ["You must provide a channel."],
