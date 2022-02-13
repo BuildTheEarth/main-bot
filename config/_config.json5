@@ -82,6 +82,8 @@
     },
     token: "",
     modpackAuth: "",
+    interKey: "",
+    apiWhitelist: [],
     database: {
         type: "",
         host: "",

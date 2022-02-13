@@ -2,6 +2,11 @@ import "reflect-metadata"
 import Discord from "discord.js"
 import Client from "./struct/Client"
 
+declare global {
+    // eslint-disable-next-line no-var
+    var client: Client
+}
+
 const client = new Client({
     intents: [
         Discord.Intents.FLAGS.GUILDS,
@@ -21,6 +26,8 @@ const client = new Client({
     partials: ["CHANNEL", "MESSAGE", "REACTION"],
     restRequestTimeout: 900000
 })
+
+globalThis.client = client
 
 async function main() {
     client.logger.debug("Loading config...")

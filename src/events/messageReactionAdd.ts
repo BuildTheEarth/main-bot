@@ -98,19 +98,17 @@ export default async function messageReactionAdd(
         ) {
             // checking if the name matches on upvote
             if (
-                (reaction.emoji.name !== this.config.emojis.upvote) && (reaction.emoji.name !== this.config.emojis.downvote)
+                reaction.emoji.name !== this.config.emojis.upvote &&
+                reaction.emoji.name !== this.config.emojis.downvote
             ) {
                 // checking if the id matches
                 if (
-                    (this.emojis.resolveId(reaction.emoji) !==
-                        downvoteEmoji.id) &&
-                    (this.emojis.resolveId(reaction.emoji) !==
-                        upvoteEmoji.id)
+                    this.emojis.resolveId(reaction.emoji) !== downvoteEmoji.id &&
+                    this.emojis.resolveId(reaction.emoji) !== upvoteEmoji.id
                 ) {
                     await reaction.users.remove(user)
                 }
-               
-            } 
+            }
         }
 
         if (

@@ -55,6 +55,8 @@ export default class ConfigManager {
     assets: AssetList
     token: string
     modpackAuth: string
+    interKey: string
+    apiWhitelist: string[]
     database: DatabaseInfo
     submodules: Submodules
 

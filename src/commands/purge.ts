@@ -44,6 +44,13 @@ export default new Command({
         //yes this is a bad way to do this but it works for now
         //client.response.sendSuccess(message, `Purged ${purged.size} messages.`) is not an option because the command message is deleted
         //I just need the bot to not crash
-        message.channel.send({embeds: [{ description: `Purged ${purged.size} messages.`, color: hexToRGB(client.config.colors.success) }]})
+        message.channel.send({
+            embeds: [
+                {
+                    description: `Purged ${purged.size} messages.`,
+                    color: hexToRGB(client.config.colors.success)
+                }
+            ]
+        })
     }
 })

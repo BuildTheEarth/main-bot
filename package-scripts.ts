@@ -30,7 +30,7 @@ export = {
     docker: {
       default: seriesNPS('docker.build', 'docker.compose'),
       compose: "docker compose up",
-      build: "docker build . -t buildtheearth/main-bot",
+      build: "docker build . -t buildtheearth/main-bot --no-cache=true",
       run: "docker run buildtheearth/main-bot",
       production: "docker run buildtheearth/main-bot -d"
     },

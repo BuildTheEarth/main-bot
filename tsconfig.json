@@ -9,9 +9,9 @@
         "noImplicitUseStrict": true,
     },
     "include": [
-        "src/**/*",
+        "src/**/**/*",
     ],
     "exclude": [
-        "dist/**/*"
+        "dist/**/**/*"
     ]
 }
