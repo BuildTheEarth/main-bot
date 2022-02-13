@@ -1,5 +1,5 @@
 import { ConnectionOptions, Connection, createConnection } from "typeorm"
-import Discord from "discord.js"
+import Discord, { Snowflake } from "discord.js"
 import EventList from "./client/EventList"
 import CommandList from "./client/CommandList"
 import ConfigManager from "./client/ConfigManager"
@@ -36,6 +36,7 @@ export default class Client extends Discord.Client {
     dutyScheduler = new DutyScheduler(this)
     messages = new Messages(this).proxy
     placeholder = new PlaceholderHandler(this)
+    deletedMessages = new WeakSet<Discord.Message>()
 
     async initDatabase(): Promise<void> {
         const db = this.config.database

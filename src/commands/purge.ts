@@ -30,27 +30,25 @@ export default new Command({
         if (amount < 1)
             return client.response.sendError(message, client.messages.purgeTooLow)
 
-        await message.continue()
-
         const purged = await (message.channel as Discord.TextChannel).bulkDelete(
             amount,
             true
         )
+
+        await message.continue()
+
         await client.log({
             color: hexToRGB(client.config.colors.info),
             author: { name: "Purge" },
             description: `${purged.size} messages purged by ${message.member} in ${message.channel}.`
         })
-        //yes this is a bad way to do this but it works for now
-        //client.response.sendSuccess(message, `Purged ${purged.size} messages.`) is not an option because the command message is deleted
-        //I just need the bot to not crash
-        message.channel.send({
-            embeds: [
-                {
-                    description: `Purged ${purged.size} messages.`,
-                    color: hexToRGB(client.config.colors.success)
-                }
-            ]
-        })
+
+        const originMessageState =
+            message.message instanceof Discord.Message && purged.has(message.message.id)
+
+        client.response.sendSuccess(
+            originMessageState ? message.channel : message,
+            `Purged ${purged.size} messages.`
+        )
     }
 })

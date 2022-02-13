@@ -116,12 +116,10 @@ export default new ApiPathHander({
                 )
             }
         } catch {
-            return res
-                .status(500)
-                .send({
-                    error: "SERVER_ERROR",
-                    message: "An issue has occured assigning: role"
-                })
+            return res.status(500).send({
+                error: "SERVER_ERROR",
+                message: "An issue has occured assigning: role"
+            })
         }
 
         const userInfo = {
