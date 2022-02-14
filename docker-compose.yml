@@ -3,6 +3,7 @@ version: "3.9"
 services:
   main-bot:
     container_name: main-bot
+    image: buildtheearth/main-bot
     build: .
     networks:
       - bot-network
