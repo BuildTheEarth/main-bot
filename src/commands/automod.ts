@@ -135,6 +135,9 @@ export default new Command({
                     )
                 await message.continue()
                 const punishment = args.consume("punishment").toUpperCase()
+                if (word.length > 19){
+                    return await client.response.sendError(message, client.messages.wordTooLong18)
+                }
                 if (!punishmentTypes.includes(punishment))
                     return await client.response.sendError(
                         message,
@@ -161,9 +164,6 @@ export default new Command({
                         message,
                         "You must provide a duration for Mutes and Bans!"
                     )
-                if (word.length > 19){
-                    return await client.response.sendError(message, client.messages.wordTooLong18)
-                }
                 const isAlreadyThere = client.filterWordsCached.banned[word]
                 if (isAlreadyThere)
                     return await client.response.sendError(
@@ -218,11 +218,15 @@ export default new Command({
             }
             if (subcommand === "add") {
                 const word = args.consumeRest(["word"])
+                
                 if (!word)
                     return await client.response.sendError(
                         message,
                         `Please specify a word.`
-                    )
+                 )
+                if (word.length > 19){
+                    return await client.response.sendError(message, client.messages.wordTooLong18)
+                }
                 await message.continue()
                 const isAlreadyThere = client.filterWordsCached.except.includes(word)
                 if (isAlreadyThere)
