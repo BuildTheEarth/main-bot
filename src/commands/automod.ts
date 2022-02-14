@@ -161,6 +161,9 @@ export default new Command({
                         message,
                         "You must provide a duration for Mutes and Bans!"
                     )
+                if (word.length > 19){
+                    return await client.response.sendError(message, client.messages.wordTooLong18)
+                }
                 const isAlreadyThere = client.filterWordsCached.banned[word]
                 if (isAlreadyThere)
                     return await client.response.sendError(
