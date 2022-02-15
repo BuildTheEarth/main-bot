@@ -10,11 +10,12 @@ export default new Command({
     description: "Ping pong!",
     permission: Roles.ANY,
     async run(this: Command, client: Client, message: CommandMessage, args: Args) {
+        const emoji = ${args.command === "ding" ? "🔔" : "🏓"}
+        const letter = args.command === "bing" ? "B" : args.command === "ding" ? "D" : "P"
+        
         await message.continue()
         await message.send({
-            content: `${args.command === "ding" ? "🔔" : "🏓"} ${
-                args.command === "bing" ? "B" : args.command === "ding" ? "D" : "P"
-            }ong! **${client.ws.ping}ms**.`
+            content: `${emoji} ${letter}ong! **${client.ws.ping}ms**`
         })
     }
 })
