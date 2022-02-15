@@ -12,9 +12,9 @@ export default new Command({
     async run(this: Command, client: Client, message: CommandMessage, args: Args) {
         await message.continue()
         await message.send({
-            content: `🏓 ${args.command === "bing" ? "B" : (args.command === "ding" ? "D" : "P")}ong! **${
-                client.ws.ping
-            }ms**.`
+            content: `${args.command === "ding" ? "🔔" : "🏓"} ${
+                args.command === "bing" ? "B" : args.command === "ding" ? "D" : "P"
+            }ong! **${client.ws.ping}ms**.`
         })
     }
 })
