@@ -135,7 +135,7 @@ export default new Command({
                     )
                 await message.continue()
                 const punishment = args.consume("punishment").toUpperCase()
-                if (word.length > 19){
+                if (word.length > 18){
                     return await client.response.sendError(message, client.messages.wordTooLong18)
                 }
                 if (!punishmentTypes.includes(punishment))
@@ -224,7 +224,7 @@ export default new Command({
                         message,
                         `Please specify a word.`
                  )
-                if (word.length > 19){
+                if (word.length > 18){
                     return await client.response.sendError(message, client.messages.wordTooLong18)
                 }
                 await message.continue()
