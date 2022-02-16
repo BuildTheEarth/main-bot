@@ -21,6 +21,8 @@ jobs:
       run: |
         docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
     - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag buildtheearth/main-bot:$(git rev-parse --short HEAD)
-    - name: Docker push
+      run: docker build . --file Dockerfile --tag buildtheearth/main-bot:$(git rev-parse --short HEAD) --tag buildtheearth/main-bot:latest
+    - name: Docker push tag
       run: docker push buildtheearth/main-bot:$(git rev-parse --short HEAD)
+    - name: Docker push latest
+      run: docker push buildtheearth/main-bot:latest
