@@ -6,6 +6,7 @@ import { SuggestionStatus } from "../../entities/Suggestion"
 import { Action } from "../../entities/ActionLog"
 import { EmojiIdentifierResolvable } from "discord.js"
 import MessagesConfig from "./MessagesConfig"
+import { throws } from "assert"
 
 type ConfigSubmoduleTypes = MessagesConfig
 
@@ -59,13 +60,30 @@ export default class ConfigManager {
     apiWhitelist: string[]
     database: DatabaseInfo
     submodules: Submodules
+    envBindings: Record<string, any>
+
 
     constructor(client: Client) {
         this.client = client
         this.submodules = { messages: new MessagesConfig(this.client) }
+        //sorry for the hacky stuff here, use self instead of this
+        this.envBindings = {
+            DB_TYPE: "self.database.type",
+            DB_PATH: "self.database.path",
+            DB_HOST: "self.database.host",
+            DB_NAME: "self.database.name",
+            DB_USER: "self.database.user",
+            DB_PASS: "self.database.pass",
+            TOKEN: "self.token",
+            MODPACK_AUTH: "self.modpackAuth",
+            INTER_KEY: "self.interKey",
+        }
+
+        
     }
 
     async load(): Promise<void> {
+        console.log(process.env)
         const configPath = path.join(__dirname, "../../../config/config.json5")
         const config = await fs.promises
             .readFile(configPath, "utf-8")
@@ -76,13 +94,20 @@ export default class ConfigManager {
                 )
                 process.exit(1)
             })
-
-        for (const [key, value] of Object.entries(config)) this[key] = value
+        for (const [key, value] of Object.entries(config)) if (this[key] !== null) this[key] = value
+        for (const [key, value] of Object.entries(process.env)) {
+            if (key in this.envBindings) {
+                const replacer = `function(self, v) {${this.envBindings[key]} = v}`
+                const wrap = s => `{ return ${s} };`
+                const assigner = new Function(wrap(replacer))
+                assigner.call(null).call(null, this, value)
+            }
+        }
         for (const submodule of Object.values(this.submodules)) await submodule.load()
     }
 
     unload(): void {
-        const excemptKeys = ["submodules", "client"]
+        const excemptKeys = ["submodules", "client", "envBindings"]
         for (const key of Object.keys(this).filter(key => !excemptKeys.includes(key))) {
             delete this[key]
         }
