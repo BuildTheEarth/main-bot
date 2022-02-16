@@ -29,6 +29,17 @@ export default async function (this: Client, message: Discord.Message): Promise<
         this.logger.info(`Set vanity code to ${chalk.hex("#FF73FA")(this.config.vanity)}`)
         return
     }
+    
+    const antiSwearFilter = false;
+    if (antiSwearFilter) {
+        const swearWords = ['dumb', 'stupid', 'shit'] // Add more here
+        swearWords.forEach((swearWord) => {
+            if (message.content.includes(swearWord) {
+                message.channel.send('Swearing isn\'t allowed!') // Create embed, make it look better
+                return
+            }
+        }
+    }
 
     if (message.content.startsWith(this.config.prefix)) {
         const body = message.content.slice(this.config.prefix.length).trim()
