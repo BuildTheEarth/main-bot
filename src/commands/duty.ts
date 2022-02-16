@@ -15,12 +15,12 @@ export default new Command({
     name: "duty",
     aliases: [],
     description: "Manage your on duty roles.",
-    permission: [Roles.SUPPORT, Roles.MODERATOR, Roles.MANAGER],
+    permission: [Roles.HELPER, Roles.SUPPORT, Roles.MODERATOR, Roles.MANAGER],
     subcommands: [
         {
             name: "add",
             description: "Add someone to duty.",
-            permission: [Roles.SUPPORT, Roles.MODERATOR, Roles.MANAGER],
+            permission: [Roles.HELPER, Roles.SUPPORT, Roles.MODERATOR, Roles.MANAGER],
             args: [
                 {
                     name: "member",
@@ -40,7 +40,7 @@ export default new Command({
         {
             name: "schedule",
             description: "Schedule a duty role.",
-            permission: [Roles.SUPPORT, Roles.MODERATOR, Roles.MANAGER],
+            permission: [Roles.HELPER, Roles.SUPPORT, Roles.MODERATOR, Roles.MANAGER],
             args: [
                 {
                     name: "time",
@@ -66,7 +66,7 @@ export default new Command({
         {
             name: "cancel",
             description: "Cancel a duty schedule.",
-            permission: [Roles.SUPPORT, Roles.MODERATOR, Roles.MANAGER],
+            permission: [Roles.HELPER, Roles.SUPPORT, Roles.MODERATOR, Roles.MANAGER],
             args: [
                 {
                     name: "member",
@@ -86,7 +86,7 @@ export default new Command({
         {
             name: "check",
             description: "Check duty status.",
-            permission: [Roles.SUPPORT, Roles.MODERATOR, Roles.MANAGER],
+            permission: [Roles.HELPER, Roles.SUPPORT, Roles.MODERATOR, Roles.MANAGER],
             args: [
                 {
                     name: "member",
