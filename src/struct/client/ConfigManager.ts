@@ -82,7 +82,6 @@ export default class ConfigManager {
     }
 
     async load(): Promise<void> {
-        console.log(process.env)
         const configPath = path.join(__dirname, "../../../config/config.json5")
         const config = await fs.promises
             .readFile(configPath, "utf-8")
