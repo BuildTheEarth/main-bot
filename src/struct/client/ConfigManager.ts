@@ -6,7 +6,6 @@ import { SuggestionStatus } from "../../entities/Suggestion"
 import { Action } from "../../entities/ActionLog"
 import { EmojiIdentifierResolvable } from "discord.js"
 import MessagesConfig from "./MessagesConfig"
-import { throws } from "assert"
 
 type ConfigSubmoduleTypes = MessagesConfig
 
