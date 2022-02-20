@@ -213,11 +213,11 @@ export default class ModerationMenu extends BaseEntity {
             new Discord.MessageActionRow().addComponents(
                 new Discord.MessageButton()
                     .setCustomId(`modmenu.${modMenu.member}.punish`)
-                    .setStyle("PRIMARY")
+                    .setStyle("DANGER")
                     .setLabel("Punish"),
                 new Discord.MessageButton()
                     .setCustomId(`modmenu.${modMenu.member}.pardon`)
-                    .setStyle("DANGER")
+                    .setStyle("SUCCESS")
                     .setLabel("Pardon")
             )
         ]
@@ -474,11 +474,11 @@ export default class ModerationMenu extends BaseEntity {
             new Discord.MessageActionRow().addComponents(
                 new Discord.MessageButton()
                     .setCustomId(`yes.${interaction.id}.modmenu`)
-                    .setStyle("PRIMARY")
+                    .setStyle("DANGER")
                     .setLabel("Pardon"),
                 new Discord.MessageButton()
                     .setCustomId(`no.${interaction.id}.modmenu`)
-                    .setStyle("DANGER")
+                    .setStyle("SUCCESS")
                     .setLabel("No")
             )
         ]
