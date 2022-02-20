@@ -537,11 +537,11 @@ export default class ModerationMenu extends BaseEntity {
             new Discord.MessageActionRow().addComponents(
                 new Discord.MessageButton()
                     .setCustomId(`yes.${interaction.id}.modmenu`)
-                    .setStyle("PRIMARY")
+                    .setStyle("DANGER")
                     .setLabel("Punish"),
                 new Discord.MessageButton()
                     .setCustomId(`no.${interaction.id}.modmenu`)
-                    .setStyle("DANGER")
+                    .setStyle("SUCCESS")
                     .setLabel("No")
             )
         ]
