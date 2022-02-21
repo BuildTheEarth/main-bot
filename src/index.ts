@@ -23,8 +23,7 @@ const client = new Client({
         Discord.Intents.FLAGS.DIRECT_MESSAGES,
         Discord.Intents.FLAGS.DIRECT_MESSAGE_REACTIONS
     ],
-    partials: ["CHANNEL", "MESSAGE", "REACTION"],
-    restRequestTimeout: 900000
+    partials: ["CHANNEL", "MESSAGE", "REACTION"]
 })
 
 globalThis.client = client
