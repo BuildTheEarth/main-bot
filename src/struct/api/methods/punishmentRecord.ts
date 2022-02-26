@@ -61,7 +61,7 @@ export default new ApiPathHander({
         const clean = !actionLogs.length
         for (const log of actionLogs) categorizedLogs[log.action].push(log)
 
-        if (clean) res.send({})
+        if (clean) res.send(categorizedLogs)
         else res.send(categorizedLogs)
 
         
