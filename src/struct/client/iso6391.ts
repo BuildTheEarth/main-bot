@@ -26,7 +26,7 @@ THE SOFTWARE.
 
 import path from "path"
 
-import { loadSyncJSON5 } from "../../util/loadJSON5"
+import { loadSyncJSON5 } from "../../util/loadJSON5.util"
 
 const LANGUAGES_LIST: Record<string, Record<string, string>> = loadSyncJSON5(
     path.join(__dirname + "../../../../config/extensions/languages.json5")

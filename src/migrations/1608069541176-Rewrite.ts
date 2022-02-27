@@ -1,7 +1,7 @@
 import { MigrationInterface, QueryRunner } from "typeorm"
 import Discord from "discord.js"
 import Client from "../struct/Client"
-import ms from "../util/ms"
+import ms from "../util/ms.util"
 import chalk from "chalk"
 import { promisify } from "util"
 

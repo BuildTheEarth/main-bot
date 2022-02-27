@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import Placeholder from "../../entities/Placeholder"
+import Placeholder from "../../entities/Placeholder.entity"
 import Client from "../Client"
 import iso6391 from "./iso6391"
-import trimSides from "../../util/trimSides"
+import trimSides from "../../util/trimSides.util"
 
 export default class PlaceholderHandler {
     client: Client

@@ -1,10 +1,10 @@
 import Client from "../Client"
 import path from "path"
 import fs from "fs"
-import express from "express"
 import util from "util"
-import ApiPath from "../api/ApiPath"
+import { NestFactory } from '@nestjs/core';
 import bodyParser from "body-parser"
+import WebMain from "../web/WebMain.module";
 async function ensureDirectoryExistence(filePath) {
     const dirname = path.dirname(filePath)
     if (fs.existsSync(dirname)) {
@@ -15,22 +15,15 @@ async function ensureDirectoryExistence(filePath) {
 }
 export default class WebserverHandler {
     client: Client
-    intercom: ApiPath
     constructor(client: Client) {
         this.client = client
-        this.intercom = new ApiPath(this.client)
     }
 
     async load(): Promise<void> {
-        const server = express()
+        const server = await NestFactory.create(WebMain);
         server.use(bodyParser.json())
         server.use(bodyParser.urlencoded({ extended: false }))
 
-        server.use("/image", express.static(path.join(__dirname, "../../../images")))
-
-        // parse application/json
-
-        server.use("/api/v1", await this.intercom.loadAll())
         server.listen(this.client.config.images.bindPort)
     }
 

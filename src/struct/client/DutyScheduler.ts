@@ -1,6 +1,6 @@
 import Discord from "discord.js"
-import hexToRGB from "../../util/hexToRGB"
-import toggleDutyRole from "../../util/toggleDutyRole"
+import hexToRGB from "../../util/hexToRGB.util"
+import toggleDutyRole from "../../util/toggleDutyRole.util"
 import Client from "../Client"
 
 export default class DutyScheduler {

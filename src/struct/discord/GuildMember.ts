@@ -1,6 +1,6 @@
 import Discord from "discord.js"
 import Guild from "./Guild"
-import Roles from "../../util/roles"
+import Roles from "../../util/roles.util"
 import Client from "../Client"
 
 export default class GuildMember {

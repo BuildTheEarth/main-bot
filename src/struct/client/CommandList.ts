@@ -1,10 +1,10 @@
 import Discord from "discord.js"
 import Command from "../Command"
-import loadDir from "../../util/loadDir"
+import loadDir from "../../util/loadDir.util"
 import Client from "../Client"
-import CommandUtils from "../../util/CommandUtils"
+import CommandUtils from "../../util/CommandUtils.util"
 import Guild from "../discord/Guild"
-import Roles from "../../util/roles"
+import Roles from "../../util/roles.util"
 import pathModule from "path"
 
 interface PermsObj {
@@ -17,6 +17,7 @@ export default class CommandList extends Discord.Collection<string, Command> {
     constructor(client: Client) {
         super()
         this.client = client
+        
     }
 
     async load(): Promise<void> {
@@ -93,7 +94,7 @@ export default class CommandList extends Discord.Collection<string, Command> {
     async unloadOne(name: string): Promise<void> {
         const path = require.resolve(
             pathModule.join(
-                __dirname + `/../../commands/${name}.${globalThis.fileExtension}`
+                __dirname + `/../../commands/${name}.command.${globalThis.fileExtension}`
             )
         )
         if (this.client.customGuilds.main()) {
@@ -117,7 +118,7 @@ export default class CommandList extends Discord.Collection<string, Command> {
         }
 
         delete require.cache[path]
-        this.delete(name)
+        this.delete(name + ".command")
     }
 
     async loadOne(name: string): Promise<void> {
@@ -125,9 +126,9 @@ export default class CommandList extends Discord.Collection<string, Command> {
         let registerPermsStaff: Discord.ApplicationCommandPermissionData[] = null
 
         const registerCommands = []
-        const path = __dirname + `/../../commands/${name}.${globalThis.fileExtension}`
+        const path = __dirname + `/../../commands/${name}.command.${globalThis.fileExtension}`
         const command: Command = (await import(path)).default
-        this.set(command.name, command)
+        this.set(command.name + ".command", command)
         let permsTemp: string[]
         const permsMain: Array<Discord.ApplicationCommandPermissionData> = []
         const permsStaff: Array<Discord.ApplicationCommandPermissionData> = []

@@ -1,6 +1,7 @@
 import Discord from "discord.js"
-import loadDir from "../../util/loadDir"
+import loadDir from "../../util/loadDir.util"
 import Client from "../Client"
+import _ from "lodash"
 
 // eslint-disable-next-line @typescript-eslint/ban-types
 export default class EventList extends Discord.Collection<string, Function> {
@@ -18,30 +19,34 @@ export default class EventList extends Discord.Collection<string, Function> {
 
     register(): void {
         // @ts-ignore: a bunch of errors related to event name and handler typings
-        this.forEach((handler, name) => this.client.on(name, handler))
+        this.forEach((handler, name) => {
+            console.log(handler)
+            console.log(name)
+            this.client.on(_.trimEnd(name, ".event"), handler)
+        })
     }
 
     unloadOne(name: string): void {
-        this.delete(name)
+        this.delete(name + ".event")
         const path = require.resolve(
-            __dirname + `/../../events/${name}.${globalThis.fileExtension}`
+            __dirname + `/../../events/${name}.event.${globalThis.fileExtension}`
         )
         delete require.cache[path]
     }
 
     unregisterOne(name: string): void {
         // @ts-ignore: same as above
-        this.client.off(name, this.get(name))
+        this.client.off(name, this.get(name + ".event"))
     }
 
     async loadOne(name: string): Promise<void> {
-        const path = __dirname + `/../../events/${name}.${globalThis.fileExtension}`
+        const path = __dirname + `/../../events/${name}.event.${globalThis.fileExtension}`
         const handler: (...args: unknown[]) => unknown = (await import(path)).default
-        this.set(name, handler)
+        this.set(name + ".event", handler)
     }
 
     registerOne(name: string): void {
         // @ts-ignore: same as above
-        this.client.on(name, this.get(name))
+        this.client.on(name, this.get(name + ".event"))
     }
 }

@@ -1,4 +1,4 @@
-import ms from "../util/ms"
+import ms from "../util/ms.util"
 import Discord from "discord.js"
 import CommandMessage from "./CommandMessage"
 

@@ -1,6 +1,6 @@
 import Discord from "discord.js"
 import Client from "../Client"
-import hexToRGB from "../../util/hexToRGB"
+import hexToRGB from "../../util/hexToRGB.util"
 import CommandMessage from "../CommandMessage"
 
 export default class Response {
