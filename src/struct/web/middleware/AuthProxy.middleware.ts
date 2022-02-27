@@ -1,9 +1,9 @@
-import { Injectable, NestMiddleware, Req, Res, Next } from '@nestjs/common';
-import { Request, Response, NextFunction } from 'express';
+import { Injectable, NestMiddleware, Req, Res, Next } from "@nestjs/common"
+import { Request, Response, NextFunction } from "express"
 
 @Injectable()
 export default class AuthProxy implements NestMiddleware {
-  use(@Req() req: Request, @Res() res: Response, @Next() next: NextFunction): void {
+    use(@Req() req: Request, @Res() res: Response, @Next() next: NextFunction): void {
         const ip = req.headers["x-forwarded-for"]?.toString() || req.socket.remoteAddress
         if (
             req.headers.authorization === `Bearer ${globalThis.client.config.interKey}` &&

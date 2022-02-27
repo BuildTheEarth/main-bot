@@ -2,9 +2,9 @@ import Client from "../Client"
 import path from "path"
 import fs from "fs"
 import util from "util"
-import { NestFactory } from '@nestjs/core';
+import { NestFactory } from "@nestjs/core"
 import bodyParser from "body-parser"
-import WebMain from "../web/WebMain.module";
+import WebMain from "../web/WebMain.module"
 async function ensureDirectoryExistence(filePath) {
     const dirname = path.dirname(filePath)
     if (fs.existsSync(dirname)) {
@@ -20,7 +20,7 @@ export default class WebserverHandler {
     }
 
     async load(): Promise<void> {
-        const server = await NestFactory.create(WebMain);
+        const server = await NestFactory.create(WebMain)
         server.use(bodyParser.json())
         server.use(bodyParser.urlencoded({ extended: false }))
 

@@ -4,13 +4,17 @@ import { FindManyOptions, IsNull, Not } from "typeorm"
 import { Controller, Get, Param, Req, Res } from "@nestjs/common"
 import ActionLog, { Action } from "../../../../entities/ActionLog.entity"
 
-@Controller('/api/v1/punish')
+@Controller("/api/v1/punish")
 export default class PunishController {
-    @Get(':id')
-    async getPunishment (@Req() req: express.Request, @Res() res: express.Response, @Param('id') id: string): Promise<unknown> {
+    @Get(":id")
+    async getPunishment(
+        @Req() req: express.Request,
+        @Res() res: express.Response,
+        @Param("id") id: string
+    ): Promise<unknown> {
         res.contentType("application/json")
         const params = req.query
-        const showDeleted = params["showDeleted"]? true : false
+        const showDeleted = params["showDeleted"] ? true : false
 
         if (!id) {
             return res.send({
@@ -65,7 +69,6 @@ export default class PunishController {
         if (clean) res.send(categorizedLogs)
         else res.send(categorizedLogs)
 
-        
         return
     }
 }

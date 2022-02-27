@@ -17,7 +17,6 @@ export default class CommandList extends Discord.Collection<string, Command> {
     constructor(client: Client) {
         super()
         this.client = client
-        
     }
 
     async load(): Promise<void> {
@@ -126,7 +125,8 @@ export default class CommandList extends Discord.Collection<string, Command> {
         let registerPermsStaff: Discord.ApplicationCommandPermissionData[] = null
 
         const registerCommands = []
-        const path = __dirname + `/../../commands/${name}.command.${globalThis.fileExtension}`
+        const path =
+            __dirname + `/../../commands/${name}.command.${globalThis.fileExtension}`
         const command: Command = (await import(path)).default
         this.set(command.name + ".command", command)
         let permsTemp: string[]

@@ -1,7 +1,6 @@
 import Discord from "discord.js"
 import loadDir from "../../util/loadDir.util"
 import Client from "../Client"
-import _ from "lodash"
 
 // eslint-disable-next-line @typescript-eslint/ban-types
 export default class EventList extends Discord.Collection<string, Function> {
@@ -18,12 +17,12 @@ export default class EventList extends Discord.Collection<string, Function> {
     }
 
     register(): void {
-        // @ts-ignore: a bunch of errors related to event name and handler typings
-        this.forEach((handler, name) => {
-            console.log(handler)
-            console.log(name)
-            this.client.on(_.trimEnd(name, ".event"), handler)
-        })
+        //@ts-ignore a bunch of errors related to event name and handler typings
+        //Here also cause formatter is quite annoying
+        this.forEach((handler, name) =>
+            //@ts-ignore a bunch of errors related to event name and handler typings
+            this.client.on(name.replace(".event", ""), handler)
+        )
     }
 
     unloadOne(name: string): void {

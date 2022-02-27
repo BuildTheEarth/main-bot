@@ -12,7 +12,7 @@ export default new Command({
     async run(this: Command, client: Client, message: CommandMessage, args: Args) {
         const emoji = "🏓"
         const letter = args.command === "bing" ? "B" : "P"
-        
+
         await message.continue()
         await message.send({
             content: `${emoji} ${letter}ong! **${client.ws.ping}ms**`

@@ -4,10 +4,14 @@ import GuildMember from "../../../discord/GuildMember"
 import Roles from "../../../../util/roles.util"
 import Discord from "discord.js"
 
-@Controller('/api/v1/builder')
+@Controller("/api/v1/builder")
 export default class BuilderController {
-    @Get(':id')
-    async builderGet (@Req() req: express.Request, @Res() res: express.Response, @Param('id') id: string): Promise<unknown> {
+    @Get(":id")
+    async builderGet(
+        @Req() req: express.Request,
+        @Res() res: express.Response,
+        @Param("id") id: string
+    ): Promise<unknown> {
         res.contentType("application/json")
         if (!id) {
             return res.send({
@@ -49,9 +53,13 @@ export default class BuilderController {
         return
     }
 
-
-    @Post(':id')
-    async builderPost (@Req() req: express.Request, @Res() res: express.Response, @Param('id') id: string, @Body("add") add: boolean): Promise<unknown> {
+    @Post(":id")
+    async builderPost(
+        @Req() req: express.Request,
+        @Res() res: express.Response,
+        @Param("id") id: string,
+        @Body("add") add: boolean
+    ): Promise<unknown> {
         res.contentType("application/json")
 
         if (!id) {

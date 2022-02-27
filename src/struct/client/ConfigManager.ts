@@ -61,7 +61,6 @@ export default class ConfigManager {
     submodules: Submodules
     envBindings: Record<string, any>
 
-
     constructor(client: Client) {
         this.client = client
         this.submodules = { messages: new MessagesConfig(this.client) }
@@ -75,10 +74,8 @@ export default class ConfigManager {
             DB_PASS: "self.database.pass",
             TOKEN: "self.token",
             MODPACK_AUTH: "self.modpackAuth",
-            INTER_KEY: "self.interKey",
+            INTER_KEY: "self.interKey"
         }
-
-        
     }
 
     async load(): Promise<void> {
@@ -92,7 +89,8 @@ export default class ConfigManager {
                 )
                 process.exit(1)
             })
-        for (const [key, value] of Object.entries(config)) if (this[key] !== null) this[key] = value
+        for (const [key, value] of Object.entries(config))
+            if (this[key] !== null) this[key] = value
         for (const [key, value] of Object.entries(process.env)) {
             if (key in this.envBindings) {
                 const replacer = `function(self, v) {${this.envBindings[key]} = v}`

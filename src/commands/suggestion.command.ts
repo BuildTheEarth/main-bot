@@ -2,7 +2,10 @@ import Discord, { FetchedThreads } from "discord.js"
 import Client from "../struct/Client"
 import Args from "../struct/Args"
 import Command from "../struct/Command"
-import Suggestion, { SuggestionStatus, SuggestionStatuses } from "../entities/Suggestion.entity"
+import Suggestion, {
+    SuggestionStatus,
+    SuggestionStatuses
+} from "../entities/Suggestion.entity"
 import Roles from "../util/roles.util"
 import path from "path"
 import humanizeArray from "../util/humanizeArray.util"
