@@ -39,14 +39,14 @@ export default class TimedPunishment extends BaseEntity {
     async undo(client: Client): Promise<void> {
         clearTimeout(this.undoTimeout)
         await this.remove()
-        const user = await client.users.fetch(this.member, { force: true })
+        const user = await client.users.fetch(this.member)
         if (!user) return
 
         if (this.type === "mute") {
             const member: Discord.GuildMember = await (
                 await client.customGuilds.main()
             ).members
-                .fetch({ user, cache: true })
+                .fetch({ user })
                 .catch(noop)
             if (!member) return
             await GuildMember.unmute(member, "End of punishment").catch(noop)
