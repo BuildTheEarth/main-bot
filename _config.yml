@@ -1,5 +1,0 @@
-# ATTENTION:
-#This file has been deprecated
-# use ./config/_config.json5
-# for a old to new config converter please see
-# scripts/convertOldYAML.js
