@@ -1,10 +1,10 @@
-import Client from "../struct/Client"
-import Args from "../struct/Args"
-import Command from "../struct/Command"
-import Roles from "../util/roles.util"
+import Client from "../struct/Client.js"
+import Args from "../struct/Args.js"
+import Command from "../struct/Command.js"
+import Roles from "../util/roles.util.js"
 import Discord from "discord.js"
-import ApiTypes from "discord-api-types"
-import CommandMessage from "../struct/CommandMessage"
+import ApiTypes = require("discord-api-types/v10")
+import CommandMessage from "../struct/CommandMessage.js"
 
 export default new Command({
     name: "slowmode",

@@ -17,6 +17,7 @@
         "node": true
     },
     "ignorePatterns": [
-        "**/*.js"
+        "**/*.js",
+        "**/*.cjs"
     ]
 }

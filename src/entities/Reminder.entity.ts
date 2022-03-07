@@ -1,30 +1,24 @@
-import {
-    Entity,
-    Column,
-    PrimaryGeneratedColumn,
-    BaseEntity,
-    CreateDateColumn
-} from "typeorm"
-import SnowflakeColumn from "./decorators/SnowflakeColumn.decorator"
-import Client from "../struct/Client"
-import milliseconds from "./transformers/milliseconds.transformer"
+import typeorm from "typeorm"
+import SnowflakeColumn from "./decorators/SnowflakeColumn.decorator.js"
+import Client from "../struct/Client.js"
+import milliseconds from "./transformers/milliseconds.transformer.js"
 import { TextChannel } from "discord.js"
 
-@Entity({ name: "reminders" })
-export default class Reminder extends BaseEntity {
-    @PrimaryGeneratedColumn()
+@typeorm.Entity({ name: "reminders" })
+export default class Reminder extends typeorm.BaseEntity {
+    @typeorm.PrimaryGeneratedColumn()
     id: number
 
     @SnowflakeColumn()
     channel: string
 
-    @Column({ length: 1024 })
+    @typeorm.Column({ length: 1024 })
     message: string
 
-    @Column({ transformer: milliseconds })
+    @typeorm.Column({ transformer: milliseconds })
     interval: number
 
-    @CreateDateColumn({ name: "created_at" })
+    @typeorm.CreateDateColumn({ name: "created_at" })
     createdAt: Date
 
     get remainder(): number {

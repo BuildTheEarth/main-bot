@@ -1,11 +1,12 @@
 import path from "path"
 import JSON5 from "json5"
 import fs from "fs"
-import Client from "../Client"
-import { SuggestionStatus } from "../../entities/Suggestion.entity"
-import { Action } from "../../entities/ActionLog.entity"
+import Client from "../Client.js"
+import { SuggestionStatus } from "../../entities/Suggestion.entity.js"
+import { Action } from "../../entities/ActionLog.entity.js"
 import { EmojiIdentifierResolvable } from "discord.js"
-import MessagesConfig from "./MessagesConfig"
+import MessagesConfig from "./MessagesConfig.js"
+import url from "url"
 
 type ConfigSubmoduleTypes = MessagesConfig
 
@@ -79,7 +80,7 @@ export default class ConfigManager {
     }
 
     async load(): Promise<void> {
-        const configPath = path.join(__dirname, "../../../config/config.json5")
+        const configPath = path.join(path.dirname(url.fileURLToPath(import.meta.url)), "../../../config/config.json5")
         const config = await fs.promises
             .readFile(configPath, "utf-8")
             .then(json5 => JSON5.parse(json5))

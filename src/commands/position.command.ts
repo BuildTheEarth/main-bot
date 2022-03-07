@@ -1,17 +1,18 @@
-import Client from "../struct/Client"
+import Client from "../struct/Client.js"
 import { loadSyncJSON5 } from "@buildtheearth/bot-utils"
-import Args from "../struct/Args"
+import Args from "../struct/Args.js"
 import path from "path"
-import Command from "../struct/Command"
-import GuildMember from "../struct/discord/GuildMember"
-import Guild from "../struct/discord/Guild"
-import Roles from "../util/roles.util"
+import url from "url"
+import Command from "../struct/Command.js"
+import GuildMember from "../struct/discord/GuildMember.js"
+import Guild from "../struct/discord/Guild.js"
+import Roles from "../util/roles.util.js"
 const pseudoteamPositions: Record<string, Record<string, string>> = loadSyncJSON5(
-    path.join(__dirname + "../../../config/extensions/pseudoteamPositions.json5")
+    path.join(path.dirname(url.fileURLToPath(import.meta.url)) + "../../../config/extensions/pseudoteamPositions.json5")
 )
 import { noop } from "@buildtheearth/bot-utils"
 import Discord from "discord.js"
-import CommandMessage from "../struct/CommandMessage"
+import CommandMessage from "../struct/CommandMessage.js"
 
 export default new Command({
     name: "position",

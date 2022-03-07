@@ -3,10 +3,11 @@
         "esModuleInterop": true,
         "experimentalDecorators": true,
         "emitDecoratorMetadata": true,
-        "module": "commonjs",
-        "target": "es2021",
+        "module": "esnext",
+        "target": "esnext",
         "outDir": "./dist",
         "noImplicitUseStrict": true,
+        "moduleResolution": "nodenext",
     },
     "include": [
         "src/**/**/*",

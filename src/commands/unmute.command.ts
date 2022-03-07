@@ -1,10 +1,10 @@
-import Client from "../struct/Client"
-import Args from "../struct/Args"
-import TimedPunishment from "../entities/TimedPunishment.entity"
-import ActionLog from "../entities/ActionLog.entity"
-import Command from "../struct/Command"
-import Roles from "../util/roles.util"
-import CommandMessage from "../struct/CommandMessage"
+import Client from "../struct/Client.js"
+import Args from "../struct/Args.js"
+import TimedPunishment from "../entities/TimedPunishment.entity.js"
+import ActionLog from "../entities/ActionLog.entity.js"
+import Command from "../struct/Command.js"
+import Roles from "../util/roles.util.js"
+import CommandMessage from "../struct/CommandMessage.js"
 
 export default new Command({
     name: "unmute",

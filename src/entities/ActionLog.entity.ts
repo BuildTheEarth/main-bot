@@ -1,18 +1,9 @@
-import {
-    Entity,
-    Column,
-    PrimaryGeneratedColumn,
-    CreateDateColumn,
-    DeleteDateColumn,
-    BaseEntity,
-    OneToOne,
-    JoinColumn
-} from "typeorm"
-import SnowflakeColumn from "./decorators/SnowflakeColumn.decorator"
+import typeorm from "typeorm"
+import SnowflakeColumn from "./decorators/SnowflakeColumn.decorator.js"
 import Discord from "discord.js"
-import Client from "../struct/Client"
-import TimedPunishment from "./TimedPunishment.entity"
-import milliseconds from "./transformers/milliseconds.transformer"
+import Client from "../struct/Client.js"
+import TimedPunishment from "./TimedPunishment.entity.js"
+import milliseconds from "./transformers/milliseconds.transformer.js"
 import {
     formatPunishmentTime,
     formatTimestamp,
@@ -34,12 +25,12 @@ export enum Actions {
     "unban"
 }
 
-@Entity({ name: "action_logs" })
-export default class ActionLog extends BaseEntity {
-    @PrimaryGeneratedColumn()
+@typeorm.Entity({ name: "action_logs" })
+export default class ActionLog extends typeorm.BaseEntity {
+    @typeorm.PrimaryGeneratedColumn()
     id: number
 
-    @Column()
+    @typeorm.Column()
     action: Action
 
     @SnowflakeColumn()
@@ -48,13 +39,13 @@ export default class ActionLog extends BaseEntity {
     @SnowflakeColumn()
     executor: string
 
-    @Column({ length: 1024 })
+    @typeorm.Column({ length: 1024 })
     reason: string
 
-    @Column({ nullable: true, name: "reason_image" })
+    @typeorm.Column({ nullable: true, name: "reason_image" })
     reasonImage?: string
 
-    @Column({ nullable: true, transformer: milliseconds })
+    @typeorm.Column({ nullable: true, transformer: milliseconds })
     length?: number
 
     @SnowflakeColumn()
@@ -66,25 +57,25 @@ export default class ActionLog extends BaseEntity {
     @SnowflakeColumn({ nullable: true })
     notification: string
 
-    @CreateDateColumn({ name: "created_at" })
+    @typeorm.CreateDateColumn({ name: "created_at" })
     createdAt: Date
 
-    @DeleteDateColumn({ name: "deleted_at" })
+    @typeorm.DeleteDateColumn({ name: "deleted_at" })
     deletedAt: Date
 
     @SnowflakeColumn({ nullable: true })
     deleter?: string
 
-    @Column({ name: "delete_reason", length: 1024, nullable: true })
+    @typeorm.Column({ name: "delete_reason", length: 1024, nullable: true })
     deleteReason?: string
 
-    @OneToOne(() => TimedPunishment, {
+    @typeorm.OneToOne(() => TimedPunishment, {
         nullable: true,
         eager: true,
         onDelete: "SET NULL",
         cascade: true
     })
-    @JoinColumn({ name: "punishment_id" })
+    @typeorm.JoinColumn({ name: "punishment_id" })
     punishment?: TimedPunishment
 
     get old(): boolean {

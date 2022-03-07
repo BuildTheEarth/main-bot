@@ -1,7 +1,7 @@
 import { hexToRGB } from "@buildtheearth/bot-utils"
 import Discord from "discord.js"
-import toggleDutyRole from "../../util/toggleDutyRole.util"
-import Client from "../Client"
+import toggleDutyRole from "../../util/toggleDutyRole.util.js"
+import Client from "../Client.js"
 
 export default class DutyScheduler {
     dutyScheduler: Map<Discord.Snowflake, [NodeJS.Timeout, Date]>

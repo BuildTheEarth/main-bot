@@ -1,9 +1,9 @@
-import Client from "../struct/Client"
-import Args from "../struct/Args"
-import Command from "../struct/Command"
-import BannerImage from "../entities/BannerImage.entity"
-import Roles from "../util/roles.util"
-import CommandMessage from "../struct/CommandMessage"
+import Client from "../struct/Client.js"
+import Args from "../struct/Args.js"
+import Command from "../struct/Command.js"
+import BannerImage from "../entities/BannerImage.entity.js"
+import Roles from "../util/roles.util.js"
+import CommandMessage from "../struct/CommandMessage.js"
 import fetch from "node-fetch"
 import { hexToRGB, quote } from "@buildtheearth/bot-utils"
 
@@ -108,7 +108,7 @@ export default new Command({
                     "content-length"
                 )
                 if (res == undefined) throw new Error()
-                isBig = res > 10485760
+                isBig = Number.parseInt(res) > 10485760
             } catch {
                 return client.response.sendError(
                     message,

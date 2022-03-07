@@ -1,19 +1,12 @@
-import {
-    Entity,
-    Column,
-    PrimaryGeneratedColumn,
-    CreateDateColumn,
-    DeleteDateColumn,
-    BaseEntity,
-    LessThan
-} from "typeorm"
-import SnowflakeColumn from "./decorators/SnowflakeColumn.decorator"
+import typeorm from "typeorm"
+import SnowflakeColumn from "./decorators/SnowflakeColumn.decorator.js"
 import Discord from "discord.js"
 import path from "path"
-import Client from "../struct/Client"
+import url from "url"
+import Client from "../struct/Client.js"
 import { hexToRGB, loadSyncJSON5, replaceAsync } from "@buildtheearth/bot-utils"
 const suggestionStatusActions = loadSyncJSON5(
-    path.join(__dirname + "../../../config/extensions/suggestionStatusActions.json5")
+    path.join(path.dirname(url.fileURLToPath(import.meta.url)) + "../../../config/extensions/suggestionStatusActions.json5")
 )
 
 export type SuggestionStatus = keyof typeof SuggestionStatuses
@@ -32,41 +25,41 @@ export interface Identifier {
     extension: string
 }
 
-@Entity({ name: "suggestions" })
-export default class Suggestion extends BaseEntity {
+@typeorm.Entity({ name: "suggestions" })
+export default class Suggestion extends typeorm.BaseEntity {
     static ALPHABET = "abcdefghijklmnopqrstuvwxyz"
 
-    @PrimaryGeneratedColumn()
+    @typeorm.PrimaryGeneratedColumn()
     id: number
 
-    @Column({ nullable: true })
+    @typeorm.Column({ nullable: true })
     number?: number
 
-    @Column({ nullable: true })
+    @typeorm.Column({ nullable: true })
     extends?: number
 
     @SnowflakeColumn()
     author: string
 
-    @Column()
+    @typeorm.Column()
     anonymous: boolean
 
-    @Column()
+    @typeorm.Column()
     title: string
 
-    @Column({ length: 2048 })
+    @typeorm.Column({ length: 2048 })
     body: string
 
-    @Column({ nullable: true })
+    @typeorm.Column({ nullable: true })
     teams?: string
 
-    @Column({ nullable: true })
+    @typeorm.Column({ nullable: true })
     status?: SuggestionStatus
 
     @SnowflakeColumn({ nullable: true, name: "status_updater" })
     statusUpdater?: string
 
-    @Column({ nullable: true, length: 1024, name: "status_reason" })
+    @typeorm.Column({ nullable: true, length: 1024, name: "status_reason" })
     statusReason?: string
 
     @SnowflakeColumn()
@@ -75,13 +68,13 @@ export default class Suggestion extends BaseEntity {
     @SnowflakeColumn({ nullable: true })
     thread: string
 
-    @Column()
+    @typeorm.Column()
     staff: boolean
 
-    @CreateDateColumn({ name: "created_at" })
+    @typeorm.CreateDateColumn({ name: "created_at" })
     createdAt: Date
 
-    @DeleteDateColumn({ name: "deleted_at" })
+    @typeorm.DeleteDateColumn({ name: "deleted_at" })
     deletedAt: Date
 
     @SnowflakeColumn({ nullable: true })
@@ -106,7 +99,7 @@ export default class Suggestion extends BaseEntity {
         } else {
             const extenders = await Suggestion.find({
                 extends: this.extends,
-                createdAt: LessThan(this.createdAt || new Date())
+                createdAt: typeorm.LessThan(this.createdAt || new Date())
             })
             const letter = Suggestion.ALPHABET[extenders.length + 1]
             return this.extends + letter

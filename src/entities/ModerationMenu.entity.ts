@@ -1,7 +1,8 @@
 import Discord from "discord.js"
 import _ from "lodash"
 import path from "path"
-import { Entity, Column, BaseEntity } from "typeorm"
+import url from "url"
+import typeorm from "typeorm"
 import {
     formatPunishmentTime,
     hexToRGB,
@@ -9,27 +10,27 @@ import {
     truncateString
 } from "@buildtheearth/bot-utils"
 const punishmentValues = loadSyncJSON5(
-    path.join(__dirname + "../../../config/extensions/punishmentValues.json5")
+    path.join(path.dirname(url.fileURLToPath(import.meta.url)) + "../../../config/extensions/punishmentValues.json5")
 )
-import Client from "../struct/Client"
-import { BannedWordObj } from "../struct/client/BannedWordFilter"
-import { bannedWordsOptions } from "./BannedWord.entity"
-import SnowflakeColumn from "./decorators/SnowflakeColumn.decorator"
-import SnowflakePrimaryColumn from "./decorators/SnowflakePrimaryColumn.decorator"
+import Client from "../struct/Client.js"
+import { BannedWordObj } from "../struct/client/BannedWordFilter.js"
+import { bannedWordsOptions } from "./BannedWord.entity.js"
+import SnowflakeColumn from "./decorators/SnowflakeColumn.decorator.js"
+import SnowflakePrimaryColumn from "./decorators/SnowflakePrimaryColumn.decorator.js"
 import JSON5 from "json5"
-import punish from "../util/punish.util"
+import punish from "../util/punish.util.js"
 import { noop } from "@buildtheearth/bot-utils"
-import TimedPunishment from "./TimedPunishment.entity"
-import Roles from "../util/roles.util"
-import GuildMember from "../struct/discord/GuildMember"
+import TimedPunishment from "./TimedPunishment.entity.js"
+import Roles from "../util/roles.util.js"
+import GuildMember from "../struct/discord/GuildMember.js"
 
 function getDuration(duration: number): string {
     if (duration === null) return "Indefinite"
     return formatPunishmentTime(duration, true)
 }
 
-@Entity({ name: "moderation_menus" })
-export default class ModerationMenu extends BaseEntity {
+@typeorm.Entity({ name: "moderation_menus" })
+export default class ModerationMenu extends typeorm.BaseEntity {
     public static async createMenu(
         message: Discord.Message,
         filterResponse: BannedWordObj[],
@@ -602,10 +603,10 @@ export default class ModerationMenu extends BaseEntity {
     @SnowflakeColumn()
     message: string
 
-    @Column({ length: 2000 })
+    @typeorm.Column({ length: 2000 })
     message_text: string
 
-    @Column("text", {
+    @typeorm.Column("text", {
         transformer: {
             to: (value: bannedWordsOptions[]) => JSON5.stringify(value),
             from: (value: string) => JSON5.parse(value)
@@ -613,10 +614,10 @@ export default class ModerationMenu extends BaseEntity {
     })
     punishments: bannedWordsOptions[]
 
-    @Column()
+    @typeorm.Column()
     offenses: number
 
-    @Column()
+    @typeorm.Column()
     current_word: string
 }
 

@@ -1,7 +1,7 @@
 import Discord from "discord.js"
-import Guild from "./Guild"
-import Roles from "../../util/roles.util"
-import Client from "../Client"
+import Guild from "./Guild.js"
+import Roles from "../../util/roles.util.js"
+import Client from "../Client.js"
 
 export default class GuildMember {
     static hasRole(

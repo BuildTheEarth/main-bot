@@ -1,7 +1,7 @@
 import { trimSides } from "@buildtheearth/bot-utils"
-import Placeholder from "../../entities/Placeholder.entity"
-import Client from "../Client"
-import iso6391 from "./iso6391"
+import Placeholder from "../../entities/Placeholder.entity.js"
+import Client from "../Client.js"
+import iso6391 from "./iso6391.js"
 
 export default class PlaceholderHandler {
     client: Client

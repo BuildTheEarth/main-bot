@@ -1,17 +1,17 @@
-import Client from "../struct/Client"
-import CommandMessage from "../struct/CommandMessage"
-import GuildMember from "../struct/discord/GuildMember"
-import Guild from "../struct/discord/Guild"
-import Args from "../struct/Args"
-import Role from "../struct/discord/Role"
-import Snippet from "../entities/Snippet.entity"
-import languages from "../struct/client/iso6391"
-import Roles from "../util/roles.util"
+import Client from "../struct/Client.js"
+import CommandMessage from "../struct/CommandMessage.js"
+import GuildMember from "../struct/discord/GuildMember.js"
+import Guild from "../struct/discord/Guild.js"
+import Args from "../struct/Args.js"
+import Role from "../struct/discord/Role.js"
+import Snippet from "../entities/Snippet.entity.js"
+import languages from "../struct/client/iso6391.js"
+import Roles from "../util/roles.util.js"
 import chalk from "chalk"
 import { noop } from "@buildtheearth/bot-utils"
 import Discord from "discord.js"
-import { Brackets, WhereExpression } from "typeorm"
-import ModerationMenu from "../entities/ModerationMenu.entity"
+import typeorm from "typeorm"
+import ModerationMenu from "../entities/ModerationMenu.entity.js"
 
 export default async function (this: Client, message: Discord.Message): Promise<unknown> {
     if (message.partial) await message.fetch().catch(noop)
@@ -45,12 +45,12 @@ export default async function (this: Client, message: Discord.Message): Promise<
                     `Please choose \`zh-s\` (简体中文) or \`zh-t\` (繁體中文)!`
                 )
 
-            const find = (query: WhereExpression) =>
+            const find = (query: typeorm.WhereExpression) =>
                 query
                     .where("snippet.name = :name", { name: args.command })
                     .andWhere("snippet.type = 'snippet'")
                     .orWhere(
-                        new Brackets(qb => {
+                        new typeorm.Brackets(qb => {
                             qb.where("FIND_IN_SET(:name, snippet.aliases)").andWhere(
                                 "snippet.type = 'snippet'"
                             )
@@ -59,13 +59,13 @@ export default async function (this: Client, message: Discord.Message): Promise<
 
             const snippet = await Snippets.createQueryBuilder("snippet")
                 .where("snippet.language = :language", { language })
-                .andWhere(new Brackets(find))
+                .andWhere(new typeorm.Brackets(find))
                 .andWhere("snippet.type = 'snippet'")
                 .getOne()
 
             if (!snippet) {
                 const unlocalizedSnippet = await Snippets.createQueryBuilder("snippet")
-                    .where(new Brackets(find))
+                    .where(new typeorm.Brackets(find))
                     .andWhere("snippet.type = 'snippet'")
                     .getOne()
                 if (unlocalizedSnippet)

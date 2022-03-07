@@ -1,32 +1,26 @@
-import {
-    Entity,
-    Column,
-    PrimaryGeneratedColumn,
-    BaseEntity,
-    CreateDateColumn
-} from "typeorm"
-import SnowflakeColumn from "./decorators/SnowflakeColumn.decorator"
-import Client from "../struct/Client"
-import GuildMember from "../struct/discord/GuildMember"
-import milliseconds from "./transformers/milliseconds.transformer"
+import typeorm from "typeorm"
+import SnowflakeColumn from "./decorators/SnowflakeColumn.decorator.js"
+import Client from "../struct/Client.js"
+import GuildMember from "../struct/discord/GuildMember.js"
+import milliseconds from "./transformers/milliseconds.transformer.js"
 import { noop, pastTense } from "@buildtheearth/bot-utils"
 import Discord from "discord.js"
 
-@Entity({ name: "timed_punishments" })
-export default class TimedPunishment extends BaseEntity {
-    @PrimaryGeneratedColumn()
+@typeorm.Entity({ name: "timed_punishments" })
+export default class TimedPunishment extends typeorm.BaseEntity {
+    @typeorm.PrimaryGeneratedColumn()
     id: number
 
     @SnowflakeColumn()
     member: string
 
-    @Column()
+    @typeorm.Column()
     type: "mute" | "ban"
 
-    @Column({ transformer: milliseconds })
+    @typeorm.Column({ transformer: milliseconds })
     length: number
 
-    @CreateDateColumn({ name: "created_at" })
+    @typeorm.CreateDateColumn({ name: "created_at" })
     createdAt: Date
 
     get end(): Date {

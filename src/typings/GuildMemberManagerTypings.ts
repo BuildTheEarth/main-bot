@@ -18,7 +18,7 @@ import {
     GuildSearchMembersOptions
 } from "discord.js"
 
-import { RawGuildMemberData } from "./rawDataTypes"
+import { RawGuildMemberData } from "./rawDataTypes.js"
 
 export class GuildMemberManagerFixed extends CachedManager<
     Snowflake,

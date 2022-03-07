@@ -1,10 +1,10 @@
 import Discord, { ButtonInteraction } from "discord.js"
-import Client from "../struct/Client"
-import CommandMessage from "../struct/CommandMessage"
-import TimedPunishment from "../entities/TimedPunishment.entity"
-import ActionLog from "../entities/ActionLog.entity"
-import GuildMember from "../struct/discord/GuildMember"
-import Roles from "./roles.util"
+import Client from "../struct/Client.js"
+import CommandMessage from "../struct/CommandMessage.js"
+import TimedPunishment from "../entities/TimedPunishment.entity.js"
+import ActionLog from "../entities/ActionLog.entity.js"
+import GuildMember from "../struct/discord/GuildMember.js"
+import Roles from "./roles.util.js"
 import { noop } from "@buildtheearth/bot-utils"
 
 async function log(

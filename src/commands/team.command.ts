@@ -1,10 +1,10 @@
-import Client from "../struct/Client"
-import Args from "../struct/Args"
-import Command from "../struct/Command"
-import Roles from "../util/roles.util"
-import { Brackets, WhereExpression } from "typeorm"
-import Snippet from "../entities/Snippet.entity"
-import CommandMessage from "../struct/CommandMessage"
+import Client from "../struct/Client.js"
+import Args from "../struct/Args.js"
+import Command from "../struct/Command.js"
+import Roles from "../util/roles.util.js"
+import typeorm from "typeorm"
+import Snippet from "../entities/Snippet.entity.js"
+import CommandMessage from "../struct/CommandMessage.js"
 
 export default new Command({
     name: "team",
@@ -27,12 +27,12 @@ export default new Command({
 
         const Snippets = Snippet.getRepository()
         const language = "en"
-        const find = (query: WhereExpression) =>
+        const find = (query: typeorm.WhereExpression) =>
             query
                 .where("snippet.name = :name", { name: input })
                 .andWhere("snippet.type = 'team'")
                 .orWhere(
-                    new Brackets(qb => {
+                    new typeorm.Brackets(qb => {
                         qb.where("FIND_IN_SET(:name, snippet.aliases)").andWhere(
                             "snippet.type = 'team'"
                         )
@@ -40,7 +40,7 @@ export default new Command({
                 )
         const snippet = await Snippets.createQueryBuilder("snippet")
             .where("snippet.language = :language", { language })
-            .andWhere(new Brackets(find))
+            .andWhere(new typeorm.Brackets(find))
             .getOne()
 
         if (!snippet) {

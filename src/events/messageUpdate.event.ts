@@ -1,6 +1,6 @@
-import Client from "../struct/Client"
+import Client from "../struct/Client.js"
 import Discord from "discord.js"
-import ModerationMenu from "../entities/ModerationMenu.entity"
+import ModerationMenu from "../entities/ModerationMenu.entity.js"
 import { noop } from "@buildtheearth/bot-utils"
 
 export default async function (

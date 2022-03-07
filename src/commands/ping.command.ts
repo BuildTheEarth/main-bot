@@ -1,8 +1,8 @@
-import Client from "../struct/Client"
-import Command from "../struct/Command"
-import Roles from "../util/roles.util"
-import CommandMessage from "../struct/CommandMessage"
-import Args from "../struct/Args"
+import Client from "../struct/Client.js"
+import Command from "../struct/Command.js"
+import Roles from "../util/roles.util.js"
+import CommandMessage from "../struct/CommandMessage.js"
+import Args from "../struct/Args.js"
 
 export default new Command({
     name: "ping",

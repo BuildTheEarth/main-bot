@@ -1,32 +1,26 @@
-import {
-    Entity,
-    Column,
-    PrimaryGeneratedColumn,
-    DeleteDateColumn,
-    BaseEntity
-} from "typeorm"
+import typeorm from "typeorm"
 import Discord from "discord.js"
-import Client from "../struct/Client"
+import type Client from "../struct/Client.js"
 import { quote } from "@buildtheearth/bot-utils"
 
-@Entity({ name: "banner_images" })
-export default class BannerImage extends BaseEntity {
-    @PrimaryGeneratedColumn()
+@typeorm.Entity({ name: "banner_images" })
+export default class BannerImage extends typeorm.BaseEntity {
+    @typeorm.PrimaryGeneratedColumn()
     id: number
 
-    @Column()
+    @typeorm.Column()
     url: string
 
-    @Column()
+    @typeorm.Column()
     credit: string
 
-    @Column()
+    @typeorm.Column()
     location: string
 
-    @Column({ length: 512, nullable: true })
+    @typeorm.Column({ length: 512, nullable: true })
     description?: string
 
-    @DeleteDateColumn({ name: "deleted_at" })
+    @typeorm.DeleteDateColumn({ name: "deleted_at" })
     deletedAt?: Date
 
     format(): string {

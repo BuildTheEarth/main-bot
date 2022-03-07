@@ -1,11 +1,11 @@
-import Client from "../struct/Client"
+import Client from "../struct/Client.js"
 import Discord from "discord.js"
-import Args from "../struct/Args"
-import Command from "../struct/Command"
-import GuildMember from "../struct/discord/GuildMember"
-import Roles from "../util/roles.util"
-import CommandMessage from "../struct/CommandMessage"
-import CommandUtils from "../util/CommandUtils.util"
+import Args from "../struct/Args.js"
+import Command from "../struct/Command.js"
+import GuildMember from "../struct/discord/GuildMember.js"
+import Roles from "../util/roles.util.js"
+import CommandMessage from "../struct/CommandMessage.js"
+import CommandUtils from "../util/CommandUtils.util.js"
 import { truncateString } from "@buildtheearth/bot-utils"
 
 export default new Command({

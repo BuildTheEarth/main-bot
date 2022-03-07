@@ -1,10 +1,10 @@
-import Client from "../struct/Client"
-import Args from "../struct/Args"
-import Command from "../struct/Command"
-import Roles from "../util/roles.util"
-import Reminder from "../entities/Reminder.entity"
-import ApiTypes from "discord-api-types"
-import CommandMessage from "../struct/CommandMessage"
+import Client from "../struct/Client.js"
+import Args from "../struct/Args.js"
+import Command from "../struct/Command.js"
+import Roles from "../util/roles.util.js"
+import Reminder from "../entities/Reminder.entity.js"
+import ApiTypes = require("discord-api-types/v10")
+import CommandMessage from "../struct/CommandMessage.js"
 import { formatTimestamp } from "@buildtheearth/bot-utils"
 
 const remindTimes = ["test", "weekly", "bi-weekly", "monthly", "bi-monthly"]

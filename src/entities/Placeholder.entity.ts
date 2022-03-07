@@ -1,21 +1,21 @@
-import { Entity, Column, PrimaryGeneratedColumn, BaseEntity } from "typeorm"
+import typeorm from "typeorm"
 import Discord from "discord.js"
-import Client from "../struct/Client"
-import languages from "../struct/client/iso6391"
+import Client from "../struct/Client.js"
+import languages from "../struct/client/iso6391.js"
 import { hexToRGB } from "@buildtheearth/bot-utils"
 
-@Entity({ name: "placeholders" })
-export default class Placeholder extends BaseEntity {
-    @PrimaryGeneratedColumn()
+@typeorm.Entity({ name: "placeholders" })
+export default class Placeholder extends typeorm.BaseEntity {
+    @typeorm.PrimaryGeneratedColumn()
     id: number
 
-    @Column({ length: 32 })
+    @typeorm.Column({ length: 32 })
     name: string
 
-    @Column({ length: 4 })
+    @typeorm.Column({ length: 4 })
     language: string
 
-    @Column({ length: 2000 })
+    @typeorm.Column({ length: 2000 })
     body: string
 
     displayEmbed(client: Client): Discord.MessageEmbedOptions {

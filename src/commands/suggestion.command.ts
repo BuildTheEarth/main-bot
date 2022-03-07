@@ -1,13 +1,14 @@
 import Discord, { FetchedThreads } from "discord.js"
-import Client from "../struct/Client"
-import Args from "../struct/Args"
-import Command from "../struct/Command"
+import Client from "../struct/Client.js"
+import Args from "../struct/Args.js"
+import Command from "../struct/Command.js"
 import Suggestion, {
     SuggestionStatus,
     SuggestionStatuses
-} from "../entities/Suggestion.entity"
-import Roles from "../util/roles.util"
+} from "../entities/Suggestion.entity.js"
+import Roles from "../util/roles.util.js"
 import path from "path"
+import url from "url"
 import {
     flattenMarkdown,
     hexToRGB,
@@ -15,13 +16,13 @@ import {
     loadSyncJSON5,
     truncateString
 } from "@buildtheearth/bot-utils"
-import { Brackets } from "typeorm"
+import typeorm from "typeorm"
 import { noop } from "@buildtheearth/bot-utils"
 const suggestionStatusActions = loadSyncJSON5(
-    path.join(__dirname + "../../../config/extensions/suggestionStatusActions.json5")
+    path.join(path.dirname(url.fileURLToPath(import.meta.url)) + "../../../config/extensions/suggestionStatusActions.json5")
 )
-import GuildMember from "../struct/discord/GuildMember"
-import CommandMessage from "../struct/CommandMessage"
+import GuildMember from "../struct/discord/GuildMember.js"
+import CommandMessage from "../struct/CommandMessage.js"
 
 export default new Command({
     name: "suggestion",
@@ -209,7 +210,7 @@ export default new Command({
                 .where(`INSTR(suggestion.${field}, :query)`, { query })
                 .andWhere(`suggestion.staff = :staff`, { staff })
                 .andWhere(
-                    new Brackets(query =>
+                    new typeorm.Brackets(query =>
                         query
                             .where(`suggestion.status IN(:statuses)`, { statuses })
                             .orWhere(`suggestion.status IS NULL`)
@@ -506,7 +507,7 @@ export default new Command({
                     dms.send({
                         embeds: [
                             {
-                                color: client.config.colors.suggestions[status],
+                                color: hexToRGB(client.config.colors.suggestions[status]),
                                 description: update
                             }
                         ]

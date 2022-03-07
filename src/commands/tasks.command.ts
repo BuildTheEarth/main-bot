@@ -1,14 +1,14 @@
 // TODO: stop using repositories whenever TypeORM adds And() and Or() operators...
-import Includes from "../entities/operators/Includes.operator"
+import Includes from "../entities/operators/Includes.operator.js"
 import Discord from "discord.js"
-import Client from "../struct/Client"
-import Args from "../struct/Args"
-import Command from "../struct/Command"
-import Task, { TaskStatus, TaskStatuses } from "../entities/Task.entity"
-import Roles from "../util/roles.util"
-import { Brackets } from "typeorm"
-import CommandMessage from "../struct/CommandMessage"
-import ApiTypes from "discord-api-types"
+import Client from "../struct/Client.js"
+import Args from "../struct/Args.js"
+import Command from "../struct/Command.js"
+import Task, { TaskStatus, TaskStatuses } from "../entities/Task.entity.js"
+import Roles from "../util/roles.util.js"
+import typeorm from "typeorm"
+import CommandMessage from "../struct/CommandMessage.js"
+import ApiTypes = require("discord-api-types/v10")
 import { hexToRGB, humanizeArray } from "@buildtheearth/bot-utils"
 
 export default new Command({
@@ -151,7 +151,7 @@ export default new Command({
             const tasks = await Tasks.createQueryBuilder("task")
                 .where(`task.assignees LIKE '%${message.member.id}%'`)
                 .andWhere(
-                    new Brackets(query =>
+                    new typeorm.Brackets(query =>
                         query
                             .where("task.status NOT IN (:not)", { not })
                             .orWhere("task.status IS NULL")

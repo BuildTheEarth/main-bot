@@ -1,7 +1,7 @@
-import { MigrationInterface, QueryRunner } from "typeorm"
+import typeorm from "typeorm"
 
-export class AddReminders1624421039931 implements MigrationInterface {
-    public async up(queryRunner: QueryRunner): Promise<void> {
+export class AddReminders1624421039931 implements typeorm.MigrationInterface {
+    public async up(queryRunner: typeorm.QueryRunner): Promise<void> {
         const exists = await queryRunner.hasTable("reminders")
         if (!exists)
             await queryRunner.query(`
@@ -17,7 +17,7 @@ export class AddReminders1624421039931 implements MigrationInterface {
         `)
     }
 
-    public async down(queryRunner: QueryRunner): Promise<void> {
+    public async down(queryRunner: typeorm.QueryRunner): Promise<void> {
         await queryRunner.dropTable("reminders", true)
     }
 }

@@ -1,19 +1,19 @@
-import Args from "../struct/Args"
-import Client from "../struct/Client"
-import Command from "../struct/Command"
+import Args from "../struct/Args.js"
+import Client from "../struct/Client.js"
+import Command from "../struct/Command.js"
 
-import BannerImage from "../entities/BannerImage.entity"
-import ActionLog from "../entities/ActionLog.entity"
-import ModerationNote from "../entities/ModerationNote.entity"
-import ModpackImage from "../entities/ModpackImage.entity"
-import Snippet from "../entities/Snippet.entity"
-import Suggestion from "../entities/Suggestion.entity"
-import TimedPunishment from "../entities/TimedPunishment.entity"
+import BannerImage from "../entities/BannerImage.entity.js"
+import ActionLog from "../entities/ActionLog.entity.js"
+import ModerationNote from "../entities/ModerationNote.entity.js"
+import ModpackImage from "../entities/ModpackImage.entity.js"
+import Snippet from "../entities/Snippet.entity.js"
+import Suggestion from "../entities/Suggestion.entity.js"
+import TimedPunishment from "../entities/TimedPunishment.entity.js"
 
-import CommandList from "../struct/client/CommandList"
-import ConfigManager from "../struct/client/ConfigManager"
-import EventList from "../struct/client/EventList"
-import loadDir from "../util/loadDir.util"
+import CommandList from "../struct/client/CommandList.js"
+import ConfigManager from "../struct/client/ConfigManager.js"
+import EventList from "../struct/client/EventList.js"
+import loadDir from "../util/loadDir.util.js"
 import {
     flattenMarkdown,
     formatPunishmentTime,
@@ -26,9 +26,9 @@ import {
     stringifyAnything,
     truncateString
 } from "@buildtheearth/bot-utils"
-import languages from "../struct/client/iso6391"
-import Roles from "../util/roles.util"
-import CommandMessage from "../struct/CommandMessage"
+import languages from "../struct/client/iso6391.js"
+import Roles from "../util/roles.util.js"
+import CommandMessage from "../struct/CommandMessage.js"
 
 // prettier-ignore
 // eslint-disable-next-line @typescript-eslint/no-unused-vars

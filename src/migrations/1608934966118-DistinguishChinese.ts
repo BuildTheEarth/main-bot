@@ -1,8 +1,8 @@
-import { MigrationInterface, QueryRunner } from "typeorm"
+import typeorm from "typeorm"
 
 // 'zh' and 'cn' were used for simplified and traditional Chinese, respectively
-export class DistinguishChinese1608934966118 implements MigrationInterface {
-    public async up(queryRunner: QueryRunner): Promise<void> {
+export class DistinguishChinese1608934966118 implements typeorm.MigrationInterface {
+    public async up(queryRunner: typeorm.QueryRunner): Promise<void> {
         if (!(await queryRunner.hasTable("snippets"))) return
 
         await queryRunner.query(
@@ -16,7 +16,7 @@ export class DistinguishChinese1608934966118 implements MigrationInterface {
         )
     }
 
-    public async down(queryRunner: QueryRunner): Promise<void> {
+    public async down(queryRunner: typeorm.QueryRunner): Promise<void> {
         if (!(await queryRunner.hasTable("snippets"))) return
 
         await queryRunner.query(

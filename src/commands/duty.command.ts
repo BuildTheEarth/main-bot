@@ -1,10 +1,10 @@
-import Client from "../struct/Client"
-import Args from "../struct/Args"
-import Command from "../struct/Command"
-import GuildMember from "../struct/discord/GuildMember"
-import Roles from "../util/roles.util"
-import CommandMessage from "../struct/CommandMessage"
-import toggleDutyRole from "../util/toggleDutyRole.util"
+import Client from "../struct/Client.js"
+import Args from "../struct/Args.js"
+import Command from "../struct/Command.js"
+import GuildMember from "../struct/discord/GuildMember.js"
+import Roles from "../util/roles.util.js"
+import CommandMessage from "../struct/CommandMessage.js"
+import toggleDutyRole from "../util/toggleDutyRole.util.js"
 import {
     formatTimestamp,
     humanizeArray,

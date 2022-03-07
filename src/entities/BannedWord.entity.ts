@@ -1,7 +1,7 @@
-import { Entity, Column, BaseEntity } from "typeorm"
-import Client from "../struct/Client"
-import SnowflakePrimaryColumn from "./decorators/SnowflakePrimaryColumn.decorator"
-import milliseconds from "./transformers/milliseconds.transformer"
+import typeorm from "typeorm"
+import type Client from "../struct/Client.js"
+import SnowflakePrimaryColumn from "./decorators/SnowflakePrimaryColumn.decorator.js"
+import milliseconds from "./transformers/milliseconds.transformer.js"
 
 export type bannedTypes = Map<string, BannedWord>
 
@@ -19,8 +19,8 @@ export interface bannedWordsOptions {
     exception?: boolean
 }
 
-@Entity({ name: "banned_words" })
-export default class BannedWord extends BaseEntity {
+@typeorm.Entity({ name: "banned_words" })
+export default class BannedWord extends typeorm.BaseEntity {
     private constructor(
         word: string = null,
         punishment_type?: "BAN" | "WARN" | "MUTE" | "KICK" | "DELETE",
@@ -63,16 +63,16 @@ export default class BannedWord extends BaseEntity {
     @SnowflakePrimaryColumn()
     word!: string
 
-    @Column({ nullable: true })
+    @typeorm.Column({ nullable: true })
     punishment_type!: "BAN" | "WARN" | "MUTE" | "KICK" | "DELETE"
 
-    @Column({ length: 1024, nullable: true })
+    @typeorm.Column({ length: 1024, nullable: true })
     reason!: string
 
-    @Column({ nullable: true, transformer: milliseconds })
+    @typeorm.Column({ nullable: true, transformer: milliseconds })
     duration?: number
 
-    @Column({ default: false })
+    @typeorm.Column({ default: false })
     exception: boolean = false
 
     static async loadWords(): Promise<{ banned: bannedTypes; except: Array<string> }> {

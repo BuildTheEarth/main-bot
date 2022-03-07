@@ -1,7 +1,7 @@
 import { TextChannel } from "discord.js"
-import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from "typeorm"
-import Client from "../struct/Client"
-import SnowflakeColumn from "./decorators/SnowflakeColumn.decorator"
+import typeorm from "typeorm"
+import Client from "../struct/Client.js"
+import SnowflakeColumn from "./decorators/SnowflakeColumn.decorator.js"
 const NO_PLURAL = [
     "staff of the month",
     "the author",
@@ -30,18 +30,18 @@ const NO_PLURAL = [
     "build the earth"
 ]
 
-@Entity({ name: "blunder_tracker" })
-export default class BlunderTracker extends BaseEntity {
-    @PrimaryGeneratedColumn()
+@typeorm.Entity({ name: "blunder_tracker" })
+export default class BlunderTracker extends typeorm.BaseEntity {
+    @typeorm.PrimaryGeneratedColumn()
     id: number
 
-    @Column()
+    @typeorm.Column()
     description: string
 
     @SnowflakeColumn({ nullable: true })
     role: string
 
-    @Column({ type: "date", name: "last_blunder", nullable: true })
+    @typeorm.Column({ type: "date", name: "last_blunder", nullable: true })
     lastBlunder: Date
 
     @SnowflakeColumn()

@@ -1,11 +1,11 @@
-import { PrimaryColumn, PrimaryColumnOptions, ColumnOptions } from "typeorm"
+import typeorm from "typeorm"
 
 export default function SnowflakePrimaryColumn(
-    options?: ColumnOptions
+    options?: typeorm.ColumnOptions
 ): PropertyDecorator {
-    return PrimaryColumn({
+    return typeorm.PrimaryColumn({
         ...options,
         type: "varchar",
         length: "18"
-    } as PrimaryColumnOptions)
+    } as typeorm.PrimaryColumnOptions)
 }

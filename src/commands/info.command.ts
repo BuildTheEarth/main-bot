@@ -1,9 +1,8 @@
-import Client from "../struct/Client"
-import Command from "../struct/Command"
-import Roles from "../util/roles.util"
-import CommandMessage from "../struct/CommandMessage"
-// @ts-ignore
-import packageJson from "../../package.json"
+import Client from "../struct/Client.js"
+import Command from "../struct/Command.js"
+import Roles from "../util/roles.util.js"
+import CommandMessage from "../struct/CommandMessage.js"
+import packageJson = require("../../package.json")
 import Discord from "discord.js"
 import { currentEnv, formatPunishmentTime, hexToRGB } from "@buildtheearth/bot-utils"
 
@@ -16,7 +15,7 @@ export default new Command({
         const embed = new Discord.MessageEmbed()
             .addFields([
                 { name: "Environment", value: currentEnv() },
-                { name: "Version", value: packageJson.version },
+                { name: "Version", value: packageJson.default.version },
                 {
                     name: "Uptime",
                     value: formatPunishmentTime(Math.floor(process.uptime()) * 1000, true)

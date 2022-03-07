@@ -1,7 +1,7 @@
-import { MigrationInterface, QueryRunner } from "typeorm"
+import typeorm from "typeorm"
 
-export class AddTasks1608523298876 implements MigrationInterface {
-    public async up(queryRunner: QueryRunner): Promise<void> {
+export class AddTasks1608523298876 implements typeorm.MigrationInterface {
+    public async up(queryRunner: typeorm.QueryRunner): Promise<void> {
         const exists = await queryRunner.hasTable("tasks")
         if (!exists)
             await queryRunner.query(`
@@ -17,7 +17,7 @@ CREATE TABLE \`tasks\` (
         `)
     }
 
-    public async down(queryRunner: QueryRunner): Promise<void> {
+    public async down(queryRunner: typeorm.QueryRunner): Promise<void> {
         await queryRunner.dropTable("tasks", true)
     }
 }

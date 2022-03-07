@@ -1,5 +1,5 @@
-import { Entity, Column, PrimaryGeneratedColumn, BaseEntity } from "typeorm"
-import SnowflakeColumn from "./decorators/SnowflakeColumn.decorator"
+import typeorm from "typeorm"
+import SnowflakeColumn from "./decorators/SnowflakeColumn.decorator.js"
 
 export type TaskStatus = keyof typeof TaskStatuses
 export enum TaskStatuses {
@@ -10,23 +10,23 @@ export enum TaskStatuses {
     "hidden"
 }
 
-@Entity({ name: "tasks" })
-export default class Task extends BaseEntity {
-    @PrimaryGeneratedColumn()
+@typeorm.Entity({ name: "tasks" })
+export default class Task extends typeorm.BaseEntity {
+    @typeorm.PrimaryGeneratedColumn()
     id: number
 
-    @Column()
+    @typeorm.Column()
     title: string
 
-    @Column({ length: 2048 })
+    @typeorm.Column({ length: 2048 })
     description: string
 
     @SnowflakeColumn()
     creator: string
 
-    @Column("simple-array")
+    @typeorm.Column("simple-array")
     assignees: string[]
 
-    @Column({ nullable: true })
+    @typeorm.Column({ nullable: true })
     status?: TaskStatus
 }

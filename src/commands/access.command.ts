@@ -1,11 +1,11 @@
-import Client from "../struct/Client"
-import Args from "../struct/Args"
-import Command from "../struct/Command"
-import Guild from "../struct/discord/Guild"
-import Roles from "../util/roles.util"
-import ApiTypes from "discord-api-types/v9"
+import Client from "../struct/Client.js"
+import Args from "../struct/Args.js"
+import Command from "../struct/Command.js"
+import Guild from "../struct/discord/Guild.js"
+import Roles from "../util/roles.util.js"
+import ApiTypes = require("discord-api-types/v10")
 import Discord from "discord.js"
-import CommandMessage from "../struct/CommandMessage"
+import CommandMessage from "../struct/CommandMessage.js"
 
 export default new Command({
     name: "access",

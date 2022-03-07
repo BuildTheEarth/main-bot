@@ -1,27 +1,30 @@
-import { ConnectionOptions, Connection, createConnection } from "typeorm"
+import typeorm from "typeorm"
 import Discord from "discord.js"
-import EventList from "./client/EventList"
-import CommandList from "./client/CommandList"
-import ConfigManager from "./client/ConfigManager"
-import createLogger from "@buildtheearth/bot-logger"
-import ActionLog from "../entities/ActionLog.entity"
-import Snippet from "../entities/Snippet.entity"
-import GuildManager from "./discord/GuildManager"
-import Response from "./discord/Response"
-import WebserverHandler from "./client/WebserverHandler"
-import BannedWord, { bannedTypes } from "../entities/BannedWord.entity"
-import BannedWordFilter from "./client/BannedWordFilter"
-import DutyScheduler from "./client/DutyScheduler"
-import Messages from "./client/Messages"
-import PlaceholderHandler from "./client/PlaceholderHandler"
-import Placeholder from "../entities/Placeholder.entity"
+import EventList from "./client/EventList.js"
+import CommandList from "./client/CommandList.js"
+import ConfigManager from "./client/ConfigManager.js"
+import createLogger = require("@buildtheearth/bot-logger")
+import ActionLog from "../entities/ActionLog.entity.js"
+import Snippet from "../entities/Snippet.entity.js"
+import GuildManager from "./discord/GuildManager.js"
+import Response from "./discord/Response.js"
+import WebserverHandler from "./client/WebserverHandler.js"
+import BannedWord, { bannedTypes } from "../entities/BannedWord.entity.js"
+import BannedWordFilter from "./client/BannedWordFilter.js"
+import DutyScheduler from "./client/DutyScheduler.js"
+import Messages from "./client/Messages.js"
+import PlaceholderHandler from "./client/PlaceholderHandler.js"
+import Placeholder from "../entities/Placeholder.entity.js"
 import { hexToRGB } from "@buildtheearth/bot-utils"
+import path from "path"
+import url from "url"
 
 export default class Client extends Discord.Client {
-    guilds: Discord.GuildManager
+    declare guilds: Discord.GuildManager
     customGuilds = new GuildManager(this)
-    db: Connection
-    logger = createLogger({ filePath: __dirname + "/../../logs/" })
+    db: typeorm.Connection
+    // @ts-ignore weird issues with call signatures
+    logger = createLogger({ filePath: path.dirname(url.fileURLToPath(import.meta.url)) + "/../../logs/" })
     config = new ConfigManager(this)
     events = new EventList(this)
     commands = new CommandList(this)
@@ -40,9 +43,10 @@ export default class Client extends Discord.Client {
 
     async initDatabase(): Promise<void> {
         const db = this.config.database
-        const options: Partial<ConnectionOptions> = {
+        const options: Partial<typeorm.ConnectionOptions> = {
             type: db.type,
-            entities: [__dirname + "/../entities/*.{js,ts}"],
+            entities: [path.dirname(url.fileURLToPath(import.meta.url)) + "/../entities/*.{js,ts}"],
+            
             synchronize: process.env.NODE_ENV !== "production",
             logging: process.env.NODE_ENV !== "production" ? "all" : false
         }
@@ -65,7 +69,7 @@ export default class Client extends Discord.Client {
             })
         }
 
-        this.db = await createConnection(options as ConnectionOptions) // non-Partial
+        this.db = await typeorm.createConnection(options as typeorm.ConnectionOptions) // non-Partial
         this.filterWordsCached = await BannedWord.loadWords()
         this.placeholder.cache = await Placeholder.loadPlaceholders()
     }

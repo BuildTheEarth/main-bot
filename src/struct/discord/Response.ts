@@ -1,7 +1,7 @@
 import { hexToRGB } from "@buildtheearth/bot-utils"
 import Discord from "discord.js"
-import Client from "../Client"
-import CommandMessage from "../CommandMessage"
+import Client from "../Client.js"
+import CommandMessage from "../CommandMessage.js"
 
 export default class Response {
     client: Client

@@ -1,8 +1,8 @@
 import express from "express"
 import Discord from "discord.js"
-import { FindManyOptions, IsNull, Not } from "typeorm"
+import typeorm from "typeorm"
 import { Controller, Get, Param, Req, Res } from "@nestjs/common"
-import ActionLog, { Action } from "../../../../entities/ActionLog.entity"
+import ActionLog, { Action } from "../../../../entities/ActionLog.entity.js"
 
 @Controller("/api/v1/punish")
 export default class PunishController {
@@ -46,9 +46,9 @@ export default class PunishController {
             return res.send({ error: "NOT_FOUND", message: "Not found: user" })
         }
 
-        let criteria: FindManyOptions<ActionLog> = { where: { member: user.id } }
+        let criteria: typeorm.FindManyOptions<ActionLog> = { where: { member: user.id } }
         if (showDeleted) {
-            criteria = { where: { member: user.id, deletedAt: Not<ActionLog>(IsNull()) } }
+            criteria = { where: { member: user.id, deletedAt: typeorm.Not<ActionLog>(typeorm.IsNull()) } }
 
             criteria.withDeleted = true
         }

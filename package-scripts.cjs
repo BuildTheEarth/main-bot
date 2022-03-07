@@ -1,26 +1,10 @@
 /// <reference types="./src/typings/nps-utils" />
 
-import npsUtils = require('nps-utils')
+const npsUtils = require('nps-utils');
 
 const clean = npsUtils.rimraf('/dist');
 
-function seriesNPS(...scriptNames: Array<string>): string {
-  function quoteScript(script: string, escaped?: string): string {
-    const quote = escaped ? '\\"' : '"';
-    const shouldQuote = script.indexOf(' ') !== -1;
-    return shouldQuote ? `${quote}${script}${quote}` : script;
-  }
-
-  return npsUtils.series(
-    ...scriptNames
-      .filter(Boolean)
-      .map(scriptName => scriptName.trim())
-      .filter(Boolean)
-      .map(scriptName => `nps ${quoteScript(scriptName)}`),
-  );
-};
-
-export = {
+module.exports = {
   scripts: {
     clean: clean,
     default: {
@@ -28,7 +12,7 @@ export = {
       production: 'npm start docker.production'
     },
     docker: {
-      default: seriesNPS('docker.build', 'docker.compose'),
+      default: npsUtils.series('npm start docker.build', 'npm start docker.compose'),
       compose: "docker compose up",
       build: "docker build . -t buildtheearth/main-bot --no-cache=true",
       run: "docker run buildtheearth/main-bot",
@@ -38,18 +22,12 @@ export = {
       default: 'node dist/index.js --unhandled-rejections=strict',
       production: 'docker run buildtheearth/main-bot -d',
     },
-    test: seriesNPS('build', 'start'),
-    preCommit: seriesNPS('lint', 'format'),
+    test: npsUtils.series('npm start build', 'npm start start'),
+    preCommit: npsUtils.series('npm start lint', 'npm start format'),
     build: 'npm start clean && tsc',
     watch: 'tsc --watch',
     format: 'prettier --write -c src',
     lint: 'eslint src --fix',
-    typeorm: 'ts-node --require ts-node/register ./node_modules/typeorm/cli.js',
-    migrate: {
-      default: 'ts-node --require ts-node/register ./node_modules/typeorm/cli.js migration:run',
-      generate: 'ts-node --require ts-node/register ./node_modules/typeorm/cli.js migration:generate',
-      create: 'ts-node --require ts-node/register ./node_modules/typeorm/cli.js migration:create'
-    },
     update: {
       default: 'git pull && npm start build && pm2 restart main-bot',
       migrate: 'git pull && npm start build && pm2 stop main-bot && npm start migrate && pm2 start main-bot'

@@ -1,5 +1,5 @@
-import { FindOperator, Like } from "typeorm"
+import typeorm from "typeorm"
 
-export default function Includes(value: string): FindOperator<string> {
-    return Like(`%${value}%`)
+export default function Includes(value: string): typeorm.FindOperator<string> {
+    return typeorm.Like(`%${value}%`)
 }

@@ -1,7 +1,7 @@
-import { MigrationInterface, QueryRunner } from "typeorm"
+import typeorm from "typeorm"
 
-export class AddBannerImages1611627842518 implements MigrationInterface {
-    public async up(queryRunner: QueryRunner): Promise<void> {
+export class AddBannerImages1611627842518 implements typeorm.MigrationInterface {
+    public async up(queryRunner: typeorm.QueryRunner): Promise<void> {
         if (!(await queryRunner.hasTable("banner_images")))
             await queryRunner.query(`
 CREATE TABLE \`banner_images\` (
@@ -15,7 +15,7 @@ CREATE TABLE \`banner_images\` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci`)
     }
 
-    public async down(queryRunner: QueryRunner): Promise<void> {
+    public async down(queryRunner: typeorm.QueryRunner): Promise<void> {
         await queryRunner.dropTable("banner_images", true)
     }
 }

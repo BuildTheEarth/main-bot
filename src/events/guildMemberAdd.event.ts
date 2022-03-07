@@ -1,7 +1,7 @@
-import Client from "../struct/Client"
-import GuildMember from "../struct/discord/GuildMember"
+import Client from "../struct/Client.js"
+import GuildMember from "../struct/discord/GuildMember.js"
 import Discord from "discord.js"
-import TimedPunishment from "../entities/TimedPunishment.entity"
+import TimedPunishment from "../entities/TimedPunishment.entity.js"
 
 export default async function guildMemberAdd(
     this: Client,

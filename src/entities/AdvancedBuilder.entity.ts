@@ -1,18 +1,18 @@
-import { Entity, CreateDateColumn, BaseEntity, Column } from "typeorm"
-import SnowflakePrimaryColumn from "./decorators/SnowflakePrimaryColumn.decorator"
-import Client from "../struct/Client"
-import Guild from "../struct/discord/Guild"
+import typeorm from "typeorm"
+import SnowflakePrimaryColumn from "./decorators/SnowflakePrimaryColumn.decorator.js"
+import Client from "../struct/Client.js"
+import Guild from "../struct/discord/Guild.js"
 import { noop } from "@buildtheearth/bot-utils"
-import Roles from "../util/roles.util"
-@Entity({ name: "advanced_builders" })
-export default class AdvancedBuilder extends BaseEntity {
+import Roles from "../util/roles.util.js"
+@typeorm.Entity({ name: "advanced_builders" })
+export default class AdvancedBuilder extends typeorm.BaseEntity {
     @SnowflakePrimaryColumn()
     builder: string
 
-    @CreateDateColumn({ name: "given_at" })
+    @typeorm.CreateDateColumn({ name: "given_at" })
     givenAt: Date
 
-    @Column({ name: "role_name", default: "ADVANCED_BUILDER", nullable: false })
+    @typeorm.Column({ name: "role_name", default: "ADVANCED_BUILDER", nullable: false })
     roleName: "ADVANCED_BUILDER" | "COOL_BUILD"
 
     private removalTimeout: NodeJS.Timeout

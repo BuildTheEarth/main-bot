@@ -1,4 +1,4 @@
-import Client from "../struct/Client"
+import Client from "../struct/Client.js"
 import Discord from "discord.js"
 import { noop } from "@buildtheearth/bot-utils"
 

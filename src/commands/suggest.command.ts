@@ -1,10 +1,10 @@
 import Discord from "discord.js"
-import Client from "../struct/Client"
-import Args from "../struct/Args"
-import Command from "../struct/Command"
-import Suggestion from "../entities/Suggestion.entity"
-import Roles from "../util/roles.util"
-import CommandMessage from "../struct/CommandMessage"
+import Client from "../struct/Client.js"
+import Args from "../struct/Args.js"
+import Command from "../struct/Command.js"
+import Suggestion from "../entities/Suggestion.entity.js"
+import Roles from "../util/roles.util.js"
+import CommandMessage from "../struct/CommandMessage.js"
 import { flattenMarkdown } from "@buildtheearth/bot-utils"
 
 export default new Command({

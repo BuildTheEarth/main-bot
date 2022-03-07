@@ -1,5 +1,5 @@
-import { Column, ColumnOptions } from "typeorm"
+import typeorm from "typeorm"
 
-export default function SnowflakeColumn(options?: ColumnOptions): PropertyDecorator {
-    return Column({ ...options, type: "varchar", length: "18" })
+export default function SnowflakeColumn(options?: typeorm.ColumnOptions): PropertyDecorator {
+    return typeorm.Column({ ...options, type: "varchar", length: "18" })
 }

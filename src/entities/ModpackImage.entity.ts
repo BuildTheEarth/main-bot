@@ -1,28 +1,28 @@
 import fetch, { Response } from "node-fetch"
-import { Entity, Column, PrimaryGeneratedColumn, BaseEntity } from "typeorm"
+import typeorm from "typeorm"
 
 export type ModpackImageKey = "logo" | 1 | 2 | 3 | 4 | 5
 export type ModpackImageSetName = "queue" | "store"
 export type ModpackImageData = { url: string; credit: string }
 export type ModpackImageSet = Partial<Record<ModpackImageKey, ModpackImageData>>
 
-@Entity({ name: "modpack_images" })
-export default class ModpackImage extends BaseEntity {
+@typeorm.Entity({ name: "modpack_images" })
+export default class ModpackImage extends typeorm.BaseEntity {
     static readonly API_URL = "https://buildtheearth.net/api/modpack/images"
 
-    @PrimaryGeneratedColumn()
+    @typeorm.PrimaryGeneratedColumn()
     id: number
 
-    @Column({ type: "varchar" })
+    @typeorm.Column({ type: "varchar" })
     key: ModpackImageKey
 
-    @Column()
+    @typeorm.Column()
     set: ModpackImageSetName
 
-    @Column()
+    @typeorm.Column()
     url: string
 
-    @Column({ nullable: true })
+    @typeorm.Column({ nullable: true })
     credit?: string
 
     format(compact = false): string {

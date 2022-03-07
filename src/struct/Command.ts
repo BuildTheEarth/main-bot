@@ -1,7 +1,7 @@
-import Client from "../struct/Client"
-import Args from "./Args"
-import ApiTypes from "discord-api-types/v9"
-import CommandMessage from "./CommandMessage"
+import Client from "../struct/Client.js"
+import Args from "./Args.js"
+import ApiTypes = require("discord-api-types/v10")
+import CommandMessage from "./CommandMessage.js"
 
 export default class Command implements CommandProperties {
     name: string

@@ -1,7 +1,7 @@
 import express from "express"
 import { Controller, Get, Post, Param, Req, Res, Body } from "@nestjs/common"
-import GuildMember from "../../../discord/GuildMember"
-import Roles from "../../../../util/roles.util"
+import GuildMember from "../../../discord/GuildMember.js"
+import Roles from "../../../../util/roles.util.js"
 import Discord from "discord.js"
 
 @Controller("/api/v1/builder")

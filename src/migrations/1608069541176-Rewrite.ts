@@ -1,6 +1,6 @@
-import { MigrationInterface, QueryRunner } from "typeorm"
+import typeorm from "typeorm"
 import Discord from "discord.js"
-import Client from "../struct/Client"
+import Client from "../struct/Client.js"
 import chalk from "chalk"
 import { promisify } from "util"
 import { ms } from "@buildtheearth/bot-utils"
@@ -27,8 +27,8 @@ some wonderfully cryptic things about the old bot to know if you're reading this
 const MAX_INT = 2147483647
 const ACTION_TYPES = ["warn", "mute", "kick", "ban", "unmute", "unban"]
 
-export class Rewrite1608069541176 implements MigrationInterface {
-    public async up(queryRunner: QueryRunner): Promise<void> {
+export class Rewrite1608069541176 implements typeorm.MigrationInterface {
+    public async up(queryRunner: typeorm.QueryRunner): Promise<void> {
         const config = await queryRunner.hasTable("Config")
         const server = await queryRunner.hasTable("Server")
         const modpack = await queryRunner.hasTable("modpack_images")

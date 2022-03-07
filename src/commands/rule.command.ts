@@ -1,11 +1,11 @@
-import Client from "../struct/Client"
-import Args from "../struct/Args"
-import Command from "../struct/Command"
-import Roles from "../util/roles.util"
-import { Brackets, WhereExpression } from "typeorm"
-import languages from "../struct/client/iso6391"
-import Snippet from "../entities/Snippet.entity"
-import CommandMessage from "../struct/CommandMessage"
+import Client from "../struct/Client.js"
+import Args from "../struct/Args.js"
+import Command from "../struct/Command.js"
+import Roles from "../util/roles.util.js"
+import typeorm from "typeorm"
+import languages from "../struct/client/iso6391.js"
+import Snippet from "../entities/Snippet.entity.js"
+import CommandMessage from "../struct/CommandMessage.js"
 import { quote } from "@buildtheearth/bot-utils"
 
 export default new Command({
@@ -49,12 +49,12 @@ export default new Command({
 
             await message.continue()
 
-            const find = (query: WhereExpression) =>
+            const find = (query: typeorm.WhereExpression) =>
                 query
                     .where("snippet.name = :name", { name: number })
                     .andWhere("snippet.type = 'rule'")
                     .orWhere(
-                        new Brackets(qb => {
+                        new typeorm.Brackets(qb => {
                             qb.where("FIND_IN_SET(:name, snippet.aliases)").andWhere(
                                 "snippet.type = 'rule'"
                             )
@@ -63,12 +63,12 @@ export default new Command({
 
             const snippet = await Snippets.createQueryBuilder("snippet")
                 .where("snippet.language = :language", { language })
-                .andWhere(new Brackets(find))
+                .andWhere(new typeorm.Brackets(find))
                 .getOne()
 
             if (!snippet) {
                 const unlocalizedSnippet = await Snippets.createQueryBuilder("snippet")
-                    .where(new Brackets(find))
+                    .where(new typeorm.Brackets(find))
                     .andWhere("snippet.type = 'rule'")
                     .getOne()
                 if (unlocalizedSnippet)

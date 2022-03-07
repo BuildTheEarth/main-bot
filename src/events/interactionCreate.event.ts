@@ -1,12 +1,12 @@
 import Discord from "discord.js"
-import Args from "../struct/Args"
-import Client from "../struct/Client"
-import CommandMessage from "../struct/CommandMessage"
-import GuildMember from "../struct/discord/GuildMember"
-import Role from "../struct/discord/Role"
-import Roles from "../util/roles.util"
+import Args from "../struct/Args.js"
+import Client from "../struct/Client.js"
+import CommandMessage from "../struct/CommandMessage.js"
+import GuildMember from "../struct/discord/GuildMember.js"
+import Role from "../struct/discord/Role.js"
+import Roles from "../util/roles.util.js"
 import chalk from "chalk"
-import ModerationMenu from "../entities/ModerationMenu.entity"
+import ModerationMenu from "../entities/ModerationMenu.entity.js"
 
 export default async function (
     this: Client,

@@ -1,11 +1,12 @@
 import Discord from "discord.js"
-import Command from "../Command"
-import loadDir from "../../util/loadDir.util"
-import Client from "../Client"
-import CommandUtils from "../../util/CommandUtils.util"
-import Guild from "../discord/Guild"
-import Roles from "../../util/roles.util"
+import Command from "../Command.js"
+import loadDir from "../../util/loadDir.util.js"
+import Client from "../Client.js"
+import CommandUtils from "../../util/CommandUtils.util.js"
+import Guild from "../discord/Guild.js"
+import Roles from "../../util/roles.util.js"
 import pathModule from "path"
+import url from "url"
 
 interface PermsObj {
     [name: string]: Discord.GuildApplicationCommandPermissionData
@@ -21,7 +22,7 @@ export default class CommandList extends Discord.Collection<string, Command> {
 
     async load(): Promise<void> {
         const commands = await loadDir<Command>(
-            __dirname + "/../../commands/",
+            pathModule.dirname(url.fileURLToPath(import.meta.url)) + "/../../commands/",
             this.client,
             null,
             this
@@ -93,7 +94,7 @@ export default class CommandList extends Discord.Collection<string, Command> {
     async unloadOne(name: string): Promise<void> {
         const path = require.resolve(
             pathModule.join(
-                __dirname + `/../../commands/${name}.command.${globalThis.fileExtension}`
+                pathModule.dirname(url.fileURLToPath(import.meta.url)) + `/../../commands/${name}.command.${globalThis.fileExtension}`
             )
         )
         if (this.client.customGuilds.main()) {
@@ -126,7 +127,7 @@ export default class CommandList extends Discord.Collection<string, Command> {
 
         const registerCommands = []
         const path =
-            __dirname + `/../../commands/${name}.command.${globalThis.fileExtension}`
+            pathModule.dirname(url.fileURLToPath(import.meta.url)) + `/../../commands/${name}.command.${globalThis.fileExtension}`
         const command: Command = (await import(path)).default
         this.set(command.name + ".command", command)
         let permsTemp: string[]

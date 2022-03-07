@@ -1,13 +1,13 @@
 import Discord from "discord.js"
-import Client from "../struct/Client"
-import Args from "../struct/Args"
-import Command from "../struct/Command"
-import Roles from "../util/roles.util"
-import ActionLog, { Action } from "../entities/ActionLog.entity"
-import TimedPunishment from "../entities/TimedPunishment.entity"
-import ModerationNote from "../entities/ModerationNote.entity"
-import { Not, IsNull, FindManyOptions } from "typeorm"
-import CommandMessage from "../struct/CommandMessage"
+import Client from "../struct/Client.js"
+import Args from "../struct/Args.js"
+import Command from "../struct/Command.js"
+import Roles from "../util/roles.util.js"
+import ActionLog, { Action } from "../entities/ActionLog.entity.js"
+import TimedPunishment from "../entities/TimedPunishment.entity.js"
+import ModerationNote from "../entities/ModerationNote.entity.js"
+import typeorm from "typeorm"
+import CommandMessage from "../struct/CommandMessage.js"
 import { noop } from "@buildtheearth/bot-utils"
 
 export default new Command({
@@ -49,9 +49,9 @@ export default new Command({
                 user === undefined ? client.messages.noUser : client.messages.invalidUser
             )
 
-        let criteria: FindManyOptions<ActionLog> = { where: { member: user.id } }
+        let criteria: typeorm.FindManyOptions<ActionLog> = { where: { member: user.id } }
         if (showDeleted) {
-            criteria = { where: { member: user.id, deletedAt: Not<ActionLog>(IsNull()) } }
+            criteria = { where: { member: user.id, deletedAt: typeorm.Not<ActionLog>(typeorm.IsNull()) } }
 
             criteria.withDeleted = true
         }

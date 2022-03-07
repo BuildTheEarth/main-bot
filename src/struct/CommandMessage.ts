@@ -1,5 +1,5 @@
 import Discord from "discord.js"
-import Client from "../struct/Client"
+import Client from "../struct/Client.js"
 
 export default class CommandMessage {
     message: Discord.CommandInteraction | Discord.Message

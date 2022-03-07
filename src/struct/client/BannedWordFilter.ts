@@ -1,12 +1,11 @@
 // Literally all of this code is taken from https://github.com/cAttte/fanum so thank him
 import path from "path"
-import { loadSyncJSON5, isSingular } from "@buildtheearth/bot-utils"
+import url from "url"
+import { loadSyncJSON5, isSingular, pluralize } from "@buildtheearth/bot-utils"
 const duplicateChars = loadSyncJSON5(
-    path.join(__dirname + "../../../../config/extensions/duplicateChars.json5")
+    path.join(path.dirname(url.fileURLToPath(import.meta.url)) + "../../../../config/extensions/duplicateChars.json5")
 )
-import Client from "../Client"
-import pluralize from "@buildtheearth/bot-utils/dist/utils/pluralize"
-
+import Client from "../Client.js"
 export default class BannedWordFilter {
     client: Client
 

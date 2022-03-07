@@ -1,9 +1,9 @@
-import Client from "../struct/Client"
-import Command from "../struct/Command"
-import Roles from "../util/roles.util"
-import CommandMessage from "../struct/CommandMessage"
-import Args from "../struct/Args"
-import BannedWord from "../entities/BannedWord.entity"
+import Client from "../struct/Client.js"
+import Command from "../struct/Command.js"
+import Roles from "../util/roles.util.js"
+import CommandMessage from "../struct/CommandMessage.js"
+import Args from "../struct/Args.js"
+import BannedWord from "../entities/BannedWord.entity.js"
 import Discord from "discord.js"
 import {
     formatPunishmentTime,

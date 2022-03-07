@@ -1,7 +1,7 @@
 import { Module, NestModule, RequestMethod, MiddlewareConsumer } from "@nestjs/common"
 import { ServeStaticModule } from "@nestjs/serve-static"
-import { ApiModule } from "./baseModules/api.module"
-import AuthProxy from "./middleware/AuthProxy.middleware"
+import { ApiModule } from "./baseModules/api.module.js"
+import AuthProxy from "./middleware/AuthProxy.middleware.js"
 
 @Module({
     imports: [

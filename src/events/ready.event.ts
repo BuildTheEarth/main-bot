@@ -1,12 +1,12 @@
 import chalk from "chalk"
 import Discord from "discord.js"
-import BannerImage from "../entities/BannerImage.entity"
-import TimedPunishment from "../entities/TimedPunishment.entity"
-import AdvancedBuilder from "../entities/AdvancedBuilder.entity"
-import Client from "../struct/Client"
-import Guild from "../struct/discord/Guild"
-import Reminder from "../entities/Reminder.entity"
-import BlunderTracker from "../entities/BlunderTracker.entity"
+import BannerImage from "../entities/BannerImage.entity.js"
+import TimedPunishment from "../entities/TimedPunishment.entity.js"
+import AdvancedBuilder from "../entities/AdvancedBuilder.entity.js"
+import Client from "../struct/Client.js"
+import Guild from "../struct/discord/Guild.js"
+import Reminder from "../entities/Reminder.entity.js"
+import BlunderTracker from "../entities/BlunderTracker.entity.js"
 
 export default async function ready(this: Client): Promise<void> {
     this.logger.debug("Loading commands...")

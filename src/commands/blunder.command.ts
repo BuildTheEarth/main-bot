@@ -1,14 +1,14 @@
-import Command from "../struct/Command"
-import Roles from "../util/roles.util"
-import Client from "../struct/Client"
-import CommandMessage from "../struct/CommandMessage"
-import Args from "../struct/Args"
-import GuildMember from "../struct/discord/GuildMember"
+import Command from "../struct/Command.js"
+import Roles from "../util/roles.util.js"
+import Client from "../struct/Client.js"
+import CommandMessage from "../struct/CommandMessage.js"
+import Args from "../struct/Args.js"
+import GuildMember from "../struct/discord/GuildMember.js"
 
-import BlunderTracker from "../entities/BlunderTracker.entity"
-import { ChannelType } from "discord-api-types"
+import BlunderTracker from "../entities/BlunderTracker.entity.js"
+import ApiTypes = require("discord-api-types/v10")
 import { GuildTextBasedChannel } from "discord.js"
-import { In, IsNull } from "typeorm"
+import typeorm from "typeorm"
 
 export default new Command({
     name: "blunder",
@@ -47,7 +47,7 @@ export default new Command({
                     description: "location of the blunder tracker",
                     required: true,
                     optionType: "CHANNEL",
-                    channelTypes: [ChannelType.GuildText]
+                    channelTypes: [ApiTypes.ChannelType.GuildText]
                 },
                 {
                     name: "description",
@@ -201,9 +201,9 @@ export default new Command({
                 findOptions = {
                     where: [
                         {
-                            role: In([...staffMember.roles.cache.keys()])
+                            role: typeorm.In([...staffMember.roles.cache.keys()])
                         },
-                        { role: IsNull() }
+                        { role: typeorm.IsNull() }
                     ]
                 }
             message.continue()

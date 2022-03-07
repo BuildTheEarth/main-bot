@@ -1,10 +1,10 @@
-import Client from "../struct/Client"
-import Args from "../struct/Args"
-import Command from "../struct/Command"
-import ActionLog from "../entities/ActionLog.entity"
-import Roles from "../util/roles.util"
-import GuildMember from "../struct/discord/GuildMember"
-import CommandMessage from "../struct/CommandMessage"
+import Client from "../struct/Client.js"
+import Args from "../struct/Args.js"
+import Command from "../struct/Command.js"
+import ActionLog from "../entities/ActionLog.entity.js"
+import Roles from "../util/roles.util.js"
+import GuildMember from "../struct/discord/GuildMember.js"
+import CommandMessage from "../struct/CommandMessage.js"
 
 export default new Command({
     name: "case",

@@ -6,9 +6,9 @@ import Discord, {
     Snowflake
 } from "discord.js"
 
-import { GuildMemberManagerFixed } from "../../typings/GuildMemberManagerTypings"
-
-export default class GuildMemberManager extends GuildMemberManagerFixed {
+//Private constructor be like
+//@ts-ignore
+export default class GuildMemberManager extends Discord.GuildMemberManager {
     fetch(
         options:
             | UserResolvable

@@ -1,10 +1,10 @@
-import Client from "../struct/Client"
-import Command from "../struct/Command"
-import Roles from "../util/roles.util"
+import Client from "../struct/Client.js"
+import Command from "../struct/Command.js"
+import Roles from "../util/roles.util.js"
 import Discord from "discord.js"
-import Args from "../struct/Args"
+import Args from "../struct/Args.js"
 import mcBlockInfo from "minecraft-block-info"
-import CommandMessage from "../struct/CommandMessage"
+import CommandMessage from "../struct/CommandMessage.js"
 import { hexToRGB } from "@buildtheearth/bot-utils"
 
 export default new Command({

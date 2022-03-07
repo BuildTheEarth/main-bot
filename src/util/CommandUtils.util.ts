@@ -11,10 +11,10 @@ import {
     SlashCommandChannelOption,
     SlashCommandMentionableOption
 } from "@discordjs/builders"
-import Command, { CommandArgs, SubCommandProperties } from "../struct/Command"
+import Command, { CommandArgs, SubCommandProperties } from "../struct/Command.js"
 import _ from "lodash"
 import Discord from "discord.js"
-import Client from "../struct/Client"
+import Client from "../struct/Client.js"
 
 export default abstract class CommandUtils {
     public static commandToSlash(command: Command): SlashCommandBuilder {

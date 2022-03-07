@@ -1,11 +1,11 @@
 import Discord from "discord.js"
-import Client from "../struct/Client"
-import Command from "../struct/Command"
-import Roles from "../util/roles.util"
+import Client from "../struct/Client.js"
+import Command from "../struct/Command.js"
+import Roles from "../util/roles.util.js"
 import { noop } from "@buildtheearth/bot-utils"
 import fetch from "node-fetch"
-import MinecraftServerStatus from "../typings/MinecraftServerStatus"
-import CommandMessage from "../struct/CommandMessage"
+import MinecraftServerStatus from "../typings/MinecraftServerStatus.js"
+import CommandMessage from "../struct/CommandMessage.js"
 
 const API_URL = "https://api.mcsrvstat.us/2/"
 const JAVA_URL = `${API_URL}network.buildtheearth.net`

@@ -1,11 +1,11 @@
-import Client from "../struct/Client"
+import Client from "../struct/Client.js"
 import Discord from "discord.js"
-import Args from "../struct/Args"
-import Command from "../struct/Command"
-import Guild from "../struct/discord/Guild"
-import Roles from "../util/roles.util"
+import Args from "../struct/Args.js"
+import Command from "../struct/Command.js"
+import Guild from "../struct/discord/Guild.js"
+import Roles from "../util/roles.util.js"
 import { noop } from "@buildtheearth/bot-utils"
-import CommandMessage from "../struct/CommandMessage"
+import CommandMessage from "../struct/CommandMessage.js"
 
 const ROLE_NAMES = [
     "English",

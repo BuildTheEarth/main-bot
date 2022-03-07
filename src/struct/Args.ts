@@ -1,6 +1,6 @@
 import { ms } from "@buildtheearth/bot-utils"
 import Discord from "discord.js"
-import CommandMessage from "./CommandMessage"
+import CommandMessage from "./CommandMessage.js"
 
 export default class Args {
     raw: string

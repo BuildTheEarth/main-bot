@@ -1,5 +1,5 @@
 import Discord from "discord.js"
-import Client from "../Client"
+import Client from "../Client.js"
 
 export default class GuildManager {
     client: Client

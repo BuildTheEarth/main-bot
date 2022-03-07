@@ -1,22 +1,23 @@
 import Discord from "discord.js"
-import Client from "../struct/Client"
-import Args from "../struct/Args"
+import Client from "../struct/Client.js"
+import Args from "../struct/Args.js"
 import {
     formatTimestamp,
     hexToRGB,
     humanizeConstant,
     loadSyncJSON5
 } from "@buildtheearth/bot-utils"
-import Command from "../struct/Command"
+import Command from "../struct/Command.js"
 import path from "path"
-import Roles from "../util/roles.util"
+import url from "url"
+import Roles from "../util/roles.util.js"
 const userFlags = loadSyncJSON5(
-    path.join(__dirname + "../../../config/extensions/userFlags.json5")
+    path.join(path.dirname(url.fileURLToPath(import.meta.url)) + "../../../config/extensions/userFlags.json5")
 )
 const activityTypes = loadSyncJSON5(
-    path.join(__dirname + "../../../config/extensions/activityTypes.json5")
+    path.join(path.dirname(url.fileURLToPath(import.meta.url)) + "../../../config/extensions/activityTypes.json5")
 )
-import CommandMessage from "../struct/CommandMessage"
+import CommandMessage from "../struct/CommandMessage.js"
 
 export default new Command({
     name: "user",

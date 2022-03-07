@@ -1,6 +1,6 @@
 import "reflect-metadata"
 import Discord from "discord.js"
-import Client from "./struct/Client"
+import Client from "./struct/Client.js"
 
 declare global {
     // eslint-disable-next-line no-var

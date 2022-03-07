@@ -1,10 +1,10 @@
 import Discord from "discord.js"
-import Client from "../struct/Client"
-import Args from "../struct/Args"
-import Command from "../struct/Command"
-import Roles from "../util/roles.util"
-import CommandMessage from "../struct/CommandMessage"
-import punish from "../util/punish.util"
+import Client from "../struct/Client.js"
+import Args from "../struct/Args.js"
+import Command from "../struct/Command.js"
+import Roles from "../util/roles.util.js"
+import CommandMessage from "../struct/CommandMessage.js"
+import punish from "../util/punish.util.js"
 
 export default new Command({
     name: "warn",

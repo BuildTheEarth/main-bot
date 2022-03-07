@@ -1,12 +1,12 @@
-import Client from "../struct/Client"
+import Client from "../struct/Client.js"
 import Discord from "discord.js"
-import Args from "../struct/Args"
-import Command from "../struct/Command"
-import GuildMember from "../struct/discord/GuildMember"
-import Roles from "../util/roles.util"
+import Args from "../struct/Args.js"
+import Command from "../struct/Command.js"
+import GuildMember from "../struct/discord/GuildMember.js"
+import Roles from "../util/roles.util.js"
 import { noop } from "@buildtheearth/bot-utils"
-import CommandMessage from "../struct/CommandMessage"
-import punish from "../util/punish.util"
+import CommandMessage from "../struct/CommandMessage.js"
+import punish from "../util/punish.util.js"
 
 export default new Command({
     name: "kick",

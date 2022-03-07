@@ -1,9 +1,9 @@
-import Client from "../struct/Client"
-import Args from "../struct/Args"
-import Command from "../struct/Command"
-import CommandMessage from "../struct/CommandMessage"
-import Roles from "../util/roles.util"
-import iso6391 from "../struct/client/iso6391"
+import Client from "../struct/Client.js"
+import Args from "../struct/Args.js"
+import Command from "../struct/Command.js"
+import CommandMessage from "../struct/CommandMessage.js"
+import Roles from "../util/roles.util.js"
+import iso6391 from "../struct/client/iso6391.js"
 import { hexToRGB } from "@buildtheearth/bot-utils"
 
 export default new Command({
