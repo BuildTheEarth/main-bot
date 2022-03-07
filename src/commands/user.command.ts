@@ -12,10 +12,16 @@ import path from "path"
 import url from "url"
 import Roles from "../util/roles.util.js"
 const userFlags = loadSyncJSON5(
-    path.join(path.dirname(url.fileURLToPath(import.meta.url)) + "../../../config/extensions/userFlags.json5")
+    path.join(
+        path.dirname(url.fileURLToPath(import.meta.url)) +
+            "../../../config/extensions/userFlags.json5"
+    )
 )
 const activityTypes = loadSyncJSON5(
-    path.join(path.dirname(url.fileURLToPath(import.meta.url)) + "../../../config/extensions/activityTypes.json5")
+    path.join(
+        path.dirname(url.fileURLToPath(import.meta.url)) +
+            "../../../config/extensions/activityTypes.json5"
+    )
 )
 import CommandMessage from "../struct/CommandMessage.js"
 

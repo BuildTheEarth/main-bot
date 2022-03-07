@@ -3,7 +3,10 @@ import path from "path"
 import url from "url"
 import { loadSyncJSON5, isSingular, pluralize } from "@buildtheearth/bot-utils"
 const duplicateChars = loadSyncJSON5(
-    path.join(path.dirname(url.fileURLToPath(import.meta.url)) + "../../../../config/extensions/duplicateChars.json5")
+    path.join(
+        path.dirname(url.fileURLToPath(import.meta.url)) +
+            "../../../../config/extensions/duplicateChars.json5"
+    )
 )
 import Client from "../Client.js"
 export default class BannedWordFilter {

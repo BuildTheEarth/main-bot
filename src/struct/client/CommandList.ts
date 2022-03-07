@@ -94,7 +94,8 @@ export default class CommandList extends Discord.Collection<string, Command> {
     async unloadOne(name: string): Promise<void> {
         const path = require.resolve(
             pathModule.join(
-                pathModule.dirname(url.fileURLToPath(import.meta.url)) + `/../../commands/${name}.command.${globalThis.fileExtension}`
+                pathModule.dirname(url.fileURLToPath(import.meta.url)) +
+                    `/../../commands/${name}.command.${globalThis.fileExtension}`
             )
         )
         if (this.client.customGuilds.main()) {
@@ -127,7 +128,8 @@ export default class CommandList extends Discord.Collection<string, Command> {
 
         const registerCommands = []
         const path =
-            pathModule.dirname(url.fileURLToPath(import.meta.url)) + `/../../commands/${name}.command.${globalThis.fileExtension}`
+            pathModule.dirname(url.fileURLToPath(import.meta.url)) +
+            `/../../commands/${name}.command.${globalThis.fileExtension}`
         const command: Command = (await import(path)).default
         this.set(command.name + ".command", command)
         let permsTemp: string[]

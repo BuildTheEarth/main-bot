@@ -30,7 +30,10 @@ import url from "url"
 import { loadSyncJSON5 } from "@buildtheearth/bot-utils"
 
 const LANGUAGES_LIST: Record<string, Record<string, string>> = loadSyncJSON5(
-    path.join(path.dirname(url.fileURLToPath(import.meta.url)) + "../../../../config/extensions/languages.json5")
+    path.join(
+        path.dirname(url.fileURLToPath(import.meta.url)) +
+            "../../../../config/extensions/languages.json5"
+    )
 )
 
 export default class iso6391 {

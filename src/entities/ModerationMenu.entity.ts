@@ -10,7 +10,10 @@ import {
     truncateString
 } from "@buildtheearth/bot-utils"
 const punishmentValues = loadSyncJSON5(
-    path.join(path.dirname(url.fileURLToPath(import.meta.url)) + "../../../config/extensions/punishmentValues.json5")
+    path.join(
+        path.dirname(url.fileURLToPath(import.meta.url)) +
+            "../../../config/extensions/punishmentValues.json5"
+    )
 )
 import Client from "../struct/Client.js"
 import { BannedWordObj } from "../struct/client/BannedWordFilter.js"

@@ -19,7 +19,10 @@ import {
 import typeorm from "typeorm"
 import { noop } from "@buildtheearth/bot-utils"
 const suggestionStatusActions = loadSyncJSON5(
-    path.join(path.dirname(url.fileURLToPath(import.meta.url)) + "../../../config/extensions/suggestionStatusActions.json5")
+    path.join(
+        path.dirname(url.fileURLToPath(import.meta.url)) +
+            "../../../config/extensions/suggestionStatusActions.json5"
+    )
 )
 import GuildMember from "../struct/discord/GuildMember.js"
 import CommandMessage from "../struct/CommandMessage.js"

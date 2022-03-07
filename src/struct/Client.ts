@@ -24,7 +24,9 @@ export default class Client extends Discord.Client {
     customGuilds = new GuildManager(this)
     db: typeorm.Connection
     // @ts-ignore weird issues with call signatures
-    logger = createLogger({ filePath: path.dirname(url.fileURLToPath(import.meta.url)) + "/../../logs/" })
+    logger = createLogger({
+        filePath: path.dirname(url.fileURLToPath(import.meta.url)) + "/../../logs/"
+    })
     config = new ConfigManager(this)
     events = new EventList(this)
     commands = new CommandList(this)
@@ -45,8 +47,11 @@ export default class Client extends Discord.Client {
         const db = this.config.database
         const options: Partial<typeorm.ConnectionOptions> = {
             type: db.type,
-            entities: [path.dirname(url.fileURLToPath(import.meta.url)) + "/../entities/*.{js,ts}"],
-            
+            entities: [
+                path.dirname(url.fileURLToPath(import.meta.url)) +
+                    "/../entities/*.{js,ts}"
+            ],
+
             synchronize: process.env.NODE_ENV !== "production",
             logging: process.env.NODE_ENV !== "production" ? "all" : false
         }

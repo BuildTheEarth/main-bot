@@ -8,7 +8,10 @@ import GuildMember from "../struct/discord/GuildMember.js"
 import Guild from "../struct/discord/Guild.js"
 import Roles from "../util/roles.util.js"
 const pseudoteamPositions: Record<string, Record<string, string>> = loadSyncJSON5(
-    path.join(path.dirname(url.fileURLToPath(import.meta.url)) + "../../../config/extensions/pseudoteamPositions.json5")
+    path.join(
+        path.dirname(url.fileURLToPath(import.meta.url)) +
+            "../../../config/extensions/pseudoteamPositions.json5"
+    )
 )
 import { noop } from "@buildtheearth/bot-utils"
 import Discord from "discord.js"

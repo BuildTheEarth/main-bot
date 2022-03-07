@@ -30,9 +30,17 @@ export default class WebserverHandler {
     }
 
     async addImage(img: Buffer, name: string): Promise<string> {
-        await ensureDirectoryExistence(path.join(path.dirname(url.fileURLToPath(import.meta.url)), "../../../images/") + name)
+        await ensureDirectoryExistence(
+            path.join(
+                path.dirname(url.fileURLToPath(import.meta.url)),
+                "../../../images/"
+            ) + name
+        )
         await util.promisify(fs.writeFile)(
-            path.join(path.dirname(url.fileURLToPath(import.meta.url)), "../../../images/") + name,
+            path.join(
+                path.dirname(url.fileURLToPath(import.meta.url)),
+                "../../../images/"
+            ) + name,
             img
         )
         return `http://${this.client.config.images.bindAddress}:${this.client.config.images.bindPort}/image/${name}` //fix this cardinal sin before pushing
@@ -44,7 +52,13 @@ export default class WebserverHandler {
 
     async imageExists(name: string): Promise<boolean> {
         return fs.promises
-            .access(path.join(path.dirname(url.fileURLToPath(import.meta.url)), "../../../images/") + name, fs.constants.F_OK)
+            .access(
+                path.join(
+                    path.dirname(url.fileURLToPath(import.meta.url)),
+                    "../../../images/"
+                ) + name,
+                fs.constants.F_OK
+            )
             .then(() => true)
             .catch(() => false)
     }

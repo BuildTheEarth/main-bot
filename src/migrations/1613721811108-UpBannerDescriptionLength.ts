@@ -1,6 +1,8 @@
 import typeorm from "typeorm"
 
-export class UpBannerDescriptionLength1613721811108 implements typeorm.MigrationInterface {
+export class UpBannerDescriptionLength1613721811108
+    implements typeorm.MigrationInterface
+{
     public async up(queryRunner: typeorm.QueryRunner): Promise<void> {
         await queryRunner.query(
             "ALTER TABLE banner_images MODIFY COLUMN description varchar(512)"

@@ -80,7 +80,10 @@ export default class ConfigManager {
     }
 
     async load(): Promise<void> {
-        const configPath = path.join(path.dirname(url.fileURLToPath(import.meta.url)), "../../../config/config.json5")
+        const configPath = path.join(
+            path.dirname(url.fileURLToPath(import.meta.url)),
+            "../../../config/config.json5"
+        )
         const config = await fs.promises
             .readFile(configPath, "utf-8")
             .then(json5 => JSON5.parse(json5))

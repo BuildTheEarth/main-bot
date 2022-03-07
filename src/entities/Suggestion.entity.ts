@@ -6,7 +6,10 @@ import url from "url"
 import Client from "../struct/Client.js"
 import { hexToRGB, loadSyncJSON5, replaceAsync } from "@buildtheearth/bot-utils"
 const suggestionStatusActions = loadSyncJSON5(
-    path.join(path.dirname(url.fileURLToPath(import.meta.url)) + "../../../config/extensions/suggestionStatusActions.json5")
+    path.join(
+        path.dirname(url.fileURLToPath(import.meta.url)) +
+            "../../../config/extensions/suggestionStatusActions.json5"
+    )
 )
 
 export type SuggestionStatus = keyof typeof SuggestionStatuses

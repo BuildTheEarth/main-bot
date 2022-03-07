@@ -51,7 +51,12 @@ export default new Command({
 
         let criteria: typeorm.FindManyOptions<ActionLog> = { where: { member: user.id } }
         if (showDeleted) {
-            criteria = { where: { member: user.id, deletedAt: typeorm.Not<ActionLog>(typeorm.IsNull()) } }
+            criteria = {
+                where: {
+                    member: user.id,
+                    deletedAt: typeorm.Not<ActionLog>(typeorm.IsNull())
+                }
+            }
 
             criteria.withDeleted = true
         }
