@@ -1,5 +1,5 @@
 import Client from "../struct/Client"
-import { loadSyncJSON5 } from "../util/loadJSON5.util"
+import { loadSyncJSON5 } from "@buildtheearth/bot-utils"
 import Args from "../struct/Args"
 import path from "path"
 import Command from "../struct/Command"
@@ -9,7 +9,7 @@ import Roles from "../util/roles.util"
 const pseudoteamPositions: Record<string, Record<string, string>> = loadSyncJSON5(
     path.join(__dirname + "../../../config/extensions/pseudoteamPositions.json5")
 )
-import noop from "../util/noop.util"
+import { noop } from "@buildtheearth/bot-utils"
 import Discord from "discord.js"
 import CommandMessage from "../struct/CommandMessage"
 

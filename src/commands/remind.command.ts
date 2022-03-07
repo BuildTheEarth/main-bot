@@ -3,9 +3,9 @@ import Args from "../struct/Args"
 import Command from "../struct/Command"
 import Roles from "../util/roles.util"
 import Reminder from "../entities/Reminder.entity"
-import formatTimestamp from "../util/formatTimestamp.util"
 import ApiTypes from "discord-api-types"
 import CommandMessage from "../struct/CommandMessage"
+import { formatTimestamp } from "@buildtheearth/bot-utils"
 
 const remindTimes = ["test", "weekly", "bi-weekly", "monthly", "bi-monthly"]
 

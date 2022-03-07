@@ -8,16 +8,18 @@ import Suggestion, {
 } from "../entities/Suggestion.entity"
 import Roles from "../util/roles.util"
 import path from "path"
-import humanizeArray from "../util/humanizeArray.util"
-import truncateString from "../util/truncateString.util"
-import { loadSyncJSON5 } from "../util/loadJSON5.util"
-import flattenMarkdown from "../util/flattenMarkdown.util"
+import {
+    flattenMarkdown,
+    hexToRGB,
+    humanizeArray,
+    loadSyncJSON5,
+    truncateString
+} from "@buildtheearth/bot-utils"
 import { Brackets } from "typeorm"
-import noop from "../util/noop.util"
+import { noop } from "@buildtheearth/bot-utils"
 const suggestionStatusActions = loadSyncJSON5(
     path.join(__dirname + "../../../config/extensions/suggestionStatusActions.json5")
 )
-import hexToRGB from "../util/hexToRGB.util"
 import GuildMember from "../struct/discord/GuildMember"
 import CommandMessage from "../struct/CommandMessage"
 
@@ -399,8 +401,7 @@ export default new Command({
                 return client.response.sendError(message, client.messages.editOthers)
 
             let edited = args.consumeRest(["text"])
-            if (field === "title")
-                edited = await flattenMarkdown(edited, client, message.guild)
+            if (field === "title") edited = await flattenMarkdown(edited, message.guild)
             if (field === "title" && edited.length > 200)
                 return client.response.sendError(message, client.messages.titleTooLong200)
             if (field === "teams" && edited.length > 255)

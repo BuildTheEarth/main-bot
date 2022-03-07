@@ -4,8 +4,8 @@ import Roles from "../util/roles.util"
 import Discord from "discord.js"
 import Args from "../struct/Args"
 import mcBlockInfo from "minecraft-block-info"
-import hexToRGB from "../util/hexToRGB.util"
 import CommandMessage from "../struct/CommandMessage"
+import { hexToRGB } from "@buildtheearth/bot-utils"
 
 export default new Command({
     name: "block",

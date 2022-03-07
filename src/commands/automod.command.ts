@@ -3,13 +3,15 @@ import Command from "../struct/Command"
 import Roles from "../util/roles.util"
 import CommandMessage from "../struct/CommandMessage"
 import Args from "../struct/Args"
-import humanizeArray from "../util/humanizeArray.util"
 import BannedWord from "../entities/BannedWord.entity"
-import formatPunishmentTime from "../util/formatPunishmentTime.util"
-import humanizeConstant from "../util/humanizeConstant.util"
-import truncateString from "../util/truncateString.util"
-import hexToRGB from "../util/hexToRGB.util"
 import Discord from "discord.js"
+import {
+    formatPunishmentTime,
+    hexToRGB,
+    humanizeArray,
+    humanizeConstant,
+    truncateString
+} from "@buildtheearth/bot-utils"
 
 const punishmentTypes = ["BAN", "MUTE", "KICK", "WARN", "DELETE"]
 

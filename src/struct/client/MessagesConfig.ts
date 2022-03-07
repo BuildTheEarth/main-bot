@@ -1,6 +1,6 @@
 import ConfigSubmodule from "./ConfigSubmodule"
 
-import loadJSON5 from "../../util/loadJSON5.util"
+import { loadJSON5 } from "@buildtheearth/bot-utils"
 import Client from "../Client"
 
 export default class MessagesConfig implements ConfigSubmodule {

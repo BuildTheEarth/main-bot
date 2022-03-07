@@ -6,11 +6,10 @@ import Args from "../struct/Args"
 import Command from "../struct/Command"
 import Task, { TaskStatus, TaskStatuses } from "../entities/Task.entity"
 import Roles from "../util/roles.util"
-import humanizeArray from "../util/humanizeArray.util"
 import { Brackets } from "typeorm"
-import hexToRGB from "../util/hexToRGB.util"
 import CommandMessage from "../struct/CommandMessage"
 import ApiTypes from "discord-api-types"
+import { hexToRGB, humanizeArray } from "@buildtheearth/bot-utils"
 
 export default new Command({
     name: "tasks",

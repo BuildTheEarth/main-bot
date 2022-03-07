@@ -3,10 +3,9 @@ import Args from "../struct/Args"
 import Command from "../struct/Command"
 import BannerImage from "../entities/BannerImage.entity"
 import Roles from "../util/roles.util"
-import quote from "../util/quote.util"
-import hexToRGB from "../util/hexToRGB.util"
 import CommandMessage from "../struct/CommandMessage"
 import fetch from "node-fetch"
+import { hexToRGB, quote } from "@buildtheearth/bot-utils"
 
 export default new Command({
     name: "banner",

@@ -6,7 +6,6 @@ import ConfigManager from "./client/ConfigManager"
 import createLogger from "@buildtheearth/bot-logger"
 import ActionLog from "../entities/ActionLog.entity"
 import Snippet from "../entities/Snippet.entity"
-import hexToRGB from "../util/hexToRGB.util"
 import GuildManager from "./discord/GuildManager"
 import Response from "./discord/Response"
 import WebserverHandler from "./client/WebserverHandler"
@@ -16,6 +15,7 @@ import DutyScheduler from "./client/DutyScheduler"
 import Messages from "./client/Messages"
 import PlaceholderHandler from "./client/PlaceholderHandler"
 import Placeholder from "../entities/Placeholder.entity"
+import { hexToRGB } from "@buildtheearth/bot-utils"
 
 export default class Client extends Discord.Client {
     guilds: Discord.GuildManager

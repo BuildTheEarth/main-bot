@@ -13,20 +13,21 @@ import TimedPunishment from "../entities/TimedPunishment.entity"
 import CommandList from "../struct/client/CommandList"
 import ConfigManager from "../struct/client/ConfigManager"
 import EventList from "../struct/client/EventList"
-
-import flattenMarkdown from "../util/flattenMarkdown.util"
-import formatPunishmentTime from "../util/formatPunishmentTime.util"
-import formatTimestamp from "../util/formatTimestamp.util"
-import humanizeArray from "../util/humanizeArray.util"
-import humanizeConstant from "../util/humanizeConstant.util"
-import isURL from "../util/isURL.util"
 import loadDir from "../util/loadDir.util"
-import noop from "../util/noop.util"
-import pastTense from "../util/pastTense.util"
+import {
+    flattenMarkdown,
+    formatPunishmentTime,
+    formatTimestamp,
+    humanizeArray,
+    humanizeConstant,
+    isURL,
+    noop,
+    pastTense,
+    stringifyAnything,
+    truncateString
+} from "@buildtheearth/bot-utils"
 import languages from "../struct/client/iso6391"
 import Roles from "../util/roles.util"
-import stringifyAnything from "../util/stringifyAnything.util"
-import truncateString from "../util/truncateString.util"
 import CommandMessage from "../struct/CommandMessage"
 
 // prettier-ignore

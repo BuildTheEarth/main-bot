@@ -2,10 +2,10 @@ import Client from "../struct/Client"
 import Args from "../struct/Args"
 import Command from "../struct/Command"
 import Roles from "../util/roles.util"
-import hexToRGB from "../util/hexToRGB.util"
 import Discord from "discord.js"
 import ApiTypes from "discord-api-types"
 import CommandMessage from "../struct/CommandMessage"
+import { hexToRGB } from "@buildtheearth/bot-utils"
 
 export default new Command({
     name: "unlock",

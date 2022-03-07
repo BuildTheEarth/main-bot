@@ -4,7 +4,7 @@ import Command from "../struct/Command"
 import CommandMessage from "../struct/CommandMessage"
 import Roles from "../util/roles.util"
 import iso6391 from "../struct/client/iso6391"
-import hexToRGB from "../util/hexToRGB.util"
+import { hexToRGB } from "@buildtheearth/bot-utils"
 
 export default new Command({
     name: "placeholder",

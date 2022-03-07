@@ -3,8 +3,8 @@ import Args from "../struct/Args"
 import Command from "../struct/Command"
 import Roles from "../util/roles.util"
 import ModerationNote from "../entities/ModerationNote.entity"
-import formatTimestamp from "../util/formatTimestamp.util"
 import CommandMessage from "../struct/CommandMessage"
+import { formatTimestamp } from "@buildtheearth/bot-utils"
 
 export default new Command({
     name: "notes",

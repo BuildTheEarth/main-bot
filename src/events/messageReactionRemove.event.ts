@@ -1,7 +1,7 @@
 import Discord from "discord.js"
 import Client from "../struct/Client"
 import GuildMember from "../struct/discord/GuildMember"
-import noop from "../util/noop.util"
+import { noop } from "@buildtheearth/bot-utils"
 import Roles from "../util/roles.util"
 
 export default async function messageReactionRemove(

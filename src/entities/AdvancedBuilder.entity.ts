@@ -2,7 +2,7 @@ import { Entity, CreateDateColumn, BaseEntity, Column } from "typeorm"
 import SnowflakePrimaryColumn from "./decorators/SnowflakePrimaryColumn.decorator"
 import Client from "../struct/Client"
 import Guild from "../struct/discord/Guild"
-import noop from "../util/noop.util"
+import { noop } from "@buildtheearth/bot-utils"
 import Roles from "../util/roles.util"
 @Entity({ name: "advanced_builders" })
 export default class AdvancedBuilder extends BaseEntity {

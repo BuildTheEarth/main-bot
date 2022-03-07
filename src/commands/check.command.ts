@@ -7,8 +7,8 @@ import ActionLog, { Action } from "../entities/ActionLog.entity"
 import TimedPunishment from "../entities/TimedPunishment.entity"
 import ModerationNote from "../entities/ModerationNote.entity"
 import { Not, IsNull, FindManyOptions } from "typeorm"
-import noop from "../util/noop.util"
 import CommandMessage from "../struct/CommandMessage"
+import { noop } from "@buildtheearth/bot-utils"
 
 export default new Command({
     name: "check",

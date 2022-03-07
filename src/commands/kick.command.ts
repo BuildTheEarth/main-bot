@@ -4,7 +4,7 @@ import Args from "../struct/Args"
 import Command from "../struct/Command"
 import GuildMember from "../struct/discord/GuildMember"
 import Roles from "../util/roles.util"
-import noop from "../util/noop.util"
+import { noop } from "@buildtheearth/bot-utils"
 import CommandMessage from "../struct/CommandMessage"
 import punish from "../util/punish.util"
 

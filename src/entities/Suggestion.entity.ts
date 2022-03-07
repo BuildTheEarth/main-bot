@@ -11,12 +11,10 @@ import SnowflakeColumn from "./decorators/SnowflakeColumn.decorator"
 import Discord from "discord.js"
 import path from "path"
 import Client from "../struct/Client"
-import { loadSyncJSON5 } from "../util/loadJSON5.util"
-import replaceAsync from "../util/replaceAsync.util"
+import { hexToRGB, loadSyncJSON5, replaceAsync } from "@buildtheearth/bot-utils"
 const suggestionStatusActions = loadSyncJSON5(
     path.join(__dirname + "../../../config/extensions/suggestionStatusActions.json5")
 )
-import hexToRGB from "../util/hexToRGB.util"
 
 export type SuggestionStatus = keyof typeof SuggestionStatuses
 export enum SuggestionStatuses {

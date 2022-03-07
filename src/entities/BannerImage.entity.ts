@@ -7,7 +7,7 @@ import {
 } from "typeorm"
 import Discord from "discord.js"
 import Client from "../struct/Client"
-import quote from "../util/quote.util"
+import { quote } from "@buildtheearth/bot-utils"
 
 @Entity({ name: "banner_images" })
 export default class BannerImage extends BaseEntity {

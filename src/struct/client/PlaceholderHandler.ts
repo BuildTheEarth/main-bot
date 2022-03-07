@@ -1,10 +1,7 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
+import { trimSides } from "@buildtheearth/bot-utils"
 import Placeholder from "../../entities/Placeholder.entity"
 import Client from "../Client"
 import iso6391 from "./iso6391"
-import trimSides from "../../util/trimSides.util"
 
 export default class PlaceholderHandler {
     client: Client
@@ -15,7 +12,7 @@ export default class PlaceholderHandler {
 
     cache = new Map<string, Placeholder>()
 
-    async addPlaceholder(name: string, language: string, body: string) {
+    async addPlaceholder(name: string, language: string, body: string): Promise<void> {
         if (this.cache.has(name + " " + language)) return
         if (!iso6391.validate(language)) return
 
@@ -30,7 +27,11 @@ export default class PlaceholderHandler {
         this.cache[name + " " + language] = placeholder
     }
 
-    async editPlaceholder(name: string, language: string, newBody: string) {
+    async editPlaceholder(
+        name: string,
+        language: string,
+        newBody: string
+    ): Promise<void> {
         if (this.cache.has(name + " " + language)) return
         if (!iso6391.validate(language)) return
 
@@ -43,7 +44,7 @@ export default class PlaceholderHandler {
         this.cache[name + " " + language] = placeholder
     }
 
-    async deletePlaceholder(name: string, language: string) {
+    async deletePlaceholder(name: string, language: string): Promise<void> {
         if (this.cache.has(name + " " + language)) return
         if (!iso6391.validate(language)) return
 
@@ -55,12 +56,13 @@ export default class PlaceholderHandler {
         delete this.cache[name + " " + language]
     }
 
-    replacePlaceholders(text: string) {
+    replacePlaceholders(text: string): string {
         if (!text) return text
 
         return text.replaceAll(
             /{{.*?}}/g,
-            (substring: string, ...args: any[]): string => {
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            (substring: string, ..._args: unknown[]): string => {
                 let trimmedString = trimSides(substring, "{{", "}}").trim()
                 if (trimmedString.split(" ").length > 2) return substring
                 if (trimmedString.split(" ").length == 1) trimmedString += " en"

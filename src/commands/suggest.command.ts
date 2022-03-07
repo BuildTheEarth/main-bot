@@ -4,8 +4,8 @@ import Args from "../struct/Args"
 import Command from "../struct/Command"
 import Suggestion from "../entities/Suggestion.entity"
 import Roles from "../util/roles.util"
-import flattenMarkdown from "../util/flattenMarkdown.util"
 import CommandMessage from "../struct/CommandMessage"
+import { flattenMarkdown } from "@buildtheearth/bot-utils"
 
 export default new Command({
     name: "suggest",
@@ -61,7 +61,7 @@ export default new Command({
         const identifier = args.consumeIf(Suggestion.isIdentifier, "number")
         const extend = identifier && Suggestion.parseIdentifier(identifier)
         args.separator = "|"
-        const title = await flattenMarkdown(args.consume("title"), client, message.guild)
+        const title = await flattenMarkdown(args.consume("title"), message.guild)
         const [body, teams] = [args.consume("body"), args.consume("team")]
 
         await message.continue()

@@ -5,7 +5,7 @@ import TimedPunishment from "../entities/TimedPunishment.entity"
 import ActionLog from "../entities/ActionLog.entity"
 import GuildMember from "../struct/discord/GuildMember"
 import Roles from "./roles.util"
-import noop from "./noop.util"
+import { noop } from "@buildtheearth/bot-utils"
 
 async function log(
     client: Client,

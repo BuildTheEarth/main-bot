@@ -1,4 +1,4 @@
-import ms from "../util/ms.util"
+import { ms } from "@buildtheearth/bot-utils"
 import Discord from "discord.js"
 import CommandMessage from "./CommandMessage"
 

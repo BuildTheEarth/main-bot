@@ -2,8 +2,7 @@ import Discord from "discord.js"
 import Client from "../struct/Client"
 import GuildMember from "../struct/discord/GuildMember"
 import Roles from "../util/roles.util"
-import noop from "../util/noop.util"
-import trimSides from "../util/trimSides.util"
+import { noop, trimSides } from "@buildtheearth/bot-utils"
 
 export default async function messageReactionAdd(
     this: Client,

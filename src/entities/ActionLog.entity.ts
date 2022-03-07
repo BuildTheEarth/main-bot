@@ -9,17 +9,19 @@ import {
     JoinColumn
 } from "typeorm"
 import SnowflakeColumn from "./decorators/SnowflakeColumn.decorator"
-import ms from "../util/ms.util"
 import Discord from "discord.js"
 import Client from "../struct/Client"
 import TimedPunishment from "./TimedPunishment.entity"
-import truncateSting from "../util/truncateString.util"
-import formatPunishmentTime from "../util/formatPunishmentTime.util"
-import formatTimestamp from "../util/formatTimestamp.util"
 import milliseconds from "./transformers/milliseconds.transformer"
-import past from "../util/pastTense.util"
-import noop from "../util/noop.util"
-import hexToRGB from "../util/hexToRGB.util"
+import {
+    formatPunishmentTime,
+    formatTimestamp,
+    hexToRGB,
+    ms,
+    noop,
+    truncateString,
+    pastTense
+} from "@buildtheearth/bot-utils"
 import { URL } from "url"
 
 export type Action = keyof typeof Actions
@@ -92,7 +94,7 @@ export default class ActionLog extends BaseEntity {
     }
 
     format(): string {
-        let formatted = truncateSting(this.reason, 64, "...")
+        let formatted = truncateString(this.reason, 64, "...")
         if (this.length) formatted = `(**${ms(this.length)}**) ` + formatted
         formatted = `\` ${this.id}. \` ${formatted}`
         if (this.old) formatted = `\\📜 ${formatted}`
@@ -141,7 +143,7 @@ export default class ActionLog extends BaseEntity {
 
     private displayNotification(client: Client): Discord.MessageEmbedOptions {
         const length = this.length ? " " + formatPunishmentTime(this.length) : ""
-        const actioned = past(this.action)
+        const actioned = pastTense(this.action)
         const color = this.action.startsWith("un") ? "success" : "error"
 
         const embed: Discord.MessageEmbedOptions = {

@@ -4,9 +4,9 @@ import Args from "../struct/Args"
 import Command from "../struct/Command"
 import GuildMember from "../struct/discord/GuildMember"
 import Roles from "../util/roles.util"
-import truncateString from "../util/truncateString.util"
 import CommandMessage from "../struct/CommandMessage"
 import CommandUtils from "../util/CommandUtils.util"
+import { truncateString } from "@buildtheearth/bot-utils"
 
 export default new Command({
     name: "help",

@@ -5,9 +5,7 @@ import CommandMessage from "../struct/CommandMessage"
 // @ts-ignore
 import packageJson from "../../package.json"
 import Discord from "discord.js"
-import currentEnv from "../util/currentEnv.util"
-import formatPunishmentTime from "../util/formatPunishmentTime.util"
-import hexToRGB from "../util/hexToRGB.util"
+import { currentEnv, formatPunishmentTime, hexToRGB } from "@buildtheearth/bot-utils"
 
 export default new Command({
     name: "info",

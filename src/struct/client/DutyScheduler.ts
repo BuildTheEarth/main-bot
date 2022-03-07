@@ -1,5 +1,5 @@
+import { hexToRGB } from "@buildtheearth/bot-utils"
 import Discord from "discord.js"
-import hexToRGB from "../../util/hexToRGB.util"
 import toggleDutyRole from "../../util/toggleDutyRole.util"
 import Client from "../Client"
 

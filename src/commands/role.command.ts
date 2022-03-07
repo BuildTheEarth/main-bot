@@ -3,9 +3,9 @@ import Command from "../struct/Command"
 import Roles from "../util/roles.util"
 import CommandMessage from "../struct/CommandMessage"
 import Args from "../struct/Args"
-import humanizeConstant from "../util/humanizeConstant.util"
 import GuildMember from "../struct/discord/GuildMember"
 import Discord from "discord.js"
+import { humanizeConstant } from "@buildtheearth/bot-utils"
 
 export default new Command({
     name: "role",

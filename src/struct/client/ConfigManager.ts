@@ -59,7 +59,7 @@ export default class ConfigManager {
     apiWhitelist: string[]
     database: DatabaseInfo
     submodules: Submodules
-    envBindings: Record<string, any>
+    envBindings: Record<string, string>
 
     constructor(client: Client) {
         this.client = client
@@ -94,7 +94,7 @@ export default class ConfigManager {
         for (const [key, value] of Object.entries(process.env)) {
             if (key in this.envBindings) {
                 const replacer = `function(self, v) {${this.envBindings[key]} = v}`
-                const wrap = s => `{ return ${s} };`
+                const wrap = (s: string) => `{ return ${s} };`
                 const assigner = new Function(wrap(replacer))
                 assigner.call(null).call(null, this, value)
             }

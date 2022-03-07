@@ -4,7 +4,7 @@ import Args from "../struct/Args"
 import Command from "../struct/Command"
 import Guild from "../struct/discord/Guild"
 import Roles from "../util/roles.util"
-import noop from "../util/noop.util"
+import { noop } from "@buildtheearth/bot-utils"
 import CommandMessage from "../struct/CommandMessage"
 
 const ROLE_NAMES = [

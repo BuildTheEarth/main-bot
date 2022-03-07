@@ -3,9 +3,8 @@ import Client from "../struct/Client"
 import Args from "../struct/Args"
 import Command from "../struct/Command"
 import Roles from "../util/roles.util"
-import humanizeArray from "../util/humanizeArray.util"
-import hexToRGB from "../util/hexToRGB.util"
 import CommandMessage from "../struct/CommandMessage"
+import { hexToRGB, humanizeArray } from "@buildtheearth/bot-utils"
 
 const VALID_IMAGE_SIZES = [16, 32, 64, 128, 256, 512, 1024, 2048, 4096]
 

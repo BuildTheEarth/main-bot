@@ -4,10 +4,10 @@ import Command from "../struct/Command"
 import Snippet from "../entities/Snippet.entity"
 import Roles from "../util/roles.util"
 import languages from "../struct/client/iso6391"
-import hexToRGB from "../util/hexToRGB.util"
 import GuildMember from "../struct/discord/GuildMember"
 import Discord from "discord.js"
 import CommandMessage from "../struct/CommandMessage"
+import { hexToRGB } from "@buildtheearth/bot-utils"
 
 const subSnippetTypes = ["team", "rule"]
 

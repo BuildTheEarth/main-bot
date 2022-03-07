@@ -2,7 +2,7 @@ import { Entity, Column, PrimaryGeneratedColumn, BaseEntity } from "typeorm"
 import Discord from "discord.js"
 import Client from "../struct/Client"
 import languages from "../struct/client/iso6391"
-import hexToRGB from "../util/hexToRGB.util"
+import { hexToRGB } from "@buildtheearth/bot-utils"
 
 @Entity({ name: "snippets" })
 export default class Snippet extends BaseEntity {

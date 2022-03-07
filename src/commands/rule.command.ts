@@ -2,11 +2,11 @@ import Client from "../struct/Client"
 import Args from "../struct/Args"
 import Command from "../struct/Command"
 import Roles from "../util/roles.util"
-import quote from "../util/quote.util"
 import { Brackets, WhereExpression } from "typeorm"
 import languages from "../struct/client/iso6391"
 import Snippet from "../entities/Snippet.entity"
 import CommandMessage from "../struct/CommandMessage"
+import { quote } from "@buildtheearth/bot-utils"
 
 export default new Command({
     name: "rule",

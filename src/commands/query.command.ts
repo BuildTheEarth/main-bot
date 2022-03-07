@@ -2,9 +2,9 @@ import Client from "../struct/Client"
 import Args from "../struct/Args"
 import Command from "../struct/Command"
 import Roles from "../util/roles.util"
-import truncateString from "../util/truncateString.util"
 import CommandMessage from "../struct/CommandMessage"
 import JSON5 from "json5"
+import { truncateString } from "@buildtheearth/bot-utils"
 
 export default new Command({
     name: "query",

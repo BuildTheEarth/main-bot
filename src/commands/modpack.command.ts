@@ -3,11 +3,11 @@ import Args from "../struct/Args"
 import Command from "../struct/Command"
 import ModpackImage, { ModpackImageKey } from "../entities/ModpackImage.entity"
 import Roles from "../util/roles.util"
-import isURL from "../util/isURL.util"
 import CommandMessage from "../struct/CommandMessage"
 import JSON5 from "json5"
 import fetch from "node-fetch"
 import sizeOf from "buffer-image-size"
+import { isURL } from "@buildtheearth/bot-utils"
 
 export default new Command({
     name: "modpack",

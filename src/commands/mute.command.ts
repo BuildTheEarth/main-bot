@@ -4,11 +4,10 @@ import TimedPunishment from "../entities/TimedPunishment.entity"
 import Command from "../struct/Command"
 import GuildMember from "../struct/discord/GuildMember"
 import Roles from "../util/roles.util"
-import formatPunishmentTime from "../util/formatPunishmentTime.util"
 import Discord from "discord.js"
 import CommandMessage from "../struct/CommandMessage"
 import punish from "../util/punish.util"
-import noop from "../util/noop.util"
+import { formatPunishmentTime, noop } from "@buildtheearth/bot-utils"
 
 export default new Command({
     name: "mute",

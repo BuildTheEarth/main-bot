@@ -4,10 +4,12 @@ import Command from "../struct/Command"
 import GuildMember from "../struct/discord/GuildMember"
 import Roles from "../util/roles.util"
 import CommandMessage from "../struct/CommandMessage"
-import humanizeArray from "../util/humanizeArray.util"
-import humanizeConstant from "../util/humanizeConstant.util"
 import toggleDutyRole from "../util/toggleDutyRole.util"
-import formatTimestamp from "../util/formatTimestamp.util"
+import {
+    formatTimestamp,
+    humanizeArray,
+    humanizeConstant
+} from "@buildtheearth/bot-utils"
 
 //I'd like to to denote that I am not storing scheduling stuff in a database simply because it's not necessary, and is clutter, if the bot dies and somebodies support schedule dosnet work, the world will not end.
 

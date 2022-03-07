@@ -9,8 +9,7 @@ import SnowflakeColumn from "./decorators/SnowflakeColumn.decorator"
 import Client from "../struct/Client"
 import GuildMember from "../struct/discord/GuildMember"
 import milliseconds from "./transformers/milliseconds.transformer"
-import noop from "../util/noop.util"
-import pastTense from "../util/pastTense.util"
+import { noop, pastTense } from "@buildtheearth/bot-utils"
 import Discord from "discord.js"
 
 @Entity({ name: "timed_punishments" })
