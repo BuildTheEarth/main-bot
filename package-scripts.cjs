@@ -32,8 +32,8 @@ module.exports = {
       default: 'git pull && npm start build && pm2 restart main-bot',
       migrate: 'git pull && npm start build && pm2 stop main-bot && npm start migrate && pm2 start main-bot'
     },
-    error: 'ts-node scripts/error',
+    error: 'ts-node scripts/error.cts',
     backup: 'mysqldump main_bot --user root --password --result-file "main_bot-$(date -u +\'%Y_%m_%dT%H:%M:%SZ\').sql"',
-    migrate_config: 'ts-node scripts/convertOldYAML',
+    migrate_config: 'ts-node scripts/convertOldYAML.cts',
   }
 };
