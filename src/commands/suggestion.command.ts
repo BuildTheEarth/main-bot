@@ -518,7 +518,18 @@ export default new Command({
                 }
             }
 
-            return client.response.sendSuccess(message, "Updated the suggestion!")
+            if (
+                !(
+                    // prettier-ignore
+                    thread && (( // thread must stay outside parentheses
+                    CLOSE_STATUS.includes(status) &&
+                    !thread?.locked &&
+                    !thread?.archived) ||
+                (CLOSE_STATUS.includes(status) &&
+                    status !== oldStatus))
+                )
+            )
+                return client.response.sendSuccess(message, "Updated the suggestion!")
         }
     }
 })
