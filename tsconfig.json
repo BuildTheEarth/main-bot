@@ -6,7 +6,6 @@
         "module": "esnext",
         "target": "esnext",
         "outDir": "./dist",
-        "noImplicitUseStrict": true,
         "moduleResolution": "nodenext",
     },
     "include": [
