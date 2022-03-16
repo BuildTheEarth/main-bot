@@ -5,7 +5,7 @@ import Command from "../struct/Command.js"
 import Suggestion from "../entities/Suggestion.entity.js"
 import Roles from "../util/roles.util.js"
 import CommandMessage from "../struct/CommandMessage.js"
-import { flattenMarkdown } from "@buildtheearth/bot-utils"
+import { flattenMarkdown, truncateString } from "@buildtheearth/bot-utils"
 
 export default new Command({
     name: "suggest",
@@ -138,7 +138,7 @@ export default new Command({
             const thread = await (
                 suggestionMessage.channel as Discord.TextChannel
             ).threads.create({
-                name: `${newIdentifier} - ${title}`,
+                name: `${newIdentifier} - ${truncateString(title, 10)}`,
                 autoArchiveDuration: "MAX",
                 startMessage: suggestionMessage
             })
