@@ -102,7 +102,7 @@ export default new Command({
         if (subcommand == "commit") {
             const id = parseInt(args.consume("id"))
             let blunder: BlunderTracker
-            message.continue()
+            await message.continue()
 
             if (id) {
                 blunder = await BlunderTracker.findOne(id)
@@ -157,7 +157,7 @@ export default new Command({
             if (!description)
                 return client.response.sendError(message, client.messages.noDescription)
 
-            message.continue()
+            await message.continue()
 
             const blunder = new BlunderTracker()
             blunder.lastBlunder = null
@@ -179,7 +179,7 @@ export default new Command({
 
             const id = parseInt(args.consume("id"))
             if (id) {
-                message.continue()
+                await message.continue()
 
                 const blunder = await BlunderTracker.findOne(id)
                 if (!blunder)
@@ -206,7 +206,7 @@ export default new Command({
                         { role: typeorm.IsNull() }
                     ]
                 }
-            message.continue()
+            await message.continue()
 
             const blunders = await BlunderTracker.find(findOptions)
 
