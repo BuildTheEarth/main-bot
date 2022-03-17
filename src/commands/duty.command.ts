@@ -35,7 +35,7 @@ export default new Command({
                     description: "Role to add to duty.",
                     required: false,
                     optionType: "STRING",
-                    choices: ["SUPPORT", "MODERATOR"]
+                    choices: ["SUPPORT", "MODERATOR", "HELPER"]
                 }
             ]
         },
@@ -48,7 +48,7 @@ export default new Command({
                     name: "time",
                     description: "Time to schedule the duty role for.",
                     required: true,
-                    optionType: "USER"
+                    optionType: "STRING"
                 },
                 {
                     name: "member",
@@ -61,7 +61,7 @@ export default new Command({
                     description: "Role to add to duty.",
                     required: false,
                     optionType: "STRING",
-                    choices: ["SUPPORT", "MODERATOR"]
+                    choices: ["SUPPORT", "MODERATOR", "HELPER"]
                 }
             ]
         },
@@ -81,7 +81,7 @@ export default new Command({
                     description: "Role to add to duty.",
                     required: false,
                     optionType: "STRING",
-                    choices: ["SUPPORT", "MODERATOR"]
+                    choices: ["SUPPORT", "MODERATOR", "HELPER"]
                 }
             ]
         },
@@ -106,11 +106,11 @@ export default new Command({
             "cancel",
             "check"
         ])
-        message.continue()
-        if (subcommand === "set" || !subcommand) {
+        await message.continue()
+        if (subcommand === "add" || !subcommand) {
             const member = await args.consumeUser("member")
             const role = args.consumeIf(
-                arg => ["support", "moderator"].includes(arg.toLowerCase()),
+                arg => ["support", "moderator", "helper"].includes(arg.toLowerCase()),
                 "role"
             )
             const memberReal = member
@@ -122,7 +122,7 @@ export default new Command({
             )
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             let roleReal: any[]
-            if (!role) roleReal = ["SUPPORT", "MODERATOR"]
+            if (!role) roleReal = ["SUPPORT", "MODERATOR", "HELPER"]
             else roleReal = [role.toUpperCase()]
             const dutyArray = roleReal.filter(role =>
                 GuildMember.hasRole(memberReal, Roles[role], client, false)
@@ -131,7 +131,7 @@ export default new Command({
                 return client.response.sendError(message, client.messages.cannotDuty)
             const toggle = await toggleDutyRole(
                 memberReal,
-                dutyArray as ("MODERATOR" | "SUPPORT")[],
+                dutyArray as ("MODERATOR" | "SUPPORT" | "HELPER")[],
                 client
             )
             return client.response.sendSuccess(
@@ -153,7 +153,7 @@ export default new Command({
                 return client.response.sendError(message, client.messages.slowmodeTooLow)
             const member = await args.consumeUser("member")
             const role = args.consumeIf(
-                arg => ["support", "moderator"].includes(arg.toLowerCase()),
+                arg => ["support", "moderator", "helper"].includes(arg.toLowerCase()),
                 "role"
             )
             const memberReal = member
@@ -165,7 +165,7 @@ export default new Command({
             )
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             let roleReal: any[]
-            if (!role) roleReal = ["SUPPORT", "MODERATOR"]
+            if (!role) roleReal = ["SUPPORT", "MODERATOR", "HELPER"]
             else roleReal = [role.toUpperCase()]
             const dutyArray = roleReal.filter(role =>
                 GuildMember.hasRole(memberReal, Roles[role], client, false)
@@ -176,7 +176,7 @@ export default new Command({
             await client.dutyScheduler.scheduleDuty(
                 time,
                 memberReal,
-                dutyArray as ("MODERATOR" | "SUPPORT")[]
+                dutyArray as ("MODERATOR" | "SUPPORT" | "HELPER")[]
             )
 
             return client.response.sendSuccess(

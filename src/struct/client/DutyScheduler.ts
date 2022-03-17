@@ -14,8 +14,12 @@ export default class DutyScheduler {
     public async scheduleDuty(
         time: number,
         user: Discord.GuildMember,
-        roles: ("SUPPORT" | "MODERATOR")[]
+        roles: ("SUPPORT" | "MODERATOR" | "HELPER")[]
     ): Promise<void> {
+        if (roles.includes("HELPER")) {
+            roles.pop()
+            roles.push("MODERATOR")
+        }
         this.dutyScheduler[user.id] = [
             setTimeout(async () => {
                 const dutyToggle = await toggleDutyRole(user, roles, this.client)

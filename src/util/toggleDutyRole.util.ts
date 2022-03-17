@@ -4,9 +4,13 @@ import Roles from "./roles.util.js"
 import Client from "../struct/Client.js"
 export default async function toggleDutyRole(
     user: Discord.GuildMember,
-    roles: ("SUPPORT" | "MODERATOR")[],
+    roles: ("SUPPORT" | "MODERATOR" | "HELPER")[],
     client: Client
 ): Promise<boolean> {
+    if (roles.includes("HELPER")) {
+        roles.pop()
+        roles.push("MODERATOR")
+    }
     return await GuildMember.toggleRole(
         user,
         roles.map(role => Roles[role + "_ON_DUTY"]),
