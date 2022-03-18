@@ -16,9 +16,11 @@ export default class DutyScheduler {
         user: Discord.GuildMember,
         roles: ("SUPPORT" | "MODERATOR" | "HELPER")[]
     ): Promise<void> {
-        if (roles.includes("HELPER")) {
+        if (roles.includes("HELPER") && roles.includes("MODERATOR") == false) {
             roles.pop()
             roles.push("MODERATOR")
+        } else if (roles.includes("HELPER") && roles.includes("MODERATOR")) {
+            roles.pop()
         }
         this.dutyScheduler[user.id] = [
             setTimeout(async () => {

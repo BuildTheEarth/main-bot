@@ -7,9 +7,11 @@ export default async function toggleDutyRole(
     roles: ("SUPPORT" | "MODERATOR" | "HELPER")[],
     client: Client
 ): Promise<boolean> {
-    if (roles.includes("HELPER")) {
+    if (roles.includes("HELPER") && roles.includes("MODERATOR") == false) {
         roles.pop()
         roles.push("MODERATOR")
+    } else if (roles.includes("HELPER") && roles.includes("MODERATOR")) {
+        roles.pop()
     }
     return await GuildMember.toggleRole(
         user,
