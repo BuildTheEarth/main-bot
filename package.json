@@ -40,7 +40,7 @@
     "@types/node-fetch": "3.0.3",
     "@typescript-eslint/eslint-plugin": "4.30.0",
     "@typescript-eslint/parser": "4.33.0",
-    "eslint": "7.32.0",
+    "eslint": "8.11.0",
     "eslint-config-prettier": "8.3.0",
     "ncc": "^0.3.6",
     "nps": "5.10.0",
