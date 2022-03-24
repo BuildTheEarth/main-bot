@@ -50,7 +50,7 @@ export default class Client extends Discord.Client {
         const db = this.config.database
         const options: Partial<typeorm.ConnectionOptions> = {
             type: db.type,
-            timezone: '+0:00',
+            timezone: '+00:00',
             entities: [
                 path.dirname(url.fileURLToPath(import.meta.url)) +
                     "/../entities/*.{js,ts}"
