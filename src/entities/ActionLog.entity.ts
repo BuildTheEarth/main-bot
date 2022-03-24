@@ -124,9 +124,8 @@ export default class ActionLog extends typeorm.BaseEntity {
             )
         }
 
-        if (this.punishment?.end > new Date()) {
-            const end = this.punishment.end.getTime() - Date.now()
-            embed.description = `*Ending in ${formatPunishmentTime(end, true)}.*`
+        if (length !== "\u200B") {
+            embed.description = `*Ending in ${length}.*`
         }
 
         return embed

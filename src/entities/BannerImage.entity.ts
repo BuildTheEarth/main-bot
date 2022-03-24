@@ -2,6 +2,7 @@ import typeorm from "typeorm"
 import Discord from "discord.js"
 import type Client from "../struct/Client.js"
 import { quote } from "@buildtheearth/bot-utils"
+import { Cron } from "croner";
 
 @typeorm.Entity({ name: "banner_images" })
 export default class BannerImage extends typeorm.BaseEntity {
@@ -27,7 +28,7 @@ export default class BannerImage extends typeorm.BaseEntity {
         return `**#${this.id}:** [Link](${this.url}), by ${this.credit}`
     }
 
-    private static cycleTimeout: NodeJS.Timeout
+    private static cycleTimeout: Cron
 
     static async cycle(client: Client): Promise<void> {
         if (!(await client.customGuilds.main()).features.includes("BANNER")) return
@@ -54,22 +55,13 @@ export default class BannerImage extends typeorm.BaseEntity {
         await client.response.sendSuccess(updates, embed)
         await next.softRemove()
         client.logger.info("Updated banner with first image in queue.")
-        this.schedule(client)
     }
 
     static schedule(client: Client): void {
-        if (this.cycleTimeout) clearTimeout(this.cycleTimeout)
-        const now = new Date()
-        const monday = new Date()
-        const today = now.getDay()
-        const offset = 8 - today
-        const mondate = now.getDate() + offset
-        monday.setDate(mondate)
-        monday.setUTCHours(0, 0, 0, 0)
-        const tillMonday = monday.getTime() - Date.now()
+        if (this.cycleTimeout) this.cycleTimeout.stop()
 
-        this.cycleTimeout = setTimeout(() => {
+        this.cycleTimeout = new Cron("0 0 * * 1", () => {
             this.cycle(client)
-        }, tillMonday)
+        })
     }
 }

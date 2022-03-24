@@ -28,7 +28,7 @@ async function log(
     if (message instanceof ButtonInteraction) log.channel = message.channelId
     else log.channel = message.channel.id
     log.message = messageId
-    if (type === ("ban" || "mute")) log.punishment = punishment
+    if (type === "ban" || type === "mute") log.punishment = punishment
     await log.save()
 
     const member: Discord.GuildMember = await message.guild.members
@@ -95,7 +95,7 @@ export default async function punish(
     messageId: string = message.id
 ): Promise<ActionLog> {
     let punishment: TimedPunishment
-    if (type === ("ban" || "mute")) {
+    if (type === "ban" || type === "mute") {
         punishment = await timedPunishment(client, member, type, length)
     } else punishment = null
 
