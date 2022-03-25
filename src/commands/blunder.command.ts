@@ -12,7 +12,7 @@ import typeorm from "typeorm"
 
 export default new Command({
     name: "blunder",
-    aliases: ["screwup", "messup", "mistake"],
+    aliases: [],
     description: "Count the low amount of days since the staff team last made a blunder",
     permission: Roles.STAFF,
     subcommands: [

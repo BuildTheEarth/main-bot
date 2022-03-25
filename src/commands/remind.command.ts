@@ -12,7 +12,7 @@ const remindTimes = ["test", "weekly", "bi-weekly", "monthly", "bi-monthly", "ye
 
 export default new Command({
     name: "remind",
-    aliases: ["remindme", "reminders"],
+    aliases: [],
     description: "List and manage reminders.",
     permission: [Roles.MANAGER],
     subcommands: [

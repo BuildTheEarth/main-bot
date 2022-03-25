@@ -8,7 +8,7 @@ import { currentEnv, formatPunishmentTime, hexToRGB } from "@buildtheearth/bot-u
 
 export default new Command({
     name: "info",
-    aliases: ["uptime"],
+    aliases: [],
     description: "Get info about the bot!",
     permission: Roles.ANY,
     async run(this: Command, client: Client, message: CommandMessage) {

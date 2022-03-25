@@ -10,7 +10,7 @@ const VALID_IMAGE_SIZES = [16, 32, 64, 128, 256, 512, 1024, 2048, 4096]
 
 export default new Command({
     name: "avatar",
-    aliases: ["pfp", "av"],
+    aliases: ["av"],
     description: "Get someone's profile picture.",
     permission: Roles.ANY,
     args: [

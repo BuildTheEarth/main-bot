@@ -13,7 +13,7 @@ import { hexToRGB, humanizeArray } from "@buildtheearth/bot-utils"
 
 export default new Command({
     name: "tasks",
-    aliases: ["task"],
+    aliases: [],
     description: "Read and manage tasks.",
     permission: Roles.STAFF,
     dms: true,

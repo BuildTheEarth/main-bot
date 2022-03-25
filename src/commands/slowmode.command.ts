@@ -8,7 +8,7 @@ import CommandMessage from "../struct/CommandMessage.js"
 
 export default new Command({
     name: "slowmode",
-    aliases: ["cooldown", "ratelimit"],
+    aliases: [],
     description: "Set the slowmode.",
     permission: [Roles.HELPER, Roles.MODERATOR, Roles.MANAGER],
     args: [

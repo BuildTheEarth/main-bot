@@ -11,7 +11,7 @@ import Discord from "discord.js"
 
 export default new Command({
     name: "honor",
-    aliases: ["advance", "coolbuild"],
+    aliases: ["advance"],
     description: "Add or remove a user as an honored builder.",
     permission: [Roles.BUILDER_COUNCIL, Roles.MANAGER],
     args: [

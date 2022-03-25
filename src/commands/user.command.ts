@@ -27,7 +27,7 @@ import CommandMessage from "../struct/CommandMessage.js"
 
 export default new Command({
     name: "user",
-    aliases: ["whois", "userinfo"],
+    aliases: ["whois"],
     description: "Get info on someone.",
     permission: Roles.ANY,
     args: [

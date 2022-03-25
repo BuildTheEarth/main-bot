@@ -10,7 +10,7 @@ import { quote } from "@buildtheearth/bot-utils"
 
 export default new Command({
     name: "rule",
-    aliases: ["rules"],
+    aliases: [],
     description: "Get a rule's text.",
     permission: Roles.ANY,
     args: [

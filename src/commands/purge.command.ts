@@ -8,7 +8,7 @@ import { hexToRGB } from "@buildtheearth/bot-utils"
 
 export default new Command({
     name: "purge",
-    aliases: ["prune", "bulkdelete"],
+    aliases: [],
     description: "Bulk-delete messages in a channel.",
     permission: [Roles.MODERATOR, Roles.MANAGER],
     args: [

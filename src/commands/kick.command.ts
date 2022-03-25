@@ -10,7 +10,7 @@ import punish from "../util/punish.util.js"
 
 export default new Command({
     name: "kick",
-    aliases: ["boot", "expell"],
+    aliases: [],
     description: "Kick a member.",
     permission: [Roles.MODERATOR, Roles.MANAGER],
     args: [

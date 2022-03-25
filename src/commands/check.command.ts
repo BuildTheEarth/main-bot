@@ -12,7 +12,7 @@ import { noop } from "@buildtheearth/bot-utils"
 
 export default new Command({
     name: "check",
-    aliases: ["history", "logs", "records"],
+    aliases: [],
     description: "Check a user's punishment records.",
     permission: [
         Roles.HELPER,

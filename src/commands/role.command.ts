@@ -9,7 +9,7 @@ import { humanizeConstant } from "@buildtheearth/bot-utils"
 
 export default new Command({
     name: "role",
-    aliases: ["roleinfo", "downloadmembers", "memberlist"],
+    aliases: ["roleinfo"],
     description: "View information about a role.",
     permission: Roles.ANY,
     basesubcommand: "view",

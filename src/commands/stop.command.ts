@@ -6,7 +6,7 @@ import CommandMessage from "../struct/CommandMessage.js"
 
 export default new Command({
     name: "stop",
-    aliases: ["close", "die", "bye", "adios", "shutdown", "off", "farewell"],
+    aliases: ["die"],
     description: "Stop the bot.",
     permission: Roles.BOT_DEVELOPER,
     args: [

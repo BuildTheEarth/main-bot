@@ -7,7 +7,7 @@ import { truncateString } from "@buildtheearth/bot-utils"
 
 export default new Command({
     name: "reload",
-    aliases: ["re"],
+    aliases: [],
     description: "Reload a command/an event handler/the config/a module/all modules.",
     permission: Roles.BOT_DEVELOPER,
     args: [

@@ -8,7 +8,7 @@ import { formatTimestamp } from "@buildtheearth/bot-utils"
 
 export default new Command({
     name: "notes",
-    aliases: ["note"],
+    aliases: [],
     description: "Read and manage moderation notes.",
     permission: [Roles.HELPER, Roles.MODERATOR, Roles.MANAGER],
     args: [

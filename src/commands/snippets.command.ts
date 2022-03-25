@@ -13,7 +13,7 @@ const subSnippetTypes = ["team", "rule"]
 
 export default new Command({
     name: "snippets",
-    aliases: ["snippet", "tags"],
+    aliases: [],
     description: "List and manage snippets.",
     permission: Roles.ANY,
     inheritGlobalArgs: true,

@@ -19,7 +19,7 @@ import CommandMessage from "../struct/CommandMessage.js"
 
 export default new Command({
     name: "position",
-    aliases: ["promote", "demote", "vcc", "vs", "bto"],
+    aliases: [],
     description: "Promote/demote a member from your team.",
     permission: [Roles.SUBTEAM_LEAD, Roles.REGIONAL_BUILD_TEAM_LEAD],
     args: [

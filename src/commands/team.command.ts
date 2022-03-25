@@ -8,7 +8,7 @@ import CommandMessage from "../struct/CommandMessage.js"
 
 export default new Command({
     name: "team",
-    aliases: ["buildteam", "bt", "invite"],
+    aliases: ["bt"],
     description: "Get an invite for a build team.",
     permission: Roles.ANY,
     args: [

@@ -17,7 +17,7 @@ const punishmentTypes = ["BAN", "MUTE", "KICK", "WARN", "DELETE"]
 
 export default new Command({
     name: "automod",
-    aliases: ["blockword", "blockedwords", "am"],
+    aliases: ["am"],
     description: "Manage banned words",
     subcommands: [
         {
