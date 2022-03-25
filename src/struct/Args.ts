@@ -43,7 +43,7 @@ export default class Args {
         if ((this.message.message as Discord.CommandInteraction).options.get(argName))
             return (this.message.message as Discord.CommandInteraction).options
                 .get(argName)
-                .value.toString()
+                .value.toString().replace(/\n/g,'\n')
         return ""
     }
 
