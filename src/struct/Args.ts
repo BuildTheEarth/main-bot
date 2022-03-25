@@ -65,7 +65,7 @@ export default class Args {
         let arg: string = null
 
         if (this.message.message.options.get(argName))
-            arg = this.message.message.options.get(argName).value.toString()
+            arg = this.message.message.options.get(argName).value.toString().replace(/\\n/g,'\n')
         else arg = ""
         let valid = false
 
@@ -93,7 +93,7 @@ export default class Args {
             )
                 option = (this.message.message as Discord.CommandInteraction).options
                     .get(element)
-                    .value.toString()
+                    .value.toString().replace(/\\n/g,'\n')
             if (option) returnArgs.push(option)
         })
         if (returnArgs.length === 1) return returnArgs[0]
