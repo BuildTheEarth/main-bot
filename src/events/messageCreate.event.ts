@@ -9,6 +9,7 @@ import { noop } from "@buildtheearth/bot-utils"
 import Discord from "discord.js"
 import typeorm from "typeorm"
 import ModerationMenu from "../entities/ModerationMenu.entity.js"
+import { runBtCommand } from "../commands/team.command.js"
 
 function consumeCommand(client: Client, message: Discord.Message): string {
     const content = message.content
@@ -34,6 +35,20 @@ function consumeLang(client: Client, message: Discord.Message): string {
     const commandSplit = command.split(" ")
     const commandName = commandSplit[1]
     return commandName || ""
+}
+
+
+function consumeTeam(client: Client, message: Discord.Message): string {
+    const content = message.content
+    const prefix = client.config.prefix
+    const prefixLength = prefix.length
+    if (content.length < prefixLength) return ""
+    if (content.substring(0, prefixLength) !== prefix) return ""
+
+    const command = content.substring(prefixLength)
+    const commandSplit = command.split(" ")
+    commandSplit.shift()
+    return commandSplit.join(" ").trim() || ""
 }
 
 export default async function (this: Client, message: Discord.Message): Promise<unknown> {
@@ -103,6 +118,12 @@ export default async function (this: Client, message: Discord.Message): Promise<
             }
 
             return await message.channel.send(snippet.body).catch(() => null)
+        }
+
+        if (command.name === "team") {
+            const team = consumeTeam(this, message)
+            if (!team || team === "") return client.response.sendError(message, client.messages.noTeam)
+            return await runBtCommand(client, message, team)
         }
 
         const member = (

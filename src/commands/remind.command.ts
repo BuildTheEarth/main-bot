@@ -74,6 +74,12 @@ export default new Command({
                     optionType: "STRING"
                 }
             ]
+        },
+        {
+            name: "list",
+            description: "List all reminders.",
+            permission: [Roles.MANAGER],
+            args: []
         }
     ],
     async run(this: Command, client: Client, message: CommandMessage, args: Args) {
