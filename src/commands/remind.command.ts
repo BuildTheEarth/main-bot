@@ -6,7 +6,7 @@ import Reminder from "../entities/Reminder.entity.js"
 import ApiTypes = require("discord-api-types/v10")
 import CommandMessage from "../struct/CommandMessage.js"
 import { formatTimestamp } from "@buildtheearth/bot-utils"
-import { isValidCron } from 'cron-validator'
+import { isValidCron } from "cron-validator"
 
 const remindTimes = ["test", "weekly", "bi-weekly", "monthly", "bi-monthly", "yearly"]
 
@@ -20,7 +20,6 @@ export default new Command({
             name: "add",
             description: "Add a reminder.",
             permission: [Roles.MANAGER],
-            seperator: " | ",
             args: [
                 {
                     name: "channel",
@@ -92,7 +91,9 @@ export default new Command({
 
                 tidy[reminder.id].channel = reminder.channel
                 tidy[reminder.id].message = reminder.message
-                tidy[reminder.id].end = new Date(Date.now() + reminder.remainder(reminder))
+                tidy[reminder.id].end = new Date(
+                    Date.now() + reminder.remainder(reminder)
+                )
             }
 
             let list = ""
@@ -110,17 +111,16 @@ export default new Command({
         }
 
         if (subcommand === "add") {
-            args.separator = "|"
             const channel = await args.consumeChannel("channel")
             if (!channel) {
                 return client.response.sendError(message, client.messages.noChannel)
             }
 
             const time = args.consume("interval")
-            let cron : string
+            let cron: string
             if (isValidCron(time)) {
                 cron = time
-            } else { 
+            } else {
                 switch (time.toLowerCase()) {
                     case "test":
                         cron = "* * * * *"
@@ -141,7 +141,10 @@ export default new Command({
                         cron = "0 0 1 1 *" // 1 month (1000ms * 60s * 60m * 24h * 30d * 12m)
                         break
                     default:
-                        return client.response.sendError(message, client.messages.invalidTime)
+                        return client.response.sendError(
+                            message,
+                            client.messages.invalidTime
+                        )
                 }
             }
 

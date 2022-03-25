@@ -43,8 +43,7 @@ export default new Command({
             description: `${purged.size} messages purged by ${message.member} in ${message.channel}.`
         })
 
-        const originMessageState =
-            message.message instanceof Discord.Message && purged.has(message.message.id)
+        const originMessageState = false && purged.has(message.message.id)
 
         client.response.sendSuccess(
             originMessageState ? message.channel : message,

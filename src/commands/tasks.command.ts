@@ -21,7 +21,6 @@ export default new Command({
         {
             name: "add",
             description: "Create a task.",
-            seperator: " | ",
             args: [
                 {
                     name: "assignees",
@@ -92,7 +91,6 @@ export default new Command({
         const subcommand = args.consumeSubcommandIf(this.subcommands.map(sub => sub.name))
 
         if (subcommand === "add" || !subcommand) {
-            args.separator = "|"
             const regex = /\d{18}/g
             const assignees = (args.consumeIf(regex, "assignees") || "").match(regex)
             const [title, description] = [

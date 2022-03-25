@@ -11,34 +11,66 @@ export default class Response {
     }
 
     async sendError(
-        message: CommandMessage | Discord.TextBasedChannel,
+        message: CommandMessage,
+        embed: string | Discord.MessageEmbedOptions,
+        ephemeral?: boolean
+    ): Promise<CommandMessage>
+
+    async sendError(
+        message: Discord.TextBasedChannel | Discord.Message,
+        embed: string | Discord.MessageEmbedOptions,
+        ephemeral?: boolean
+    ): Promise<Discord.Message>
+
+    async sendError(
+        message: CommandMessage | Discord.TextBasedChannel | Discord.Message,
+        embed: string | Discord.MessageEmbedOptions,
+        ephemeral?: boolean
+    ): Promise<Discord.Message | CommandMessage>
+
+    async sendError(
+        message: CommandMessage | Discord.TextBasedChannel | Discord.Message,
         embed: string | Discord.MessageEmbedOptions,
         ephemeral: boolean = true
-    ): Promise<CommandMessage | void> {
+    ): Promise<CommandMessage | Discord.Message> {
         if (typeof embed === "string") embed = { description: embed }
         embed.color = hexToRGB(this.client.config.colors.error)
         if (message instanceof CommandMessage)
             return message.send({ embeds: [embed], ephemeral: ephemeral })
-        else
-            return new CommandMessage(
-                await message.send({ embeds: [embed] }),
-                this.client
-            )
+        else if (message instanceof Discord.Message)
+            return message.reply({ embeds: [embed], allowedMentions: {repliedUser: false} })
+        else return message.send({ embeds: [embed] })
     }
 
     async sendSuccess(
-        message: CommandMessage | Discord.TextBasedChannel,
+        message: CommandMessage,
         embed: string | Discord.MessageEmbedOptions,
-        ephemeral: boolean = false
-    ): Promise<CommandMessage | void> {
+        ephemeral?: boolean
+    ): Promise<CommandMessage>
+
+    async sendSuccess(
+        message: Discord.TextBasedChannel | Discord.Message,
+        embed: string | Discord.MessageEmbedOptions,
+        ephemeral?: boolean
+    ): Promise<Discord.Message>
+
+    async sendSuccess(
+        message: CommandMessage | Discord.TextBasedChannel | Discord.Message,
+        embed: string | Discord.MessageEmbedOptions,
+        ephemeral?: boolean
+    ): Promise<Discord.Message | CommandMessage>
+
+    async sendSuccess(
+        message: CommandMessage | Discord.TextBasedChannel | Discord.Message,
+        embed: string | Discord.MessageEmbedOptions,
+        ephemeral: boolean = true
+    ): Promise<CommandMessage | Discord.Message> {
         if (typeof embed === "string") embed = { description: embed }
         embed.color = hexToRGB(this.client.config.colors.success)
         if (message instanceof CommandMessage)
             return message.send({ embeds: [embed], ephemeral: ephemeral })
-        else
-            return new CommandMessage(
-                await message.send({ embeds: [embed] }),
-                this.client
-            )
+        else if (message instanceof Discord.Message)
+            return message.reply({ embeds: [embed], allowedMentions: {repliedUser: false} })
+        else return message.send({ embeds: [embed] })
     }
 }

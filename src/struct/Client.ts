@@ -39,7 +39,10 @@ export default class Client extends Discord.Client {
         except: new Array<string>()
     }
 
-    punishmentTimeouts: Map<string, {mute: Cron, ban: Cron}> = new Map()
+    punishmentTimeouts: Map<string, { mute: Cron; ban: Cron }> = new Map()
+    honorBuilderTimeouts: Map<string, Cron> = new Map()
+    reminderTimeouts: Map<number, Cron> = new Map()
+    bannerCycleTimeout: Cron
     filter = new BannedWordFilter(this)
     dutyScheduler = new DutyScheduler(this)
     messages = new Messages(this).proxy
@@ -50,7 +53,7 @@ export default class Client extends Discord.Client {
         const db = this.config.database
         const options: Partial<typeorm.ConnectionOptions> = {
             type: db.type,
-            timezone: '+00:00',
+            timezone: "+00:00",
             entities: [
                 path.dirname(url.fileURLToPath(import.meta.url)) +
                     "/../entities/*.{js,ts}"
@@ -81,7 +84,7 @@ export default class Client extends Discord.Client {
         this.filterWordsCached = await BannedWord.loadWords()
         this.placeholder.cache = await Placeholder.loadPlaceholders()
     }
-    
+
     login(): Promise<string> {
         return super.login(this.config.token)
     }

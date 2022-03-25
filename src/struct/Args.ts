@@ -5,7 +5,6 @@ import CommandMessage from "./CommandMessage.js"
 export default class Args {
     raw: string
     command: string
-    separator?: string
     message: CommandMessage
 
     constructor(value: string, message: CommandMessage) {
@@ -15,72 +14,47 @@ export default class Args {
     }
 
     split(argNames: string[]): string[] {
-        if (this.message.isNormalCommand()) {
-            return this.separator
-                ? this.raw.split(this.separator).map(arg => arg.trim())
-                : this.raw.split(/\s/)
-        }
-        if (this.message.isSlashCommand()) {
-            const returnArgs = []
-            argNames.forEach(element =>
-                returnArgs.push(
-                    (this.message.message as Discord.CommandInteraction).options
-                        .get(element)
-                        .value.toString()
-                )
+        const returnArgs = []
+        argNames.forEach(element =>
+            returnArgs.push(
+                (this.message.message as Discord.CommandInteraction).options
+                    .get(element)
+                    .value.toString()
             )
-            return returnArgs
-        }
+        )
+        return returnArgs
     }
 
     splitMultiple(argNames: string[]): string[] {
-        if (this.message.isNormalCommand()) {
-            return this.separator ? this.split(argNames) : this.raw.split(/\s+/)
-        }
-        if (this.message.isSlashCommand()) {
-            const returnArgs = []
-            argNames.forEach(element =>
-                returnArgs.push(
-                    (this.message.message as Discord.CommandInteraction).options
-                        .get(element)
-                        .value.toString()
-                )
+        const returnArgs = []
+        argNames.forEach(element =>
+            returnArgs.push(
+                (this.message.message as Discord.CommandInteraction).options
+                    .get(element)
+                    .value.toString()
             )
-            return returnArgs
-        }
+        )
+        return returnArgs
     }
 
     get(argName: string): string
     get(argName: string, count: number): string[]
-    get(argName: string, count?: number): string | string[] {
-        if (this.message.isNormalCommand()) {
-            return count
-                ? this.splitMultiple([argName]).slice(0, count)
-                : this.split([argName])[0]
-        }
-        if (this.message.isSlashCommand()) {
-            if ((this.message.message as Discord.CommandInteraction).options.get(argName))
-                return (this.message.message as Discord.CommandInteraction).options
-                    .get(argName)
-                    .value.toString()
-            return ""
-        }
+    get(argName: string): string | string[] {
+        if ((this.message.message as Discord.CommandInteraction).options.get(argName))
+            return (this.message.message as Discord.CommandInteraction).options
+                .get(argName)
+                .value.toString()
+        return ""
     }
 
     consumeCommand(): string {
-        if (this.message.isNormalCommand()) {
-            return this.consume("")
-        }
-        if (this.message.isSlashCommand()) {
-            return this.message.message.commandName
-        }
+        return this.message.message.commandName
     }
 
     consume(argName: string): string
     consume(argName: string, count: number): string[]
     consume(argName: string, count?: number): string | string[] {
         const args = this.get(argName, count)
-        this.remove(count)
         return args
     }
 
@@ -89,16 +63,10 @@ export default class Args {
         argName: string
     ): string {
         let arg: string = null
-        if (this.message.isNormalCommand()) {
-            arg = this.get(argName)
-        }
-        if (this.message.isSlashCommand()) {
-            if ((this.message.message as Discord.CommandInteraction).options.get(argName))
-                arg = (this.message.message as Discord.CommandInteraction).options
-                    .get(argName)
-                    .value.toString()
-            else arg = ""
-        }
+
+        if (this.message.message.options.get(argName))
+            arg = this.message.message.options.get(argName).value.toString()
+        else arg = ""
         let valid = false
 
         if (typeof equals === "string") valid = equals.toLowerCase() === arg.toLowerCase()
@@ -114,54 +82,23 @@ export default class Args {
 
     consumeRest(argNames: string[]): string
     consumeRest(argNames: string[], count: number): string[]
-    consumeRest(argNames: string[], count?: number): string | string[] {
-        if (this.message.isNormalCommand()) {
-            if (!count) {
-                const args = this.raw.trim()
-                this.raw = ""
-                return args
-            } else {
-                const args = this.consume("", count - 1)
-                args.push(this.consumeRest([""]))
-                return args
-            }
-        }
-        if (this.message.isSlashCommand()) {
-            const returnArgs = []
-            argNames.forEach(element => {
-                let option: string
-                if (
-                    (this.message.message as Discord.CommandInteraction).options
-                        .get(element)
-                        ?.value.toString()
-                )
-                    option = (this.message.message as Discord.CommandInteraction).options
-                        .get(element)
-                        .value.toString()
-                if (option) returnArgs.push(option)
-            })
-            if (returnArgs.length === 1) return returnArgs[0]
-            if (returnArgs.length === 0) return null
-            else return returnArgs
-        }
-    }
-
-    remove(count: number = 1): string {
-        if (this.message.isNormalCommand()) {
-            if (this.separator) {
-                this.raw = this.raw
-                    .split(this.separator)
-                    .slice(count)
-                    .join(this.separator)
-                    .trim()
-            } else {
-                const regex = new RegExp(`^([^\\s]+(\\s+|$)){1,${count}}`)
-                this.raw = this.raw.replace(regex, "")
-            }
-
-            return this.raw
-        }
-        if (this.message.isSlashCommand()) return ""
+    consumeRest(argNames: string[]): string | string[] {
+        const returnArgs = []
+        argNames.forEach(element => {
+            let option: string
+            if (
+                (this.message.message as Discord.CommandInteraction).options
+                    .get(element)
+                    ?.value.toString()
+            )
+                option = (this.message.message as Discord.CommandInteraction).options
+                    .get(element)
+                    .value.toString()
+            if (option) returnArgs.push(option)
+        })
+        if (returnArgs.length === 1) return returnArgs[0]
+        if (returnArgs.length === 0) return null
+        else return returnArgs
     }
 
     removeCodeblock(text: string): string {
@@ -194,133 +131,42 @@ export default class Args {
     }
 
     async consumeChannel(argName: string): Promise<Discord.Channel> {
-        if (this.message.isNormalCommand()) {
-            const id = this.raw.match(/^(<#)?(\d{18})>?/)?.[2]
-            if (!id) return null
-            this.remove()
-            const channel: Discord.TextChannel =
-                await this.message.message.client.channels
-                    .fetch(id, { force: true })
-                    .catch(() => null)
-            return channel
-        }
-        if (this.message.isSlashCommand())
-            return this.message.message.options.getChannel(argName) as Discord.Channel
+        return this.message.message.options.getChannel(argName) as Discord.Channel
     }
 
-    async consumeUser(
-        argName: string,
-        allowSpecial: boolean = false
-    ): Promise<Discord.User> {
-        if (this.message.isNormalCommand()) {
-            if (allowSpecial) {
-                const special = this.consumeIf(
-                    ["me", "you", "yourself", "someone"],
-                    argName
-                )
-                if (special) {
-                    const users = this.message.message.client.users.cache
-                    switch (special) {
-                        case "me":
-                            return this.message.message.author
-                        case "you":
-                        case "yourself":
-                            return this.message.message.client.user
-                        case "someone":
-                            return users.random()
-                    }
-                }
-            }
-
-            const tag = this.raw.match(/^.{2,32}#\d{4}/)?.[0]
-            const id = this.raw.match(/^(<@!?)?(\d{18})>?/)?.[2]
-            const users = this.message.client.users
-
-            if (tag) {
-                this.raw = this.raw.replace(tag, "").trim()
-                const user = users.cache.find(user => user.tag === tag)
-                return user || null
-            } else if (id) {
-                this.consume(argName)
-                const user: Discord.User = await users
-                    .fetch(id, { force: true })
-                    .catch(() => null)
-                return user || null
-            } else if (!tag && !id) {
-                return undefined
-            }
-        }
-        if (this.message.isSlashCommand()) {
-            return this.message.message.options.getUser(argName)
-        }
+    async consumeUser(argName: string): Promise<Discord.User> {
+        return this.message.message.options.getUser(argName)
     }
 
     async consumeRole(argName: string): Promise<Discord.Role> {
-        if (this.message.isNormalCommand()) {
-            const id = this.raw.match(/^(<@&)?(\d{18})>?/)?.[2]
-            if (!id) return null
-            this.remove()
-            const role: Discord.Role =
-                (await (await this.message.client.customGuilds.main()).roles
-                    .fetch(id, { force: true })
-                    .catch(() => null)) ||
-                (await (await this.message.client.customGuilds.staff()).roles
-                    .fetch(id, { force: true })
-                    .catch(() => null))
-            return role
-        }
-        if (this.message.isSlashCommand())
-            return this.message.message.options.getRole(argName) as Discord.Role
+        return this.message.message.options.getRole(argName) as Discord.Role
     }
 
     consumeAttachment(
         check?: (attachment: Discord.MessageAttachment) => boolean
     ): Discord.MessageAttachment {
-        if (this.message.isNormalCommand()) {
-            return check
-                ? this.message.message.attachments.find(check) || null
-                : this.message.message.attachments.first() || null
-        } else return null
+        //NOTE: USE THE ATTACHMENT STUFF WHEN 13.7 IS AVAILABLE
+        return null
     }
 
     consumeImage(argName: string): string {
-        if (this.message.isNormalCommand()) {
-            const check = (att: Discord.MessageAttachment) =>
-                !!att.name.match(/\.(jpe?g|png|gif)$/i)
-            const attachment = this.consumeAttachment(check)
-            if (attachment) return attachment.url
+        //NOTE: USE THE ATTACHMENT STUFF WHEN 13.7 IS AVAILABLE
+        const url = this.consumeIf(/https?:\/\/(.+)?\.(jpe?g|png|gif)/i, argName)
+        if (url)
+            return url.replace(
+                /.(jpe?g|png|gif)/i,
+                url.match(/.(jpe?g|png|gif)/i)[0].toLowerCase()
+            )
 
-            const url = this.consumeIf(/https?:\/\/(.+)?\.(jpe?g|png|gif)/i, argName)
-            if (url)
-                return url.replace(
-                    /.(jpe?g|png|gif)/i,
-                    url.match(/.(jpe?g|png|gif)/i)[0].toLowerCase()
-                )
-
-            return null
-        }
-        if (this.message.isSlashCommand()) {
-            const url = this.consumeIf(/https?:\/\/(.+)?\.(jpe?g|png|gif)/i, argName)
-            if (url)
-                return url.replace(
-                    /.(jpe?g|png|gif)/i,
-                    url.match(/.(jpe?g|png|gif)/i)[0].toLowerCase()
-                )
-
-            return null
-        }
+        return null
     }
 
-    checkSubcommand(compareFromValue: string, compareTo: string): boolean {
-        if (this.message.isNormalCommand()) return compareFromValue === compareTo
-        if (this.message.isSlashCommand())
-            return this.message.message.options.getSubcommand() === compareTo
+    checkSubcommand(compareTo: string): boolean {
+        return this.message.message.options.getSubcommand() === compareTo
     }
 
-    checkSubcommandGroup(compareFromValue: string, compareTo: string): boolean {
-        if (this.message.isNormalCommand()) return compareFromValue === compareTo
-        if (this.message.isSlashCommand())
-            return this.message.message.options.getSubcommandGroup() === compareTo
+    checkSubcommandGroup(compareTo: string): boolean {
+        return this.message.message.options.getSubcommandGroup() === compareTo
     }
 
     consumeSubcommandIf(
@@ -328,16 +174,13 @@ export default class Args {
     ): string {
         if (equals) {
             let arg: string = null
-            if (this.message.isNormalCommand()) {
-                arg = this.get("")
+
+            try {
+                arg = this.message.message.options.getSubcommand()
+            } catch {
+                arg = ""
             }
-            if (this.message.isSlashCommand()) {
-                try {
-                    arg = this.message.message.options.getSubcommand()
-                } catch {
-                    arg = ""
-                }
-            }
+
             let valid = false
 
             if (typeof equals === "string")
@@ -358,16 +201,13 @@ export default class Args {
     ): string {
         if (equals) {
             let arg: string = null
-            if (this.message.isNormalCommand()) {
-                arg = this.get("")
+
+            try {
+                arg = this.message.message.options.getSubcommandGroup()
+            } catch {
+                arg = ""
             }
-            if (this.message.isSlashCommand()) {
-                try {
-                    arg = this.message.message.options.getSubcommandGroup()
-                } catch {
-                    arg = ""
-                }
-            }
+
             let valid = false
 
             if (typeof equals === "string")
@@ -384,22 +224,18 @@ export default class Args {
     }
 
     consumeSubcommand(): string {
-        if (this.message.isNormalCommand()) return this.consume("")
-        if (this.message.isSlashCommand())
-            try {
-                return this.message.message.options.getSubcommand()
-            } catch {
-                return ""
-            }
+        try {
+            return this.message.message.options.getSubcommand()
+        } catch {
+            return ""
+        }
     }
 
     consumeSubcommandGroup(): string {
-        if (this.message.isNormalCommand()) return this.consume("")
-        if (this.message.isSlashCommand())
-            try {
-                return this.message.message.options.getSubcommandGroup()
-            } catch {
-                return ""
-            }
+        try {
+            return this.message.message.options.getSubcommandGroup()
+        } catch {
+            return ""
+        }
     }
 }

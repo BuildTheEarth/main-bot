@@ -79,7 +79,7 @@ export default new Command({
     ],
     async run(this: Command, client: Client, message: CommandMessage, args: Args) {
         const subcommand = args.consumeSubcommandIf(["add", "edit", "clear", "check"])
-        const user = await args.consumeUser("member", true)
+        const user = await args.consumeUser("member")
         if (!user)
             return client.response.sendError(
                 message,

@@ -4,7 +4,7 @@ import Client from "../struct/Client.js"
 import GuildMember from "../struct/discord/GuildMember.js"
 import milliseconds from "./transformers/milliseconds.transformer.js"
 import { noop, pastTense } from "@buildtheearth/bot-utils"
-import { Cron } from "croner";
+import { Cron } from "croner"
 
 @typeorm.Entity({ name: "timed_punishments" })
 export default class TimedPunishment extends typeorm.BaseEntity {
@@ -28,7 +28,7 @@ export default class TimedPunishment extends typeorm.BaseEntity {
     }
 
     async undo(client: Client): Promise<void> {
-        if (client.punishmentTimeouts.has(this.member)) { 
+        if (client.punishmentTimeouts.has(this.member)) {
             const setPunish = client.punishmentTimeouts.get(this.member)
             if (setPunish[this.type]) {
                 setPunish[this.type].stop()
@@ -39,8 +39,9 @@ export default class TimedPunishment extends typeorm.BaseEntity {
         if (!user) return
 
         if (this.type === "mute") {
-            const member = await client.customGuilds.main().members
-                .fetch({ user })
+            const member = await client.customGuilds
+                .main()
+                .members.fetch({ user })
                 .catch(noop)
             if (!member) return
             await GuildMember.unmute(member, "End of punishment").catch(noop)
@@ -55,11 +56,13 @@ export default class TimedPunishment extends typeorm.BaseEntity {
     }
 
     schedule(client: Client): void {
-        let setPunish = {"ban" : null, "mute" : null}
+        let setPunish = { ban: null, mute: null }
         if (client.punishmentTimeouts.has(this.member)) {
             setPunish = client.punishmentTimeouts.get(this.member)
         }
-        setPunish[this.type] = new Cron(this.end, () => { this.undo(client) })
+        setPunish[this.type] = new Cron(this.end, () => {
+            this.undo(client)
+        })
         client.punishmentTimeouts.set(this.member, setPunish)
     }
 }

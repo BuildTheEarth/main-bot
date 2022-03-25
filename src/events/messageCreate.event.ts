@@ -1,9 +1,6 @@
 import Client from "../struct/Client.js"
-import CommandMessage from "../struct/CommandMessage.js"
 import GuildMember from "../struct/discord/GuildMember.js"
 import Guild from "../struct/discord/Guild.js"
-import Args from "../struct/Args.js"
-import Role from "../struct/discord/Role.js"
 import Snippet from "../entities/Snippet.entity.js"
 import languages from "../struct/client/iso6391.js"
 import Roles from "../util/roles.util.js"
@@ -12,6 +9,32 @@ import { noop } from "@buildtheearth/bot-utils"
 import Discord from "discord.js"
 import typeorm from "typeorm"
 import ModerationMenu from "../entities/ModerationMenu.entity.js"
+
+function consumeCommand(client: Client, message: Discord.Message): string {
+    const content = message.content
+    const prefix = client.config.prefix
+    const prefixLength = prefix.length
+    if (content.length < prefixLength) return ""
+    if (content.substring(0, prefixLength) !== prefix) return ""
+
+    const command = content.substring(prefixLength)
+    const commandSplit = command.split(" ")
+    const commandName = commandSplit[0]
+    return commandName || ""
+}
+
+function consumeLang(client: Client, message: Discord.Message): string {
+    const content = message.content
+    const prefix = client.config.prefix
+    const prefixLength = prefix.length
+    if (content.length < prefixLength) return ""
+    if (content.substring(0, prefixLength) !== prefix) return ""
+
+    const command = content.substring(prefixLength)
+    const commandSplit = command.split(" ")
+    const commandName = commandSplit[1]
+    return commandName || ""
+}
 
 export default async function (this: Client, message: Discord.Message): Promise<unknown> {
     if (message.partial) await message.fetch().catch(noop)
@@ -31,23 +54,23 @@ export default async function (this: Client, message: Discord.Message): Promise<
     }
 
     if (message.content.startsWith(this.config.prefix)) {
-        const body = message.content.slice(this.config.prefix.length).trim()
-        const args = new Args(body, new CommandMessage(message, this))
-        const command = this.commands.search(args.command)
+        const command = this.commands.search(consumeCommand(this, message))
         if (!command) {
-            const firstArg = args.consume("").toLowerCase() //before someone kills me, this is guaranteed to be of a normal message as it is in messageCreate, so we strictly dont need an arg name but i am NOT making that an optional arg
+            const firstArg = consumeLang(this, message).toLowerCase() //before someone kills me, this is guaranteed to be of a normal message as it is in messageCreate, so we strictly dont need an arg name but i am NOT making that an optional arg
             const languageName = languages.getName(firstArg) || "English"
             const language = languages.validate(firstArg) ? firstArg.toLowerCase() : "en"
 
             if (firstArg.toLowerCase() === "zh")
                 return this.response.sendError(
-                    new CommandMessage(message, this),
+                    message,
                     `Please choose \`zh-s\` (简体中文) or \`zh-t\` (繁體中文)!`
                 )
 
             const find = (query: typeorm.WhereExpression) =>
                 query
-                    .where("snippet.name = :name", { name: args.command })
+                    .where("snippet.name = :name", {
+                        name: consumeCommand(this, message)
+                    })
                     .andWhere("snippet.type = 'snippet'")
                     .orWhere(
                         new typeorm.Brackets(qb => {
@@ -70,8 +93,11 @@ export default async function (this: Client, message: Discord.Message): Promise<
                     .getOne()
                 if (unlocalizedSnippet)
                     this.response.sendError(
-                        new CommandMessage(message, this),
-                        `The **${args.command}** snippet hasn't been translated to ${languageName} yet.`
+                        message,
+                        `The **${consumeCommand(
+                            this,
+                            message
+                        )}** snippet hasn't been translated to ${languageName} yet.`
                     )
                 return
             }
@@ -92,34 +118,10 @@ export default async function (this: Client, message: Discord.Message): Promise<
         if (message.channel.type === "DM" && !command.dms) return
         if (command.permission !== Roles.ANY && !hasPermission) return
 
-        const label = message.member
-            ? Role.format(member.roles.highest as Discord.Role)
-            : chalk.blueBright("DMs")
-        const tag =
-            command.name === "suggest" && !message.guild
-                ? "(Anonymous)"
-                : message.author.tag
-
-        try {
-            await command.run(this, new CommandMessage(message, this), args)
-        } catch (error) {
-            await this.response
-                .sendError(
-                    new CommandMessage(message, this),
-                    "An unknown error occurred! Please contact one of the bot developers for help."
-                )
-                .catch(noop)
-
-            const stack = (error.stack as string)
-                .split("\n")
-                .map(line => "    " + line)
-                .join("\n")
-            return this.logger.error(
-                `${label} ${tag} tried to run '${command.name}' command:\n${stack}`
-            )
-        }
-
-        return this.logger.info(`${label} ${tag} ran '${command.name}' command.`)
+        return client.response.sendError(
+            message,
+            "Due to new features presented by Discord we have decided to deprecate normal Message Commands, please use SlashCommands by typing `/` to open the menu, Snippets still may be used with Message Commands."
+        )
     }
 
     const suggestions = Object.values(this.config.suggestions)
@@ -128,7 +130,7 @@ export default async function (this: Client, message: Discord.Message): Promise<
         !GuildMember.hasRole(message.member, Roles.MANAGER, this)
     ) {
         const error = await this.response.sendError(
-            new CommandMessage(message, this),
+            message,
             `Please use the \`suggest\` command to post suggestions! (Check \`${this.config.prefix}help suggest\` for help). **Your message will be deleted in 30 seconds.**`
         )
 

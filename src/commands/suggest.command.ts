@@ -12,7 +12,6 @@ export default new Command({
     aliases: [],
     description: "Make a suggestion.",
     permission: Roles.ANY,
-    seperator: " | ",
     args: [
         {
             name: "anon",
@@ -60,7 +59,6 @@ export default new Command({
 
         const identifier = args.consumeIf(Suggestion.isIdentifier, "number")
         const extend = identifier && Suggestion.parseIdentifier(identifier)
-        args.separator = "|"
         const title = await flattenMarkdown(args.consume("title"), message.guild)
         const [body, teams] = [args.consume("body"), args.consume("team")]
 

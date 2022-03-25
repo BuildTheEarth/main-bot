@@ -2,8 +2,8 @@ import typeorm from "typeorm"
 import SnowflakeColumn from "./decorators/SnowflakeColumn.decorator.js"
 import Client from "../struct/Client.js"
 import { TextChannel } from "discord.js"
-import { Cron } from "croner";
-import dateEpochTransformer from "./transformers/dateEpoch.transformer.js";
+import { Cron } from "croner"
+import dateEpochTransformer from "./transformers/dateEpoch.transformer.js"
 
 @typeorm.Entity({ name: "reminders" })
 export default class Reminder extends typeorm.BaseEntity {
@@ -22,13 +22,15 @@ export default class Reminder extends typeorm.BaseEntity {
     @typeorm.CreateDateColumn({ name: "created_at" })
     createdAt: Date
 
-    private reminderTimeout: Cron
-
-    @typeorm.Column({name: "next_fire_date", type: "int", transformer: dateEpochTransformer})
+    @typeorm.Column({
+        name: "next_fire_date",
+        type: "int",
+        transformer: dateEpochTransformer
+    })
     nextFireDate: Date
 
     remainder(reminder: Reminder): number {
-        return (reminder.nextFireDate.getTime() - Date.now())
+        return reminder.nextFireDate.getTime() - Date.now()
     }
 
     async send(client: Client): Promise<void> {
@@ -36,18 +38,30 @@ export default class Reminder extends typeorm.BaseEntity {
         if (!channel) return
 
         channel.send(this.message)
-        this.nextFireDate = this.reminderTimeout.next(new Date(Date.now()))
+        if (client.reminderTimeouts.has(this.id))
+            this.nextFireDate = client.reminderTimeouts
+                .get(this.id)
+                .next(new Date(Date.now()))
         await this.save()
     }
 
     async schedule(client: Client): Promise<void> {
-        this.reminderTimeout = new Cron(this.interval, () => {this.send(client)})
-        this.nextFireDate = this.reminderTimeout.next(new Date(Date.now()))
+        client.reminderTimeouts.set(
+            this.id,
+            new Cron(this.interval, () => {
+                this.send(client)
+            })
+        )
+        if (client.reminderTimeouts.has(this.id))
+            this.nextFireDate = client.reminderTimeouts
+                .get(this.id)
+                .next(new Date(Date.now()))
         await this.save()
     }
 
     async delete(): Promise<void> {
-        this.reminderTimeout.stop()
+        if (client.reminderTimeouts.has(this.id))
+            client.reminderTimeouts.get(this.id).stop()
         await this.remove()
     }
 }

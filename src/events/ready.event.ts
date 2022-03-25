@@ -7,7 +7,7 @@ import Client from "../struct/Client.js"
 import Guild from "../struct/discord/Guild.js"
 import Reminder from "../entities/Reminder.entity.js"
 import BlunderTracker from "../entities/BlunderTracker.entity.js"
-import { Cron } from "croner";
+import { Cron } from "croner"
 
 export default async function ready(this: Client): Promise<void> {
     this.logger.debug("Loading commands...")

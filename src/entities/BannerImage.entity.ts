@@ -2,7 +2,7 @@ import typeorm from "typeorm"
 import Discord from "discord.js"
 import type Client from "../struct/Client.js"
 import { quote } from "@buildtheearth/bot-utils"
-import { Cron } from "croner";
+import { Cron } from "croner"
 
 @typeorm.Entity({ name: "banner_images" })
 export default class BannerImage extends typeorm.BaseEntity {
@@ -27,8 +27,6 @@ export default class BannerImage extends typeorm.BaseEntity {
     format(): string {
         return `**#${this.id}:** [Link](${this.url}), by ${this.credit}`
     }
-
-    private static cycleTimeout: Cron
 
     static async cycle(client: Client): Promise<void> {
         if (!(await client.customGuilds.main()).features.includes("BANNER")) return
@@ -58,9 +56,9 @@ export default class BannerImage extends typeorm.BaseEntity {
     }
 
     static schedule(client: Client): void {
-        if (this.cycleTimeout) this.cycleTimeout.stop()
+        if (client.bannerCycleTimeout) client.bannerCycleTimeout.stop()
 
-        this.cycleTimeout = new Cron("0 0 * * 1", () => {
+        client.bannerCycleTimeout = new Cron("0 0 * * 1", () => {
             this.cycle(client)
         })
     }
