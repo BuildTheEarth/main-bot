@@ -30,7 +30,7 @@
     "sqlite3": "5.0.2",
     "ts-node": "10.4.0",
     "typeorm": "^0.2.46-dev.486f8c5",
-    "winston": "3.3.3",
+    "winston": "3.6.0",
     "yaml": "1.10.2"
   },
   "devDependencies": {
