@@ -17,6 +17,7 @@
     "discord-api-types": "^0.27.3",
     "discord.js": "13.6.0",
     "express": "^4.17.3",
+    "gitmoji-cli": "^4.11.0",
     "js-yaml": "4.1.0",
     "json5": "2.2.0",
     "minecraft-block-info": "github:XboxBedrock/minecraft-block-info",
@@ -33,6 +34,7 @@
     "yaml": "1.10.2"
   },
   "devDependencies": {
+    "@commitlint/cli": "^16.2.3",
     "@types/chalk": "^2.2.0",
     "@types/express": "^4.17.13",
     "@types/lodash": "4.14.177",
@@ -40,8 +42,13 @@
     "@types/node-fetch": "3.0.3",
     "@typescript-eslint/eslint-plugin": "4.30.0",
     "@typescript-eslint/parser": "4.33.0",
+    "commitizen": "^4.2.4",
+    "commitizen-emoji": "^1.0.5",
+    "commitlint-config-gitmoji": "^2.2.5",
+    "cz-customizable": "^6.3.0",
     "eslint": "7.32.0",
     "eslint-config-prettier": "8.3.0",
+    "husky": "^7.0.0",
     "ncc": "^0.3.6",
     "nps": "5.10.0",
     "prettier": "2.4.1",
@@ -54,7 +61,16 @@
     "webpack-node-externals": "^3.0.0"
   },
   "scripts": {
-    "start": "nps"
+    "start": "nps",
+    "prepare": "husky install"
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/commitizen-emoji"
+    },
+    "commitizenEmoji": {
+      "symbol": true
+    }
   },
   "repository": "BuildTheEarth/main-bot",
   "author": "BuildTheEarth",

@@ -7,6 +7,8 @@ const clean = npsUtils.rimraf('/dist');
 module.exports = {
   scripts: {
     clean: clean,
+    commit: "cz",
+    cm: "cz",
     default: {
       default: 'node dist/index.js --unhandled-rejections=strict',
       production: 'npm start docker.production'
