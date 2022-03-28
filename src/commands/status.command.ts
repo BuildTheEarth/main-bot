@@ -13,7 +13,7 @@ const BEDROCK_URL = `${API_URL}bedrock.buildtheearth.net`
 
 export default new Command({
     name: "status",
-    aliases: ["server", "network"],
+    aliases: [],
     description: "Check the status of the Minecraft network.",
     permission: Roles.ANY,
     async run(this: Command, client: Client, message: CommandMessage) {

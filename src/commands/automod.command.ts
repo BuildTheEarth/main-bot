@@ -17,7 +17,7 @@ const punishmentTypes = ["BAN", "MUTE", "KICK", "WARN", "DELETE"]
 
 export default new Command({
     name: "automod",
-    aliases: ["blockword", "blockedwords", "am"],
+    aliases: ["am"],
     description: "Manage banned words",
     subcommands: [
         {
@@ -28,7 +28,6 @@ export default new Command({
                 {
                     name: "add",
                     description: "Add a blocked word",
-                    seperator: " | ",
                     args: [
                         {
                             name: "word",
@@ -128,7 +127,6 @@ export default new Command({
                 await getList(false, message, client)
             }
             if (subcommand === "add") {
-                args.separator = "|"
                 const word = args.consume("word")
                 if (!word)
                     return await client.response.sendError(

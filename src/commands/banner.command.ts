@@ -80,7 +80,6 @@ export default new Command({
         const subcommand = args.consumeSubcommandIf(this.subcommands.map(sub => sub.name))
 
         if (subcommand === "add" || !subcommand) {
-            args.separator = "|"
             const image = args.consumeImage("image_url")
             const [location, credit, description] = [
                 args.consume("location"),

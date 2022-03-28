@@ -4,6 +4,8 @@ import Client from "../struct/Client.js"
 import Guild from "../struct/discord/Guild.js"
 import { noop } from "@buildtheearth/bot-utils"
 import Roles from "../util/roles.util.js"
+import { Cron } from "croner"
+
 @typeorm.Entity({ name: "advanced_builders" })
 export default class AdvancedBuilder extends typeorm.BaseEntity {
     @SnowflakePrimaryColumn()
@@ -15,10 +17,9 @@ export default class AdvancedBuilder extends typeorm.BaseEntity {
     @typeorm.Column({ name: "role_name", default: "ADVANCED_BUILDER", nullable: false })
     roleName: "ADVANCED_BUILDER" | "COOL_BUILD"
 
-    private removalTimeout: NodeJS.Timeout
-
     async removeBuilder(client: Client): Promise<void> {
-        clearTimeout(this.removalTimeout)
+        if (client.honorBuilderTimeouts.has(this.builder))
+            client.honorBuilderTimeouts.get(this.builder).stop()
         const role = Guild.role(await client.customGuilds.main(), Roles[this.roleName])
         const member = await (await client.customGuilds.main()).members
             .fetch({ user: this.builder, cache: true })
@@ -30,17 +31,14 @@ export default class AdvancedBuilder extends typeorm.BaseEntity {
     }
 
     schedule(client: Client): void {
-        if (this.removalTimeout) clearTimeout(this.removalTimeout)
+        if (client.honorBuilderTimeouts.has(this.builder))
+            client.honorBuilderTimeouts.get(this.builder).stop()
         const time = this.givenAt || new Date()
         time.setMonth(time.getMonth() + 3)
-        const timeout = time.getTime() - Date.now()
 
-        // avoid TimeoutOverflowWarning; reschedule
-        // (2147483647 ms is ~24 days)
-        if (timeout > 2147483647) {
-            this.removalTimeout = setTimeout(() => this.schedule(client), 2147483647)
-        } else {
-            this.removalTimeout = setTimeout(() => this.removeBuilder(client), timeout)
-        }
+        client.honorBuilderTimeouts.set(
+            this.builder,
+            new Cron(time, () => this.removeBuilder(client))
+        )
     }
 }

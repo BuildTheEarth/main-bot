@@ -18,6 +18,7 @@ import Placeholder from "../entities/Placeholder.entity.js"
 import { hexToRGB } from "@buildtheearth/bot-utils"
 import path from "path"
 import url from "url"
+import { Cron } from "croner"
 
 export default class Client extends Discord.Client {
     declare guilds: Discord.GuildManager
@@ -37,6 +38,11 @@ export default class Client extends Discord.Client {
         banned: new Map<string, BannedWord>(),
         except: new Array<string>()
     }
+
+    punishmentTimeouts: Map<string, { mute: Cron; ban: Cron }> = new Map()
+    honorBuilderTimeouts: Map<string, Cron> = new Map()
+    reminderTimeouts: Map<number, Cron> = new Map()
+    bannerCycleTimeout: Cron
     filter = new BannedWordFilter(this)
     dutyScheduler = new DutyScheduler(this)
     messages = new Messages(this).proxy
@@ -47,11 +53,11 @@ export default class Client extends Discord.Client {
         const db = this.config.database
         const options: Partial<typeorm.ConnectionOptions> = {
             type: db.type,
+            timezone: "+00:00",
             entities: [
                 path.dirname(url.fileURLToPath(import.meta.url)) +
                     "/../entities/*.{js,ts}"
             ],
-
             synchronize: process.env.NODE_ENV !== "production",
             logging: process.env.NODE_ENV !== "production" ? "all" : false
         }

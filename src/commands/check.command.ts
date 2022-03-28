@@ -12,7 +12,7 @@ import { noop } from "@buildtheearth/bot-utils"
 
 export default new Command({
     name: "check",
-    aliases: ["history", "logs", "records"],
+    aliases: [],
     description: "Check a user's punishment records.",
     permission: [
         Roles.HELPER,
@@ -37,7 +37,7 @@ export default new Command({
         }
     ],
     async run(this: Command, client: Client, message: CommandMessage, args: Args) {
-        const user = await args.consumeUser("user", true)
+        const user = await args.consumeUser("user")
         const showDeleted = args.consume("deleted").toLowerCase() === "deleted"
         const member = await (await client.customGuilds.main()).members
             .fetch({ user })

@@ -27,7 +27,7 @@ import CommandMessage from "../struct/CommandMessage.js"
 
 export default new Command({
     name: "user",
-    aliases: ["whois", "userinfo"],
+    aliases: ["whois"],
     description: "Get info on someone.",
     permission: Roles.ANY,
     args: [
@@ -39,7 +39,7 @@ export default new Command({
         }
     ],
     async run(this: Command, client: Client, message: CommandMessage, args: Args) {
-        const user = await args.consumeUser("member", true)
+        const user = await args.consumeUser("member")
         if (!user)
             return client.response.sendError(
                 message,

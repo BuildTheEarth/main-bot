@@ -10,7 +10,7 @@ const VALID_IMAGE_SIZES = [16, 32, 64, 128, 256, 512, 1024, 2048, 4096]
 
 export default new Command({
     name: "avatar",
-    aliases: ["pfp", "av"],
+    aliases: ["av"],
     description: "Get someone's profile picture.",
     permission: Roles.ANY,
     args: [
@@ -36,7 +36,7 @@ export default new Command({
         }
     ],
     async run(this: Command, client: Client, message: CommandMessage, args: Args) {
-        const user = (await args.consumeUser("user", true)) || message.member
+        const user = (await args.consumeUser("user")) || message.member
         const size =
             Number(args.consumeIf(arg => !Number.isNaN(Number(arg)), "size")) || 512
         const format = args.consumeIf("webp", "webp") || "png"

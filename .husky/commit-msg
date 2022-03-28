@@ -1,0 +1,8 @@
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
+
+echo "Builder can be found at 'npm start cm'"
+echo "Builder can be found at 'npm start cm'"
+echo "Builder can be found at 'npm start cm'"
+npx --no-install commitlint --edit "$1"
+

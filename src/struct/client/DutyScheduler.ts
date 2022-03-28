@@ -2,12 +2,13 @@ import { hexToRGB } from "@buildtheearth/bot-utils"
 import Discord from "discord.js"
 import toggleDutyRole from "../../util/toggleDutyRole.util.js"
 import Client from "../Client.js"
+import { Cron } from "croner"
 
 export default class DutyScheduler {
-    dutyScheduler: Map<Discord.Snowflake, [NodeJS.Timeout, Date]>
+    dutyScheduler: Map<Discord.Snowflake, [NodeJS.Timeout, Cron]>
     client: Client
     public constructor(client: Client) {
-        this.dutyScheduler = new Map<Discord.Snowflake, [NodeJS.Timeout, Date]>()
+        this.dutyScheduler = new Map<Discord.Snowflake, [NodeJS.Timeout, Cron]>()
         this.client = client
     }
 
@@ -23,7 +24,7 @@ export default class DutyScheduler {
             roles.pop()
         }
         this.dutyScheduler[user.id] = [
-            setTimeout(async () => {
+            new Cron(new Date(Date.now() + time), async () => {
                 const dutyToggle = await toggleDutyRole(user, roles, this.client)
                 await user.send({
                     embeds: [
@@ -36,7 +37,7 @@ export default class DutyScheduler {
                     ]
                 })
                 delete this.dutyScheduler[user.id]
-            }, time),
+            }),
             new Date(Date.now() + time)
         ]
     }
@@ -46,7 +47,7 @@ export default class DutyScheduler {
         userWhoDid: Discord.GuildMember
     ): Promise<boolean> {
         if (this.dutyScheduler[user.id] !== undefined) {
-            clearTimeout(this.dutyScheduler[user.id][0])
+            this.dutyScheduler[user.id][0].stop()
             delete this.dutyScheduler[user.id]
             if (user.id !== userWhoDid.id)
                 await user.send({

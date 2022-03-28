@@ -2,7 +2,7 @@ import Discord from "discord.js"
 import Client from "../struct/Client.js"
 
 export default class CommandMessage {
-    message: Discord.CommandInteraction | Discord.Message
+    message: Discord.CommandInteraction
     channel: Discord.TextBasedChannel
     member: Discord.GuildMember
     author: Discord.User
@@ -11,7 +11,7 @@ export default class CommandMessage {
     id: Discord.Snowflake
     createdTimestamp: number
 
-    constructor(message: Discord.CommandInteraction | Discord.Message, client: Client) {
+    constructor(message: Discord.CommandInteraction, client: Client) {
         this.client = client
         this.message = message
         this.channel = message.channel
@@ -19,82 +19,54 @@ export default class CommandMessage {
         this.id = message.id
         this.createdTimestamp = message.createdTimestamp
         //set author property to message author
-        if (this.message instanceof Discord.Message) this.member = this.message.member
-        if (this.message instanceof Discord.CommandInteraction)
-            this.member = this.message.member as Discord.GuildMember
-        if (this.message instanceof Discord.Message) this.author = this.message.author
-        if (this.message instanceof Discord.CommandInteraction)
-            this.author = this.message.user as Discord.User
+        this.member = this.message.member as Discord.GuildMember
+        this.author = this.message.user as Discord.User
     }
 
     async send(payload: MessageOptions): Promise<CommandMessage> {
-        if (this.isNormalCommand()) {
-            if (!payload.allowedMentions) payload.allowedMentions = { repliedUser: false }
-            return new CommandMessage(
-                await this.message.reply(payload as Discord.ReplyMessageOptions),
-                this.client
-            )
-        }
-        if (this.isSlashCommand()) {
-            if (this.message.deferred)
-                await this.message.followUp(payload as Discord.InteractionReplyOptions)
-            else await this.message.reply(payload as Discord.InteractionReplyOptions)
+        if (this.message.deferred)
+            await this.message.followUp(payload as Discord.InteractionReplyOptions)
+        else await this.message.reply(payload as Discord.InteractionReplyOptions)
 
-            return this
-        }
+        return this
     }
 
-    async react(emoji: string): Promise<CommandMessage | Discord.MessageReaction> {
-        if (this.isNormalCommand()) return await this.message.react(emoji)
-        if (this.isSlashCommand())
-            return new CommandMessage(
-                (await this.message.followUp({
-                    ephemeral: true,
-                    content: emoji
-                })) as Discord.Message,
-                this.client
-            )
+    async react(emoji: string): Promise<CommandMessage> {
+        await this.message.followUp({
+            ephemeral: true,
+            content: emoji
+        })
+
+        return this
     }
 
     async delete(): Promise<CommandMessage | void> {
-        if (this.isNormalCommand())
-            return new CommandMessage(await this.message.delete(), this.client)
-        if (this.isSlashCommand())
-            try {
-                this.message.deleteReply()
-            } catch {
-                return
-            }
+        try {
+            this.message.deleteReply()
+        } catch {
+            return
+        }
         return
     }
 
     async edit(payload: MessageOptions): Promise<CommandMessage> {
-        if (this.isNormalCommand()) {
-            if (!payload.allowedMentions) payload.allowedMentions = { repliedUser: false }
-            return new CommandMessage(
-                await this.message.edit(payload as Discord.ReplyMessageOptions),
-                this.client
-            )
-        }
-        if (this.isSlashCommand()) {
-            await this.message.editReply(payload as Discord.InteractionReplyOptions)
+        await this.message.editReply(payload as Discord.InteractionReplyOptions)
 
-            return this
-        }
+        return this
     }
 
     isSlashCommand(): this is this & { message: Discord.CommandInteraction } {
-        if (this.message instanceof Discord.Message) return false
-        if (this.message instanceof Discord.CommandInteraction) return true
+        //Literally to avoid some extra refactoring cause of typeguard stuff
+        return true
     }
 
     isNormalCommand(): this is this & { message: Discord.Message } {
-        if (this.message instanceof Discord.Message) return true
-        if (this.message instanceof Discord.CommandInteraction) return false
+        //Literally to avoid some extra refactoring cause of typeguard stuff
+        return false
     }
 
     async continue(): Promise<CommandMessage> {
-        if (this.isSlashCommand()) await this.message.deferReply()
+        await this.message.deferReply()
         return this
     }
 

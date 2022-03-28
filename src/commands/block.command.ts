@@ -9,7 +9,7 @@ import { hexToRGB } from "@buildtheearth/bot-utils"
 
 export default new Command({
     name: "block",
-    aliases: ["blocks"],
+    aliases: [],
     description: "Find a minecraft block! (currently only 1.12.2)",
     permission: Roles.ANY,
     basesubcommand: "block",

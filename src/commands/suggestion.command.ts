@@ -122,7 +122,6 @@ export default new Command({
             name: "search",
             description: "Search for suggestions.",
             permission: Roles.ANY,
-            seperator: "|",
             args: [
                 {
                     name: "field",
@@ -198,7 +197,6 @@ export default new Command({
             const PER_PAGE = 10
             await message.continue()
 
-            args.separator = "|"
             const field = args.consumeIf(["title", "body", "teams"], "field") || "body"
             const query = args.consume("query")
             let statuses = args

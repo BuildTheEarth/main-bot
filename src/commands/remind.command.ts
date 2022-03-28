@@ -6,12 +6,13 @@ import Reminder from "../entities/Reminder.entity.js"
 import ApiTypes = require("discord-api-types/v10")
 import CommandMessage from "../struct/CommandMessage.js"
 import { formatTimestamp } from "@buildtheearth/bot-utils"
+import { isValidCron } from "cron-validator"
 
-const remindTimes = ["test", "weekly", "bi-weekly", "monthly", "bi-monthly"]
+const remindTimes = ["test", "weekly", "bi-weekly", "monthly", "bi-monthly", "yearly"]
 
 export default new Command({
     name: "remind",
-    aliases: ["remindme", "reminders"],
+    aliases: [],
     description: "List and manage reminders.",
     permission: [Roles.MANAGER],
     subcommands: [
@@ -73,6 +74,12 @@ export default new Command({
                     optionType: "STRING"
                 }
             ]
+        },
+        {
+            name: "list",
+            description: "List all reminders.",
+            permission: [Roles.MANAGER],
+            args: []
         }
     ],
     async run(this: Command, client: Client, message: CommandMessage, args: Args) {
@@ -90,7 +97,9 @@ export default new Command({
 
                 tidy[reminder.id].channel = reminder.channel
                 tidy[reminder.id].message = reminder.message
-                tidy[reminder.id].end = new Date(Date.now() + reminder.remainder)
+                tidy[reminder.id].end = new Date(
+                    Date.now() + reminder.remainder(reminder)
+                )
             }
 
             let list = ""
@@ -113,26 +122,36 @@ export default new Command({
                 return client.response.sendError(message, client.messages.noChannel)
             }
 
-            const time = args.consume("interval").toLowerCase()
-            let millis
-            switch (time) {
-                case "test":
-                    millis = 1000 * 5
-                    break
-                case "weekly":
-                    millis = 1000 * 60 * 60 * 24 * 7 // 1 week (1000ms * 60s * 60m * 24h * 7d)
-                    break
-                case "bi-weekly":
-                    millis = 1000 * 60 * 60 * 24 * 3.5 // half a week (1000ms * 60s * 60m * 24h * 3.5d)
-                    break
-                case "monthly":
-                    millis = 1000 * 60 * 60 * 24 * 30 // 1 month (1000ms * 60s * 60m * 24h * 30d)
-                    break
-                case "bi-monthly":
-                    millis = 1000 * 60 * 60 * 24 * 15 // half a month (1000ms * 60s * 60m * 24h * 15d)
-                    break
-                default:
-                    return client.response.sendError(message, client.messages.invalidTime)
+            const time = args.consume("interval")
+            let cron: string
+            if (isValidCron(time)) {
+                cron = time
+            } else {
+                switch (time.toLowerCase()) {
+                    case "test":
+                        cron = "* * * * *"
+                        break
+                    case "weekly":
+                        cron = "0 0 * * 1" // 1 week (1000ms * 60s * 60m * 24h * 7d)
+                        break
+                    case "bi-weekly":
+                        cron = "0 0 * * 0,3" // half a week (1000ms * 60s * 60m * 24h * 3.5d)
+                        break
+                    case "monthly":
+                        cron = "0 0 1 * *" // 1 month (1000ms * 60s * 60m * 24h * 30d)
+                        break
+                    case "bi-monthly":
+                        cron = "0 0 1,15 * *" // half a month (1000ms * 60s * 60m * 24h * 15d)
+                        break
+                    case "yearly":
+                        cron = "0 0 1 1 *" // 1 month (1000ms * 60s * 60m * 24h * 30d * 12m)
+                        break
+                    default:
+                        return client.response.sendError(
+                            message,
+                            client.messages.invalidTime
+                        )
+                }
             }
 
             const body = args.consumeRest(["message"])
@@ -143,7 +162,7 @@ export default new Command({
 
             const reminder = new Reminder()
             reminder.channel = channel.id
-            reminder.interval = millis
+            reminder.interval = cron
             reminder.message = body
             await reminder.save()
             reminder.schedule(client)

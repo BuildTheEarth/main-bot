@@ -17,7 +17,8 @@ import Discord from "discord.js"
 import Client from "../struct/Client.js"
 
 export default abstract class CommandUtils {
-    public static commandToSlash(command: Command): SlashCommandBuilder {
+    public static commandToSlash(command: Command): SlashCommandBuilder[] {
+        const commands = []
         let builder = new SlashCommandBuilder()
             .setName(command.name)
             .setDescription(command.description)
@@ -56,7 +57,13 @@ export default abstract class CommandUtils {
                         builder = addOption(builder, arg)
                     })
 
-        return _.cloneDeep(builder)
+        commands.push(_.cloneDeep(builder))
+
+        command.aliases.forEach(alias => {
+            commands.push(_.cloneDeep(builder).setName(alias))
+        })
+
+        return commands
     }
 
     public static getHelpMessage(

@@ -8,7 +8,7 @@ import { formatTimestamp } from "@buildtheearth/bot-utils"
 
 export default new Command({
     name: "notes",
-    aliases: ["note"],
+    aliases: [],
     description: "Read and manage moderation notes.",
     permission: [Roles.HELPER, Roles.MODERATOR, Roles.MANAGER],
     args: [
@@ -79,7 +79,7 @@ export default new Command({
     ],
     async run(this: Command, client: Client, message: CommandMessage, args: Args) {
         const subcommand = args.consumeSubcommandIf(["add", "edit", "clear", "check"])
-        const user = await args.consumeUser("member", true)
+        const user = await args.consumeUser("member")
         if (!user)
             return client.response.sendError(
                 message,
