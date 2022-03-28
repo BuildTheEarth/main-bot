@@ -1,4 +1,4 @@
-import Discord from "discord.js"
+import Discord, { ModalSubmitInteraction } from "discord.js"
 import Args from "../struct/Args.js"
 import Client from "../struct/Client.js"
 import CommandMessage from "../struct/CommandMessage.js"
@@ -7,6 +7,7 @@ import Role from "../struct/discord/Role.js"
 import Roles from "../util/roles.util.js"
 import chalk from "chalk"
 import ModerationMenu from "../entities/ModerationMenu.entity.js"
+import createSuggestion from "../modals/suggest.modal.js"
 
 export default async function (
     this: Client,
@@ -121,6 +122,11 @@ export default async function (
 
             return this.logger.info(`${label} ${tag} ran '${command.name}' command.`)
         }
+    }
+
+    if (interaction.type === "MODAL_SUBMIT") {
+        //TODO: Check for what kind of modal, may need handler.
+        createSuggestion(<ModalSubmitInteraction>interaction)
     }
 
     return
