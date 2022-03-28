@@ -37,7 +37,6 @@ function consumeLang(client: Client, message: Discord.Message): string {
     return commandName || ""
 }
 
-
 function consumeTeam(client: Client, message: Discord.Message): string {
     const content = message.content
     const prefix = client.config.prefix
@@ -122,7 +121,8 @@ export default async function (this: Client, message: Discord.Message): Promise<
 
         if (command.name === "team") {
             const team = consumeTeam(this, message)
-            if (!team || team === "") return client.response.sendError(message, client.messages.noTeam)
+            if (!team || team === "")
+                return client.response.sendError(message, client.messages.noTeam)
             return await runBtCommand(client, message, team)
         }
 

@@ -38,7 +38,10 @@ export default class Response {
         if (message instanceof CommandMessage)
             return message.send({ embeds: [embed], ephemeral: ephemeral })
         else if (message instanceof Discord.Message)
-            return message.reply({ embeds: [embed], allowedMentions: {repliedUser: false} })
+            return message.reply({
+                embeds: [embed],
+                allowedMentions: { repliedUser: false }
+            })
         else return message.send({ embeds: [embed] })
     }
 
@@ -70,7 +73,10 @@ export default class Response {
         if (message instanceof CommandMessage)
             return message.send({ embeds: [embed], ephemeral: ephemeral })
         else if (message instanceof Discord.Message)
-            return message.reply({ embeds: [embed], allowedMentions: {repliedUser: false} })
+            return message.reply({
+                embeds: [embed],
+                allowedMentions: { repliedUser: false }
+            })
         else return message.send({ embeds: [embed] })
     }
 }

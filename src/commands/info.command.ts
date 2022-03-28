@@ -3,7 +3,12 @@ import Command from "../struct/Command.js"
 import Roles from "../util/roles.util.js"
 import CommandMessage from "../struct/CommandMessage.js"
 import Discord from "discord.js"
-import { currentEnv, formatPunishmentTime, hexToRGB, loadSyncJSON5 } from "@buildtheearth/bot-utils"
+import {
+    currentEnv,
+    formatPunishmentTime,
+    hexToRGB,
+    loadSyncJSON5
+} from "@buildtheearth/bot-utils"
 const packageJson = loadSyncJSON5("package.json")
 
 export default new Command({

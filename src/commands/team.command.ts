@@ -28,7 +28,11 @@ export default new Command({
     }
 })
 
-export async function runBtCommand(client: Client, message: CommandMessage | Discord.Message, arg: string): Promise<unknown> {
+export async function runBtCommand(
+    client: Client,
+    message: CommandMessage | Discord.Message,
+    arg: string
+): Promise<unknown> {
     const Snippets = Snippet.getRepository()
     const language = "en"
     const find = (query: typeorm.WhereExpression) =>
@@ -50,11 +54,13 @@ export async function runBtCommand(client: Client, message: CommandMessage | Dis
     if (!snippet) {
         return client.response.sendError(message, client.messages.invalidTeam)
     } else {
-        if ( message instanceof CommandMessage) return message
-            .send({ content: snippet.body, allowedMentions: { parse: [] } })
-            .catch(() => null)
-        else return message
-            .reply({ content: snippet.body, allowedMentions: { parse: [] } })
-            .catch(() => null)
+        if (message instanceof CommandMessage)
+            return message
+                .send({ content: snippet.body, allowedMentions: { parse: [] } })
+                .catch(() => null)
+        else
+            return message
+                .reply({ content: snippet.body, allowedMentions: { parse: [] } })
+                .catch(() => null)
     }
 }
