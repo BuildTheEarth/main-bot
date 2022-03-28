@@ -97,6 +97,12 @@ export default class CommandMessage {
         if (this.isSlashCommand()) await this.message.deferReply()
         return this
     }
+
+    async showModal(modal: Discord.Modal): Promise<void> {
+        if (this.isSlashCommand()) {
+            this.message.showModal(modal)
+        }
+    }
 }
 
 export interface MessageOptions {
