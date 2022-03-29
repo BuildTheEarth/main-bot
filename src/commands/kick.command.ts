@@ -38,25 +38,25 @@ export default new Command({
         if (!user)
             return client.response.sendError(
                 message,
-                user === undefined ? client.messages.noUser : client.messages.invalidUser
+                user === undefined ? message.messages.noUser : message.messages.invalidUser
             )
         const member: Discord.GuildMember = await message.guild.members
             .fetch({ user, cache: false })
             .catch(noop)
-        if (!member) return client.response.sendError(message, client.messages.notInGuild)
+        if (!member) return client.response.sendError(message, message.messages.notInGuild)
 
         if (member.user.bot)
-            return client.response.sendError(message, client.messages.isBot)
+            return client.response.sendError(message, message.messages.isBot)
         if (member.id === message.member.user.id)
-            return client.response.sendError(message, client.messages.isSelfKick)
+            return client.response.sendError(message, message.messages.isSelfKick)
         if (GuildMember.hasRole(member, Roles.STAFF, client))
-            return client.response.sendError(message, client.messages.isStaffKick)
+            return client.response.sendError(message, message.messages.isStaffKick)
 
         const image = args.consumeImage("image_url")
         const reason = client.placeholder.replacePlaceholders(
             args.consumeRest(["reason"])
         )
-        if (!reason) return client.response.sendError(message, client.messages.noReason)
+        if (!reason) return client.response.sendError(message, message.messages.noReason)
 
         await message.continue()
 

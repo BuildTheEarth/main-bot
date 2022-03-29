@@ -70,7 +70,7 @@ export default new Command({
         const subcommand = args.consumeSubcommandIf(["edit", "delete", "check"])
         const id = Number(args.consume("id"))
         if (Number.isNaN(id))
-            return client.response.sendError(message, client.messages.noCaseId)
+            return client.response.sendError(message, message.messages.noCaseId)
 
         await message.continue()
 
@@ -92,9 +92,9 @@ export default new Command({
                 args.consumeRest(["reason"])
             )
             if (!reason && !image)
-                return client.response.sendError(message, client.messages.noNewReason)
+                return client.response.sendError(message, message.messages.noNewReason)
             if (reason === log.reason && !image)
-                return client.response.sendError(message, client.messages.noChange)
+                return client.response.sendError(message, message.messages.noChange)
 
             if (image) log.reasonImage = image
             if (reason) log.reason = reason
@@ -104,15 +104,15 @@ export default new Command({
             await client.log(log)
         } else if (subcommand === "delete") {
             if (!GuildMember.hasRole(message.member, Roles.MODERATOR, client))
-                return client.response.sendError(message, client.messages.noPerms)
+                return client.response.sendError(message, message.messages.noPerms)
             const reason = args.consumeRest(["reason"])
             if (!reason)
                 return client.response.sendError(
                     message,
-                    client.messages.noDeletionReason
+                    message.messages.noDeletionReason
                 )
             if (log.deletedAt)
-                return client.response.sendError(message, client.messages.alreadyDeleted)
+                return client.response.sendError(message, message.messages.alreadyDeleted)
 
             log.deletedAt = new Date()
             log.deleter = message.member.user.id

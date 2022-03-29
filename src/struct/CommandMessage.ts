@@ -1,5 +1,6 @@
 import Discord from "discord.js"
 import Client from "../struct/Client.js"
+import { vsprintf } from "sprintf-js"
 
 export default class CommandMessage {
     message: Discord.CommandInteraction
@@ -10,6 +11,8 @@ export default class CommandMessage {
     guild: Discord.Guild
     id: Discord.Snowflake
     createdTimestamp: number
+    messages: Record<string, string>
+    locale: string
 
     constructor(message: Discord.CommandInteraction, client: Client) {
         this.client = client
@@ -21,6 +24,30 @@ export default class CommandMessage {
         //set author property to message author
         this.member = this.message.member as Discord.GuildMember
         this.author = this.message.user as Discord.User
+        this.locale = this.message.locale
+        this.messages = new Proxy({}, {
+            get: (_unused, key: string): string => {
+                return this.client.messages.getMessage(key, this.locale)
+            }
+        })
+    }
+
+    public async sendError(embed: string | Discord.MessageEmbedOptions, ephemeral: boolean = false): Promise<CommandMessage> {
+        return client.response.sendError(this, embed, ephemeral)
+    }
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    public async sendErrorMessage(message: string, ...args: any[]): Promise<CommandMessage> {
+        return client.response.sendError(this, vsprintf(this.messages[message], args))
+    }
+
+    public async sendSuccess(embed: string | Discord.MessageEmbedOptions, ephemeral: boolean = false): Promise<CommandMessage> {
+        return client.response.sendSuccess(this, embed, ephemeral)
+    }
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    public async sendSuccessMessage(message: string, ...args: any[]): Promise<CommandMessage> {
+        return client.response.sendSuccess(this, vsprintf(this.messages[message], args))
     }
 
     async send(payload: MessageOptions): Promise<CommandMessage> {

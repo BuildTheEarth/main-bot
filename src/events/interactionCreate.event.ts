@@ -27,7 +27,7 @@ export default async function (
                 await interaction.deferUpdate()
                 await interaction.followUp({
                     ephemeral: true,
-                    content: this.messages.noPermsMod
+                    content: client.messages.getMessage("noPermsMod", interaction.locale)
                 })
                 return
             }
@@ -51,7 +51,7 @@ export default async function (
                 await interaction.deferUpdate()
                 await interaction.followUp({
                     ephemeral: true,
-                    content: this.messages.noPermsMod
+                    content: client.messages.getMessage("noPermsMod", interaction.locale)
                 })
                 return
             }
@@ -85,7 +85,7 @@ export default async function (
                     command.permission,
                     this
                 )
-            if (interaction.channel.type === "DM" && !command.dms) return
+            //if (interaction.channel.type === "DM" && !command.dms) return
             if (command.permission !== Roles.ANY && !hasPermission) return
 
             const label = interaction.member

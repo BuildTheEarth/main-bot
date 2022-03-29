@@ -46,7 +46,7 @@ export default new Command({
         if (!user)
             return client.response.sendError(
                 message,
-                user === undefined ? client.messages.noUser : client.messages.invalidUser
+                user === undefined ? message.messages.noUser : message.messages.invalidUser
             )
         const member: Discord.GuildMember = await message.guild.members
             .fetch({ user, cache: false })
@@ -54,27 +54,27 @@ export default new Command({
 
         if (member) {
             if (member.user.bot)
-                return client.response.sendError(message, client.messages.isBot)
+                return client.response.sendError(message, message.messages.isBot)
             if (member.id === message.member.id)
-                return client.response.sendError(message, client.messages.isSelfBan)
+                return client.response.sendError(message, message.messages.isSelfBan)
             if (GuildMember.hasRole(member, Roles.STAFF, client))
-                return client.response.sendError(message, client.messages.isStaffBan)
+                return client.response.sendError(message, message.messages.isStaffBan)
         }
 
         const length = args.consumeLength("length")
         if (length == null)
-            return client.response.sendError(message, client.messages.noLength)
+            return client.response.sendError(message, message.messages.noLength)
         const image = args.consumeImage("image_url")
-        if (!image) return client.response.sendError(message, client.messages.noImage)
+        if (!image) return client.response.sendError(message, message.messages.noImage)
         const reason = client.placeholder.replacePlaceholders(
             args.consumeRest(["reason"])
         )
-        if (!reason) return client.response.sendError(message, client.messages.noReason)
+        if (!reason) return client.response.sendError(message, message.messages.noReason)
 
         await message.continue()
 
         const ban = await TimedPunishment.findOne({ member: user.id, type: "ban" })
-        if (ban) return client.response.sendError(message, client.messages.alreadyBanned)
+        if (ban) return client.response.sendError(message, message.messages.alreadyBanned)
 
         const log = await punish(client, message, user, "ban", reason, image, length)
 

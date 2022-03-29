@@ -80,7 +80,7 @@ export default new Command({
     async run(this: Command, client: Client, message: CommandMessage, args: Args) {
         const subcommand = args.consumeSubcommandIf(["commit", "new", "delete", "list"])
         if (!subcommand)
-            return client.response.sendError(message, client.messages.noSubcommand)
+            return client.response.sendError(message, message.messages.noSubcommand)
 
         const staffMember = await client.customGuilds
             .staff()
@@ -109,10 +109,10 @@ export default new Command({
                 if (!blunder)
                     return client.response.sendError(
                         message,
-                        client.messages.invalidBlunderID
+                        message.messages.invalidBlunderID
                     )
                 if (!staffMember.roles.cache.has(blunder.role) && !canManage)
-                    return client.response.sendError(message, client.messages.noPerms)
+                    return client.response.sendError(message, message.messages.noPerms)
             } else {
                 const rolesDescending = staffMember.roles.cache.sort(
                     (roleA, roleB) => roleB.position - roleA.position
@@ -125,37 +125,37 @@ export default new Command({
                     if (blunders.length > 1)
                         return client.response.sendError(
                             message,
-                            client.messages.multipleBlunders
+                            message.messages.multipleBlunders
                         )
                     blunder = blunders[0]
                     break
                 }
             }
             if (!blunder)
-                return client.response.sendError(message, client.messages.blunderNotFound)
+                return client.response.sendError(message, message.messages.blunderNotFound)
             await blunder.reset(client)
-            client.response.sendSuccess(message, client.messages.blunderCommitted)
+            client.response.sendSuccess(message, message.messages.blunderCommitted)
         } else if (subcommand == "new") {
             if (!canManage)
-                return client.response.sendError(message, client.messages.noPerms)
+                return client.response.sendError(message, message.messages.noPerms)
 
             const role = await args.consumeRole("team")
 
             const channel = await args.consumeChannel("channel")
             if (!channel || !channel.isText())
-                return client.response.sendError(message, client.messages.noChannel)
+                return client.response.sendError(message, message.messages.noChannel)
             if (
                 (channel as GuildTextBasedChannel).guild?.id !==
                 client.customGuilds.staff().id
             )
                 return client.response.sendError(
                     message,
-                    client.messages.staffChannelRequired
+                    message.messages.staffChannelRequired
                 )
 
             const description = args.consumeRest(["description"])
             if (!description)
-                return client.response.sendError(message, client.messages.noDescription)
+                return client.response.sendError(message, message.messages.noDescription)
 
             await message.continue()
 
@@ -175,7 +175,7 @@ export default new Command({
             client.response.sendSuccess(message, "Blunder Tracker created!")
         } else if (subcommand == "delete") {
             if (!canManage)
-                return client.response.sendError(message, client.messages.noPerms)
+                return client.response.sendError(message, message.messages.noPerms)
 
             const id = parseInt(args.consume("id"))
             if (id) {
@@ -185,7 +185,7 @@ export default new Command({
                 if (!blunder)
                     return client.response.sendError(
                         message,
-                        client.messages.invalidBlunderID
+                        message.messages.invalidBlunderID
                     )
 
                 const msg = await (
@@ -194,7 +194,7 @@ export default new Command({
                 await msg?.delete()
                 await blunder.remove()
                 client.response.sendSuccess(message, `Blunder tracker \`${id}\` deleted!`)
-            } else client.response.sendError(message, client.messages.noBlunderID)
+            } else client.response.sendError(message, message.messages.noBlunderID)
         } else if (subcommand == "list") {
             let findOptions = {}
             if (!canManage)

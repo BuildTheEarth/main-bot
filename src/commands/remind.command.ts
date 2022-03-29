@@ -119,7 +119,7 @@ export default new Command({
         if (subcommand === "add") {
             const channel = await args.consumeChannel("channel")
             if (!channel) {
-                return client.response.sendError(message, client.messages.noChannel)
+                return client.response.sendError(message, message.messages.noChannel)
             }
 
             const time = args.consume("interval")
@@ -149,14 +149,14 @@ export default new Command({
                     default:
                         return client.response.sendError(
                             message,
-                            client.messages.invalidTime
+                            message.messages.invalidTime
                         )
                 }
             }
 
             const body = args.consumeRest(["message"])
             if (!body)
-                return client.response.sendError(message, client.messages.noReminder)
+                return client.response.sendError(message, message.messages.noReminder)
 
             await message.continue()
 
@@ -174,7 +174,7 @@ export default new Command({
         }
 
         const id = parseInt(args.consume("id"))
-        if (!id) return client.response.sendError(message, client.messages.noID)
+        if (!id) return client.response.sendError(message, message.messages.noID)
 
         await message.continue()
 
@@ -184,7 +184,7 @@ export default new Command({
             if (!reminder)
                 return client.response.sendError(
                     message,
-                    client.messages.reminderNotFound
+                    message.messages.reminderNotFound
                 )
             await reminder.delete()
             return client.response.sendSuccess(message, `Reminder **#${id}** deleted!`)
@@ -192,7 +192,7 @@ export default new Command({
             if (!reminder)
                 return client.response.sendError(
                     message,
-                    client.messages.reminderNotFound
+                    message.messages.reminderNotFound
                 )
             const body = args.consumeRest(["message"])
             reminder.message = body

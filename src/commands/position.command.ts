@@ -49,7 +49,7 @@ export default new Command({
         if (!user)
             return client.response.sendError(
                 message,
-                user === undefined ? client.messages.noUser : client.messages.invalidUser
+                user === undefined ? message.messages.noUser : message.messages.invalidUser
             )
 
         let position = args.consumeIf(["bto", "vcc", "vs"], "position")
@@ -73,7 +73,7 @@ export default new Command({
         ).members
             .fetch({ user, cache: true })
             .catch(noop)
-        if (!member) return client.response.sendError(message, client.messages.notInGuild)
+        if (!member) return client.response.sendError(message, message.messages.notInGuild)
 
         await message.continue()
 

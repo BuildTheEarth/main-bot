@@ -57,14 +57,14 @@ export default new Command({
         if (!user)
             return client.response.sendError(
                 message,
-                user === undefined ? client.messages.noUser : client.messages.invalidUser
+                user === undefined ? message.messages.noUser : message.messages.invalidUser
             )
 
         const member = await (await client.customGuilds.main()).members
             .fetch({ user, cache: true })
             .catch(noop)
         if (!member || !GuildMember.hasRole(member, Roles.BUILDER, client))
-            return client.response.sendError(message, client.messages.noBuilder)
+            return client.response.sendError(message, message.messages.noBuilder)
         const role = Guild.role(await client.customGuilds.main(), Roles[roleName])
 
         await message.continue()
@@ -76,7 +76,7 @@ export default new Command({
             if (!record)
                 return client.response.sendError(
                     message,
-                    client.messages.notAdvancedBuilder
+                    message.messages.notAdvancedBuilder
                 )
             await record.removeBuilder(client)
             return client.response.sendSuccess(message, `Removed ${user}.`)

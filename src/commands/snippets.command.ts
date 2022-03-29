@@ -333,7 +333,7 @@ export default new Command({
                     return
                 if (interaction.user.id !== message.member.id)
                     return interaction.reply({
-                        content: client.messages.wrongUser,
+                        content: message.messages.wrongUser,
                         ephemeral: true
                     })
                 if (
@@ -404,7 +404,7 @@ export default new Command({
             let subcommand = args.consumeSubcommand()
 
             if (rules) {
-                return client.response.sendError(message, client.messages.ruleAlias)
+                return client.response.sendError(message, message.messages.ruleAlias)
             }
 
             // eslint-disable-next-line prefer-const
@@ -418,14 +418,14 @@ export default new Command({
                 !GuildMember.hasRole(message.member, editPermissions, client) &&
                 !(subcommand === "list")
             )
-                return client.response.sendError(message, client.messages.noPermission)
+                return client.response.sendError(message, message.messages.noPermission)
             const languageName = languages.getName(language)
             if (!name)
-                return client.response.sendError(message, client.messages.noSnippet)
+                return client.response.sendError(message, message.messages.noSnippet)
             if (!languageName && !teams)
                 return client.response.sendError(
                     message,
-                    client.messages.invalidSnippetLang
+                    message.messages.invalidSnippetLang
                 )
             if (languageName && teams) language = "en"
             if (!languageName && teams) language = "en"
@@ -434,7 +434,7 @@ export default new Command({
 
             const snippet = await Snippet.findOne({ name, language })
             if (!snippet)
-                return client.response.sendError(message, client.messages.snippetNotFound)
+                return client.response.sendError(message, message.messages.snippetNotFound)
             if (subcommand === "list") {
                 const list =
                     snippet.aliases.map(alias => `• \u200B \u200B ${alias}`).join("\n") ||
@@ -445,7 +445,7 @@ export default new Command({
             const alias = teams
                 ? args.consumeRest(["alias"]).toLowerCase()
                 : args.consume("alias").toLowerCase()
-            if (!alias) return client.response.sendError(message, client.messages.noAlias)
+            if (!alias) return client.response.sendError(message, message.messages.noAlias)
             if (subcommand === "add") {
                 if (!snippet.aliases) snippet.aliases = []
                 snippet.aliases.push(alias)
@@ -482,9 +482,9 @@ export default new Command({
         const name = args.consume("name").toLowerCase()
         let language = args.consume("language").toLowerCase()
         const languageName = languages.getName(language)
-        if (!name) return client.response.sendError(message, client.messages.noName)
+        if (!name) return client.response.sendError(message, message.messages.noName)
         if (!languageName && !teams)
-            return client.response.sendError(message, client.messages.invalidSnippetLang)
+            return client.response.sendError(message, message.messages.invalidSnippetLang)
         if (languageName && teams) language = "en"
         if (!languageName && teams) language = "en"
 
@@ -502,24 +502,24 @@ export default new Command({
         ) {
             const body = args.consumeRest(["body"])
             let snippet: Snippet
-            if (!body) return client.response.sendError(message, client.messages.noBody)
+            if (!body) return client.response.sendError(message, message.messages.noBody)
 
             if (subcommand === "add") {
                 if (client.commands.search(name))
                     return client.response.sendError(
                         message,
-                        client.messages.alreadyInUse
+                        message.messages.alreadyInUse
                     )
                 if (existingSnippet)
                     return client.response.sendError(
                         message,
-                        client.messages.alreadyExists
+                        message.messages.alreadyExists
                     )
                 if (rules) {
                     if (Number.isNaN(Number(name))) {
                         return client.response.sendError(
                             message,
-                            client.messages.invalidRuleName
+                            message.messages.invalidRuleName
                         )
                     }
                 }
@@ -535,7 +535,7 @@ export default new Command({
                         "That snippet doesn't exist!"
                     )
                 if (existingSnippet.body === body)
-                    return client.response.sendError(message, client.messages.noChange)
+                    return client.response.sendError(message, message.messages.noChange)
                 snippet = existingSnippet
             }
 
@@ -547,7 +547,7 @@ export default new Command({
             await client.log(snippet, subcommand, message.member.user)
         } else if (subcommand === "delete" && !subcommandGroup) {
             if (!existingSnippet)
-                return client.response.sendError(message, client.messages.snippetNotFound)
+                return client.response.sendError(message, message.messages.snippetNotFound)
 
             await existingSnippet.remove()
             // prettier-ignore
@@ -555,7 +555,7 @@ export default new Command({
             await client.log(existingSnippet, "delete", message.member.user)
         } else if (subcommand === "source" && !subcommandGroup) {
             if (!existingSnippet)
-                return client.response.sendError(message, client.messages.snippetNotFound)
+                return client.response.sendError(message, message.messages.snippetNotFound)
             await message.send({
                 embeds: [
                     {

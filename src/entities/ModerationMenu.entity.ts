@@ -297,11 +297,11 @@ export default class ModerationMenu extends typeorm.BaseEntity {
         )
 
         if (punishment.punishment_type === "BAN") {
-            messages.alreadyPunished = client.messages.alreadyBanned
+            messages.alreadyPunished = client.messages.getMessage("alreadyBanned", interaction.locale)
         }
 
         if (punishment.punishment_type === "MUTE") {
-            messages.alreadyPunished = client.messages.alreadyMuted
+            messages.alreadyPunished = client.messages.getMessage("alreadyMuted", interaction.locale)
         }
 
         const user = await client.users.fetch(modMenu.member)
@@ -310,8 +310,8 @@ export default class ModerationMenu extends typeorm.BaseEntity {
             replyInteraction.editReply({
                 content:
                     user === undefined
-                        ? client.messages.noUser
-                        : client.messages.invalidUser
+                        ? client.messages.getMessage("noUser", interaction.locale)
+                        : client.messages.getMessage("invalidUser", interaction.locale)
             })
 
             return
@@ -325,21 +325,21 @@ export default class ModerationMenu extends typeorm.BaseEntity {
             (!member && punishment.punishment_type === "WARN")
         ) {
             await replyInteraction.editReply({
-                content: client.messages.notInGuild
+                content: client.messages.getMessage("notInGuild", interaction.locale)
             })
             return
         }
 
         if (user.bot) {
             await replyInteraction.editReply({
-                content: client.messages.isBot
+                content: client.messages.getMessage("isBot", interaction.locale)
             })
             return
         }
 
         if (user.id === interaction.user.id) {
             await replyInteraction.editReply({
-                content: client.messages.isSelfBan
+                content: client.messages.getMessage("isSelfBan", interaction.locale)
             })
             return
         }
@@ -347,7 +347,7 @@ export default class ModerationMenu extends typeorm.BaseEntity {
         if (member) {
             if (GuildMember.hasRole(member, Roles.STAFF, client)) {
                 replyInteraction.editReply({
-                    content: client.messages.isStaffBan
+                    content: client.messages.getMessage("isStaffBan", interaction.locale)
                 })
                 return
             }

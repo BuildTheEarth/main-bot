@@ -30,18 +30,18 @@ export default new Command({
         if (!user)
             return client.response.sendError(
                 message,
-                user === undefined ? client.messages.noUser : client.messages.invalidUser
+                user === undefined ? message.messages.noUser : message.messages.invalidUser
             )
 
         const reason = client.placeholder.replacePlaceholders(
             args.consumeRest(["reason"])
         )
-        if (!reason) return client.response.sendError(message, client.messages.noReason)
+        if (!reason) return client.response.sendError(message, message.messages.noReason)
 
         await message.continue()
 
         const ban = await TimedPunishment.findOne({ member: user.id, type: "ban" })
-        if (!ban) return client.response.sendError(message, client.messages.notBanned)
+        if (!ban) return client.response.sendError(message, message.messages.notBanned)
 
         await ban.undo(client)
         const log = new ActionLog()

@@ -1,0 +1,5 @@
+// This is the file for messages, most error messages and some success messages reside here, and can be edited at your will, from this file, reloading it can be done by reloading the config
+
+{
+    gaveChannelPerms: ["%s में प्रबंधकों को अनुमति दी."]
+}

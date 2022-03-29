@@ -128,7 +128,7 @@ export default new Command({
                 GuildMember.hasRole(memberReal, Roles[role], client, false)
             )
             if (dutyArray.length === 0)
-                return client.response.sendError(message, client.messages.cannotDuty)
+                return client.response.sendError(message, message.messages.cannotDuty)
             const toggle = await toggleDutyRole(
                 memberReal,
                 dutyArray as ("MODERATOR" | "SUPPORT" | "HELPER")[],
@@ -144,13 +144,13 @@ export default new Command({
                     dutyArray.map(ele => humanizeConstant(ele)),
                     false,
                     "and"
-                )}${!scheduledDuty ? ` ${client.messages.scheduleCancelAuto}` : ""}.`
+                )}${!scheduledDuty ? ` ${message.messages.scheduleCancelAuto}` : ""}.`
             )
         } else if (subcommand === "schedule") {
             const time = args.consumeLength("time")
-            if (!time) return client.response.sendError(message, client.messages.noTime)
+            if (!time) return client.response.sendError(message, message.messages.noTime)
             if (time <= 0)
-                return client.response.sendError(message, client.messages.slowmodeTooLow)
+                return client.response.sendError(message, message.messages.slowmodeTooLow)
             const member = await args.consumeUser("member")
             const role = args.consumeIf(
                 arg => ["support", "moderator", "helper"].includes(arg.toLowerCase()),
@@ -171,7 +171,7 @@ export default new Command({
                 GuildMember.hasRole(memberReal, Roles[role], client, false)
             )
             if (dutyArray.length === 0)
-                return client.response.sendError(message, client.messages.cannotDuty)
+                return client.response.sendError(message, message.messages.cannotDuty)
 
             await client.dutyScheduler.scheduleDuty(
                 time,
@@ -181,8 +181,8 @@ export default new Command({
 
             return client.response.sendSuccess(
                 message,
-                `${client.messages.toggleScheduled}${
-                    !scheduledDuty ? ` ${client.messages.scheduleCancelAuto}` : ""
+                `${message.messages.toggleScheduled}${
+                    !scheduledDuty ? ` ${message.messages.scheduleCancelAuto}` : ""
                 }.`
             )
         } else if (subcommand === "cancel") {
@@ -197,12 +197,12 @@ export default new Command({
             if (scheduledDuty) {
                 return client.response.sendSuccess(
                     message,
-                    client.messages.scheduleCancel
+                    message.messages.scheduleCancel
                 )
             } else {
                 return client.response.sendError(
                     message,
-                    client.messages.noCancellableSchedule
+                    message.messages.noCancellableSchedule
                 )
             }
         } else if (subcommand === "check") {

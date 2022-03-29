@@ -122,12 +122,12 @@ export default new Command({
             } catch {
                 return client.response.sendError(
                     message,
-                    client.messages.requestIncomplete
+                    message.messages.requestIncomplete
                 )
             }
             const dimensions = sizeOf(buff)
             if (dimensions.width / dimensions.height !== 16 / 9)
-                return client.response.sendError(message, client.messages.not16To9)
+                return client.response.sendError(message, message.messages.not16To9)
 
             const image = new ModpackImage()
             image.key = key as ModpackImageKey

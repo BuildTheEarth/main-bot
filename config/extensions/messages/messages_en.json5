@@ -158,5 +158,6 @@
     noPermsMod: ["You do not have moderation permissions"],
     requestIncomplete: ["The request to this URL could not be completed."],
     noBuilder: ["That user is not a builder."],
-    notAdvancedBuilder: ["That user is not an advanced builder."]
+    notAdvancedBuilder: ["That user is not an advanced builder."],
+    gaveChannelPerms: ["Gave managers permission in %s."]
 }

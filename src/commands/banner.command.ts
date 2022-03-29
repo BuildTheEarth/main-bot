@@ -96,7 +96,7 @@ export default new Command({
             if (description?.length > 512)
                 return client.response.sendError(
                     message,
-                    client.messages.descriptionTooLong512
+                    message.messages.descriptionTooLong512
                 )
 
             await message.continue()
@@ -111,13 +111,13 @@ export default new Command({
             } catch {
                 return client.response.sendError(
                     message,
-                    client.messages.requestIncomplete
+                    message.messages.requestIncomplete
                 )
             }
             if (isBig)
                 return client.response.sendError(
                     message,
-                    client.messages.contentTooLarge10MB
+                    message.messages.contentTooLarge10MB
                 )
 
             const banner = new BannerImage()
@@ -133,7 +133,7 @@ export default new Command({
             )
         } else if (subcommand === "delete") {
             const id = args.consume("id")
-            if (!id) return client.response.sendError(message, client.messages.noBannerID)
+            if (!id) return client.response.sendError(message, message.messages.noBannerID)
 
             await message.continue()
 
@@ -156,13 +156,13 @@ export default new Command({
             })
         } else if (subcommand === "show") {
             const id = args.consume("id")
-            if (!id) return client.response.sendError(message, client.messages.noBannerID)
+            if (!id) return client.response.sendError(message, message.messages.noBannerID)
 
             await message.continue()
 
             const banner = await BannerImage.findOne(Number(id))
             if (!banner)
-                return client.response.sendError(message, client.messages.noBanner)
+                return client.response.sendError(message, message.messages.noBanner)
 
             await message.send({
                 embeds: [

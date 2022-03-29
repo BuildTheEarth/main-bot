@@ -111,7 +111,7 @@ export default new Command({
         ])
         const name = args.consume("name").toLowerCase()
         if (name.length > 32)
-            return client.response.sendError(message, client.messages.nameTooLong32)
+            return client.response.sendError(message, message.messages.nameTooLong32)
         const language = args.consume("language").toLowerCase()
         const body = args.consumeRest(["body"])
 
@@ -155,25 +155,25 @@ export default new Command({
             if (placeholders[name + " " + language])
                 return client.response.sendError(
                     message,
-                    client.messages.alreadyExistsPlaceholder
+                    message.messages.alreadyExistsPlaceholder
                 )
-            if (!body) return client.response.sendError(message, client.messages.noBody)
+            if (!body) return client.response.sendError(message, message.messages.noBody)
             if (!name)
                 return client.response.sendError(
                     message,
-                    client.messages.noPlaceholderName
+                    message.messages.noPlaceholderName
                 )
             if (!language)
-                return client.response.sendError(message, client.messages.noLang)
+                return client.response.sendError(message, message.messages.noLang)
             if (!iso6391.validate(language))
                 return client.response.sendError(
                     message,
-                    client.messages.invalidPlaceholderLang
+                    message.messages.invalidPlaceholderLang
                 )
             if (name.match(/{+|}+/g))
                 return client.response.sendError(
                     message,
-                    client.messages.invalidPlaceholderName
+                    message.messages.invalidPlaceholderName
                 )
             await client.placeholder.addPlaceholder(name, language, body)
             await client.response.sendSuccess(
@@ -182,18 +182,18 @@ export default new Command({
             )
             client.log(placeholders[name + " " + language], "add", message.member.user)
         } else if (subcommand === "edit") {
-            if (!body) return client.response.sendError(message, client.messages.noBody)
+            if (!body) return client.response.sendError(message, message.messages.noBody)
             if (!name)
                 return client.response.sendError(
                     message,
-                    client.messages.noPlaceholderName
+                    message.messages.noPlaceholderName
                 )
             if (!language)
-                return client.response.sendError(message, client.messages.noLang)
+                return client.response.sendError(message, message.messages.noLang)
             if (!placeholders[name + " " + language])
                 return client.response.sendError(
                     message,
-                    client.messages.placeholderNotFound
+                    message.messages.placeholderNotFound
                 )
             await client.placeholder.editPlaceholder(name, language, body)
             await client.response.sendSuccess(
@@ -205,14 +205,14 @@ export default new Command({
             if (!name)
                 return client.response.sendError(
                     message,
-                    client.messages.noPlaceholderName
+                    message.messages.noPlaceholderName
                 )
             if (!language)
-                return client.response.sendError(message, client.messages.noLang)
+                return client.response.sendError(message, message.messages.noLang)
             if (!placeholders[name + " " + language])
                 return client.response.sendError(
                     message,
-                    client.messages.placeholderNotFound
+                    message.messages.placeholderNotFound
                 )
             client.placeholder.deletePlaceholder(name, language)
             await client.response.sendSuccess(
@@ -224,14 +224,14 @@ export default new Command({
             if (!name)
                 return client.response.sendError(
                     message,
-                    client.messages.noPlaceholderName
+                    message.messages.noPlaceholderName
                 )
             if (!language)
-                return client.response.sendError(message, client.messages.noLang)
+                return client.response.sendError(message, message.messages.noLang)
             if (!placeholders[name + " " + language])
                 return client.response.sendError(
                     message,
-                    client.messages.placeholderNotFound
+                    message.messages.placeholderNotFound
                 )
             const placeholder = placeholders[name + " " + language]
             const embed = {

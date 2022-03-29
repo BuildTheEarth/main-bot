@@ -22,7 +22,7 @@ export default new Command({
     ],
     async run(this: Command, client: Client, message: CommandMessage, args: Args) {
         const input = args.consumeRest(["team"]).toLowerCase()
-        if (!input) return client.response.sendError(message, client.messages.noTeam)
+        if (!input) return client.response.sendError(message, message.messages.noTeam)
         await message.continue()
         return await runBtCommand(client, message, input)
     }
@@ -50,9 +50,13 @@ export async function runBtCommand(
         .where("snippet.language = :language", { language })
         .andWhere(new typeorm.Brackets(find))
         .getOne()
+    
+    let locale = "en_US"
+
+    if (message instanceof CommandMessage) locale = message.locale
 
     if (!snippet) {
-        return client.response.sendError(message, client.messages.invalidTeam)
+        return client.response.sendError(message, client.messages.getMessage("invalidTeam",  locale))
     } else {
         if (message instanceof CommandMessage)
             return message

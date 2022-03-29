@@ -138,7 +138,7 @@ export default new Command({
                 if (word.length > 18) {
                     return await client.response.sendError(
                         message,
-                        client.messages.wordTooLong18
+                        message.messages.wordTooLong18
                     )
                 }
                 if (!punishmentTypes.includes(punishment))
@@ -230,7 +230,7 @@ export default new Command({
                 if (word.length > 18) {
                     return await client.response.sendError(
                         message,
-                        client.messages.wordTooLong18
+                        message.messages.wordTooLong18
                     )
                 }
                 await message.continue()
@@ -360,7 +360,7 @@ async function getList(
             return
         if (interaction.user.id !== message.member.id)
             return interaction.reply({
-                content: client.messages.wrongUser,
+                content: message.messages.wrongUser,
                 ephemeral: true
             })
         if (

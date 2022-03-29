@@ -43,11 +43,11 @@ export default new Command({
         }
 
         if (slowmode < 0)
-            return client.response.sendError(message, client.messages.slowmodeTooLow)
+            return client.response.sendError(message, message.messages.slowmodeTooLow)
         else if (slowmode === 6 * 60 * 60)
-            return client.response.sendError(message, client.messages.slowmodeTooHigh)
+            return client.response.sendError(message, message.messages.slowmodeTooHigh)
         else if (slowmode > 6 * 60 * 60)
-            return client.response.sendError(message, client.messages.slowmodeTooHigh)
+            return client.response.sendError(message, message.messages.slowmodeTooHigh)
 
         await message.continue()
 

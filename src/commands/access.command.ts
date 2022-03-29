@@ -23,9 +23,9 @@ export default new Command({
     ],
     async run(this: Command, client: Client, message: CommandMessage, args: Args) {
         const channel = (await args.consumeChannel("channel")) || message.channel
-        const perms = (channel as Discord.TextChannel).permissionsFor(message.member)
-        if (!perms.has("VIEW_CHANNEL"))
-            return client.response.sendError(message, client.messages.noChannelPerms)
+        const perms = (channel as Discord.TextChannel).permissionsFor(message.member).has("VIEW_CHANNEL") && (channel as Discord.TextChannel).permissionsFor(client.user).has("VIEW_CHANNEL")
+        if (!perms)
+            return message.sendErrorMessage("noChannelPerms")
 
         await message.continue()
 
@@ -37,9 +37,6 @@ export default new Command({
             MANAGE_ROLES: true
         }) // There is no non-hacky reason support here now
 
-        await client.response.sendSuccess(
-            message,
-            `Gave managers permission in ${channel}.`
-        )
+        message.sendSuccessMessage("gaveChannelPerms", channel)
     }
 })

@@ -45,7 +45,7 @@ export default class Client extends Discord.Client {
     bannerCycleTimeout: Cron
     filter = new BannedWordFilter(this)
     dutyScheduler = new DutyScheduler(this)
-    messages = new Messages(this).proxy
+    messages = new Messages(this)
     placeholder = new PlaceholderHandler(this)
     deletedMessages = new WeakSet<Discord.Message>()
 

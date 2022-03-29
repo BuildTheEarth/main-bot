@@ -29,7 +29,7 @@ export default new Command({
         if (!java?.online) {
             return client.response.sendError(
                 message,
-                client.messages.networkOffline,
+                message.messages.networkOffline,
                 false
             )
         } else {
