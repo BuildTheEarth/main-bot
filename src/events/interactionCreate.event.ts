@@ -8,6 +8,7 @@ import Roles from "../util/roles.util.js"
 import chalk from "chalk"
 import ModerationMenu from "../entities/ModerationMenu.entity.js"
 import createSuggestion from "../modals/suggest.modal.js"
+import createBanner from "../modals/banner.modal.js"
 
 export default async function (
     this: Client,
@@ -125,9 +126,14 @@ export default async function (
     }
 
     if (interaction.type === "MODAL_SUBMIT") {
-        //TODO: Check for what kind of modal, may need handler.
-        createSuggestion(<ModalSubmitInteraction>interaction)
+        if (interaction instanceof ModalSubmitInteraction) {
+            const type = interaction.customId.split(".")[0]
+            if (type === "suggestionmodal") {
+                return createSuggestion(interaction)
+            }
+            if (type === "bannermodal") {
+                return createBanner(interaction)
+            }
+        }
     }
-
-    return
 }

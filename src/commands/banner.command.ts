@@ -4,8 +4,8 @@ import Command from "../struct/Command.js"
 import BannerImage from "../entities/BannerImage.entity.js"
 import Roles from "../util/roles.util.js"
 import CommandMessage from "../struct/CommandMessage.js"
-import fetch from "node-fetch"
 import { hexToRGB, quote } from "@buildtheearth/bot-utils"
+import Discord from "discord.js"
 
 export default new Command({
     name: "banner",
@@ -15,33 +15,7 @@ export default new Command({
     subcommands: [
         {
             name: "add",
-            description: "Add a banner to the queue.",
-            args: [
-                {
-                    name: "image_url",
-                    description: "Image URL (required if used as slashcommand).",
-                    required: true,
-                    optionType: "STRING"
-                },
-                {
-                    name: "location",
-                    description: "Location of build.",
-                    required: true,
-                    optionType: "STRING"
-                },
-                {
-                    name: "credit",
-                    description: "Build credit.",
-                    required: true,
-                    optionType: "STRING"
-                },
-                {
-                    name: "description",
-                    description: "Build description.",
-                    required: false,
-                    optionType: "STRING"
-                }
-            ]
+            description: "Add a banner to the queue."
         },
         {
             name: "delete",
@@ -79,58 +53,78 @@ export default new Command({
     async run(this: Command, client: Client, message: CommandMessage, args: Args) {
         const subcommand = args.consumeSubcommandIf(this.subcommands.map(sub => sub.name))
 
-        if (subcommand === "add" || !subcommand) {
-            const image = args.consumeImage("image_url")
-            const [location, credit, description] = [
-                args.consume("location"),
-                args.consume("credit"),
-                args.consume("description")
-            ]
-
-            let missing: string
-            if (!image) missing = "the banner image"
-            else if (!location) missing = "the location of the build"
-            else if (!credit) missing = "the image credit"
-            if (missing)
-                return client.response.sendError(message, `You must provide ${missing}!`)
-            if (description?.length > 512)
-                return client.response.sendError(
-                    message,
-                    message.messages.descriptionTooLong512
-                )
-
-            await message.continue()
-
-            let isBig: boolean
-            try {
-                const res = (await fetch(image, { method: "HEAD" })).headers.get(
-                    "content-length"
-                )
-                if (res == undefined) throw new Error()
-                isBig = Number.parseInt(res) > 10485760
-            } catch {
-                return client.response.sendError(
-                    message,
-                    message.messages.requestIncomplete
-                )
-            }
-            if (isBig)
-                return client.response.sendError(
-                    message,
-                    message.messages.contentTooLarge10MB
-                )
-
-            const banner = new BannerImage()
-            banner.url = image
-            banner.location = location
-            banner.credit = credit
-            if (description) banner.description = description
-            await banner.save()
-
-            await client.response.sendSuccess(
-                message,
-                `Queued the banner! (**#${banner.id}**).`
-            )
+        if (subcommand === "add") {
+            const modal = new Discord.Modal({
+                title: "Banner",
+                customId: `bannermodal.${message.author.id}`,
+                components: [
+                    {
+                        type: "ACTION_ROW",
+                        components: [
+                            {
+                                type: "TEXT_INPUT",
+                                customId: "img_url",
+                                label: "Image URL",
+                                maxLength: null,
+                                minLength: null,
+                                placeholder: null,
+                                required: true,
+                                style: "SHORT",
+                                value: null
+                            }
+                        ]
+                    },
+                    {
+                        type: "ACTION_ROW",
+                        components: [
+                            {
+                                type: "TEXT_INPUT",
+                                customId: "location",
+                                label: "Location",
+                                maxLength: null,
+                                minLength: null,
+                                placeholder: null,
+                                required: true,
+                                style: "SHORT",
+                                value: null
+                            }
+                        ]
+                    },
+                    {
+                        type: "ACTION_ROW",
+                        components: [
+                            {
+                                type: "TEXT_INPUT",
+                                customId: "credit",
+                                label: "Credit",
+                                maxLength: null,
+                                minLength: null,
+                                placeholder: null,
+                                required: true,
+                                style: "SHORT",
+                                value: null
+                            }
+                        ]
+                    },
+                    {
+                        type: "ACTION_ROW",
+                        components: [
+                            {
+                                type: "TEXT_INPUT",
+                                customId: "description",
+                                label: "Description",
+                                maxLength: 512,
+                                minLength: null,
+                                placeholder: null,
+                                required: true,
+                                style: "PARAGRAPH",
+                                value: null
+                            }
+                        ]
+                    }
+                ]
+            })
+            await message.showModal(modal)
         } else if (subcommand === "delete") {
             const id = args.consume("id")
             if (!id)
