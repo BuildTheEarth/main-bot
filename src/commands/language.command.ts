@@ -73,7 +73,9 @@ export default new Command({
         if (!user)
             return client.response.sendError(
                 message,
-                user === undefined ? message.messages.noUser : message.messages.invalidUser
+                user === undefined
+                    ? message.messages.noUser
+                    : message.messages.invalidUser
             )
 
         const member: Discord.GuildMember = await (
@@ -81,7 +83,8 @@ export default new Command({
         ).members
             .fetch({ user, cache: true })
             .catch(noop)
-        if (!member) return client.response.sendError(message, message.messages.notInGuild)
+        if (!member)
+            return client.response.sendError(message, message.messages.notInGuild)
 
         const languageInput = args.consume("language").toLowerCase()
         const language = LANGUAGE_ROLES[languageInput]

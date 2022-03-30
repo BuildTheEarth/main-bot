@@ -405,10 +405,17 @@ export default new Command({
             let edited = args.consumeRest(["text"])
             if (field === "title") edited = await flattenMarkdown(edited, message.guild)
             if (field === "title" && edited.length > 200)
-                return client.response.sendError(message, message.messages.titleTooLong200)
+                return client.response.sendError(
+                    message,
+                    message.messages.titleTooLong200
+                )
             if (field === "teams" && edited.length > 255)
-                return client.response.sendError(message, message.messages.teamsTooLong255)
-            if (!edited) return client.response.sendError(message, message.messages.noBody)
+                return client.response.sendError(
+                    message,
+                    message.messages.teamsTooLong255
+                )
+            if (!edited)
+                return client.response.sendError(message, message.messages.noBody)
 
             suggestion[field] = edited
             await suggestion.save()

@@ -122,7 +122,10 @@ export default async function (this: Client, message: Discord.Message): Promise<
         if (command.name === "team") {
             const team = consumeTeam(this, message)
             if (!team || team === "")
-                return client.response.sendError(message, client.messages.getMessage("noTeam", "en_US"))
+                return client.response.sendError(
+                    message,
+                    client.messages.getMessage("noTeam", "en_US")
+                )
             return await runBtCommand(client, message, team)
         }
 

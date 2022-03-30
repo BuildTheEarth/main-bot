@@ -297,11 +297,17 @@ export default class ModerationMenu extends typeorm.BaseEntity {
         )
 
         if (punishment.punishment_type === "BAN") {
-            messages.alreadyPunished = client.messages.getMessage("alreadyBanned", interaction.locale)
+            messages.alreadyPunished = client.messages.getMessage(
+                "alreadyBanned",
+                interaction.locale
+            )
         }
 
         if (punishment.punishment_type === "MUTE") {
-            messages.alreadyPunished = client.messages.getMessage("alreadyMuted", interaction.locale)
+            messages.alreadyPunished = client.messages.getMessage(
+                "alreadyMuted",
+                interaction.locale
+            )
         }
 
         const user = await client.users.fetch(modMenu.member)

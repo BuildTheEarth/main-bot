@@ -50,13 +50,16 @@ export async function runBtCommand(
         .where("snippet.language = :language", { language })
         .andWhere(new typeorm.Brackets(find))
         .getOne()
-    
+
     let locale = "en_US"
 
     if (message instanceof CommandMessage) locale = message.locale
 
     if (!snippet) {
-        return client.response.sendError(message, client.messages.getMessage("invalidTeam",  locale))
+        return client.response.sendError(
+            message,
+            client.messages.getMessage("invalidTeam", locale)
+        )
     } else {
         if (message instanceof CommandMessage)
             return message

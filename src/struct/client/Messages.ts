@@ -16,9 +16,13 @@ export default class Messages {
             if (this.client.config.submodules.messages.json["en"][key] === undefined)
                 return "Message not set in configuration!"
             else
-                return this.getRandomMessage(this.client.config.submodules.messages.json["en"][key])
+                return this.getRandomMessage(
+                    this.client.config.submodules.messages.json["en"][key]
+                )
 
-        return this.getRandomMessage(this.client.config.submodules.messages.json[trueLocale][key])
+        return this.getRandomMessage(
+            this.client.config.submodules.messages.json[trueLocale][key]
+        )
     }
 
     private getRandomMessage(arr: string[]): string {

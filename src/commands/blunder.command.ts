@@ -132,7 +132,10 @@ export default new Command({
                 }
             }
             if (!blunder)
-                return client.response.sendError(message, message.messages.blunderNotFound)
+                return client.response.sendError(
+                    message,
+                    message.messages.blunderNotFound
+                )
             await blunder.reset(client)
             client.response.sendSuccess(message, message.messages.blunderCommitted)
         } else if (subcommand == "new") {

@@ -434,7 +434,10 @@ export default new Command({
 
             const snippet = await Snippet.findOne({ name, language })
             if (!snippet)
-                return client.response.sendError(message, message.messages.snippetNotFound)
+                return client.response.sendError(
+                    message,
+                    message.messages.snippetNotFound
+                )
             if (subcommand === "list") {
                 const list =
                     snippet.aliases.map(alias => `• \u200B \u200B ${alias}`).join("\n") ||
@@ -445,7 +448,8 @@ export default new Command({
             const alias = teams
                 ? args.consumeRest(["alias"]).toLowerCase()
                 : args.consume("alias").toLowerCase()
-            if (!alias) return client.response.sendError(message, message.messages.noAlias)
+            if (!alias)
+                return client.response.sendError(message, message.messages.noAlias)
             if (subcommand === "add") {
                 if (!snippet.aliases) snippet.aliases = []
                 snippet.aliases.push(alias)
@@ -547,7 +551,10 @@ export default new Command({
             await client.log(snippet, subcommand, message.member.user)
         } else if (subcommand === "delete" && !subcommandGroup) {
             if (!existingSnippet)
-                return client.response.sendError(message, message.messages.snippetNotFound)
+                return client.response.sendError(
+                    message,
+                    message.messages.snippetNotFound
+                )
 
             await existingSnippet.remove()
             // prettier-ignore
@@ -555,7 +562,10 @@ export default new Command({
             await client.log(existingSnippet, "delete", message.member.user)
         } else if (subcommand === "source" && !subcommandGroup) {
             if (!existingSnippet)
-                return client.response.sendError(message, message.messages.snippetNotFound)
+                return client.response.sendError(
+                    message,
+                    message.messages.snippetNotFound
+                )
             await message.send({
                 embeds: [
                     {

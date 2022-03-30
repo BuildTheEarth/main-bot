@@ -31,7 +31,9 @@ export default new Command({
         if (!user)
             return client.response.sendError(
                 message,
-                user === undefined ? message.messages.noUser : message.messages.invalidUsers
+                user === undefined
+                    ? message.messages.noUser
+                    : message.messages.invalidUsers
             )
 
         const reason = client.placeholder.replacePlaceholders(

@@ -133,7 +133,8 @@ export default new Command({
             )
         } else if (subcommand === "delete") {
             const id = args.consume("id")
-            if (!id) return client.response.sendError(message, message.messages.noBannerID)
+            if (!id)
+                return client.response.sendError(message, message.messages.noBannerID)
 
             await message.continue()
 
@@ -156,7 +157,8 @@ export default new Command({
             })
         } else if (subcommand === "show") {
             const id = args.consume("id")
-            if (!id) return client.response.sendError(message, message.messages.noBannerID)
+            if (!id)
+                return client.response.sendError(message, message.messages.noBannerID)
 
             await message.continue()
 
