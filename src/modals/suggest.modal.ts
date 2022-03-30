@@ -1,11 +1,10 @@
-import Discord, { Message } from "discord.js"
+import Discord from "discord.js"
 import Suggestion from "../entities/Suggestion.entity.js"
-import { truncateString, flattenMarkdown } from "@buildtheearth/bot-utils"
+import { truncateString } from "@buildtheearth/bot-utils"
 
 export default async function createSuggestion(
     interaction: Discord.ModalSubmitInteraction
 ): Promise<void> {
-    interaction.reply({ content: "Created suggestion!", ephemeral: true })
     const anon =
         interaction.fields.getTextInputValue("anon").toLowerCase() === "anon"
             ? true
@@ -47,4 +46,5 @@ export default async function createSuggestion(
 
     await suggestionmessage.react(client.config.emojis.upvote)
     await suggestionmessage.react(client.config.emojis.downvote)
+    interaction.reply({ content: "Created suggestion!", ephemeral: true })
 }
