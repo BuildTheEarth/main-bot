@@ -54,77 +54,7 @@ export default new Command({
         const subcommand = args.consumeSubcommandIf(this.subcommands.map(sub => sub.name))
 
         if (subcommand === "add") {
-            const modal = new Discord.Modal({
-                title: "Banner",
-                customId: `bannermodal.${message.author.id}`,
-                components: [
-                    {
-                        type: "ACTION_ROW",
-                        components: [
-                            {
-                                type: "TEXT_INPUT",
-                                customId: "img_url",
-                                label: "Image URL",
-                                maxLength: null,
-                                minLength: null,
-                                placeholder: null,
-                                required: true,
-                                style: "SHORT",
-                                value: null
-                            }
-                        ]
-                    },
-                    {
-                        type: "ACTION_ROW",
-                        components: [
-                            {
-                                type: "TEXT_INPUT",
-                                customId: "location",
-                                label: "Location",
-                                maxLength: null,
-                                minLength: null,
-                                placeholder: null,
-                                required: true,
-                                style: "SHORT",
-                                value: null
-                            }
-                        ]
-                    },
-                    {
-                        type: "ACTION_ROW",
-                        components: [
-                            {
-                                type: "TEXT_INPUT",
-                                customId: "credit",
-                                label: "Credit",
-                                maxLength: null,
-                                minLength: null,
-                                placeholder: null,
-                                required: true,
-                                style: "SHORT",
-                                value: null
-                            }
-                        ]
-                    },
-                    {
-                        type: "ACTION_ROW",
-                        components: [
-                            {
-                                type: "TEXT_INPUT",
-                                customId: "description",
-                                label: "Description",
-                                maxLength: 512,
-                                minLength: null,
-                                placeholder: null,
-                                required: true,
-                                style: "PARAGRAPH",
-                                value: null
-                            }
-                        ]
-                    }
-                ]
-            })
-            await message.showModal(modal)
+            await message.showModal("banner")
         } else if (subcommand === "delete") {
             const id = args.consume("id")
             if (!id)

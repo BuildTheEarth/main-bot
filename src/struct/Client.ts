@@ -19,6 +19,7 @@ import { hexToRGB } from "@buildtheearth/bot-utils"
 import path from "path"
 import url from "url"
 import { Cron } from "croner"
+import ModalList from "./client/ModalList.js"
 
 export default class Client extends Discord.Client {
     declare guilds: Discord.GuildManager
@@ -30,6 +31,7 @@ export default class Client extends Discord.Client {
     })
     config = new ConfigManager(this)
     events = new EventList(this)
+    modals = new ModalList(this)
     commands = new CommandList(this)
     aliases = new Discord.Collection()
     response = new Response(this)

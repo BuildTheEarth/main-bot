@@ -50,6 +50,13 @@ export default class CommandMessage {
         return client.response.sendError(this, vsprintf(this.messages[message], args))
     }
 
+    public getMessage(
+        message: string,
+        ...args: any[]
+    ): string {
+        return vsprintf(this.messages[message], args)
+    }
+
     public async sendSuccess(
         embed: string | Discord.MessageEmbedOptions,
         ephemeral: boolean = false
@@ -112,10 +119,14 @@ export default class CommandMessage {
         return this
     }
 
-    async showModal(modal: Discord.Modal): Promise<void> {
-        if (this.isSlashCommand()) {
-            this.message.showModal(modal)
-        }
+    async showModal(modalName: string): Promise<void> {
+        const modal = this.client.modals.getLocaleModal(modalName, this.locale)
+        modal.customId += "." + this.id
+        await this.message.showModal(new Discord.Modal(modal as {components:
+            | Discord.MessageActionRow<Discord.ModalActionRowComponent>[]
+            | Discord.MessageActionRowOptions<Discord.ModalActionRowComponentResolvable>[];
+          customId: string;
+          title: string;}))
     }
 }
 

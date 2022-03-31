@@ -46,6 +46,10 @@ async function main() {
     client.events.register()
     client.logger.info("Registered events.")
 
+    client.logger.debug("Registering modals..")
+    await client.modals.load()
+    client.logger.info("Registered modals.")
+
     client.logger.debug("Logging in to Discord...")
     await client.login()
     client.logger.info("Logged in to Discord.")
