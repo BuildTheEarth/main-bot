@@ -50,12 +50,7 @@ export default new Command({
     async run(this: Command, client: Client, message: CommandMessage, args: Args) {
         const user = await args.consumeUser("member")
         if (!user)
-            return client.response.sendError(
-                message,
-                user === undefined
-                    ? message.messages.noUser
-                    : message.messages.invalidUser
-            )
+            return message.sendErrorMessage(user === undefined ? "noUser" : "invalidUser")
 
         let position = args.consumeIf(["bto", "vcc", "vs"], "position")
         if (!position)
@@ -68,10 +63,7 @@ export default new Command({
         const expanded = pseudoteamPositions.expansions[position]
 
         if (!GuildMember.hasRole(message.member, client.roles[lead], client))
-            return client.response.sendError(
-                message,
-                `You can't manage members in the **${expanded}** team!`
-            )
+            return message.sendErrorMessage("notLead", expanded)
         const role = Guild.role(await client.customGuilds.main(), client.roles[expanded])
 
         const member: Discord.GuildMember = await (
@@ -79,8 +71,7 @@ export default new Command({
         ).members
             .fetch({ user, cache: true })
             .catch(noop)
-        if (!member)
-            return client.response.sendError(message, message.messages.notInGuild)
+        if (!member) return message.sendErrorMessage("notInGuild")
 
         await message.continue()
 

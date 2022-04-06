@@ -71,28 +71,19 @@ export default new Command({
     async run(this: Command, client: Client, message: CommandMessage, args: Args) {
         const user = await args.consumeUser("member")
         if (!user)
-            return client.response.sendError(
-                message,
-                user === undefined
-                    ? message.messages.noUser
-                    : message.messages.invalidUser
-            )
+            return message.sendErrorMessage(user === undefined ? "noUser" : "invalidUser")
 
         const member: Discord.GuildMember = await (
             await client.customGuilds.main()
         ).members
             .fetch({ user, cache: true })
             .catch(noop)
-        if (!member)
-            return client.response.sendError(message, message.messages.notInGuild)
+        if (!member) return message.sendErrorMessage("notInGuild")
 
         const languageInput = args.consume("language").toLowerCase()
         const language = LANGUAGE_ROLES[languageInput]
         if (!language)
-            return client.response.sendError(
-                message,
-                languageInput ? message.messages.notLang : message.messages.noLang
-            )
+            return message.sendErrorMessage(languageInput ? "notLang" : "noLang")
 
         await message.continue()
 

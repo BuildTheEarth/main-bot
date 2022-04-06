@@ -104,8 +104,8 @@ export default new Command({
             if (title.length > 99) error = message.messages.titleTooLong99
             if (!title || !description) error = message.messages.noBody
             if (status && !TaskStatuses[status])
-                error = `That's not a valid status! (${statuses}).`
-            if (error) return client.response.sendError(message, error)
+                error = message.messages.invalidStatus.replace("%s", statuses)
+            if (error) return message.sendError(error)
 
             await message.continue()
 
@@ -123,15 +123,11 @@ export default new Command({
             )
         } else if (subcommand === "status") {
             const id = Number(args.consume("task"))
-            if (Number.isNaN(id))
-                return client.response.sendError(message, message.messages.noID)
+            if (Number.isNaN(id)) return message.sendErrorMessage("noID")
             const status = args.consume("status").toLowerCase()
             const statuses = humanizeArray(Object.keys(TaskStatuses))
             if (!TaskStatuses[status])
-                return client.response.sendError(
-                    message,
-                    `That's not a valid status! (${statuses}).`
-                )
+                return message.sendErrorMessage("invalidStatus", statuses)
 
             await message.continue()
 
@@ -197,8 +193,7 @@ export default new Command({
                 }
             })
 
-            if (!tasks.length)
-                return client.response.sendError(message, message.messages.noTasks)
+            if (!tasks.length) return message.sendErrorMessage("noTasks")
 
             const report = tasks.map(task => `•   ${task.title}`).join("\n")
             await channel.send(`Task report from <@${message.member.id}>:\n\n${report}`)

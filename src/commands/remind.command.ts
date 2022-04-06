@@ -119,7 +119,7 @@ export default new Command({
         if (subcommand === "add") {
             const channel = await args.consumeChannel("channel")
             if (!channel) {
-                return client.response.sendError(message, message.messages.noChannel)
+                return message.sendErrorMessage("noChannel")
             }
 
             const time = args.consume("interval")
@@ -147,16 +147,12 @@ export default new Command({
                         cron = "0 0 1 1 *" // 1 month (1000ms * 60s * 60m * 24h * 30d * 12m)
                         break
                     default:
-                        return client.response.sendError(
-                            message,
-                            message.messages.invalidTime
-                        )
+                        return message.sendErrorMessage("invalidTime")
                 }
             }
 
             const body = args.consumeRest(["message"])
-            if (!body)
-                return client.response.sendError(message, message.messages.noReminder)
+            if (!body) return message.sendErrorMessage("noReminder")
 
             await message.continue()
 
@@ -174,26 +170,18 @@ export default new Command({
         }
 
         const id = parseInt(args.consume("id"))
-        if (!id) return client.response.sendError(message, message.messages.noID)
+        if (!id) return message.sendErrorMessage("noID")
 
         await message.continue()
 
         const reminder = await Reminder.findOne(id)
 
         if (subcommand === "delete") {
-            if (!reminder)
-                return client.response.sendError(
-                    message,
-                    message.messages.reminderNotFound
-                )
+            if (!reminder) return message.sendErrorMessage("reminderNotFound")
             await reminder.delete()
             return client.response.sendSuccess(message, `Reminder **#${id}** deleted!`)
         } else if (subcommand === "edit") {
-            if (!reminder)
-                return client.response.sendError(
-                    message,
-                    message.messages.reminderNotFound
-                )
+            if (!reminder) return message.sendErrorMessage("reminderNotFound")
             const body = args.consumeRest(["message"])
             reminder.message = body
             await reminder.save()

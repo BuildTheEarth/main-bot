@@ -22,7 +22,7 @@ export default new Command({
     ],
     async run(this: Command, client: Client, message: CommandMessage, args: Args) {
         const input = args.consumeRest(["team"]).toLowerCase()
-        if (!input) return client.response.sendError(message, message.messages.noTeam)
+        if (!input) return message.sendErrorMessage("noTeam")
         await message.continue()
         return await runBtCommand(client, message, input)
     }

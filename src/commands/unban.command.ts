@@ -28,22 +28,17 @@ export default new Command({
     async run(this: Command, client: Client, message: CommandMessage, args: Args) {
         const user = await args.consumeUser("member")
         if (!user)
-            return client.response.sendError(
-                message,
-                user === undefined
-                    ? message.messages.noUser
-                    : message.messages.invalidUser
-            )
+            return message.sendErrorMessage(user === undefined ? "noUser" : "invalidUser")
 
         const reason = client.placeholder.replacePlaceholders(
             args.consumeRest(["reason"])
         )
-        if (!reason) return client.response.sendError(message, message.messages.noReason)
+        if (!reason) return message.sendErrorMessage("noReason")
 
         await message.continue()
 
         const ban = await TimedPunishment.findOne({ member: user.id, type: "ban" })
-        if (!ban) return client.response.sendError(message, message.messages.notBanned)
+        if (!ban) return message.sendErrorMessage("notBanned")
 
         await ban.undo(client)
         const log = new ActionLog()

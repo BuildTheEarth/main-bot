@@ -41,12 +41,7 @@ export default new Command({
     async run(this: Command, client: Client, message: CommandMessage, args: Args) {
         const user = await args.consumeUser("member")
         if (!user)
-            return client.response.sendError(
-                message,
-                user === undefined
-                    ? message.messages.noUser
-                    : message.messages.invalidUser
-            )
+            return message.sendErrorMessage(user === undefined ? "noUser" : "invalidUser")
 
         await message.continue()
 

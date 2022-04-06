@@ -70,7 +70,7 @@ export default new Command({
         } catch (error) {
             const err = `${error.name || "Error"}: ${error.message}`
 
-            client.response.sendError(message, {
+            message.sendError({
                 author: { name: "Error" },
                 description: `\`\`\`${truncateString(err, 1994)}\`\`\``
             })

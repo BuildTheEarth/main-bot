@@ -118,11 +118,9 @@ export default new Command({
     async run(this: Command, client: Client, message: CommandMessage, args: Args) {
         const subcommandGroup = args.consumeSubcommandGroupIf(["block", "except"])
         if (!subcommandGroup)
-            return client.response.sendError(
-                message,
-                `Specify a valid subcommand group of ${humanizeArray(
-                    this.subcommands.map(ele => ele.name)
-                )}`
+            return message.sendErrorMessage(
+                "specifyValidSubGr",
+                humanizeArray(this.subcommands.map(ele => ele.name))
             )
         if (subcommandGroup === "block") {
             const validSubcommands = ["add", "remove", "list"]
@@ -132,34 +130,23 @@ export default new Command({
             }
             if (subcommand === "add") {
                 const word = args.consume("word")
-                if (!word)
-                    return await client.response.sendError(
-                        message,
-                        `Please specify a word.`
-                    )
+                if (!word) return await message.sendErrorMessage("invalidWord")
+
                 await message.continue()
                 const punishment = args.consume("punishment").toUpperCase()
                 if (word.length > 18) {
-                    return await client.response.sendError(
-                        message,
-                        message.messages.wordTooLong18
-                    )
+                    return await message.sendErrorMessage("wordTooLong18")
                 }
                 if (!punishmentTypes.includes(punishment))
-                    return await client.response.sendError(
-                        message,
-                        `Specify a valid punishment type of ${humanizeArray(
-                            punishmentTypes
-                        )}`
+                    return message.sendErrorMessage(
+                        "specifyValidPunish",
+                        humanizeArray(punishmentTypes)
                     )
                 const reason = client.placeholder.replacePlaceholders(
                     args.consume("reason")
                 )
                 if (!reason && punishment !== "DELETE")
-                    return await client.response.sendError(
-                        message,
-                        `Please specify a reason.`
-                    )
+                    return await message.sendErrorMessage("specifyReason")
                 const duration = args.consumeLength("duration")
                 if (
                     duration === null &&
@@ -167,16 +154,10 @@ export default new Command({
                     punishment !== "KICK" &&
                     punishment !== "DELETE"
                 )
-                    return await client.response.sendError(
-                        message,
-                        "You must provide a duration for Mutes and Bans!"
-                    )
+                    return await message.sendErrorMessage("specifyDuration")
                 const isAlreadyThere = client.filterWordsCached.banned[word]
                 if (isAlreadyThere)
-                    return await client.response.sendError(
-                        message,
-                        `This word is already banned!`
-                    )
+                    return await message.sendErrorMessage("wordAlreadyBanned")
 
                 await BannedWord.createBannedWord(
                     {
@@ -198,23 +179,12 @@ export default new Command({
             }
             if (subcommand === "remove") {
                 const word = args.consumeRest(["word"])
-                if (!word)
-                    return await client.response.sendError(
-                        message,
-                        `Please specify a word.`
-                    )
+                if (!word) return await message.sendErrorMessage("invalidWord")
                 await message.continue()
                 const isThere = client.filterWordsCached.banned[word]
-                if (!isThere)
-                    return client.response.sendError(
-                        message,
-                        `I can't unban a word that is not banned!`
-                    )
+                if (!isThere) return message.sendErrorMessage("wordNotBanned")
                 await isThere?.deleteWord(client)
-                return await client.response.sendSuccess(
-                    message,
-                    `The word has been deleted!`
-                )
+                return await message.sendSuccessMessage("wordDeleted")
             }
         }
         if (subcommandGroup === "except") {
@@ -226,24 +196,14 @@ export default new Command({
             if (subcommand === "add") {
                 const word = args.consumeRest(["word"])
 
-                if (!word)
-                    return await client.response.sendError(
-                        message,
-                        `Please specify a word.`
-                    )
+                if (!word) return await message.sendErrorMessage("invalidWord")
                 if (word.length > 18) {
-                    return await client.response.sendError(
-                        message,
-                        message.messages.wordTooLong18
-                    )
+                    return message.sendErrorMessage("wordTooLong18")
                 }
                 await message.continue()
                 const isAlreadyThere = client.filterWordsCached.except.includes(word)
                 if (isAlreadyThere)
-                    return await client.response.sendError(
-                        message,
-                        `This word is already banned!`
-                    )
+                    return await message.sendErrorMessage("wordAlreadyBanned")
 
                 await BannedWord.createBannedWord(
                     {
@@ -260,21 +220,13 @@ export default new Command({
             }
             if (subcommand === "remove") {
                 const word = args.consumeRest(["word"])
-                if (!word)
-                    return await client.response.sendError(
-                        message,
-                        `Please specify a word.`
-                    )
+                if (!word) return await message.sendErrorMessage("invalidWord")
                 await message.continue()
                 const isThere = await BannedWord.findOne({
                     exception: true,
                     word: word
                 })
-                if (!isThere)
-                    return client.response.sendError(
-                        message,
-                        `I can't unban a word that is not banned!`
-                    )
+                if (!isThere) return message.sendErrorMessage("wordNotBanned")
                 await isThere.deleteWord(client)
                 return await client.response.sendSuccess(
                     message,

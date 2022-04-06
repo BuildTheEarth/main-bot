@@ -80,8 +80,7 @@ export default new Command({
     async run(this: Command, client: Client, message: CommandMessage, args: Args) {
         const subcommand = args.consumeSubcommandIf(["edit", "delete", "check"])
         const id = Number(args.consume("id"))
-        if (Number.isNaN(id))
-            return client.response.sendError(message, message.messages.noCaseId)
+        if (Number.isNaN(id)) return message.sendErrorMessage("noCaseId")
 
         await message.continue()
 
@@ -91,8 +90,7 @@ export default new Command({
             .andWhere({ id: id })
             .getOne()
 
-        if (!log)
-            return client.response.sendError(message, `Couldn't find case **#${id}**.`)
+        if (!log) return message.sendErrorMessage("noCaseFound", id)
 
         if (!["edit", "delete"].includes(subcommand)) {
             const embed = await log.displayEmbed(client)
@@ -102,16 +100,15 @@ export default new Command({
             const reason = client.placeholder.replacePlaceholders(
                 args.consumeRest(["reason"])
             )
-            if (!reason && !image)
-                return client.response.sendError(message, message.messages.noNewReason)
+            if (!reason && !image) return message.sendErrorMessage("noNewReason")
             if (reason === log.reason && !image)
-                return client.response.sendError(message, message.messages.noChange)
+                return message.sendErrorMessage("noChange")
 
             if (image) log.reasonImage = image
             if (reason) log.reason = reason
             await log.save()
             await log.updateNotification(client)
-            await client.response.sendError(message, `Edited case **#${id}**.`, false)
+            await message.sendErrorMessageSeen("editedCase", id)
             await client.log(log)
         } else if (subcommand === "delete") {
             if (
@@ -121,15 +118,10 @@ export default new Command({
                     client
                 )
             )
-                return client.response.sendError(message, message.messages.noPerms)
+                return message.sendErrorMessage("noPerms")
             const reason = args.consumeRest(["reason"])
-            if (!reason)
-                return client.response.sendError(
-                    message,
-                    message.messages.noDeletionReason
-                )
-            if (log.deletedAt)
-                return client.response.sendError(message, message.messages.alreadyDeleted)
+            if (!reason) return message.sendErrorMessage("noDeletionReason")
+            if (log.deletedAt) return message.sendErrorMessage("alreadyDeleted")
 
             log.deletedAt = new Date()
             log.deleter = message.member.user.id

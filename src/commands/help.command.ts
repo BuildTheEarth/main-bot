@@ -36,12 +36,12 @@ export default new Command({
         if (commandName) {
             const command = client.commands.search(commandName)
             if (!command)
-                return client.response.sendError(
-                    message,
-                    `Unknown command \`${truncateString(commandName, 32, "...")}\`.`
+                return message.sendErrorMessage(
+                    "unknownCommand",
+                    truncateString(commandName, 32, "...")
                 )
             if (!GuildMember.hasRole(member, command.permission, client))
-                return client.response.sendError(message, message.messages.noPerms)
+                return message.sendErrorMessage("noPerms")
 
             const embed = CommandUtils.getHelpMessage(
                 command,

@@ -47,45 +47,41 @@ export default new Command({
     async run(this: Command, client: Client, message: CommandMessage, args: Args) {
         const user = await args.consumeUser("member")
         if (!user)
-            return client.response.sendError(
-                message,
-                user === undefined
-                    ? message.messages.noUser
-                    : message.messages.invalidUser
-            )
+            return message.sendErrorMessage(user === undefined ? "noUser" : "invalidUser")
         const member: Discord.GuildMember = await message.guild.members
             .fetch({ user, cache: false })
             .catch(noop)
         if (member) {
-            if (member.user.bot)
-                return client.response.sendError(message, message.messages.isBot)
+            if (member.user.bot) return message.sendErrorMessage("isBot")
             if (GuildMember.hasRole(member, globalThis.client.roles.STAFF, client))
-                return client.response.sendError(message, message.messages.isStaffMute)
+                return message.sendErrorMessage("isStaffMute")
         }
 
         const length = args.consumeLength("length")
-        if (length == null)
-            return client.response.sendError(message, message.messages.invalidLength)
+        if (length == null) return message.sendErrorMessage("invalidLength")
 
         const image = args.consumeImage("image_url")
         const reason = client.placeholder.replacePlaceholders(
             args.consumeRest(["reason"])
         )
-        if (!reason) return client.response.sendError(message, message.messages.noReason)
+        if (!reason) return message.sendErrorMessage("noReason")
 
         await message.continue()
 
         const mute = await TimedPunishment.findOne({ member: user.id, type: "mute" })
-        if (mute) return client.response.sendError(message, message.messages.alreadyMuted)
+        if (mute) return message.sendErrorMessage("alreadyMuted")
 
         const log = await punish(client, message, user, "mute", reason, image, length)
 
         const away = member ? "" : ", though they're not in the server"
         const formattedLength = formatPunishmentTime(length)
         const formattedUser = user.id === message.member.id ? "*you*" : user.toString()
-        await client.response.sendError(
-            message,
-            `Muted ${formattedUser} ${formattedLength} (**#${log.id}**)${away}.`
+        await message.sendErrorMessageSeen(
+            "mutedMessage",
+            formattedUser,
+            formattedLength,
+            log.id,
+            away
         )
         await client.log(log)
     }

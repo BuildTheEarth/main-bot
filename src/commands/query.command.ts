@@ -33,8 +33,7 @@ export default new Command({
             })
         } catch (error) {
             const err = error.message || "\u200B"
-            client.response.sendError(
-                message,
+            message.sendError(
                 {
                     author: { name: "Error" },
                     description: `\`\`\`${truncateString(err, 1994)}\`\`\``

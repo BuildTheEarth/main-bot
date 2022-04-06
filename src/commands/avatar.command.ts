@@ -41,16 +41,11 @@ export default new Command({
             Number(args.consumeIf(arg => !Number.isNaN(Number(arg)), "size")) || 512
         const format = args.consumeIf("webp", "webp") || "png"
         if (!user)
-            return client.response.sendError(
-                message,
-                user === undefined
-                    ? message.messages.noUser
-                    : message.messages.invalidUser
-            )
+            return message.sendErrorMessage(user === undefined ? "noUser" : "invalidUser")
         if (!VALID_IMAGE_SIZES.includes(size))
-            return client.response.sendError(
-                message,
-                `The avatar size must be one of ${humanizeArray(VALID_IMAGE_SIZES)}.`
+            return message.sendErrorMessage(
+                "invalidAvatarSize",
+                `${humanizeArray(VALID_IMAGE_SIZES)}.`
             )
 
         await message.continue()

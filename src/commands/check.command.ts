@@ -44,12 +44,7 @@ export default new Command({
             .catch(noop)
 
         if (!user)
-            return client.response.sendError(
-                message,
-                user === undefined
-                    ? message.messages.noUser
-                    : message.messages.invalidUser
-            )
+            return message.sendErrorMessage(user === undefined ? "noUser" : "invalidUser")
 
         let criteria: typeorm.FindManyOptions<ActionLog> = { where: { member: user.id } }
         if (showDeleted) {

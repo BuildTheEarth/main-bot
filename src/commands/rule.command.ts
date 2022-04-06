@@ -33,19 +33,14 @@ export default new Command({
         //let rule: string
 
         if (Number.isInteger(number) || Number.isFinite(number)) {
-            if (number < 1)
-                return client.response.sendError(message, "That's not a valid number.")
+            if (number < 1) return message.sendErrorMessage("invalidNumber")
 
             const Snippets = Snippet.getRepository()
             const firstArg = args.consume("language").toLowerCase()
             const languageName = languages.getName(firstArg) || "English"
             const language = languages.validate(firstArg) ? firstArg.toLowerCase() : "en"
 
-            if (firstArg.toLowerCase() === "zh")
-                return client.response.sendError(
-                    message,
-                    `Please choose \`zh-s\` (简体中文) or \`zh-t\` (繁體中文)!`
-                )
+            if (firstArg.toLowerCase() === "zh") return message.sendErrorMessage("zhLang")
 
             await message.continue()
 
@@ -72,12 +67,13 @@ export default new Command({
                     .andWhere("snippet.type = 'rule'")
                     .getOne()
                 if (unlocalizedSnippet)
-                    client.response.sendError(
-                        message,
-                        `The **${args.command}** rule hasn't been translated to ${languageName} yet.`
+                    message.sendErrorMessage(
+                        "ruleNotTranslated",
+                        args.command,
+                        languageName
                     )
                 else {
-                    return client.response.sendError(message, `This rule dosent exist.`)
+                    return message.sendErrorMessage("theyDontKnowTheRules")
                 }
             } else {
                 return message
@@ -88,7 +84,7 @@ export default new Command({
                     .catch(() => null)
             }
         } else {
-            return client.response.sendError(message, `Valid input please!`)
+            return message.sendErrorMessage("pleaseValid")
         }
     }
 })

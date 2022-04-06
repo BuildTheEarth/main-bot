@@ -151,8 +151,7 @@ export default new Command({
             const dutyArray = roleReal.filter(role =>
                 GuildMember.hasRole(memberReal, client.roles[role], client, false)
             )
-            if (dutyArray.length === 0)
-                return client.response.sendError(message, message.messages.cannotDuty)
+            if (dutyArray.length === 0) return message.sendErrorMessage("cannotDuty")
             const toggle = await toggleDutyRole(
                 memberReal,
                 dutyArray as ("MODERATOR" | "SUPPORT" | "HELPER")[],
@@ -172,9 +171,8 @@ export default new Command({
             )
         } else if (subcommand === "schedule") {
             const time = args.consumeLength("time")
-            if (!time) return client.response.sendError(message, message.messages.noTime)
-            if (time <= 0)
-                return client.response.sendError(message, message.messages.slowmodeTooLow)
+            if (!time) return message.sendErrorMessage("noTime")
+            if (time <= 0) return message.sendErrorMessage("slowmodeTooLow")
             const member = await args.consumeUser("member")
             const role = args.consumeIf(
                 arg => ["support", "moderator", "helper"].includes(arg.toLowerCase()),
@@ -194,8 +192,7 @@ export default new Command({
             const dutyArray = roleReal.filter(role =>
                 GuildMember.hasRole(memberReal, client.roles[role], client, false)
             )
-            if (dutyArray.length === 0)
-                return client.response.sendError(message, message.messages.cannotDuty)
+            if (dutyArray.length === 0) return message.sendErrorMessage("cannotDuty")
 
             await client.dutyScheduler.scheduleDuty(
                 time,
@@ -224,10 +221,7 @@ export default new Command({
                     message.messages.scheduleCancel
                 )
             } else {
-                return client.response.sendError(
-                    message,
-                    message.messages.noCancellableSchedule
-                )
+                return message.sendErrorMessage("noCancellableSchedule")
             }
         } else if (subcommand === "check") {
             const member = await args.consumeUser("member")

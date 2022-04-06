@@ -115,8 +115,7 @@ export default new Command({
             "info"
         ])
         const name = args.consume("name").toLowerCase()
-        if (name.length > 32)
-            return client.response.sendError(message, message.messages.nameTooLong32)
+        if (name.length > 32) return message.sendErrorMessage("nameTooLong32")
         const language = args.consume("language").toLowerCase()
         const body = args.consumeRest(["body"])
 
@@ -158,28 +157,14 @@ export default new Command({
             await client.response.sendSuccess(message, embed)
         } else if (subcommand === "add") {
             if (placeholders[name + " " + language])
-                return client.response.sendError(
-                    message,
-                    message.messages.alreadyExistsPlaceholder
-                )
-            if (!body) return client.response.sendError(message, message.messages.noBody)
-            if (!name)
-                return client.response.sendError(
-                    message,
-                    message.messages.noPlaceholderName
-                )
-            if (!language)
-                return client.response.sendError(message, message.messages.noLang)
+                return message.sendErrorMessage("alreadyExistsPlaceholder")
+            if (!body) return message.sendErrorMessage("noBody")
+            if (!name) return message.sendErrorMessage("noPlaceholderName")
+            if (!language) return message.sendErrorMessage("noLang")
             if (!iso6391.validate(language))
-                return client.response.sendError(
-                    message,
-                    message.messages.invalidPlaceholderLang
-                )
+                return message.sendErrorMessage("invalidPlaceholderLang")
             if (name.match(/{+|}+/g))
-                return client.response.sendError(
-                    message,
-                    message.messages.invalidPlaceholderName
-                )
+                return message.sendErrorMessage("invalidPlaceholderName")
             await client.placeholder.addPlaceholder(name, language, body)
             await client.response.sendSuccess(
                 message,
@@ -187,19 +172,11 @@ export default new Command({
             )
             client.log(placeholders[name + " " + language], "add", message.member.user)
         } else if (subcommand === "edit") {
-            if (!body) return client.response.sendError(message, message.messages.noBody)
-            if (!name)
-                return client.response.sendError(
-                    message,
-                    message.messages.noPlaceholderName
-                )
-            if (!language)
-                return client.response.sendError(message, message.messages.noLang)
+            if (!body) return message.sendErrorMessage("noBody")
+            if (!name) return message.sendErrorMessage("noPlaceholderName")
+            if (!language) return message.sendErrorMessage("noLang")
             if (!placeholders[name + " " + language])
-                return client.response.sendError(
-                    message,
-                    message.messages.placeholderNotFound
-                )
+                return message.sendErrorMessage("placeholderNotFound")
             await client.placeholder.editPlaceholder(name, language, body)
             await client.response.sendSuccess(
                 message,
@@ -207,18 +184,10 @@ export default new Command({
             )
             client.log(placeholders[name + " " + language], "edit", message.member.user)
         } else if (subcommand === "delete") {
-            if (!name)
-                return client.response.sendError(
-                    message,
-                    message.messages.noPlaceholderName
-                )
-            if (!language)
-                return client.response.sendError(message, message.messages.noLang)
+            if (!name) return message.sendErrorMessage("noPlaceholderName")
+            if (!language) return message.sendErrorMessage("noLang")
             if (!placeholders[name + " " + language])
-                return client.response.sendError(
-                    message,
-                    message.messages.placeholderNotFound
-                )
+                return message.sendErrorMessage("placeholderNotFound")
             client.placeholder.deletePlaceholder(name, language)
             await client.response.sendSuccess(
                 message,
@@ -226,18 +195,10 @@ export default new Command({
             )
             client.log(placeholders[name + " " + language], "delete", message.member.user)
         } else if (subcommand === "info") {
-            if (!name)
-                return client.response.sendError(
-                    message,
-                    message.messages.noPlaceholderName
-                )
-            if (!language)
-                return client.response.sendError(message, message.messages.noLang)
+            if (!name) return message.sendErrorMessage("noPlaceholderName")
+            if (!language) return message.sendErrorMessage("noLang")
             if (!placeholders[name + " " + language])
-                return client.response.sendError(
-                    message,
-                    message.messages.placeholderNotFound
-                )
+                return message.sendErrorMessage("placeholderNotFound")
             const placeholder = placeholders[name + " " + language]
             const embed = {
                 color: hexToRGB(client.config.colors.info),

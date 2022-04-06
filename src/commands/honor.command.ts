@@ -43,13 +43,9 @@ export default new Command({
         const user = await args.consumeUser("user")
         const type = args.consumeIf(["advanced", "cool_build"], "type")
         if (!type) {
-            return client.response.sendError(
-                message,
-                `Please choose the type from one of ${humanizeArray(
-                    ["advanced", "cool_build"],
-                    true,
-                    "or"
-                )}`
+            return message.sendErrorMessage(
+                "chooseBuilder",
+                humanizeArray(["advanced", "cool_build"], true, "or")
             )
         }
 
@@ -58,12 +54,7 @@ export default new Command({
 
         const remove = !!args.consumeIf("remove", "demote")
         if (!user)
-            return client.response.sendError(
-                message,
-                user === undefined
-                    ? message.messages.noUser
-                    : message.messages.invalidUser
-            )
+            return message.sendErrorMessage(user === undefined ? "noUser" : "invalidUser")
 
         const member = await (await client.customGuilds.main()).members
             .fetch({ user, cache: true })
@@ -72,7 +63,7 @@ export default new Command({
             !member ||
             !GuildMember.hasRole(member, globalThis.client.roles.BUILDER, client)
         )
-            return client.response.sendError(message, message.messages.noBuilder)
+            return message.sendErrorMessage("noBuilder")
         const role = Guild.role(await client.customGuilds.main(), client.roles[roleName])
 
         await message.continue()
@@ -81,11 +72,7 @@ export default new Command({
             const record = await AdvancedBuilder.findOne(user.id, {
                 where: { roleName: roleName }
             })
-            if (!record)
-                return client.response.sendError(
-                    message,
-                    message.messages.notAdvancedBuilder
-                )
+            if (!record) return message.sendErrorMessage("notAdvancedBuilder")
             await record.removeBuilder(client)
             return client.response.sendSuccess(message, `Removed ${user}.`)
         } else {

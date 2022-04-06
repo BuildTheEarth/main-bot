@@ -50,6 +50,17 @@ export default class CommandMessage {
         return client.response.sendError(this, vsprintf(this.messages[message], args))
     }
 
+    public async sendErrorMessageSeen(
+        message: string,
+        ...args: any[]
+    ): Promise<CommandMessage> {
+        return client.response.sendError(
+            this,
+            vsprintf(this.messages[message], args),
+            false
+        )
+    }
+
     public getMessage(message: string, ...args: any[]): string {
         return vsprintf(this.messages[message], args)
     }
@@ -67,6 +78,17 @@ export default class CommandMessage {
         ...args: any[]
     ): Promise<CommandMessage> {
         return client.response.sendSuccess(this, vsprintf(this.messages[message], args))
+    }
+
+    public async sendSuccessMessageUnseen(
+        message: string,
+        ...args: any[]
+    ): Promise<CommandMessage> {
+        return client.response.sendSuccess(
+            this,
+            vsprintf(this.messages[message], args),
+            false
+        )
     }
 
     async send(payload: MessageOptions): Promise<CommandMessage> {

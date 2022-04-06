@@ -34,10 +34,7 @@ export default new Command({
 
         if (!command && !handler && !config && !file && !all) {
             const truncated = truncateString(name, 32, "...")
-            return client.response.sendError(
-                message,
-                `Unknown command, event handler, or module \`${truncated}\`.`
-            )
+            return message.sendErrorMessage("unknownReload", truncated)
         }
 
         await message.continue()

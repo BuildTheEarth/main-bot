@@ -59,14 +59,12 @@ export default new Command({
             await message.showModal("banner")
         } else if (subcommand === "delete") {
             const id = args.consume("id")
-            if (!id)
-                return client.response.sendError(message, message.messages.noBannerID)
+            if (!id) return message.sendErrorMessage("noBannerID")
 
             await message.continue()
 
             const banner = await BannerImage.findOne(Number(id))
-            if (!banner)
-                return client.response.sendError(message, "That banner doesn't exist.")
+            if (!banner) return message.sendErrorMessage("bannerDosentExist")
 
             await banner.remove()
             await client.response.sendSuccess(
@@ -83,14 +81,12 @@ export default new Command({
             })
         } else if (subcommand === "show") {
             const id = args.consume("id")
-            if (!id)
-                return client.response.sendError(message, message.messages.noBannerID)
+            if (!id) return message.sendErrorMessage("noBannerID")
 
             await message.continue()
 
             const banner = await BannerImage.findOne(Number(id))
-            if (!banner)
-                return client.response.sendError(message, message.messages.noBanner)
+            if (!banner) return message.sendErrorMessage("noBanner")
 
             await message.send({
                 embeds: [

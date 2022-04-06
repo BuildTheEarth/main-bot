@@ -164,10 +164,7 @@ export default new Command({
             : false
 
         if (message.channel.id === client.config.suggestions[category] && !canManage) {
-            const messages = await client.response.sendError(
-                message,
-                `Please run this command in another channel!`
-            )
+            const messages = await message.sendErrorMessage("anotherChannel")
             message.delete().catch(noop)
             setTimeout(() => {
                 if (messages) messages.delete().catch(noop)
@@ -190,8 +187,9 @@ export default new Command({
         const allSubcommandNames = this.subcommands.map(sub => sub.name)
         if (!allSubcommandNames.includes(subcommand))
             // prettier-ignore
-            return client.response.sendError(message,
-                `You must specify a subcommand! (${humanizeArray(availableSubcommandNames)}).`
+            return message.sendErrorMessage(
+                "specifyValidSub",
+                humanizeArray(availableSubcommandNames)
             )
 
         const suggestionsID = client.config.suggestions[category]
@@ -228,11 +226,7 @@ export default new Command({
             const results = await selection.take(PER_PAGE).getMany()
             const paginate = total > PER_PAGE
 
-            if (!total)
-                return client.response.sendError(
-                    message,
-                    `No suggestions found for **${cleanQuery}**!`
-                )
+            if (!total) return message.sendErrorMessage("noSuggFound", cleanQuery)
 
             const embed: Discord.MessageEmbedOptions = {
                 color: hexToRGB(client.config.colors.success),
@@ -361,23 +355,17 @@ export default new Command({
         /* suggestion management commands from here */
 
         const identifier = Suggestion.parseIdentifier(args.consume("number"))
-        if (!identifier.number)
-            return client.response.sendError(message, message.messages.noSuggestionNumber)
+        if (!identifier.number) return message.sendErrorMessage("noSuggestionNumber")
 
         await message.continue()
 
         const suggestion = await Suggestion.findByIdentifier(identifier, staff)
-        if (!suggestion)
-            return client.response.sendError(
-                message,
-                message.messages.invalidSuggestionNumber
-            )
+        if (!suggestion) return message.sendErrorMessage("invalidSuggestionNumber")
 
         const suggestionMessage: Discord.Message = await suggestions.messages
             .fetch(suggestion.message)
             .catch(() => null)
-        if (!suggestionMessage)
-            return client.response.sendError(message, message.messages.utlSuggestion)
+        if (!suggestionMessage) return message.sendErrorMessage("utlSuggestion")
 
         let thread = await (
             client.channels.cache.get(
@@ -406,22 +394,15 @@ export default new Command({
                 suggestion.author !== message.author.id &&
                 (field === "body" || !canManage)
             )
-                return client.response.sendError(message, message.messages.editOthers)
+                return message.sendErrorMessage("editOthers")
 
             let edited = args.consumeRest(["text"])
             if (field === "title") edited = await flattenMarkdown(edited, message.guild)
             if (field === "title" && edited.length > 200)
-                return client.response.sendError(
-                    message,
-                    message.messages.titleTooLong200
-                )
+                return message.sendErrorMessage("titleTooLong200")
             if (field === "teams" && edited.length > 255)
-                return client.response.sendError(
-                    message,
-                    message.messages.teamsTooLong255
-                )
-            if (!edited)
-                return client.response.sendError(message, message.messages.noBody)
+                return message.sendErrorMessage("teamsTooLong255")
+            if (!edited) return message.sendErrorMessage("noBody")
 
             suggestion[field] = edited
             await suggestion.save()
@@ -431,7 +412,7 @@ export default new Command({
             return client.response.sendSuccess(message, "Edited the suggestion!")
         } else if (subcommand === "delete") {
             if (suggestion.author !== message.author.id && !canManage)
-                return client.response.sendError(message, message.messages.deleteOthers)
+                return message.sendErrorMessage("deleteOthers")
 
             // BaseEntity#softRemove() doesn't save the deletion date to the object itself
             // and we need it to be saved because Suggestion#displayEmbed() uses it
@@ -457,10 +438,7 @@ export default new Command({
             const reason = args.consumeRest(["reason"])
             if (!(status in suggestionStatusActions)) {
                 const formatted = humanizeArray(Object.keys(suggestionStatusActions))
-                return client.response.sendError(
-                    message,
-                    `You must specify a new suggestion status! (${formatted}).`
-                )
+                return message.sendErrorMessage("specifyNewStatus", formatted)
             }
 
             suggestion.status = status as SuggestionStatus

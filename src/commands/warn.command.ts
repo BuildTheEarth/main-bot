@@ -39,23 +39,19 @@ export default new Command({
         const user = await args.consumeUser("member")
 
         if (!user)
-            return client.response.sendError(
-                message.channel,
-                user === undefined
-                    ? message.messages.noUser
-                    : message.messages.invalidUser
+            return message.sendErrorMessage(
+                user === undefined ? "noUser" : "invalidUsers"
             )
 
         const image = args.consumeImage("image_url")
         const reason = client.placeholder.replacePlaceholders(
             args.consumeRest(["reason"])
         )
-        if (!reason) return client.response.sendError(message, message.messages.noReason)
+        if (!reason) return message.sendErrorMessage("noReason")
         const member: Discord.GuildMember = await message.guild.members
             .fetch({ user, cache: false })
             .catch(() => null)
-        if (!member)
-            return client.response.sendError(message, message.messages.notInGuild)
+        if (!member) return message.sendErrorMessage("notInGuild")
 
         await message.continue()
 

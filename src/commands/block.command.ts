@@ -40,8 +40,7 @@ export default new Command({
         let results //TODO: Fix this huge mess
         if (subcommand === "search") {
             const query = args.consumeRest(["query"])
-            if (!query)
-                return client.response.sendError(message, "No query was specified")
+            if (!query) return message.sendErrorMessage("noQuery")
 
             await message.continue()
 
@@ -49,7 +48,7 @@ export default new Command({
         }
         if (subcommand === "absolute" || !subcommand) {
             const blocks = args.consumeRest(["blocks"])
-            if (!blocks) return client.response.sendError(message, "No blocks were found")
+            if (!blocks) return message.sendErrorMessage("noBlocksFound")
             const blocksInput = blocks.trim().split(",")
             const newBlocks = []
             blocksInput.forEach(element => newBlocks.push(element.trim()))
@@ -61,10 +60,7 @@ export default new Command({
             )
         }
         if (results.length === 0 || !results.length) {
-            return client.response.sendError(
-                message,
-                "Your search did not match any results\nSuggestions:\n• Make sure all words are spelled correctly.\n• Try different keywords.\n• Try more general keywords."
-            )
+            return message.sendErrorMessage("googleRipOff")
         }
         results = results.reduce((all, one, i) => {
             const ch = Math.floor(i / 5)
@@ -76,8 +72,7 @@ export default new Command({
             "base64"
         )
         let file = await client.webserver.addImage(buffIMG, `${message.id}/image0.png`)
-        if (results.length === 0)
-            client.response.sendError(message, "No results were found")
+        if (results.length === 0) message.sendErrorMessage("noResultsFound")
         else if (results.length === 1)
             message.send({
                 embeds: [

@@ -33,22 +33,19 @@ export default new Command({
         const user = await args.consumeUser("member")
 
         if (!user)
-            return client.response.sendError(
-                message,
-                user === undefined
-                    ? message.messages.noUser
-                    : message.messages.invalidUsers
+            return message.sendErrorMessage(
+                user === undefined ? "noUser" : "invalidUsers"
             )
 
         const reason = client.placeholder.replacePlaceholders(
             args.consumeRest(["reason"])
         )
-        if (!reason) return client.response.sendError(message, message.messages.noReason)
+        if (!reason) return message.sendErrorMessage("noReason")
 
         await message.continue()
 
         const mute = await TimedPunishment.findOne({ member: user.id, type: "mute" })
-        if (!mute) return client.response.sendError(message, message.messages.notMuted)
+        if (!mute) return message.sendErrorMessage("notMuted")
 
         await mute.undo(client)
 

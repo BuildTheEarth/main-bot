@@ -72,7 +72,7 @@ export default new Command({
     async run(this: Command, client: Client, message: CommandMessage, args: Args) {
         const subcommand = args.consumeSubcommand().toLowerCase()
         if (!this.subcommands.map(sub => sub.name).includes(subcommand))
-            return client.response.sendError(message, "You must specify a subcommand.")
+            return message.sendErrorMessage("specifySubcommand")
 
         if (subcommand === "list") {
             await message.continue()
@@ -103,15 +103,10 @@ export default new Command({
                 args.consume("credit")
             ]
             if (!key || !ModpackImage.isValidKey(key))
-                return client.response.sendError(message, "You must specify a valid key!")
-            if (!url || !isURL(url))
-                return client.response.sendError(message, "You must specify a valid URL!")
+                return message.sendErrorMessage("specifyValidKey")
+            if (!url || !isURL(url)) return message.sendErrorMessage("specifyValidURL")
             if (!credit && key !== "logo")
-                return client.response.sendError(
-                    message,
-                    "You must specify image credit!"
-                )
-
+                return message.sendErrorMessage("specifyImageCredit")
             await message.continue()
 
             let buff: Buffer
@@ -120,14 +115,11 @@ export default new Command({
                 const arrayBuffer = await response.arrayBuffer()
                 buff = Buffer.from(arrayBuffer)
             } catch {
-                return client.response.sendError(
-                    message,
-                    message.messages.requestIncomplete
-                )
+                return message.sendErrorMessage("requestIncomplete")
             }
             const dimensions = sizeOf(buff)
             if (dimensions.width / dimensions.height !== 16 / 9)
-                return client.response.sendError(message, message.messages.not16To9)
+                return message.sendErrorMessage("not16To9")
 
             const image = new ModpackImage()
             image.key = key as ModpackImageKey
@@ -141,13 +133,12 @@ export default new Command({
         } else if (subcommand === "delete") {
             const key = args.consume("key")
             if (!key || !ModpackImage.isValidKey(key))
-                return client.response.sendError(message, "You must specify a valid key!")
+                return message.sendErrorMessage("specifyValidKey")
 
             await message.continue()
 
             const image = await ModpackImage.findOne({ key: key as ModpackImageKey })
-            if (!image)
-                return client.response.sendError(message, "Couldn't find that image!")
+            if (!image) return message.sendErrorMessage("couldNotFindImage")
 
             await image.remove()
             client.response.sendSuccess(message, "Deleted image.")

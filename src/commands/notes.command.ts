@@ -85,20 +85,11 @@ export default new Command({
         const subcommand = args.consumeSubcommandIf(["add", "edit", "clear", "check"])
         const user = await args.consumeUser("member")
         if (!user)
-            return client.response.sendError(
-                message,
-                user === undefined
-                    ? message.messages.noUser
-                    : message.messages.invalidUser
-            )
+            return message.sendErrorMessage(user === undefined ? "noUser" : "invalidUser")
         const body = args.consumeRest(["body"])
         if (subcommand && subcommand !== "clear" && subcommand !== "check") {
-            if (!body) return client.response.sendError(message, message.messages.noBody)
-            if (body.length > 1024)
-                return client.response.sendError(
-                    message,
-                    message.messages.noteTooLong1024
-                )
+            if (!body) return message.sendErrorMessage("noBody")
+            if (body.length > 1024) return message.sendErrorMessage("noteTooLong1024")
         }
 
         await message.continue()
@@ -130,16 +121,13 @@ export default new Command({
                 )
             await client.response.sendSuccess(message, embed)
         } else if (!subcommand || subcommand === "add") {
-            if (!body) return client.response.sendError(message, message.messages.noBody)
+            if (!body) return message.sendErrorMessage("noBody")
 
             if (note) {
                 const tip = body.length <= 1024 ? " (Overwrite it with `note edit`)." : ""
                 note.body += `\n${body}`
                 if (note.body.length > 1024)
-                    return client.response.sendError(
-                        message,
-                        `Appending to this note would exceed the character limit!${tip}`
-                    )
+                    return message.sendErrorMessage("appendOverflow", tip)
                 if (!note.updaters.includes(message.member.id))
                     note.updaters.push(message.member.id)
 
@@ -155,10 +143,7 @@ export default new Command({
             }
         } else if (subcommand === "edit") {
             if (!note) {
-                return client.response.sendError(
-                    message,
-                    `${user} doesn't have any notes! (Add them with \`${client.config.prefix}note add\`)`
-                )
+                return message.sendErrorMessage("noNotes", user)
             }
             note.body = body
             if (!note.updaters.includes(message.member.id))

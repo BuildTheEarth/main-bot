@@ -21,14 +21,10 @@ export default new Command({
     ],
     async run(this: Command, client: Client, message: CommandMessage, args: Args) {
         const amount = Number(args.consume("amount"))
-        if (!amount)
-            return client.response.sendError(message, message.messages.invalidAmount)
-        if (Number.isNaN(amount))
-            return client.response.sendError(message, message.messages.invalidAmount)
-        if (amount > 100)
-            return client.response.sendError(message, message.messages.purgeLimit)
-        if (amount < 1)
-            return client.response.sendError(message, message.messages.purgeTooLow)
+        if (!amount) return message.sendErrorMessage("invalidAmount")
+        if (Number.isNaN(amount)) return message.sendErrorMessage("invalidAmount")
+        if (amount > 100) return message.sendErrorMessage("purgeLimit")
+        if (amount < 1) return message.sendErrorMessage("purgeTooLow")
 
         const purged = await (message.channel as Discord.TextChannel).bulkDelete(
             amount,

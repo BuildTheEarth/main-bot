@@ -27,11 +27,7 @@ export default new Command({
         const bedrock = await status(BEDROCK_URL)
 
         if (!java?.online) {
-            return client.response.sendError(
-                message,
-                message.messages.networkOffline,
-                false
-            )
+            return message.sendErrorMessageSeen("networkOffline")
         } else {
             const embed: Discord.MessageEmbedOptions = {
                 description: "The network is online!",
