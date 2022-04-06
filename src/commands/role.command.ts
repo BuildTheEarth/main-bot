@@ -204,7 +204,7 @@ export default new Command({
             } else {
                 members = role.members.map(m => {
                     return {
-                        tage: m.user.tag,
+                        tag: m.user.tag,
                         id: m.user.id
                     }
                 })
