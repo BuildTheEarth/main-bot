@@ -138,9 +138,18 @@ export default class CommandMessage {
         return this
     }
 
-    async showModal(modalName: string): Promise<void> {
+    async showModal(modalName: string, placeholders?: Record<string, string>): Promise<void> {
         const modal = this.client.modals.getLocaleModal(modalName, this.locale)
         modal.customId += "." + this.id
+        if (placeholders) {
+            modal.components.forEach(component => {
+                const componentPartialTyped = component as { placeholder: string , customId: string }
+                if (placeholders[componentPartialTyped.customId] !== undefined) {
+                    // @ts-ignore @eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    component.placeholder = placeholders[componentPartialTyped.customId]
+                }
+            })
+        }
         await this.message.showModal(
             new Discord.Modal(
                 modal as {
