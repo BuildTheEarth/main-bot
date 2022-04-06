@@ -1,7 +1,7 @@
 import Client from "../struct/Client.js"
 import Args from "../struct/Args.js"
 import Command from "../struct/Command.js"
-import Roles from "../util/roles.util.js"
+
 import CommandMessage from "../struct/CommandMessage.js"
 import { truncateString } from "@buildtheearth/bot-utils"
 
@@ -9,7 +9,7 @@ export default new Command({
     name: "reload",
     aliases: [],
     description: "Reload a command/an event handler/the config/a module/all modules.",
-    permission: Roles.BOT_DEVELOPER,
+    permission: globalThis.client.roles.BOT_DEVELOPER,
     args: [
         {
             name: "module",

@@ -1,7 +1,6 @@
 import express from "express"
 import { Controller, Get, Post, Param, Req, Res, Body } from "@nestjs/common"
 import GuildMember from "../../../discord/GuildMember.js"
-import Roles from "../../../../util/roles.util.js"
 import Discord from "discord.js"
 
 @Controller("/api/v1/builder")
@@ -45,7 +44,12 @@ export default class BuilderController {
 
         const userInfo = {
             id: user.id,
-            hasBuilder: GuildMember.hasRole(user, Roles.BUILDER, globalThis.client, false)
+            hasBuilder: GuildMember.hasRole(
+                user,
+                globalThis.client.roles.BUILDER,
+                globalThis.client,
+                false
+            )
         }
 
         res.send(userInfo)
@@ -107,14 +111,14 @@ export default class BuilderController {
             if (add === true) {
                 await GuildMember.addRole(
                     user,
-                    Roles.BUILDER,
+                    globalThis.client.roles.BUILDER,
                     "API request from Build Team Bot"
                 )
             }
             if (add === false) {
                 await GuildMember.removeRole(
                     user,
-                    Roles.BUILDER,
+                    globalThis.client.roles.BUILDER,
                     "API request from Build Team Bot"
                 )
             }
@@ -127,7 +131,12 @@ export default class BuilderController {
 
         const userInfo = {
             id: user.id,
-            hasBuilder: GuildMember.hasRole(user, Roles.BUILDER, globalThis.client, false)
+            hasBuilder: GuildMember.hasRole(
+                user,
+                globalThis.client.roles.BUILDER,
+                globalThis.client,
+                false
+            )
         }
 
         res.send(userInfo)

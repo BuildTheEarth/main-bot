@@ -4,7 +4,7 @@ import Client from "../struct/Client.js"
 import CommandMessage from "../struct/CommandMessage.js"
 import GuildMember from "../struct/discord/GuildMember.js"
 import Role from "../struct/discord/Role.js"
-import Roles from "../util/roles.util.js"
+
 import chalk from "chalk"
 import ModerationMenu from "../entities/ModerationMenu.entity.js"
 import createSuggestion from "../modals/suggest.modal.js"
@@ -21,7 +21,11 @@ export default async function (
             if (
                 !GuildMember.hasRole(
                     interaction.member as Discord.GuildMember,
-                    [Roles.MODERATOR, Roles.HELPER, Roles.MANAGER],
+                    [
+                        globalThis.client.roles.MODERATOR,
+                        globalThis.client.roles.HELPER,
+                        globalThis.client.roles.MANAGER
+                    ],
                     this
                 )
             ) {
@@ -45,7 +49,11 @@ export default async function (
                 interaction.customId.includes("modmenu.") &&
                 !GuildMember.hasRole(
                     interaction.member as Discord.GuildMember,
-                    [Roles.MODERATOR, Roles.HELPER, Roles.MANAGER],
+                    [
+                        globalThis.client.roles.MODERATOR,
+                        globalThis.client.roles.HELPER,
+                        globalThis.client.roles.MANAGER
+                    ],
                     this
                 )
             ) {
@@ -87,7 +95,8 @@ export default async function (
                     this
                 )
             //if (interaction.channel.type === "DM" && !command.dms) return
-            if (command.permission !== Roles.ANY && !hasPermission) return
+            if (command.permission !== globalThis.client.roles.ANY && !hasPermission)
+                return
 
             const label = interaction.member
                 ? Role.format(

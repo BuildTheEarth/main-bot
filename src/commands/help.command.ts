@@ -3,7 +3,7 @@ import Discord from "discord.js"
 import Args from "../struct/Args.js"
 import Command from "../struct/Command.js"
 import GuildMember from "../struct/discord/GuildMember.js"
-import Roles from "../util/roles.util.js"
+
 import CommandMessage from "../struct/CommandMessage.js"
 import CommandUtils from "../util/CommandUtils.util.js"
 import { truncateString } from "@buildtheearth/bot-utils"
@@ -12,7 +12,7 @@ export default new Command({
     name: "help",
     aliases: [],
     description: "Get a list of available commands (or info on one of them).",
-    permission: Roles.ANY,
+    permission: globalThis.client.roles.ANY,
     args: [
         {
             name: "command",

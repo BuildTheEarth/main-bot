@@ -2,16 +2,18 @@ import Client from "../struct/Client.js"
 import Args from "../struct/Args.js"
 import Command from "../struct/Command.js"
 import BannerImage from "../entities/BannerImage.entity.js"
-import Roles from "../util/roles.util.js"
+
 import CommandMessage from "../struct/CommandMessage.js"
 import { hexToRGB, quote } from "@buildtheearth/bot-utils"
-import Discord from "discord.js"
 
 export default new Command({
     name: "banner",
     aliases: [],
     description: "Manage the banner queue.",
-    permission: [Roles.MANAGER, Roles.BUILDER_COUNCIL],
+    permission: [
+        globalThis.client.roles.MANAGER,
+        globalThis.client.roles.BUILDER_COUNCIL
+    ],
     subcommands: [
         {
             name: "add",

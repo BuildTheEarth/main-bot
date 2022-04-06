@@ -1,7 +1,7 @@
 import Client from "../struct/Client.js"
 import Args from "../struct/Args.js"
 import Command from "../struct/Command.js"
-import Roles from "../util/roles.util.js"
+
 import ModerationNote from "../entities/ModerationNote.entity.js"
 import CommandMessage from "../struct/CommandMessage.js"
 import { formatTimestamp } from "@buildtheearth/bot-utils"
@@ -10,7 +10,11 @@ export default new Command({
     name: "notes",
     aliases: [],
     description: "Read and manage moderation notes.",
-    permission: [Roles.HELPER, Roles.MODERATOR, Roles.MANAGER],
+    permission: [
+        globalThis.client.roles.HELPER,
+        globalThis.client.roles.MODERATOR,
+        globalThis.client.roles.MANAGER
+    ],
     args: [
         {
             name: "member",

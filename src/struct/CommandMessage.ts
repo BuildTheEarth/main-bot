@@ -50,10 +50,7 @@ export default class CommandMessage {
         return client.response.sendError(this, vsprintf(this.messages[message], args))
     }
 
-    public getMessage(
-        message: string,
-        ...args: any[]
-    ): string {
+    public getMessage(message: string, ...args: any[]): string {
         return vsprintf(this.messages[message], args)
     }
 
@@ -122,11 +119,17 @@ export default class CommandMessage {
     async showModal(modalName: string): Promise<void> {
         const modal = this.client.modals.getLocaleModal(modalName, this.locale)
         modal.customId += "." + this.id
-        await this.message.showModal(new Discord.Modal(modal as {components:
-            | Discord.MessageActionRow<Discord.ModalActionRowComponent>[]
-            | Discord.MessageActionRowOptions<Discord.ModalActionRowComponentResolvable>[];
-          customId: string;
-          title: string;}))
+        await this.message.showModal(
+            new Discord.Modal(
+                modal as {
+                    components:
+                        | Discord.MessageActionRow<Discord.ModalActionRowComponent>[]
+                        | Discord.MessageActionRowOptions<Discord.ModalActionRowComponentResolvable>[]
+                    customId: string
+                    title: string
+                }
+            )
+        )
     }
 }
 

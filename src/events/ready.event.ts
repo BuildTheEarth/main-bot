@@ -30,7 +30,7 @@ export default async function ready(this: Client): Promise<void> {
             .fetch(channelID)
             .catch(() => null)
         if (channel) {
-            for (const messageID of Object.keys(this.config.reactionRoles[channelID])) {
+            for (const messageID of Object.keys(this.config.reactionRoles.channelID)) {
                 await channel.messages.fetch(messageID).catch(() => null)
             }
         }

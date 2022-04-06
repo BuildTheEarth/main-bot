@@ -1,7 +1,7 @@
 import Discord from "discord.js"
 import Client from "../struct/Client.js"
 import Command from "../struct/Command.js"
-import Roles from "../util/roles.util.js"
+
 import { noop } from "@buildtheearth/bot-utils"
 import fetch from "node-fetch"
 import MinecraftServerStatus from "../typings/MinecraftServerStatus.js"
@@ -15,7 +15,7 @@ export default new Command({
     name: "status",
     aliases: [],
     description: "Check the status of the Minecraft network.",
-    permission: Roles.ANY,
+    permission: globalThis.client.roles.ANY,
     async run(this: Command, client: Client, message: CommandMessage) {
         await message.continue()
 

@@ -1,7 +1,7 @@
 import Client from "../struct/Client.js"
 import Args from "../struct/Args.js"
 import Command from "../struct/Command.js"
-import Roles from "../util/roles.util.js"
+
 import typeorm from "typeorm"
 import languages from "../struct/client/iso6391.js"
 import Snippet from "../entities/Snippet.entity.js"
@@ -12,7 +12,7 @@ export default new Command({
     name: "rule",
     aliases: [],
     description: "Get a rule's text.",
-    permission: Roles.ANY,
+    permission: globalThis.client.roles.ANY,
     args: [
         {
             name: "number",

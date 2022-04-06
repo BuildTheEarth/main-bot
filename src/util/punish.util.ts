@@ -4,7 +4,6 @@ import CommandMessage from "../struct/CommandMessage.js"
 import TimedPunishment from "../entities/TimedPunishment.entity.js"
 import ActionLog from "../entities/ActionLog.entity.js"
 import GuildMember from "../struct/discord/GuildMember.js"
-import Roles from "./roles.util.js"
 import { noop } from "@buildtheearth/bot-utils"
 
 async function log(
@@ -44,7 +43,7 @@ async function log(
             ) as Discord.TextChannel
         if (
             member &&
-            GuildMember.hasRole(member, Roles.BUILDER, client) &&
+            GuildMember.hasRole(member, globalThis.client.roles.BUILDER, client) &&
             reviewerChannel
         )
             await client.response.sendSuccess(

@@ -2,7 +2,6 @@ import Client from "../struct/Client.js"
 import Args from "../struct/Args.js"
 import Command from "../struct/Command.js"
 import GuildMember from "../struct/discord/GuildMember.js"
-import Roles from "../util/roles.util.js"
 import CommandMessage from "../struct/CommandMessage.js"
 import toggleDutyRole from "../util/toggleDutyRole.util.js"
 import {
@@ -17,12 +16,22 @@ export default new Command({
     name: "duty",
     aliases: [],
     description: "Manage your on duty roles.",
-    permission: [Roles.HELPER, Roles.SUPPORT, Roles.MODERATOR, Roles.MANAGER],
+    permission: [
+        globalThis.client.roles.HELPER,
+        globalThis.client.roles.SUPPORT,
+        globalThis.client.roles.MODERATOR,
+        globalThis.client.roles.MANAGER
+    ],
     subcommands: [
         {
             name: "add",
             description: "Add someone to duty.",
-            permission: [Roles.HELPER, Roles.SUPPORT, Roles.MODERATOR, Roles.MANAGER],
+            permission: [
+                globalThis.client.roles.HELPER,
+                globalThis.client.roles.SUPPORT,
+                globalThis.client.roles.MODERATOR,
+                globalThis.client.roles.MANAGER
+            ],
             args: [
                 {
                     name: "member",
@@ -42,7 +51,12 @@ export default new Command({
         {
             name: "schedule",
             description: "Schedule a duty role.",
-            permission: [Roles.HELPER, Roles.SUPPORT, Roles.MODERATOR, Roles.MANAGER],
+            permission: [
+                globalThis.client.roles.HELPER,
+                globalThis.client.roles.SUPPORT,
+                globalThis.client.roles.MODERATOR,
+                globalThis.client.roles.MANAGER
+            ],
             args: [
                 {
                     name: "time",
@@ -68,7 +82,12 @@ export default new Command({
         {
             name: "cancel",
             description: "Cancel a duty schedule.",
-            permission: [Roles.HELPER, Roles.SUPPORT, Roles.MODERATOR, Roles.MANAGER],
+            permission: [
+                globalThis.client.roles.HELPER,
+                globalThis.client.roles.SUPPORT,
+                globalThis.client.roles.MODERATOR,
+                globalThis.client.roles.MANAGER
+            ],
             args: [
                 {
                     name: "member",
@@ -88,7 +107,12 @@ export default new Command({
         {
             name: "check",
             description: "Check duty status.",
-            permission: [Roles.HELPER, Roles.SUPPORT, Roles.MODERATOR, Roles.MANAGER],
+            permission: [
+                globalThis.client.roles.HELPER,
+                globalThis.client.roles.SUPPORT,
+                globalThis.client.roles.MODERATOR,
+                globalThis.client.roles.MANAGER
+            ],
             args: [
                 {
                     name: "member",
@@ -125,7 +149,7 @@ export default new Command({
             if (!role) roleReal = ["SUPPORT", "MODERATOR", "HELPER"]
             else roleReal = [role.toUpperCase()]
             const dutyArray = roleReal.filter(role =>
-                GuildMember.hasRole(memberReal, Roles[role], client, false)
+                GuildMember.hasRole(memberReal, client.roles[role], client, false)
             )
             if (dutyArray.length === 0)
                 return client.response.sendError(message, message.messages.cannotDuty)
@@ -168,7 +192,7 @@ export default new Command({
             if (!role) roleReal = ["SUPPORT", "MODERATOR", "HELPER"]
             else roleReal = [role.toUpperCase()]
             const dutyArray = roleReal.filter(role =>
-                GuildMember.hasRole(memberReal, Roles[role], client, false)
+                GuildMember.hasRole(memberReal, client.roles[role], client, false)
             )
             if (dutyArray.length === 0)
                 return client.response.sendError(message, message.messages.cannotDuty)

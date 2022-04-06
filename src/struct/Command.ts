@@ -8,7 +8,7 @@ export default class Command implements CommandProperties {
     aliases: string[]
     inheritGlobalArgs?: boolean
     description: string
-    permission: string | string[]
+    permission: string[] | string[][]
     basesubcommand?: string
     dms: boolean
     args?: CommandArgs[]
@@ -41,7 +41,7 @@ export interface CommandProperties extends SubCommandProperties {
     inheritGlobalArgs?: boolean
     devOnly?: boolean
     subcommands?: SubCommandProperties[]
-    permission: string | string[]
+    permission: string[] | string[][]
     basesubcommand?: string
     dms?: boolean
     seperator?: string
@@ -51,7 +51,7 @@ export interface CommandProperties extends SubCommandProperties {
 export interface SubCommandProperties {
     name: string
     description: string
-    permission?: string | string[]
+    permission?: string[] | string[][]
     group?: boolean
     subcommands?: SubCommandProperties[]
     args?: CommandArgs[]

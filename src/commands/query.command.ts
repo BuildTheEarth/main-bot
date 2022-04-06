@@ -1,7 +1,7 @@
 import Client from "../struct/Client.js"
 import Args from "../struct/Args.js"
 import Command from "../struct/Command.js"
-import Roles from "../util/roles.util.js"
+
 import CommandMessage from "../struct/CommandMessage.js"
 import JSON5 from "json5"
 import { truncateString } from "@buildtheearth/bot-utils"
@@ -10,7 +10,7 @@ export default new Command({
     name: "query",
     aliases: [],
     description: "Evaluate an SQL query.",
-    permission: Roles.BOT_DEVELOPER,
+    permission: globalThis.client.roles.BOT_DEVELOPER,
     devOnly: true,
     args: [
         {

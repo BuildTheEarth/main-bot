@@ -3,7 +3,7 @@ import GuildMember from "../struct/discord/GuildMember.js"
 import Guild from "../struct/discord/Guild.js"
 import Snippet from "../entities/Snippet.entity.js"
 import languages from "../struct/client/iso6391.js"
-import Roles from "../util/roles.util.js"
+
 import chalk from "chalk"
 import { noop } from "@buildtheearth/bot-utils"
 import Discord from "discord.js"
@@ -140,7 +140,7 @@ export default async function (this: Client, message: Discord.Message): Promise<
         const hasPermission =
             member && GuildMember.hasRole(member, command.permission, this)
         if (message.channel.type === "DM" && !command.dms) return
-        if (command.permission !== Roles.ANY && !hasPermission) return
+        if (command.permission !== globalThis.client.roles.ANY && !hasPermission) return
 
         return client.response.sendError(
             message,
@@ -151,7 +151,7 @@ export default async function (this: Client, message: Discord.Message): Promise<
     const suggestions = Object.values(this.config.suggestions)
     if (
         suggestions.includes(message.channel.id) &&
-        !GuildMember.hasRole(message.member, Roles.MANAGER, this)
+        !GuildMember.hasRole(message.member, globalThis.client.roles.MANAGER, this)
     ) {
         const error = await this.response.sendError(
             message,

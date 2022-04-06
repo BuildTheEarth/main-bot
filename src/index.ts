@@ -1,6 +1,7 @@
 import "reflect-metadata"
 import Discord from "discord.js"
 import Client from "./struct/Client.js"
+import { loadRoles } from "./util/roles.util.js"
 
 declare global {
     // eslint-disable-next-line no-var
@@ -31,6 +32,7 @@ globalThis.client = client
 async function main() {
     client.logger.debug("Loading config...")
     await client.config.load()
+    client.roles = loadRoles(client)
     client.logger.info("Loaded config.")
 
     client.logger.debug("Registering webserver...")

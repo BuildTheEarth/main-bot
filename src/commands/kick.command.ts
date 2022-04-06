@@ -3,7 +3,7 @@ import Discord from "discord.js"
 import Args from "../struct/Args.js"
 import Command from "../struct/Command.js"
 import GuildMember from "../struct/discord/GuildMember.js"
-import Roles from "../util/roles.util.js"
+
 import { noop } from "@buildtheearth/bot-utils"
 import CommandMessage from "../struct/CommandMessage.js"
 import punish from "../util/punish.util.js"
@@ -12,7 +12,7 @@ export default new Command({
     name: "kick",
     aliases: [],
     description: "Kick a member.",
-    permission: [Roles.MODERATOR, Roles.MANAGER],
+    permission: [globalThis.client.roles.MODERATOR, globalThis.client.roles.MANAGER],
     args: [
         {
             name: "member",
@@ -52,7 +52,7 @@ export default new Command({
             return client.response.sendError(message, message.messages.isBot)
         if (member.id === message.member.user.id)
             return client.response.sendError(message, message.messages.isSelfKick)
-        if (GuildMember.hasRole(member, Roles.STAFF, client))
+        if (GuildMember.hasRole(member, globalThis.client.roles.STAFF, client))
             return client.response.sendError(message, message.messages.isStaffKick)
 
         const image = args.consumeImage("image_url")

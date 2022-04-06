@@ -1,7 +1,7 @@
 import Client from "../struct/Client.js"
 import Args from "../struct/Args.js"
 import Command from "../struct/Command.js"
-import Roles from "../util/roles.util.js"
+
 import Discord from "discord.js"
 import ApiTypes = require("discord-api-types/v10")
 import CommandMessage from "../struct/CommandMessage.js"
@@ -11,7 +11,7 @@ export default new Command({
     name: "unlock",
     aliases: [],
     description: "Unlock the channel.",
-    permission: Roles.MANAGER,
+    permission: globalThis.client.roles.MANAGER,
     args: [
         {
             name: "channel",

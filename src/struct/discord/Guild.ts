@@ -8,8 +8,8 @@ export default class Guild {
         return (await guild.members.fetch(user)) as Discord.GuildMember
     }
 
-    static role(guild: Discord.Guild, name: string): Discord.Role {
-        return guild?.roles?.cache?.find(role => role.name === name)
+    static role(guild: Discord.Guild, name: string[]): Discord.Role {
+        return guild?.roles?.cache?.find(role => name.includes(role.id))
     }
 
     static async setVanityCode(

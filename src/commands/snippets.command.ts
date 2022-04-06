@@ -2,7 +2,7 @@ import Client from "../struct/Client.js"
 import Args from "../struct/Args.js"
 import Command from "../struct/Command.js"
 import Snippet from "../entities/Snippet.entity.js"
-import Roles from "../util/roles.util.js"
+
 import languages from "../struct/client/iso6391.js"
 import GuildMember from "../struct/discord/GuildMember.js"
 import Discord from "discord.js"
@@ -15,7 +15,7 @@ export default new Command({
     name: "snippets",
     aliases: [],
     description: "List and manage snippets.",
-    permission: Roles.ANY,
+    permission: globalThis.client.roles.ANY,
     inheritGlobalArgs: true,
     args: [
         {
@@ -30,7 +30,7 @@ export default new Command({
         {
             name: "list",
             description: "List all snippets.",
-            permission: Roles.ANY,
+            permission: globalThis.client.roles.ANY,
             args: [
                 {
                     name: "date",
@@ -44,7 +44,11 @@ export default new Command({
         {
             name: "add",
             description: "Add a snippet.",
-            permission: [Roles.SUPPORT, Roles.MANAGER, Roles.PR_TRANSLATION_TEAM],
+            permission: [
+                globalThis.client.roles.SUPPORT,
+                globalThis.client.roles.MANAGER,
+                globalThis.client.roles.PR_TRANSLATION_TEAM
+            ],
             args: [
                 {
                     name: "name",
@@ -69,7 +73,11 @@ export default new Command({
         {
             name: "edit",
             description: "Edit a snippet.",
-            permission: [Roles.SUPPORT, Roles.MANAGER, Roles.PR_TRANSLATION_TEAM],
+            permission: [
+                globalThis.client.roles.SUPPORT,
+                globalThis.client.roles.MANAGER,
+                globalThis.client.roles.PR_TRANSLATION_TEAM
+            ],
             args: [
                 {
                     name: "name",
@@ -94,7 +102,10 @@ export default new Command({
         {
             name: "delete",
             description: "Delete a snippet.",
-            permission: [Roles.SUPPORT, Roles.MANAGER],
+            permission: [
+                globalThis.client.roles.SUPPORT,
+                globalThis.client.roles.MANAGER
+            ],
             args: [
                 {
                     name: "name",
@@ -113,7 +124,7 @@ export default new Command({
         {
             name: "source",
             description: "Get the source response of a specific snippet.",
-            permission: Roles.ANY,
+            permission: globalThis.client.roles.ANY,
             args: [
                 {
                     name: "name",
@@ -132,13 +143,16 @@ export default new Command({
         {
             name: "aliases",
             description: " Add aliases to a snippet",
-            permission: [Roles.SUPPORT, Roles.MANAGER],
+            permission: [
+                globalThis.client.roles.SUPPORT,
+                globalThis.client.roles.MANAGER
+            ],
             group: true,
             subcommands: [
                 {
                     name: "list",
                     description: "List all snippet aliases for a snippet.",
-                    permission: Roles.ANY,
+                    permission: globalThis.client.roles.ANY,
                     args: [
                         {
                             name: "name",
@@ -157,7 +171,10 @@ export default new Command({
                 {
                     name: "add",
                     description: "Add a snippet alias.",
-                    permission: [Roles.SUPPORT, Roles.MANAGER],
+                    permission: [
+                        globalThis.client.roles.SUPPORT,
+                        globalThis.client.roles.MANAGER
+                    ],
                     args: [
                         {
                             name: "name",
@@ -182,7 +199,10 @@ export default new Command({
                 {
                     name: "delete",
                     description: "Deletes a snippet alias.",
-                    permission: [Roles.SUPPORT, Roles.MANAGER],
+                    permission: [
+                        globalThis.client.roles.SUPPORT,
+                        globalThis.client.roles.MANAGER
+                    ],
                     args: [
                         {
                             name: "name",
@@ -410,9 +430,9 @@ export default new Command({
             // eslint-disable-next-line prefer-const
             let [name, language] = [args.consume("name"), args.consume("language")]
             const editPermissions = [
-                Roles.SUPPORT,
-                Roles.MANAGER,
-                Roles.PR_TRANSLATION_TEAM
+                globalThis.client.roles.SUPPORT,
+                globalThis.client.roles.MANAGER,
+                globalThis.client.roles.PR_TRANSLATION_TEAM
             ]
             if (
                 !GuildMember.hasRole(message.member, editPermissions, client) &&
@@ -473,8 +493,15 @@ export default new Command({
                 )
             }
         }
-        const editPermissions = [Roles.SUPPORT, Roles.MANAGER, Roles.PR_TRANSLATION_TEAM]
-        const deletePermissions = [Roles.SUPPORT, Roles.MANAGER]
+        const editPermissions = [
+            globalThis.client.roles.SUPPORT,
+            globalThis.client.roles.MANAGER,
+            globalThis.client.roles.PR_TRANSLATION_TEAM
+        ]
+        const deletePermissions = [
+            globalThis.client.roles.SUPPORT,
+            globalThis.client.roles.MANAGER
+        ]
         if (
             !GuildMember.hasRole(message.member, editPermissions, client) &&
             subcommand !== "source"

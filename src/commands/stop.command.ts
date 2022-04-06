@@ -1,14 +1,14 @@
 import Client from "../struct/Client.js"
 import Args from "../struct/Args.js"
 import Command from "../struct/Command.js"
-import Roles from "../util/roles.util.js"
+
 import CommandMessage from "../struct/CommandMessage.js"
 
 export default new Command({
     name: "stop",
     aliases: ["die"],
     description: "Stop the bot.",
-    permission: Roles.BOT_DEVELOPER,
+    permission: globalThis.client.roles.BOT_DEVELOPER,
     args: [
         {
             name: "bye",

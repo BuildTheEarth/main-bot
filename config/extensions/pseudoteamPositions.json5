@@ -1,13 +1,13 @@
 {
     expansions: {
-        bto: "Team Owner",
-        vcc: "Verified Content Creator",
-        vs: "Verified Streamer"
+        bto: "TEAM_OWNER",
+        vcc: "VERIFIED_CONTENT_CREATOR",
+        vs: "VERIFIED_STREAMER"
     },
 
     leads: {
-        bto: "Regional Build Team Lead",
-        vcc: "PR Subteam Lead",
-        vs: "PR Subteam Lead"
+        bto: "RBTL",
+        vcc: "PR_SUBTEAM_LEAD",
+        vs: "PR_SUBTEAM_LEAD"
     }
 }

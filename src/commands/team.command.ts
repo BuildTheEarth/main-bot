@@ -1,7 +1,7 @@
 import Client from "../struct/Client.js"
 import Args from "../struct/Args.js"
 import Command from "../struct/Command.js"
-import Roles from "../util/roles.util.js"
+
 import typeorm from "typeorm"
 import Snippet from "../entities/Snippet.entity.js"
 import CommandMessage from "../struct/CommandMessage.js"
@@ -11,7 +11,7 @@ export default new Command({
     name: "team",
     aliases: ["bt"],
     description: "Get an invite for a build team.",
-    permission: Roles.ANY,
+    permission: globalThis.client.roles.ANY,
     args: [
         {
             name: "team",

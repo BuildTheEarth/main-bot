@@ -24,7 +24,7 @@ import JSON5 from "json5"
 import punish from "../util/punish.util.js"
 import { noop } from "@buildtheearth/bot-utils"
 import TimedPunishment from "./TimedPunishment.entity.js"
-import Roles from "../util/roles.util.js"
+
 import GuildMember from "../struct/discord/GuildMember.js"
 
 function getDuration(duration: number): string {
@@ -42,7 +42,11 @@ export default class ModerationMenu extends typeorm.BaseEntity {
         if (
             GuildMember.hasRole(
                 message.member,
-                [Roles.HELPER, Roles.MODERATOR, Roles.MANAGER],
+                [
+                    globalThis.client.roles.HELPER,
+                    globalThis.client.roles.MODERATOR,
+                    globalThis.client.roles.MANAGER
+                ],
                 client
             )
         )
@@ -351,7 +355,7 @@ export default class ModerationMenu extends typeorm.BaseEntity {
         }
 
         if (member) {
-            if (GuildMember.hasRole(member, Roles.STAFF, client)) {
+            if (GuildMember.hasRole(member, globalThis.client.roles.STAFF, client)) {
                 replyInteraction.editReply({
                     content: client.messages.getMessage("isStaffBan", interaction.locale)
                 })

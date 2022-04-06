@@ -2,7 +2,7 @@ import Client from "../struct/Client.js"
 import Args from "../struct/Args.js"
 import Command from "../struct/Command.js"
 import ActionLog from "../entities/ActionLog.entity.js"
-import Roles from "../util/roles.util.js"
+
 import GuildMember from "../struct/discord/GuildMember.js"
 import CommandMessage from "../struct/CommandMessage.js"
 
@@ -10,7 +10,11 @@ export default new Command({
     name: "case",
     aliases: [],
     description: "Check specific info on a case.",
-    permission: [Roles.HELPER, Roles.MODERATOR, Roles.MANAGER],
+    permission: [
+        globalThis.client.roles.HELPER,
+        globalThis.client.roles.MODERATOR,
+        globalThis.client.roles.MANAGER
+    ],
     basesubcommand: "check",
     args: [
         {
@@ -24,7 +28,11 @@ export default new Command({
         {
             name: "edit",
             description: "Edit a case.",
-            permission: [Roles.HELPER, Roles.MODERATOR, Roles.MANAGER],
+            permission: [
+                globalThis.client.roles.HELPER,
+                globalThis.client.roles.MODERATOR,
+                globalThis.client.roles.MANAGER
+            ],
             args: [
                 {
                     name: "id",
@@ -49,7 +57,10 @@ export default new Command({
         {
             name: "delete",
             description: "Delete a case.",
-            permission: [Roles.MODERATOR, Roles.MANAGER],
+            permission: [
+                globalThis.client.roles.MODERATOR,
+                globalThis.client.roles.MANAGER
+            ],
             args: [
                 {
                     name: "id",
@@ -103,7 +114,13 @@ export default new Command({
             await client.response.sendError(message, `Edited case **#${id}**.`, false)
             await client.log(log)
         } else if (subcommand === "delete") {
-            if (!GuildMember.hasRole(message.member, Roles.MODERATOR, client))
+            if (
+                !GuildMember.hasRole(
+                    message.member,
+                    globalThis.client.roles.MODERATOR,
+                    client
+                )
+            )
                 return client.response.sendError(message, message.messages.noPerms)
             const reason = args.consumeRest(["reason"])
             if (!reason)

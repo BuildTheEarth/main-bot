@@ -1,6 +1,6 @@
 import Client from "../struct/Client.js"
 import Command from "../struct/Command.js"
-import Roles from "../util/roles.util.js"
+
 import CommandMessage from "../struct/CommandMessage.js"
 import Discord from "discord.js"
 import {
@@ -15,7 +15,7 @@ export default new Command({
     name: "info",
     aliases: [],
     description: "Get info about the bot!",
-    permission: Roles.ANY,
+    permission: globalThis.client.roles.ANY,
     async run(this: Command, client: Client, message: CommandMessage) {
         const embed = new Discord.MessageEmbed()
             .addFields([

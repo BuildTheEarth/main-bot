@@ -50,6 +50,7 @@ export default class Client extends Discord.Client {
     messages = new Messages(this)
     placeholder = new PlaceholderHandler(this)
     deletedMessages = new WeakSet<Discord.Message>()
+    roles: Record<string, string[]> = {}
 
     async initDatabase(): Promise<void> {
         const db = this.config.database

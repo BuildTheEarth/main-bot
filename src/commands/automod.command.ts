@@ -1,6 +1,6 @@
 import Client from "../struct/Client.js"
 import Command from "../struct/Command.js"
-import Roles from "../util/roles.util.js"
+
 import CommandMessage from "../struct/CommandMessage.js"
 import Args from "../struct/Args.js"
 import BannedWord from "../entities/BannedWord.entity.js"
@@ -110,7 +110,11 @@ export default new Command({
             ]
         }
     ],
-    permission: [Roles.MODERATOR, Roles.MANAGER, Roles.ANY],
+    permission: [
+        globalThis.client.roles.MODERATOR,
+        globalThis.client.roles.MANAGER,
+        globalThis.client.roles.ANY
+    ],
     async run(this: Command, client: Client, message: CommandMessage, args: Args) {
         const subcommandGroup = args.consumeSubcommandGroupIf(["block", "except"])
         if (!subcommandGroup)

@@ -6,7 +6,7 @@ import Suggestion, {
     SuggestionStatus,
     SuggestionStatuses
 } from "../entities/Suggestion.entity.js"
-import Roles from "../util/roles.util.js"
+
 import path from "path"
 import url from "url"
 import {
@@ -31,7 +31,7 @@ export default new Command({
     name: "suggestion",
     aliases: ["suggestions"],
     description: "Manage suggestions.",
-    permission: Roles.ANY,
+    permission: globalThis.client.roles.ANY,
     dms: true,
     subcommands: [
         {
@@ -74,7 +74,7 @@ export default new Command({
         {
             name: "delete",
             description: "Delete a suggestion.",
-            permission: Roles.ANY,
+            permission: globalThis.client.roles.ANY,
             args: [
                 {
                     name: "number",
@@ -87,7 +87,10 @@ export default new Command({
         {
             name: "status",
             description: "Change the status of a suggestion.",
-            permission: [Roles.SUGGESTION_TEAM, Roles.MANAGER],
+            permission: [
+                globalThis.client.roles.SUGGESTION_TEAM,
+                globalThis.client.roles.MANAGER
+            ],
             args: [
                 {
                     name: "number",
@@ -121,7 +124,7 @@ export default new Command({
         {
             name: "search",
             description: "Search for suggestions.",
-            permission: Roles.ANY,
+            permission: globalThis.client.roles.ANY,
             args: [
                 {
                     name: "field",
@@ -152,7 +155,10 @@ export default new Command({
         const canManage = message.member
             ? GuildMember.hasRole(
                   message.member,
-                  [Roles.SUGGESTION_TEAM, Roles.MANAGER],
+                  [
+                      globalThis.client.roles.SUGGESTION_TEAM,
+                      globalThis.client.roles.MANAGER
+                  ],
                   client
               )
             : false

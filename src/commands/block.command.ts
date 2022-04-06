@@ -1,6 +1,6 @@
 import Client from "../struct/Client.js"
 import Command from "../struct/Command.js"
-import Roles from "../util/roles.util.js"
+
 import Discord from "discord.js"
 import Args from "../struct/Args.js"
 import mcBlockInfo from "minecraft-block-info"
@@ -11,7 +11,7 @@ export default new Command({
     name: "block",
     aliases: [],
     description: "Find a minecraft block! (currently only 1.12.2)",
-    permission: Roles.ANY,
+    permission: globalThis.client.roles.ANY,
     basesubcommand: "block",
     args: [
         {

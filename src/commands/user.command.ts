@@ -10,7 +10,7 @@ import {
 import Command from "../struct/Command.js"
 import path from "path"
 import url from "url"
-import Roles from "../util/roles.util.js"
+
 const userFlags = loadSyncJSON5(
     path.join(
         path.dirname(url.fileURLToPath(import.meta.url)) +
@@ -29,7 +29,7 @@ export default new Command({
     name: "user",
     aliases: ["whois"],
     description: "Get info on someone.",
-    permission: Roles.ANY,
+    permission: globalThis.client.roles.ANY,
     args: [
         {
             name: "member",

@@ -1,5 +1,5 @@
 import Command from "../struct/Command.js"
-import Roles from "../util/roles.util.js"
+
 import Client from "../struct/Client.js"
 import CommandMessage from "../struct/CommandMessage.js"
 import Args from "../struct/Args.js"
@@ -14,13 +14,13 @@ export default new Command({
     name: "blunder",
     aliases: [],
     description: "Count the low amount of days since the staff team last made a blunder",
-    permission: Roles.STAFF,
+    permission: globalThis.client.roles.STAFF,
     subcommands: [
         {
             name: "commit",
             description:
                 "admit to committing a blunder and reset the tracker. Resets tracker for your highest role if no ID",
-            permission: Roles.STAFF,
+            permission: globalThis.client.roles.STAFF,
             args: [
                 {
                     name: "id",
@@ -34,7 +34,7 @@ export default new Command({
         {
             name: "new",
             description: "add a new blunder tracker",
-            permission: Roles.MANAGER,
+            permission: globalThis.client.roles.MANAGER,
             args: [
                 {
                     name: "team",
@@ -61,7 +61,7 @@ export default new Command({
         {
             name: "delete",
             description: "delete a blunder tracker",
-            permission: Roles.MANAGER,
+            permission: globalThis.client.roles.MANAGER,
             args: [
                 {
                     name: "id",
@@ -74,7 +74,7 @@ export default new Command({
         {
             name: "list",
             description: "list blunder trackers available to you",
-            permission: Roles.STAFF
+            permission: globalThis.client.roles.STAFF
         }
     ],
     async run(this: Command, client: Client, message: CommandMessage, args: Args) {
@@ -90,10 +90,10 @@ export default new Command({
             ? GuildMember.hasRole(
                   staffMember,
                   [
-                      Roles.MANAGER,
-                      Roles.LEAD_DEVELOPER,
-                      Roles.PR_SUBTEAM_LEAD,
-                      Roles.COMMUNITY_SUBTEAM_LEAD
+                      globalThis.client.roles.MANAGER,
+                      globalThis.client.roles.LEAD_DEVELOPER,
+                      globalThis.client.roles.PR_SUBTEAM_LEAD,
+                      globalThis.client.roles.COMMUNITY_SUBTEAM_LEAD
                   ],
                   client
               )

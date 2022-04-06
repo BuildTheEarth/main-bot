@@ -6,7 +6,7 @@ import url from "url"
 import Command from "../struct/Command.js"
 import GuildMember from "../struct/discord/GuildMember.js"
 import Guild from "../struct/discord/Guild.js"
-import Roles from "../util/roles.util.js"
+
 const pseudoteamPositions: Record<string, Record<string, string>> = loadSyncJSON5(
     path.join(
         path.dirname(url.fileURLToPath(import.meta.url)) +
@@ -21,7 +21,10 @@ export default new Command({
     name: "position",
     aliases: [],
     description: "Promote/demote a member from your team.",
-    permission: [Roles.SUBTEAM_LEAD, Roles.REGIONAL_BUILD_TEAM_LEAD],
+    permission: [
+        globalThis.client.roles.SUBTEAM_LEAD,
+        globalThis.client.roles.REGIONAL_BUILD_TEAM_LEAD
+    ],
     args: [
         {
             name: "member",
@@ -57,18 +60,19 @@ export default new Command({
         let position = args.consumeIf(["bto", "vcc", "vs"], "position")
         if (!position)
             for (const [team, lead] of Object.entries(pseudoteamPositions.leads))
-                if (GuildMember.hasRole(message.member, lead, client)) position = team
+                if (GuildMember.hasRole(message.member, client.roles[lead], client))
+                    position = team
         if (!position) return
 
         const lead = pseudoteamPositions.leads[position]
         const expanded = pseudoteamPositions.expansions[position]
 
-        if (!GuildMember.hasRole(message.member, lead, client))
+        if (!GuildMember.hasRole(message.member, client.roles[lead], client))
             return client.response.sendError(
                 message,
                 `You can't manage members in the **${expanded}** team!`
             )
-        const role = Guild.role(await client.customGuilds.main(), expanded)
+        const role = Guild.role(await client.customGuilds.main(), client.roles[expanded])
 
         const member: Discord.GuildMember = await (
             await client.customGuilds.main()

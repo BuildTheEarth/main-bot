@@ -3,7 +3,7 @@ import Args from "../struct/Args.js"
 import Command from "../struct/Command.js"
 import GuildMember from "../struct/discord/GuildMember.js"
 import Guild from "../struct/discord/Guild.js"
-import Roles from "../util/roles.util.js"
+
 import { humanizeArray, ms, noop } from "@buildtheearth/bot-utils"
 import AdvancedBuilder from "../entities/AdvancedBuilder.entity.js"
 import CommandMessage from "../struct/CommandMessage.js"
@@ -13,7 +13,10 @@ export default new Command({
     name: "honor",
     aliases: ["advance"],
     description: "Add or remove a user as an honored builder.",
-    permission: [Roles.BUILDER_COUNCIL, Roles.MANAGER],
+    permission: [
+        globalThis.client.roles.BUILDER_COUNCIL,
+        globalThis.client.roles.MANAGER
+    ],
     args: [
         {
             name: "user",
@@ -65,9 +68,12 @@ export default new Command({
         const member = await (await client.customGuilds.main()).members
             .fetch({ user, cache: true })
             .catch(noop)
-        if (!member || !GuildMember.hasRole(member, Roles.BUILDER, client))
+        if (
+            !member ||
+            !GuildMember.hasRole(member, globalThis.client.roles.BUILDER, client)
+        )
             return client.response.sendError(message, message.messages.noBuilder)
-        const role = Guild.role(await client.customGuilds.main(), Roles[roleName])
+        const role = Guild.role(await client.customGuilds.main(), client.roles[roleName])
 
         await message.continue()
 
@@ -105,7 +111,7 @@ export default new Command({
                 record.schedule(client)
                 await member.roles.add(role)
 
-                if (Roles[roleName] === Roles.COOL_BUILD) {
+                if (client.roles[roleName] === globalThis.client.roles.COOL_BUILD) {
                     let progressChannel = client.customGuilds
                         .main()
                         .channels.cache.find(
@@ -130,7 +136,7 @@ export default new Command({
                     )
                 }
 
-                if (Roles[roleName] === Roles.ADVANCED_BUILDER) {
+                if (client.roles[roleName] === globalThis.client.roles.ADVANCED_BUILDER) {
                     await user
                         .createDM()
                         .then(dms =>

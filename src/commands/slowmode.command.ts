@@ -1,7 +1,7 @@
 import Client from "../struct/Client.js"
 import Args from "../struct/Args.js"
 import Command from "../struct/Command.js"
-import Roles from "../util/roles.util.js"
+
 import Discord from "discord.js"
 import ApiTypes = require("discord-api-types/v10")
 import CommandMessage from "../struct/CommandMessage.js"
@@ -10,7 +10,11 @@ export default new Command({
     name: "slowmode",
     aliases: [],
     description: "Set the slowmode.",
-    permission: [Roles.HELPER, Roles.MODERATOR, Roles.MANAGER],
+    permission: [
+        globalThis.client.roles.HELPER,
+        globalThis.client.roles.MODERATOR,
+        globalThis.client.roles.MANAGER
+    ],
     args: [
         {
             name: "time",

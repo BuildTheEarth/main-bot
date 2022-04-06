@@ -2,7 +2,7 @@ import Discord from "discord.js"
 import Client from "../struct/Client.js"
 import Args from "../struct/Args.js"
 import Command from "../struct/Command.js"
-import Roles from "../util/roles.util.js"
+
 import CommandMessage from "../struct/CommandMessage.js"
 import { hexToRGB, humanizeArray } from "@buildtheearth/bot-utils"
 
@@ -12,7 +12,7 @@ export default new Command({
     name: "avatar",
     aliases: ["av"],
     description: "Get someone's profile picture.",
-    permission: Roles.ANY,
+    permission: globalThis.client.roles.ANY,
     args: [
         {
             name: "user",

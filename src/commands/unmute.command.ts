@@ -3,14 +3,18 @@ import Args from "../struct/Args.js"
 import TimedPunishment from "../entities/TimedPunishment.entity.js"
 import ActionLog from "../entities/ActionLog.entity.js"
 import Command from "../struct/Command.js"
-import Roles from "../util/roles.util.js"
+
 import CommandMessage from "../struct/CommandMessage.js"
 
 export default new Command({
     name: "unmute",
     aliases: [],
     description: "Unmute a member.",
-    permission: [Roles.HELPER, Roles.MODERATOR, Roles.MANAGER],
+    permission: [
+        globalThis.client.roles.HELPER,
+        globalThis.client.roles.MODERATOR,
+        globalThis.client.roles.MANAGER
+    ],
     args: [
         {
             name: "member",

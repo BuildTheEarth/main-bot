@@ -1,7 +1,7 @@
 import Discord from "discord.js"
 import Client from "../struct/Client.js"
 import GuildMember from "../struct/discord/GuildMember.js"
-import Roles from "../util/roles.util.js"
+
 import { noop, trimSides } from "@buildtheearth/bot-utils"
 
 export default async function messageReactionAdd(
@@ -30,7 +30,7 @@ export default async function messageReactionAdd(
             guild.id === this.config.guilds.staff &&
             channel.name === "weekly-updates" &&
             reaction.emoji.name === "📣" &&
-            GuildMember.hasRole(member, Roles.MANAGER, this)
+            GuildMember.hasRole(member, globalThis.client.roles.MANAGER, this)
         ) {
             await reaction.users.remove(user)
             let update = reaction.message.content
@@ -64,7 +64,12 @@ export default async function messageReactionAdd(
                 (reaction.emoji.name === this.config.emojis.delete) &&
             GuildMember.hasRole(
                 member,
-                [Roles.MODERATOR, Roles.MANAGER, Roles.HELPER, Roles.SUGGESTION_TEAM],
+                [
+                    globalThis.client.roles.MODERATOR,
+                    globalThis.client.roles.MANAGER,
+                    globalThis.client.roles.HELPER,
+                    globalThis.client.roles.SUGGESTION_TEAM
+                ],
                 this
             )
         ) {
@@ -122,7 +127,12 @@ export default async function messageReactionAdd(
                 (reaction.emoji.name === this.config.emojis.pin) &&
             GuildMember.hasRole(
                 member,
-                [Roles.MODERATOR, Roles.MANAGER, Roles.HELPER, Roles.SUGGESTION_TEAM],
+                [
+                    globalThis.client.roles.MODERATOR,
+                    globalThis.client.roles.MANAGER,
+                    globalThis.client.roles.HELPER,
+                    globalThis.client.roles.SUGGESTION_TEAM
+                ],
                 this
             )
         ) {

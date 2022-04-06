@@ -1,7 +1,7 @@
 import Client from "../struct/Client.js"
 import Args from "../struct/Args.js"
 import Command from "../struct/Command.js"
-import Roles from "../util/roles.util.js"
+
 import Reminder from "../entities/Reminder.entity.js"
 import ApiTypes = require("discord-api-types/v10")
 import CommandMessage from "../struct/CommandMessage.js"
@@ -14,12 +14,12 @@ export default new Command({
     name: "remind",
     aliases: [],
     description: "List and manage reminders.",
-    permission: [Roles.MANAGER],
+    permission: [globalThis.client.roles.MANAGER],
     subcommands: [
         {
             name: "add",
             description: "Add a reminder.",
-            permission: [Roles.MANAGER],
+            permission: [globalThis.client.roles.MANAGER],
             args: [
                 {
                     name: "channel",
@@ -46,7 +46,7 @@ export default new Command({
         {
             name: "edit",
             description: "Edit a reminder.",
-            permission: [Roles.MANAGER],
+            permission: [globalThis.client.roles.MANAGER],
             args: [
                 {
                     name: "id",
@@ -65,7 +65,7 @@ export default new Command({
         {
             name: "delete",
             description: "Delete a reminder.",
-            permission: [Roles.MANAGER],
+            permission: [globalThis.client.roles.MANAGER],
             args: [
                 {
                     name: "id",
@@ -78,7 +78,7 @@ export default new Command({
         {
             name: "list",
             description: "List all reminders.",
-            permission: [Roles.MANAGER],
+            permission: [globalThis.client.roles.MANAGER],
             args: []
         }
     ],

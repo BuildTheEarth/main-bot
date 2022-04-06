@@ -3,7 +3,7 @@ import SnowflakePrimaryColumn from "./decorators/SnowflakePrimaryColumn.decorato
 import Client from "../struct/Client.js"
 import Guild from "../struct/discord/Guild.js"
 import { noop } from "@buildtheearth/bot-utils"
-import Roles from "../util/roles.util.js"
+
 import { Cron } from "croner"
 
 @typeorm.Entity({ name: "advanced_builders" })
@@ -20,7 +20,10 @@ export default class AdvancedBuilder extends typeorm.BaseEntity {
     async removeBuilder(client: Client): Promise<void> {
         if (client.honorBuilderTimeouts.has(this.builder))
             client.honorBuilderTimeouts.get(this.builder).stop()
-        const role = Guild.role(await client.customGuilds.main(), Roles[this.roleName])
+        const role = Guild.role(
+            await client.customGuilds.main(),
+            client.roles[this.roleName]
+        )
         const member = await (await client.customGuilds.main()).members
             .fetch({ user: this.builder, cache: true })
             .catch(noop)

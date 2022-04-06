@@ -2,7 +2,6 @@ import Discord from "discord.js"
 import Client from "../struct/Client.js"
 import GuildMember from "../struct/discord/GuildMember.js"
 import { noop } from "@buildtheearth/bot-utils"
-import Roles from "../util/roles.util.js"
 
 export default async function messageReactionRemove(
     this: Client,
@@ -34,7 +33,12 @@ export default async function messageReactionRemove(
                 (reaction.emoji.name === this.config.emojis.pin) &&
             GuildMember.hasRole(
                 member,
-                [Roles.MODERATOR, Roles.MANAGER, Roles.HELPER, Roles.SUGGESTION_TEAM],
+                [
+                    globalThis.client.roles.MODERATOR,
+                    globalThis.client.roles.MANAGER,
+                    globalThis.client.roles.HELPER,
+                    globalThis.client.roles.SUGGESTION_TEAM
+                ],
                 this
             )
         ) {

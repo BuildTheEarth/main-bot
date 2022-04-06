@@ -2,7 +2,7 @@ import Discord from "discord.js"
 import Client from "../struct/Client.js"
 import Args from "../struct/Args.js"
 import Command from "../struct/Command.js"
-import Roles from "../util/roles.util.js"
+
 import ActionLog, { Action } from "../entities/ActionLog.entity.js"
 import TimedPunishment from "../entities/TimedPunishment.entity.js"
 import ModerationNote from "../entities/ModerationNote.entity.js"
@@ -15,11 +15,11 @@ export default new Command({
     aliases: [],
     description: "Check a user's punishment records.",
     permission: [
-        Roles.HELPER,
-        Roles.MODERATOR,
-        Roles.MANAGER,
-        Roles.SUPPORT,
-        Roles.PR_SUBTEAM_LEADS
+        globalThis.client.roles.HELPER,
+        globalThis.client.roles.MODERATOR,
+        globalThis.client.roles.MANAGER,
+        globalThis.client.roles.SUPPORT,
+        globalThis.client.roles.PR_SUBTEAM_LEADS
     ],
     args: [
         {

@@ -2,7 +2,7 @@ import Client from "../struct/Client.js"
 import Args from "../struct/Args.js"
 import Command from "../struct/Command.js"
 import Guild from "../struct/discord/Guild.js"
-import Roles from "../util/roles.util.js"
+
 import ApiTypes = require("discord-api-types/v10")
 import Discord from "discord.js"
 import CommandMessage from "../struct/CommandMessage.js"
@@ -11,7 +11,7 @@ export default new Command({
     name: "access",
     aliases: [],
     description: "Enable the Manage Permissions permission for a channel.",
-    permission: Roles.MANAGER,
+    permission: globalThis.client.roles.MANAGER,
     args: [
         {
             name: "channel",
@@ -34,7 +34,7 @@ export default new Command({
 
         await message.continue()
 
-        const manager = Guild.role(message.guild, Roles.MANAGER)
+        const manager = Guild.role(message.guild, globalThis.client.roles.MANAGER)
         /*eslint-disable */
         const reason = `Access requested by ${message.member.user.tag} (${message.member.id})`
         /*eslint-enable */

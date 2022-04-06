@@ -3,14 +3,14 @@ import Args from "../struct/Args.js"
 import TimedPunishment from "../entities/TimedPunishment.entity.js"
 import ActionLog from "../entities/ActionLog.entity.js"
 import Command from "../struct/Command.js"
-import Roles from "../util/roles.util.js"
+
 import CommandMessage from "../struct/CommandMessage.js"
 
 export default new Command({
     name: "unban",
     aliases: [],
     description: "Unban a member.",
-    permission: [Roles.MODERATOR, Roles.MANAGER],
+    permission: [globalThis.client.roles.MODERATOR, globalThis.client.roles.MANAGER],
     args: [
         {
             name: "member",

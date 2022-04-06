@@ -3,7 +3,7 @@ import Discord from "discord.js"
 import Args from "../struct/Args.js"
 import Command from "../struct/Command.js"
 import Guild from "../struct/discord/Guild.js"
-import Roles from "../util/roles.util.js"
+
 import { noop } from "@buildtheearth/bot-utils"
 import CommandMessage from "../struct/CommandMessage.js"
 
@@ -52,7 +52,7 @@ export default new Command({
     name: "language",
     aliases: ["lang"],
     description: "Give a member a language role.",
-    permission: Roles.STAFF,
+    permission: globalThis.client.roles.STAFF,
     args: [
         {
             name: "member",

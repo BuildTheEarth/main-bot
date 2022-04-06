@@ -27,18 +27,18 @@ import {
     truncateString
 } from "@buildtheearth/bot-utils"
 import languages from "../struct/client/iso6391.js"
-import Roles from "../util/roles.util.js"
+
 import CommandMessage from "../struct/CommandMessage.js"
 
 // prettier-ignore
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-const _ = { Args, Client, Command, BannerImage, ActionLog, ModerationNote, ModpackImage, Snippet, Suggestion, TimedPunishment, CommandList, ConfigManager, EventList, flattenMarkdown, formatPunishmentTime, formatTimestamp, humanizeArray, humanizeConstant, isURL, loadDir, noop, pastTense, languages, Roles, stringifyAnything, truncateString }
+const _ = { Args, Client, Command, BannerImage, ActionLog, ModerationNote, ModpackImage, Snippet, Suggestion, TimedPunishment, CommandList, ConfigManager, EventList, flattenMarkdown, formatPunishmentTime, formatTimestamp, humanizeArray, humanizeConstant, isURL, loadDir, noop, pastTense, languages, stringifyAnything, truncateString }
 
 export default new Command({
     name: "eval",
     aliases: [],
     description: "Evaluate JavaScript code.",
-    permission: Roles.BOT_DEVELOPER,
+    permission: globalThis.client.roles.BOT_DEVELOPER,
     devOnly: true,
     args: [
         {

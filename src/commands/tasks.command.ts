@@ -5,7 +5,7 @@ import Client from "../struct/Client.js"
 import Args from "../struct/Args.js"
 import Command from "../struct/Command.js"
 import Task, { TaskStatus, TaskStatuses } from "../entities/Task.entity.js"
-import Roles from "../util/roles.util.js"
+
 import typeorm from "typeorm"
 import CommandMessage from "../struct/CommandMessage.js"
 import ApiTypes = require("discord-api-types/v10")
@@ -15,7 +15,7 @@ export default new Command({
     name: "tasks",
     aliases: [],
     description: "Read and manage tasks.",
-    permission: Roles.STAFF,
+    permission: globalThis.client.roles.STAFF,
     dms: true,
     subcommands: [
         {

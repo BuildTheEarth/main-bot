@@ -2,7 +2,7 @@ import Client from "../struct/Client.js"
 import Args from "../struct/Args.js"
 import Command from "../struct/Command.js"
 import ModpackImage, { ModpackImageKey } from "../entities/ModpackImage.entity.js"
-import Roles from "../util/roles.util.js"
+
 import CommandMessage from "../struct/CommandMessage.js"
 import JSON5 from "json5"
 import fetch from "node-fetch"
@@ -13,7 +13,7 @@ export default new Command({
     name: "modpack",
     aliases: ["mp"],
     description: "Manage the modpack's background images.",
-    permission: Roles.MANAGER,
+    permission: globalThis.client.roles.MANAGER,
     subcommands: [
         {
             name: "list",

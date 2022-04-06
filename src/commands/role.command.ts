@@ -1,6 +1,6 @@
 import Client from "../struct/Client.js"
 import Command from "../struct/Command.js"
-import Roles from "../util/roles.util.js"
+
 import CommandMessage from "../struct/CommandMessage.js"
 import Args from "../struct/Args.js"
 import GuildMember from "../struct/discord/GuildMember.js"
@@ -11,7 +11,7 @@ export default new Command({
     name: "role",
     aliases: ["roleinfo"],
     description: "View information about a role.",
-    permission: Roles.ANY,
+    permission: globalThis.client.roles.ANY,
     basesubcommand: "view",
     args: [
         {
@@ -25,7 +25,10 @@ export default new Command({
         {
             name: "download",
             description: "Download a list of all the members in a role.",
-            permission: [Roles.SUBTEAM_LEAD, Roles.MANAGER],
+            permission: [
+                globalThis.client.roles.SUBTEAM_LEAD,
+                globalThis.client.roles.MANAGER
+            ],
             args: [
                 {
                     name: "role",
@@ -179,7 +182,8 @@ export default new Command({
             if (
                 !GuildMember.hasRole(
                     message.member,
-                    Roles.SUBTEAM_LEAD || Roles.MANAGER,
+                    globalThis.client.roles.SUBTEAM_LEAD ||
+                        globalThis.client.roles.MANAGER,
                     client
                 )
             )
@@ -204,7 +208,7 @@ export default new Command({
             } else {
                 members = role.members.map(m => {
                     return {
-                        tage: m.user.tag,
+                        tag: m.user.tag,
                         id: m.user.id
                     }
                 })

@@ -2,7 +2,7 @@ import Client from "../struct/Client.js"
 import Args from "../struct/Args.js"
 import Command from "../struct/Command.js"
 import CommandMessage from "../struct/CommandMessage.js"
-import Roles from "../util/roles.util.js"
+
 import iso6391 from "../struct/client/iso6391.js"
 import { hexToRGB } from "@buildtheearth/bot-utils"
 
@@ -10,7 +10,12 @@ export default new Command({
     name: "placeholder",
     aliases: ["placeholders"],
     description: "List and manage placeholders.",
-    permission: [Roles.MODERATOR, Roles.HELPER, Roles.MANAGER, Roles.PR_TRANSLATION_TEAM],
+    permission: [
+        globalThis.client.roles.MODERATOR,
+        globalThis.client.roles.HELPER,
+        globalThis.client.roles.MANAGER,
+        globalThis.client.roles.PR_TRANSLATION_TEAM
+    ],
     subcommands: [
         {
             name: "list",

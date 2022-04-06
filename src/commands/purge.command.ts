@@ -1,7 +1,7 @@
 import Client from "../struct/Client.js"
 import Args from "../struct/Args.js"
 import Command from "../struct/Command.js"
-import Roles from "../util/roles.util.js"
+
 import Discord from "discord.js"
 import CommandMessage from "../struct/CommandMessage.js"
 import { hexToRGB } from "@buildtheearth/bot-utils"
@@ -10,7 +10,7 @@ export default new Command({
     name: "purge",
     aliases: [],
     description: "Bulk-delete messages in a channel.",
-    permission: [Roles.MODERATOR, Roles.MANAGER],
+    permission: [globalThis.client.roles.MODERATOR, globalThis.client.roles.MANAGER],
     args: [
         {
             name: "amount",
