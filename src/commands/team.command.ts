@@ -51,7 +51,7 @@ export async function runBtCommand(
         .andWhere(new typeorm.Brackets(find))
         .getOne()
 
-    let locale = "en_US"
+    let locale = "en-US"
 
     if (message instanceof CommandMessage) locale = message.locale
 

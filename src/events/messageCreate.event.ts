@@ -124,7 +124,7 @@ export default async function (this: Client, message: Discord.Message): Promise<
             if (!team || team === "")
                 return client.response.sendError(
                     message,
-                    client.messages.getMessage("noTeam", "en_US")
+                    client.messages.getMessage("noTeam", "en-US")
                 )
             return await runBtCommand(client, message, team)
         }
