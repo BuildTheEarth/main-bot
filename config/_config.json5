@@ -31,7 +31,7 @@
     images: {
         //Please add the bindport in Dockerfile aswell
         bindPort: 8080,
-        bindAddress: "127.0.0.1"
+        bindAddress: "http://127.0.0.1"
     },
     emojis: {
         upvote: "👍",
