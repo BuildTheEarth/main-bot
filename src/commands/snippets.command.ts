@@ -65,7 +65,7 @@ export default new Command({
                 {
                     name: "body",
                     description: "Snippet body.",
-                    required: true,
+                    required: false,
                     optionType: "STRING"
                 }
             ]
@@ -94,7 +94,7 @@ export default new Command({
                 {
                     name: "body",
                     description: "Snippet body.",
-                    required: true,
+                    required: false,
                     optionType: "STRING"
                 }
             ]
@@ -520,7 +520,6 @@ export default new Command({
         ) {
             const body = args.consumeRest(["body"])
             let snippet: Snippet
-            if (!body) return message.sendErrorMessage("noBody")
 
             if (subcommand === "add") {
                 if (client.commands.search(name))
@@ -531,6 +530,7 @@ export default new Command({
                         return message.sendErrorMessage("invalidRuleName")
                     }
                 }
+                if (!body) return message.showModal("snippet")
                 snippet = new Snippet()
                 snippet.name = name
                 snippet.language = language
@@ -539,10 +539,32 @@ export default new Command({
             } else if (subcommand === "edit") {
                 if (!existingSnippet)
                     return message.sendErrorMessage("nonexistantSnippet")
-
+                if (!body) return message.showModal("snippet")
                 if (existingSnippet.body === body)
                     return message.sendErrorMessage("noChange")
                 snippet = existingSnippet
+            }
+
+            // eslint-disable-next-line no-inner-declarations
+            async function interCreate(interaction: Discord.ModalSubmitInteraction) {
+                const body = interaction.fields.getTextInputValue("body")
+                if (subcommand === "add") {
+                    snippet = new Snippet()
+                    snippet.name = name
+                    snippet.language = language
+                    snippet.body = body
+                    snippet.aliases = []
+                    snippet.type = currType
+                } else if (subcommand === "edit") {
+                    if (existingSnippet.body === body)
+                        return message.sendErrorMessage("noChange")
+                    snippet = existingSnippet
+                    snippet.body = body
+                }
+                await snippet.save()
+                const past = subcommand === "add" ? "Added" : "Edited"
+                // prettier-ignore
+                await client.response.sendSuccess(message, `${past} **${name}** ${currType} in ${languageName}.`)
             }
 
             snippet.body = body

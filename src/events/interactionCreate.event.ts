@@ -143,6 +143,9 @@ export default async function (
             if (type === "bannermodal") {
                 return createBanner(interaction)
             }
+            if (type === "snippetmodal") {
+                interCreate
+            }
         }
     }
 }
