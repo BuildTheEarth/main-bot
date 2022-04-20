@@ -10,6 +10,7 @@ import ModerationMenu from "../entities/ModerationMenu.entity.js"
 import createSuggestion from "../modals/suggest.modal.js"
 import createBanner from "../modals/banner.modal.js"
 import createSnippet from "../modals/snippet.modal.js"
+import createPlaceholder from "../modals/placeholder.modal.js"
 
 export default async function (
     this: Client,
@@ -146,6 +147,9 @@ export default async function (
             }
             if (type === "snippetmodal") {
                 return createSnippet(interaction, this)
+            }
+            if (type === "placeholdermodal") {
+                return createPlaceholder(interaction, this)
             }
         }
     }

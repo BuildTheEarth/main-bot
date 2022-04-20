@@ -40,7 +40,7 @@ export default new Command({
                 {
                     name: "body",
                     description: "placeholder body.",
-                    required: true,
+                    required: false,
                     optionType: "STRING"
                 }
             ]
@@ -64,7 +64,7 @@ export default new Command({
                 {
                     name: "body",
                     description: "placeholder body.",
-                    required: true,
+                    required: false,
                     optionType: "STRING"
                 }
             ]
@@ -119,7 +119,7 @@ export default new Command({
         const language = args.consume("language").toLowerCase()
         const body = args.consumeRest(["body"])
 
-        await message.continue()
+        if (!(subcommand === "add" || subcommand === "edit")) await message.continue()
         const placeholders = await client.placeholder.cache
         if (subcommand === "list" || !subcommand) {
             const tidy: Record<string, { languages: string[] }> = {}
@@ -158,13 +158,21 @@ export default new Command({
         } else if (subcommand === "add") {
             if (placeholders[name + " " + language])
                 return message.sendErrorMessage("alreadyExistsPlaceholder")
-            if (!body) return message.sendErrorMessage("noBody")
             if (!name) return message.sendErrorMessage("noPlaceholderName")
             if (!language) return message.sendErrorMessage("noLang")
             if (!iso6391.validate(language))
                 return message.sendErrorMessage("invalidPlaceholderLang")
             if (name.match(/{+|}+/g))
                 return message.sendErrorMessage("invalidPlaceholderName")
+            if (!body) {
+                const modalId = await message.showModal("placeholder")
+                return client.interactionInfo.set(modalId, {
+                    name: name,
+                    language: language,
+                    subcommand: "add",
+                    modalType: "placeholdermodal",
+                })
+            }
             await client.placeholder.addPlaceholder(name, language, body)
             await client.response.sendSuccess(
                 message,
@@ -172,11 +180,20 @@ export default new Command({
             )
             client.log(placeholders[name + " " + language], "add", message.member.user)
         } else if (subcommand === "edit") {
-            if (!body) return message.sendErrorMessage("noBody")
             if (!name) return message.sendErrorMessage("noPlaceholderName")
             if (!language) return message.sendErrorMessage("noLang")
             if (!placeholders[name + " " + language])
                 return message.sendErrorMessage("placeholderNotFound")
+            if (!body) {
+                const modalId = await message.showModal("placeholder", {body: placeholders[name + " " + language].body})
+                return client.interactionInfo.set(modalId, {
+                    name: name,
+                    language: language,
+                    subcommand: "edit",
+                    modalType: "placeholdermodal",
+                    existingPlaceholder: placeholders[name + " " + language]
+                })
+            }
             await client.placeholder.editPlaceholder(name, language, body)
             await client.response.sendSuccess(
                 message,
