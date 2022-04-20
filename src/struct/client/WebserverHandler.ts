@@ -43,11 +43,11 @@ export default class WebserverHandler {
             ) + name,
             img
         )
-        return `http://${this.client.config.images.bindAddress}:${this.client.config.images.bindPort}/image/${name}` //fix this cardinal sin before pushing
+        return `${this.client.config.images.bindAddress}:${this.client.config.images.bindPort}/image/${name}` //fix this cardinal sin before pushing
     }
 
     getURLfromPath(name: string): string {
-        return `http://${this.client.config.images.bindAddress}:${this.client.config.images.bindPort}/image/${name}` //fix this cardinal sin before pushing
+        return `${this.client.config.images.bindAddress}:${this.client.config.images.bindPort}/image/${name}` //fix this cardinal sin before pushing
     }
 
     async imageExists(name: string): Promise<boolean> {
