@@ -149,6 +149,7 @@ export default class Args {
 
     consumeAttachment(
         check?: (attachment: Discord.MessageAttachment) => boolean
+        // ill keep the lint error for now until 13.7, so i remember, so dont fix this
     ): Discord.MessageAttachment {
         //NOTE: USE THE ATTACHMENT STUFF WHEN 13.7 IS AVAILABLE
         return null

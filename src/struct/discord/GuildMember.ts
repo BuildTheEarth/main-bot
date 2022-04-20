@@ -16,7 +16,11 @@ export default class GuildMember {
             isStringArr
         const isNotStringArrFunc = (roles: string[] | string[][]): roles is string[][] =>
             !isStringArr
-        if ( (isStringArrFunc(roles)  && roles === globalThis.client.roles.ANY) || (isNotStringArrFunc(roles) && roles.includes(globalThis.client.roles.ANY))) return true
+        if (
+            (isStringArrFunc(roles) && roles === globalThis.client.roles.ANY) ||
+            (isNotStringArrFunc(roles) && roles.includes(globalThis.client.roles.ANY))
+        )
+            return true
         if (isStringArrFunc(roles)) roles = [roles]
         if (botDevBypass && client.config.developers.includes(user.id)) return true
         for (const role of roles) {

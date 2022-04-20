@@ -16,10 +16,16 @@ export default new Command({
     description: "Get info about the bot!",
     permission: globalThis.client.roles.ANY,
     async run(this: Command, client: Client, message: CommandMessage) {
-        const response: any = await fetch(
-            "https://api.github.com/repos/buildtheearth/main-bot/git/refs/heads/main"
-        ).then(res => res.json())
-        const commit: any = await fetch(response.object.url).then(res => res.json())
+        const response = (await (
+            await fetch(
+                "https://api.github.com/repos/buildtheearth/main-bot/git/refs/heads/main"
+            )
+        ).json()) as { object: { url: string } }
+        const commit = (await (await fetch(response.object.url)).json()) as {
+            committer: { name: string }
+            message: string
+            html_url: string
+        }
         const embed = new Discord.MessageEmbed()
             .addFields([
                 { name: "Environment", value: currentEnv() },

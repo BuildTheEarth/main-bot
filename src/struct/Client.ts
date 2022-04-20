@@ -20,6 +20,7 @@ import path from "path"
 import url from "url"
 import { Cron } from "croner"
 import ModalList from "./client/ModalList.js"
+import InteractionInfo from "../typings/InteractionInfo.js"
 
 export default class Client extends Discord.Client {
     declare guilds: Discord.GuildManager
@@ -51,6 +52,7 @@ export default class Client extends Discord.Client {
     placeholder = new PlaceholderHandler(this)
     deletedMessages = new WeakSet<Discord.Message>()
     roles: Record<string, string[]> = {}
+    interactionInfo: Map<string, InteractionInfo> = new Map()
 
     async initDatabase(): Promise<void> {
         const db = this.config.database

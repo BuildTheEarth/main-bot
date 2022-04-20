@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import Discord from "discord.js"
 import Client from "../struct/Client.js"
 import { vsprintf } from "sprintf-js"
@@ -42,7 +43,6 @@ export default class CommandMessage {
         return client.response.sendError(this, embed, ephemeral)
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     public async sendErrorMessage(
         message: string,
         ...args: any[]
@@ -72,7 +72,6 @@ export default class CommandMessage {
         return client.response.sendSuccess(this, embed, ephemeral)
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     public async sendSuccessMessage(
         message: string,
         ...args: any[]
@@ -138,12 +137,18 @@ export default class CommandMessage {
         return this
     }
 
-    async showModal(modalName: string, placeholders?: Record<string, string>): Promise<void> {
+    async showModal(
+        modalName: string,
+        placeholders?: Record<string, string>
+    ): Promise<string> {
         const modal = this.client.modals.getLocaleModal(modalName, this.locale)
         modal.customId += "." + this.id
         if (placeholders) {
             modal.components.forEach(component => {
-                const componentPartialTyped = component as { placeholder: string , customId: string }
+                const componentPartialTyped = component as {
+                    placeholder: string
+                    customId: string
+                }
                 if (placeholders[componentPartialTyped.customId] !== undefined) {
                     // @ts-ignore @eslint-disable-next-line @typescript-eslint/no-explicit-any
                     component.placeholder = placeholders[componentPartialTyped.customId]
@@ -161,6 +166,7 @@ export default class CommandMessage {
                 }
             )
         )
+        return modal.customId
     }
 }
 

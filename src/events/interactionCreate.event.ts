@@ -9,6 +9,7 @@ import chalk from "chalk"
 import ModerationMenu from "../entities/ModerationMenu.entity.js"
 import createSuggestion from "../modals/suggest.modal.js"
 import createBanner from "../modals/banner.modal.js"
+import createSnippet from "../modals/snippet.modal.js"
 
 export default async function (
     this: Client,
@@ -144,7 +145,7 @@ export default async function (
                 return createBanner(interaction)
             }
             if (type === "snippetmodal") {
-                interCreate
+                return createSnippet(interaction, this)
             }
         }
     }

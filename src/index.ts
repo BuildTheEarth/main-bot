@@ -26,6 +26,7 @@ const client = new Client({
     ],
     partials: ["CHANNEL", "MESSAGE", "REACTION"]
 })
+global.client = client
 
 globalThis.client = client
 

@@ -11,6 +11,12 @@ export default class Response {
     }
 
     async sendError(
+        message: Discord.ModalSubmitInteraction,
+        embed: string | Discord.MessageEmbedOptions,
+        ephemeral?: boolean
+    ): Promise<void>
+
+    async sendError(
         message: CommandMessage,
         embed: string | Discord.MessageEmbedOptions,
         ephemeral?: boolean
@@ -29,10 +35,14 @@ export default class Response {
     ): Promise<Discord.Message | CommandMessage>
 
     async sendError(
-        message: CommandMessage | Discord.TextBasedChannel | Discord.Message,
+        message:
+            | CommandMessage
+            | Discord.TextBasedChannel
+            | Discord.Message
+            | Discord.ModalSubmitInteraction,
         embed: string | Discord.MessageEmbedOptions,
         ephemeral: boolean = true
-    ): Promise<CommandMessage | Discord.Message> {
+    ): Promise<CommandMessage | Discord.Message | Discord.ModalSubmitInteraction | void> {
         if (typeof embed === "string") embed = { description: embed }
         embed.color = hexToRGB(this.client.config.colors.error)
         if (message instanceof CommandMessage)
@@ -42,8 +52,16 @@ export default class Response {
                 embeds: [embed],
                 allowedMentions: { repliedUser: false }
             })
+        else if (message instanceof Discord.ModalSubmitInteraction)
+            return message.reply({ embeds: [embed], ephemeral: ephemeral })
         else return message.send({ embeds: [embed] })
     }
+
+    async sendSuccess(
+        message: Discord.ModalSubmitInteraction,
+        embed: string | Discord.MessageEmbedOptions,
+        ephemeral?: boolean
+    ): Promise<void>
 
     async sendSuccess(
         message: CommandMessage,
@@ -64,10 +82,14 @@ export default class Response {
     ): Promise<Discord.Message | CommandMessage>
 
     async sendSuccess(
-        message: CommandMessage | Discord.TextBasedChannel | Discord.Message,
+        message:
+            | CommandMessage
+            | Discord.TextBasedChannel
+            | Discord.Message
+            | Discord.ModalSubmitInteraction,
         embed: string | Discord.MessageEmbedOptions,
-        ephemeral: boolean = true
-    ): Promise<CommandMessage | Discord.Message> {
+        ephemeral: boolean = false
+    ): Promise<CommandMessage | Discord.Message | void> {
         if (typeof embed === "string") embed = { description: embed }
         embed.color = hexToRGB(this.client.config.colors.success)
         if (message instanceof CommandMessage)
@@ -77,6 +99,8 @@ export default class Response {
                 embeds: [embed],
                 allowedMentions: { repliedUser: false }
             })
+        else if (message instanceof Discord.ModalSubmitInteraction)
+            return message.reply({ embeds: [embed], ephemeral: ephemeral })
         else return message.send({ embeds: [embed] })
     }
 }

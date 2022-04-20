@@ -506,7 +506,13 @@ export default new Command({
         if (languageName && teams) language = "en"
         if (!languageName && teams) language = "en"
 
-        await message.continue()
+        if (
+            !(
+                (subcommand === "add" && !subcommandGroup) ||
+                (subcommand === "edit" && !subcommandGroup)
+            )
+        )
+            await message.continue()
 
         const existingSnippet = await Snippet.findOne({
             name: name,
@@ -530,7 +536,16 @@ export default new Command({
                         return message.sendErrorMessage("invalidRuleName")
                     }
                 }
-                if (!body) return message.showModal("snippet")
+                if (!body) {
+                    const modalId = await message.showModal("snippet")
+                    return client.interactionInfo.set(modalId, {
+                        name: name,
+                        language: language,
+                        type: currType,
+                        subcommand: "add",
+                        modalType: "snippetmodal"
+                    })
+                }
                 snippet = new Snippet()
                 snippet.name = name
                 snippet.language = language
@@ -539,32 +554,20 @@ export default new Command({
             } else if (subcommand === "edit") {
                 if (!existingSnippet)
                     return message.sendErrorMessage("nonexistantSnippet")
-                if (!body) return message.showModal("snippet")
+                if (!body) {
+                    const modalId = await message.showModal("snippet")
+                    return client.interactionInfo.set(modalId, {
+                        name: name,
+                        language: language,
+                        type: currType,
+                        subcommand: "edit",
+                        modalType: "snippetmodal",
+                        existingSnippet: existingSnippet
+                    })
+                }
                 if (existingSnippet.body === body)
                     return message.sendErrorMessage("noChange")
                 snippet = existingSnippet
-            }
-
-            // eslint-disable-next-line no-inner-declarations
-            async function interCreate(interaction: Discord.ModalSubmitInteraction) {
-                const body = interaction.fields.getTextInputValue("body")
-                if (subcommand === "add") {
-                    snippet = new Snippet()
-                    snippet.name = name
-                    snippet.language = language
-                    snippet.body = body
-                    snippet.aliases = []
-                    snippet.type = currType
-                } else if (subcommand === "edit") {
-                    if (existingSnippet.body === body)
-                        return message.sendErrorMessage("noChange")
-                    snippet = existingSnippet
-                    snippet.body = body
-                }
-                await snippet.save()
-                const past = subcommand === "add" ? "Added" : "Edited"
-                // prettier-ignore
-                await client.response.sendSuccess(message, `${past} **${name}** ${currType} in ${languageName}.`)
             }
 
             snippet.body = body

@@ -1,4 +1,4 @@
-import { humanizeConstant, loadSyncJSON5 } from "@buildtheearth/bot-utils"
+import { loadSyncJSON5 } from "@buildtheearth/bot-utils"
 import url from "url"
 import path from "path"
 import fs from "fs"

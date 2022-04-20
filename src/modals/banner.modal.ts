@@ -16,13 +16,15 @@ export default async function createBanner(
         if (res == undefined) throw new Error()
         isBig = Number.parseInt(res) > 10485760
     } catch (e) {
-        return interaction.reply(
+        return client.response.sendError(
+            interaction,
             client.messages.getMessage("requestIncomplete", interaction.locale)
         )
     }
 
     if (isBig)
-        return interaction.reply(
+        return client.response.sendError(
+            interaction,
             client.messages.getMessage("contentTooLarge10MB", interaction.locale)
         )
 
@@ -33,5 +35,8 @@ export default async function createBanner(
     if (description) banner.description = description
     await banner.save()
 
-    await interaction.reply(`Queued the banner! (**#${banner.id}**).`)
+    await client.response.sendSuccess(
+        interaction,
+        `Queued the banner! (**#${banner.id}**).`
+    )
 }

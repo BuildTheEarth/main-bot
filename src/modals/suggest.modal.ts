@@ -46,5 +46,5 @@ export default async function createSuggestion(
 
     await suggestionmessage.react(client.config.emojis.upvote)
     await suggestionmessage.react(client.config.emojis.downvote)
-    interaction.reply({ content: "Created suggestion!", ephemeral: true })
+    client.response.sendSuccess(interaction, "Created suggestion!", true)
 }

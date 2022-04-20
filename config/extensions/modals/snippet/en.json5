@@ -1,6 +1,6 @@
 {
     title: "Snippet",
-    customId: "snippetadd",
+    customId: "snippetmodal",
     components: [
         {
             type: "ACTION_ROW",
