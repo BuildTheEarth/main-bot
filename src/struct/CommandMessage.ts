@@ -144,15 +144,21 @@ export default class CommandMessage {
         const modal = this.client.modals.getLocaleModal(modalName, this.locale)
         modal.customId += "." + this.id
         if (placeholders) {
-            modal.components.forEach(component => {
-                const componentPartialTyped = component as {
-                    placeholder: string
-                    customId: string
+            modal.components.forEach(componentPar => {
+                const componentParPartialTyped = componentPar as {
+                    components: {
+                        value: string
+                        customId: string
+                    }[]
                 }
-                if (placeholders[componentPartialTyped.customId] !== undefined) {
-                    // @ts-ignore @eslint-disable-next-line @typescript-eslint/no-explicit-any
-                    component.placeholder = placeholders[componentPartialTyped.customId]
-                }
+                componentParPartialTyped.components.forEach(component => {
+                    if (placeholders[component.customId] !== undefined) {
+                        // @ts-ignore @eslint-disable-next-line @typescript-eslint/no-explicit-any
+                        component.value = placeholders[component.customId]
+                    }
+                })
+
+
             })
         }
         await this.message.showModal(
