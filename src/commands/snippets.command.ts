@@ -555,7 +555,9 @@ export default new Command({
                 if (!existingSnippet)
                     return message.sendErrorMessage("nonexistantSnippet")
                 if (!body) {
-                    const modalId = await message.showModal("snippet", {body: existingSnippet.body})
+                    const modalId = await message.showModal("snippet", {
+                        body: existingSnippet.body
+                    })
                     return client.interactionInfo.set(modalId, {
                         name: name,
                         language: language,

@@ -2,7 +2,7 @@ import Discord from "discord.js"
 import Snippet from "../entities/Snippet.entity.js"
 import Client from "../struct/Client.js"
 import languages from "../struct/client/iso6391.js"
-import { isSnippetInfo} from "../typings/InteractionInfo.js"
+import { isSnippetInfo } from "../typings/InteractionInfo.js"
 
 export default async function createSnippet(
     interaction: Discord.ModalSubmitInteraction,
@@ -10,12 +10,9 @@ export default async function createSnippet(
 ): Promise<void> {
     const customId = interaction.customId
     const info = client.interactionInfo.get(customId)
-    if (
-        client.interactionInfo.has(customId) &&
-        isSnippetInfo(info)
-    ) {
+    if (client.interactionInfo.has(customId) && isSnippetInfo(info)) {
         const body = interaction.fields.getTextInputValue("body")
-        
+
         let snippet: Snippet
         if (info.subcommand === "add") {
             snippet = new Snippet()

@@ -170,7 +170,7 @@ export default new Command({
                     name: name,
                     language: language,
                     subcommand: "add",
-                    modalType: "placeholdermodal",
+                    modalType: "placeholdermodal"
                 })
             }
             await client.placeholder.addPlaceholder(name, language, body)
@@ -185,7 +185,9 @@ export default new Command({
             if (!placeholders[name + " " + language])
                 return message.sendErrorMessage("placeholderNotFound")
             if (!body) {
-                const modalId = await message.showModal("placeholder", {body: placeholders[name + " " + language].body})
+                const modalId = await message.showModal("placeholder", {
+                    body: placeholders[name + " " + language].body
+                })
                 return client.interactionInfo.set(modalId, {
                     name: name,
                     language: language,

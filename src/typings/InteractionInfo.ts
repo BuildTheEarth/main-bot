@@ -18,11 +18,13 @@ export interface PlaceholderModalInfo {
     existingPlaceholder?: Placeholder
 }
 
-export function isSnippetInfo(info: {modalType: string}): info is SnippetModalInfo {
+export function isSnippetInfo(info: { modalType: string }): info is SnippetModalInfo {
     return info.modalType === "snippetmodal"
 }
 
-export function isPlaceholderInfo(info: {modalType: string}): info is PlaceholderModalInfo {
+export function isPlaceholderInfo(info: {
+    modalType: string
+}): info is PlaceholderModalInfo {
     return info.modalType === "placeholdermodal"
 }
 

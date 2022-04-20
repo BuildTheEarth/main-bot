@@ -157,8 +157,6 @@ export default class CommandMessage {
                         component.value = placeholders[component.customId]
                     }
                 })
-
-
             })
         }
         await this.message.showModal(
