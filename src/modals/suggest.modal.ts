@@ -17,7 +17,7 @@ export default async function createSuggestion(
 
     const suggestion = new Suggestion()
     suggestion.number = await Suggestion.findNumber(staff, client)
-    suggestion.author = interaction.customId.split(".")[1]
+    suggestion.author = interaction.user.id
     suggestion.anonymous = anon
     suggestion.title = title
     suggestion.body = body

@@ -1,70 +1,70 @@
 {
-            title: "Suggestion",
-            customId: "suggestionmodal",
+    title: "Suggestion",
+    customId: "suggestionmodal",
+    components: [
+        {
+            type: "ACTION_ROW",
             components: [
                 {
-                    type: "ACTION_ROW",
-                    components: [
-                        {
-                            type: "TEXT_INPUT",
-                            customId: "anon",
-                            label: "lol (Type 'anon' to make it anonymous)",
-                            maxLength: null,
-                            minLength: null,
-                            placeholder: null,
-                            required: false,
-                            style: "SHORT",
-                            value: null
-                        }
-                    ]
-                },
+                    type: "TEXT_INPUT",
+                    customId: "anon",
+                    label: "lol (Type 'anon' to make it anonymous)",
+                    maxLength: null,
+                    minLength: null,
+                    placeholder: null,
+                    required: false,
+                    style: "SHORT",
+                    value: null
+                }
+            ]
+        },
+        {
+            type: "ACTION_ROW",
+            components: [
                 {
-                    type: "ACTION_ROW",
-                    components: [
-                        {
-                            type: "TEXT_INPUT",
-                            customId: "title",
-                            label: "Titlelol",
-                            maxLength: 200,
-                            minLength: null,
-                            placeholder: null,
-                            required: true,
-                            style: "PARAGRAPH",
-                            value: null
-                        }
-                    ]
-                },
+                    type: "TEXT_INPUT",
+                    customId: "title",
+                    label: "Titlelol",
+                    maxLength: 200,
+                    minLength: null,
+                    placeholder: null,
+                    required: true,
+                    style: "PARAGRAPH",
+                    value: null
+                }
+            ]
+        },
+        {
+            type: "ACTION_ROW",
+            components: [
                 {
-                    type: "ACTION_ROW",
-                    components: [
-                        {
-                            type: "TEXT_INPUT",
-                            customId: "body",
-                            label: "Suggestion Bodylol",
-                            maxLength: null,
-                            minLength: null,
-                            placeholder: null,
-                            required: true,
-                            style: "PARAGRAPH",
-                            value: null
-                        }
-                    ]
-                },
+                    type: "TEXT_INPUT",
+                    customId: "body",
+                    label: "Suggestion Bodylol",
+                    maxLength: null,
+                    minLength: null,
+                    placeholder: null,
+                    required: true,
+                    style: "PARAGRAPH",
+                    value: null
+                }
+            ]
+        },
+        {
+            type: "ACTION_ROW",
+            components: [
                 {
-                    type: "ACTION_ROW",
-                    components: [
-                        {
-                            type: "TEXT_INPUT",
-                            customId: "teams",
-                            label: "Teamslol",
-                            maxLength: null,
-                            minLength: null,
-                            placeholder: null,
-                            required: true,
-                            style: "SHORT",
-                            value: null
-                        }
-                    ]
+                    type: "TEXT_INPUT",
+                    customId: "teams",
+                    label: "Teamslol",
+                    maxLength: null,
+                    minLength: null,
+                    placeholder: null,
+                    required: true,
+                    style: "SHORT",
+                    value: null
                 }
             ]
         }
+    ]
+}

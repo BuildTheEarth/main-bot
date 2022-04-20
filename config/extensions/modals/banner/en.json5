@@ -1,70 +1,70 @@
 {
-                title: "Banner",
-                customId: "bannermodal",
-                components: [
-                    {
-                        type: "ACTION_ROW",
-                        components: [
-                            {
-                                type: "TEXT_INPUT",
-                                customId: "img_url",
-                                label: "Image URL",
-                                maxLength: null,
-                                minLength: null,
-                                placeholder: null,
-                                required: true,
-                                style: "SHORT",
-                                value: null
-                            }
-                        ]
-                    },
-                    {
-                        type: "ACTION_ROW",
-                        components: [
-                            {
-                                type: "TEXT_INPUT",
-                                customId: "location",
-                                label: "Location",
-                                maxLength: null,
-                                minLength: null,
-                                placeholder: null,
-                                required: true,
-                                style: "SHORT",
-                                value: null
-                            }
-                        ]
-                    },
-                    {
-                        type: "ACTION_ROW",
-                        components: [
-                            {
-                                type: "TEXT_INPUT",
-                                customId: "credit",
-                                label: "Credit",
-                                maxLength: null,
-                                minLength: null,
-                                placeholder: null,
-                                required: true,
-                                style: "SHORT",
-                                value: null
-                            }
-                        ]
-                    },
-                    {
-                        type: "ACTION_ROW",
-                        components: [
-                            {
-                                type: "TEXT_INPUT",
-                                customId: "description",
-                                label: "Description",
-                                maxLength: 512,
-                                minLength: null,
-                                placeholder: null,
-                                required: true,
-                                style: "PARAGRAPH",
-                                value: null
-                            }
-                        ]
-                    }
-                ]
+    title: "Banner",
+    customId: "bannermodal",
+    components: [
+        {
+            type: "ACTION_ROW",
+            components: [
+                {
+                    type: "TEXT_INPUT",
+                    customId: "img_url",
+                    label: "Image URL",
+                    maxLength: null,
+                    minLength: null,
+                    placeholder: null,
+                    required: true,
+                    style: "SHORT",
+                    value: null
+                }
+            ]
+        },
+        {
+            type: "ACTION_ROW",
+            components: [
+                {
+                    type: "TEXT_INPUT",
+                    customId: "location",
+                    label: "Location",
+                    maxLength: null,
+                    minLength: null,
+                    placeholder: null,
+                    required: true,
+                    style: "SHORT",
+                    value: null
+                }
+            ]
+        },
+        {
+            type: "ACTION_ROW",
+            components: [
+                {
+                    type: "TEXT_INPUT",
+                    customId: "credit",
+                    label: "Credit",
+                    maxLength: null,
+                    minLength: null,
+                    placeholder: null,
+                    required: true,
+                    style: "SHORT",
+                    value: null
+                }
+            ]
+        },
+        {
+            type: "ACTION_ROW",
+            components: [
+                {
+                    type: "TEXT_INPUT",
+                    customId: "description",
+                    label: "Description",
+                    maxLength: 512,
+                    minLength: null,
+                    placeholder: null,
+                    required: true,
+                    style: "PARAGRAPH",
+                    value: null
+                }
+            ]
+        }
+    ]
 }
