@@ -1,7 +1,7 @@
 // Literally all of this code is taken from https://github.com/cAttte/fanum so thank him
 import path from "path"
 import url from "url"
-import { loadSyncJSON5, isSingular, pluralize } from "@buildtheearth/bot-utils"
+import { loadSyncJSON5, isSingular, pluralize, trimSides } from "@buildtheearth/bot-utils"
 const duplicateChars = loadSyncJSON5(
     path.join(
         path.dirname(url.fileURLToPath(import.meta.url)) +
@@ -17,7 +17,7 @@ export default class BannedWordFilter {
     }
 
     findBannedWord(text: string): BannedWordObj[] {
-        let profanities = []
+        let profanities: BannedWordObj[] = []
         for (const word of Object.keys(this.client.filterWordsCached.banned)) {
             if (word.length > text.length) continue
             if (isSingular(word)) {
@@ -38,6 +38,7 @@ export default class BannedWordFilter {
                 const wordExceptions = exceptions.filter(e => typeof e === "string")
                 const isException = this.findException(match, text, wordExceptions)
                 passes = passes && !isException
+                console.log(match)
             }
             return passes
         })
@@ -98,7 +99,7 @@ export default class BannedWordFilter {
                 return this.createChooseRegex(characters)
             })
             .join(separator)
-        return regexBody
+        return '(?<=\\s|^)' + regexBody + '(?=\\s|$)'
     }
 
     createChooseRegex(strings: string[]): string {
