@@ -199,5 +199,8 @@
     anotherChannel: ["Please run this command in another channel!"],
     noSuggFound: ["No suggestions found for **%s**!"],
     specifyNewStatus: ["You must specify a new suggestion status! (%s)"],
-    invalidStatus: ["That's not a valid status! (%s)"]
+    invalidStatus: ["That's not a valid status! (%s)"],
+    provideMsgUrl: ["Please provide a valud message URL, that is in this server."],
+    httpError: ["There was an error fetching some data, please contact the bot devs."],
+    discohookUrl: ["Here is the embed url: [`%1$s`](%1$s) and it expires %2$s."],
 }
