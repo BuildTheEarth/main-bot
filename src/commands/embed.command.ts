@@ -40,6 +40,11 @@ export default new Command({
 
         const channel = await guild.channels.fetch(messageProps.channelId).catch(noop)
 
+        const perms =
+            channel.permissionsFor(message.member) &&
+            channel.permissionsFor(client.user).has("VIEW_CHANNEL")
+        if (!perms) return message.sendErrorMessage("noChannelPerms")
+
         if (!channel || !channel.isText()) {
             return message.sendErrorMessage("provideMsgUrl")
         }
