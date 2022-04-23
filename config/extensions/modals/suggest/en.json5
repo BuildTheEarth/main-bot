@@ -1,23 +1,7 @@
 {
     title: "Suggestion",
-    customId: "suggestionmodal",
+    customId: "suggestmodal",
     components: [
-        {
-            type: "ACTION_ROW",
-            components: [
-                {
-                    type: "TEXT_INPUT",
-                    customId: "anon",
-                    label: "Anonymous (Type 'anon' to make it anonymous)",
-                    maxLength: null,
-                    minLength: null,
-                    placeholder: null,
-                    required: false,
-                    style: "SHORT",
-                    value: null
-                }
-            ]
-        },
         {
             type: "ACTION_ROW",
             components: [

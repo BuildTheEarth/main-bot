@@ -1,5 +1,7 @@
 import Placeholder from "../entities/Placeholder.entity.js"
 import Snippet from "../entities/Snippet.entity.js"
+import Discord from "discord.js"
+import Suggestion from "../entities/Suggestion.entity.js"
 
 export interface SnippetModalInfo {
     name: string
@@ -18,6 +20,18 @@ export interface PlaceholderModalInfo {
     existingPlaceholder?: Placeholder
 }
 
+export interface SuggestModalInfo {
+    anon: string
+    subsuggestion: string
+    modalType: "suggestmodal"
+}
+
+export interface SuggestionModalInfo {
+    suggestion: Suggestion
+    message: Discord.Message
+    modalType: "suggestionmodal"
+}
+
 export function isSnippetInfo(info: { modalType: string }): info is SnippetModalInfo {
     return info.modalType === "snippetmodal"
 }
@@ -28,6 +42,20 @@ export function isPlaceholderInfo(info: {
     return info.modalType === "placeholdermodal"
 }
 
-type InteractionInfo = SnippetModalInfo | PlaceholderModalInfo
+export function isSuggestInfo(info: { modalType: string }): info is SuggestModalInfo {
+    return info.modalType === "suggestmodal"
+}
+
+export function isSuggestionInfo(info: {
+    modalType: string
+}): info is SuggestionModalInfo {
+    return info.modalType === "suggestionmodal"
+}
+
+type InteractionInfo =
+    | SnippetModalInfo
+    | PlaceholderModalInfo
+    | SuggestModalInfo
+    | SuggestionModalInfo
 
 export default InteractionInfo
