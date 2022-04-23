@@ -8,6 +8,9 @@ dist/
 config.yml
 config/config.json5
 *.sqlite
+*.sqlite3
+*.sqlite-shm
+*.sqlite-wal
 
 # Logs
 logs/
