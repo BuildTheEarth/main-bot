@@ -99,7 +99,7 @@ export default class BannedWordFilter {
                 return this.createChooseRegex(characters)
             })
             .join(separator)
-        return '(?<=\\s|^)' + regexBody + '(?=\\s|$)'
+        return "(?<=\\s|^)" + regexBody + "(?=\\s|$)"
     }
 
     createChooseRegex(strings: string[]): string {

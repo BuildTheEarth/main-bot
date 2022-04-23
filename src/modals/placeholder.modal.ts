@@ -1,7 +1,5 @@
 import Discord from "discord.js"
-import Snippet from "../entities/Snippet.entity.js"
 import Client from "../struct/Client.js"
-import languages from "../struct/client/iso6391.js"
 import { isPlaceholderInfo } from "../typings/InteractionInfo.js"
 
 export default async function createPlaceholder(

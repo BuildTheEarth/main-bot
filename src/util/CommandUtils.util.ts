@@ -272,7 +272,10 @@ function addOption(
     builder: DBuilders.SlashCommandSubcommandBuilder,
     arg: CommandArgs
 ): DBuilders.SlashCommandSubcommandBuilder
-function addOption(builder: DBuilders.SlashCommandBuilder, arg: CommandArgs): DBuilders.SlashCommandBuilder
+function addOption(
+    builder: DBuilders.SlashCommandBuilder,
+    arg: CommandArgs
+): DBuilders.SlashCommandBuilder
 function addOption(
     builder: DBuilders.SlashCommandSubcommandBuilder | DBuilders.SlashCommandBuilder,
     arg: CommandArgs
