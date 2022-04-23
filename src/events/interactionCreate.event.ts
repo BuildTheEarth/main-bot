@@ -11,6 +11,7 @@ import createSuggestion from "../modals/suggest.modal.js"
 import createBanner from "../modals/banner.modal.js"
 import createSnippet from "../modals/snippet.modal.js"
 import createPlaceholder from "../modals/placeholder.modal.js"
+import editSuggestion from "../modals/suggestion.modal.js"
 
 export default async function (
     this: Client,
@@ -139,7 +140,7 @@ export default async function (
     if (interaction.type === "MODAL_SUBMIT") {
         if (interaction instanceof ModalSubmitInteraction) {
             const type = interaction.customId.split(".")[0]
-            if (type === "suggestionmodal") {
+            if (type === "suggestmodal") {
                 return createSuggestion(interaction)
             }
             if (type === "bannermodal") {
@@ -150,6 +151,9 @@ export default async function (
             }
             if (type === "placeholdermodal") {
                 return createPlaceholder(interaction, this)
+            }
+            if (type === "suggestionmodal") {
+                return editSuggestion(interaction, this)
             }
         }
     }

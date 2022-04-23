@@ -10,7 +10,6 @@ import Suggestion, {
 import path from "path"
 import url from "url"
 import {
-    flattenMarkdown,
     hexToRGB,
     humanizeArray,
     loadSyncJSON5,
@@ -40,7 +39,7 @@ export default new Command({
             args: [
                 {
                     name: "number",
-                    description: "Suggestion number, only to be used if sub-suggesting.",
+                    description: "Suggestion number",
                     required: true,
                     optionType: "STRING"
                 }
@@ -52,20 +51,7 @@ export default new Command({
             args: [
                 {
                     name: "number",
-                    description: "Suggestion number, only to be used if sub-suggesting.",
-                    required: true,
-                    optionType: "STRING"
-                },
-                {
-                    name: "field",
-                    description: "Field to edit.",
-                    required: true,
-                    optionType: "STRING",
-                    choices: ["title", "body", "teams"]
-                },
-                {
-                    name: "text",
-                    description: "Edited text.",
+                    description: "Suggestion number",
                     required: true,
                     optionType: "STRING"
                 }
@@ -357,7 +343,7 @@ export default new Command({
         const identifier = Suggestion.parseIdentifier(args.consume("number"))
         if (!identifier.number) return message.sendErrorMessage("noSuggestionNumber")
 
-        await message.continue()
+        if (subcommand != "edit") await message.continue()
 
         const suggestion = await Suggestion.findByIdentifier(identifier, staff)
         if (!suggestion) return message.sendErrorMessage("invalidSuggestionNumber")
@@ -389,27 +375,19 @@ export default new Command({
                 )
             }
         } else if (subcommand === "edit") {
-            const field = args.consumeIf(["title", "body", "teams"], "field") || "body"
-            if (
-                suggestion.author !== message.author.id &&
-                (field === "body" || !canManage)
-            )
+            if (suggestion.author !== message.author.id && !canManage)
                 return message.sendErrorMessage("editOthers")
 
-            let edited = args.consumeRest(["text"])
-            if (field === "title") edited = await flattenMarkdown(edited, message.guild)
-            if (field === "title" && edited.length > 200)
-                return message.sendErrorMessage("titleTooLong200")
-            if (field === "teams" && edited.length > 255)
-                return message.sendErrorMessage("teamsTooLong255")
-            if (!edited) return message.sendErrorMessage("noBody")
-
-            suggestion[field] = edited
-            await suggestion.save()
-
-            const embed = await suggestion.displayEmbed(client)
-            await suggestionMessage.edit({ embeds: [embed] })
-            return client.response.sendSuccess(message, "Edited the suggestion!")
+            const modalId = await message.showModal("suggestion", {
+                title: suggestion.title,
+                body: suggestion.body,
+                teams: suggestion.teams
+            })
+            return client.interactionInfo.set(modalId, {
+                suggestion: suggestion,
+                message: suggestionMessage,
+                modalType: "suggestionmodal"
+            })
         } else if (subcommand === "delete") {
             if (suggestion.author !== message.author.id && !canManage)
                 return message.sendErrorMessage("deleteOthers")
