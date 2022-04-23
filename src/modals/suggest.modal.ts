@@ -16,10 +16,7 @@ export default async function createSuggestion(
 
         const staff = interaction.guild?.id === client.config.guilds.staff
         const suggestionsChannel = client.config.suggestions[staff ? "staff" : "main"]
-        if (
-            interaction.channel?.id !== suggestionsChannel &&
-            interaction.channel.type !== "DM"
-        )
+        if (interaction.channel?.id !== suggestionsChannel)
             return client.response.sendError(
                 interaction,
                 `Please run this command in <#${suggestionsChannel}>!`
