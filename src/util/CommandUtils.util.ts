@@ -1,25 +1,13 @@
-import {
-    SlashCommandBuilder,
-    SlashCommandSubcommandGroupBuilder,
-    SlashCommandSubcommandBuilder,
-    SlashCommandStringOption,
-    SlashCommandIntegerOption,
-    SlashCommandBooleanOption,
-    SlashCommandRoleOption,
-    SlashCommandNumberOption,
-    SlashCommandUserOption,
-    SlashCommandChannelOption,
-    SlashCommandMentionableOption
-} from "@discordjs/builders"
+import DBuilders = require("@discordjs/builders")
 import Command, { CommandArgs, SubCommandProperties } from "../struct/Command.js"
 import _ from "lodash"
 import Discord from "discord.js"
 import Client from "../struct/Client.js"
 
 export default abstract class CommandUtils {
-    public static commandToSlash(command: Command): SlashCommandBuilder[] {
+    public static commandToSlash(command: Command): DBuilders.SlashCommandBuilder[] {
         const commands = []
-        let builder = new SlashCommandBuilder()
+        let builder = new DBuilders.SlashCommandBuilder()
             .setName(command.name)
             .setDescription(command.description)
             .setDefaultPermission(false)
@@ -236,12 +224,12 @@ function argsToStrSubCommand(
 function addSubcommandGroup(
     subcommand: SubCommandProperties,
     globalArgs?: CommandArgs[]
-): SlashCommandSubcommandGroupBuilder {
-    const currentSlashBuilder = new SlashCommandSubcommandGroupBuilder()
+): DBuilders.SlashCommandSubcommandGroupBuilder {
+    const currentSlashBuilder = new DBuilders.SlashCommandSubcommandGroupBuilder()
         .setName(subcommand.name)
         .setDescription(subcommand.description)
     subcommand.subcommands.forEach(subSubcommand => {
-        let currentSubSlashBuilder = new SlashCommandSubcommandBuilder()
+        let currentSubSlashBuilder = new DBuilders.SlashCommandSubcommandBuilder()
             .setName(subSubcommand.name)
             .setDescription(subSubcommand.description)
         let argList = []
@@ -262,8 +250,8 @@ function addSubcommandGroup(
 function addSubcommand(
     subcommand: SubCommandProperties,
     globalArgs?: CommandArgs[]
-): SlashCommandSubcommandBuilder {
-    let currentSlashBuilder = new SlashCommandSubcommandBuilder()
+): DBuilders.SlashCommandSubcommandBuilder {
+    let currentSlashBuilder = new DBuilders.SlashCommandSubcommandBuilder()
         .setName(subcommand.name)
         .setDescription(subcommand.description)
     let argList = []
@@ -281,14 +269,14 @@ function addSubcommand(
 }
 
 function addOption(
-    builder: SlashCommandSubcommandBuilder,
+    builder: DBuilders.SlashCommandSubcommandBuilder,
     arg: CommandArgs
-): SlashCommandSubcommandBuilder
-function addOption(builder: SlashCommandBuilder, arg: CommandArgs): SlashCommandBuilder
+): DBuilders.SlashCommandSubcommandBuilder
+function addOption(builder: DBuilders.SlashCommandBuilder, arg: CommandArgs): DBuilders.SlashCommandBuilder
 function addOption(
-    builder: SlashCommandSubcommandBuilder | SlashCommandBuilder,
+    builder: DBuilders.SlashCommandSubcommandBuilder | DBuilders.SlashCommandBuilder,
     arg: CommandArgs
-): SlashCommandSubcommandBuilder | SlashCommandBuilder {
+): DBuilders.SlashCommandSubcommandBuilder | DBuilders.SlashCommandBuilder {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let trueChoices: any = null
     if (arg.choices) {
@@ -298,40 +286,40 @@ function addOption(
         })
     }
     if (arg.optionType === "STRING") {
-        const tempBuilder = new SlashCommandStringOption()
+        const tempBuilder = new DBuilders.SlashCommandStringOption()
             .setName(arg.name)
             .setDescription(arg.description)
             .setRequired(arg.required)
         if (trueChoices) tempBuilder.addChoices(trueChoices)
         builder.addStringOption(tempBuilder)
     } else if (arg.optionType === "INTEGER") {
-        const tempBuilder = new SlashCommandIntegerOption()
+        const tempBuilder = new DBuilders.SlashCommandIntegerOption()
             .setName(arg.name)
             .setDescription(arg.description)
             .setRequired(arg.required)
         if (trueChoices) tempBuilder.addChoices(trueChoices)
         builder.addIntegerOption(tempBuilder)
     } else if (arg.optionType === "NUMBER") {
-        const tempBuilder = new SlashCommandNumberOption()
+        const tempBuilder = new DBuilders.SlashCommandNumberOption()
             .setName(arg.name)
             .setDescription(arg.description)
             .setRequired(arg.required)
         if (trueChoices) tempBuilder.addChoices(trueChoices)
         builder.addNumberOption(tempBuilder)
     } else if (arg.optionType === "BOOLEAN") {
-        const tempBuilder = new SlashCommandBooleanOption()
+        const tempBuilder = new DBuilders.SlashCommandBooleanOption()
             .setName(arg.name)
             .setDescription(arg.description)
             .setRequired(arg.required)
         builder.addBooleanOption(tempBuilder)
     } else if (arg.optionType === "USER") {
-        const tempBuilder = new SlashCommandUserOption()
+        const tempBuilder = new DBuilders.SlashCommandUserOption()
             .setName(arg.name)
             .setDescription(arg.description)
             .setRequired(arg.required)
         builder.addUserOption(tempBuilder)
     } else if (arg.optionType === "CHANNEL") {
-        const tempBuilder = new SlashCommandChannelOption()
+        const tempBuilder = new DBuilders.SlashCommandChannelOption()
             .setName(arg.name)
             .setDescription(arg.description)
             .setRequired(arg.required)
@@ -339,13 +327,13 @@ function addOption(
         if (arg.channelTypes) tempBuilder.addChannelTypes(arg.channelTypes as []) //hacky fix, but works
         builder.addChannelOption(tempBuilder)
     } else if (arg.optionType === "ROLE") {
-        const tempBuilder = new SlashCommandRoleOption()
+        const tempBuilder = new DBuilders.SlashCommandRoleOption()
             .setName(arg.name)
             .setDescription(arg.description)
             .setRequired(arg.required)
         builder.addRoleOption(tempBuilder)
     } else if (arg.optionType === "MENTIONABLE") {
-        const tempBuilder = new SlashCommandMentionableOption()
+        const tempBuilder = new DBuilders.SlashCommandMentionableOption()
             .setName(arg.name)
             .setDescription(arg.description)
             .setRequired(arg.required)

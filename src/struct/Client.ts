@@ -21,6 +21,7 @@ import url from "url"
 import { Cron } from "croner"
 import ModalList from "./client/ModalList.js"
 import InteractionInfo from "../typings/InteractionInfo.js"
+import { Database } from "better-sqlite3"
 
 export default class Client extends Discord.Client {
     declare guilds: Discord.GuildManager
@@ -81,7 +82,22 @@ export default class Client extends Discord.Client {
             })
         } else if (db.type === "sqlite") {
             Object.assign(options, {
-                database: db.path
+                database: db.path,
+                type: "better-sqlite3",
+                prepareDatabase: (data: any) => {
+                    const typedData = data as Database
+                    typedData.function("FIND_IN_SET", (find: string, list: string) => {
+                        if (find === null || list === null) {
+                            return null
+                        }
+                        const listArray = list.split(",")
+                        const index = listArray.indexOf(find)
+                        if (index === -1) {
+                            return 0
+                        }
+                        return index + 1
+                    })
+                }
             })
         }
 

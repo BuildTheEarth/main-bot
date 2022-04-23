@@ -32,8 +32,7 @@ export default new Command({
                     name: "interval",
                     description: "Reminder interval.",
                     required: true,
-                    optionType: "STRING",
-                    choices: remindTimes
+                    optionType: "STRING"
                 },
                 {
                     name: "message",
