@@ -12,6 +12,9 @@ import createBanner from "../modals/banner.modal.js"
 import createSnippet from "../modals/snippet.modal.js"
 import createPlaceholder from "../modals/placeholder.modal.js"
 import editSuggestion from "../modals/suggestion.modal.js"
+import createSuspiciousUser from "../modals/suspicioususer.modal.js"
+import _ from "lodash"
+import SuspiciousUser from "../entities/SuspiciousUser.entity.js"
 
 export default async function (
     this: Client,
@@ -47,39 +50,42 @@ export default async function (
             )
         }
         if (interaction.isButton()) {
-            if (!interaction.customId.includes("modmenu.")) return
-            if (
-                interaction.customId.includes("modmenu.") &&
-                !GuildMember.hasRole(
-                    interaction.member as Discord.GuildMember,
-                    [
-                        globalThis.client.roles.MODERATOR,
-                        globalThis.client.roles.HELPER,
-                        globalThis.client.roles.MANAGER
-                    ],
-                    this
-                )
-            ) {
+            if (_.startsWith(interaction.customId, "modmenu.")) {
+                if (
+                    !GuildMember.hasRole(
+                        interaction.member as Discord.GuildMember,
+                        [
+                            globalThis.client.roles.MODERATOR,
+                            globalThis.client.roles.HELPER,
+                            globalThis.client.roles.MANAGER
+                        ],
+                        this
+                    )
+                ) {
+                    await interaction.deferUpdate()
+                    await interaction.followUp({
+                        ephemeral: true,
+                        content: client.messages.getMessage("noPermsMod", interaction.locale)
+                    })
+                    return
+                }
                 await interaction.deferUpdate()
-                await interaction.followUp({
-                    ephemeral: true,
-                    content: client.messages.getMessage("noPermsMod", interaction.locale)
-                })
-                return
+                if (interaction.customId.split(".")[2] === "pardon")
+                    await ModerationMenu.pardonConfirm(
+                        interaction.customId.split(".")[1],
+                        interaction,
+                        this
+                    )
+                if (interaction.customId.split(".")[2] === "punish")
+                    await ModerationMenu.punishConfirm(
+                        interaction.customId.split(".")[1],
+                        interaction,
+                        this
+                    )
             }
-            await interaction.deferUpdate()
-            if (interaction.customId.split(".")[2] === "pardon")
-                await ModerationMenu.pardonConfirm(
-                    interaction.customId.split(".")[1],
-                    interaction,
-                    this
-                )
-            if (interaction.customId.split(".")[2] === "punish")
-                await ModerationMenu.punishConfirm(
-                    interaction.customId.split(".")[1],
-                    interaction,
-                    this
-                )
+            if (_.startsWith(interaction.customId, "suspicious_user.")) {
+                return await SuspiciousUser.buttonPress(this, interaction)
+            }
         }
     }
 
@@ -154,6 +160,9 @@ export default async function (
             }
             if (type === "suggestionmodal") {
                 return editSuggestion(interaction, this)
+            }
+            if (type === "suspicioususermodal") {
+                return createSuspiciousUser(interaction, this)
             }
         }
     }

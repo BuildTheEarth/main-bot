@@ -1,0 +1,22 @@
+{
+    title: "Suspicious user",
+    customId: "suspicioususermodal",
+    components: [
+        {
+            type: "ACTION_ROW",
+            components: [
+                {
+                    type: "TEXT_INPUT",
+                    customId: "reason",
+                    label: "Reason",
+                    maxLength: 1000,
+                    minLength: null,
+                    placeholder: null,
+                    required: true,
+                    style: "PARAGRAPH",
+                    value: null
+                }
+            ]
+        }
+    ]
+}

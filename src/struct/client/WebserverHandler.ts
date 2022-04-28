@@ -3,7 +3,10 @@ import path from "path"
 import fs from "fs"
 import util from "util"
 import { NestFactory } from "@nestjs/core"
-import bodyParser from "body-parser"
+import {
+    FastifyAdapter,
+    NestFastifyApplication,
+} from '@nestjs/platform-fastify'
 import WebMain from "../web/WebMain.module.js"
 import url from "url"
 
@@ -22,11 +25,12 @@ export default class WebserverHandler {
     }
 
     async load(): Promise<void> {
-        const server = await NestFactory.create(WebMain)
-        server.use(bodyParser.json())
-        server.use(bodyParser.urlencoded({ extended: false }))
+        const server = await NestFactory.create<NestFastifyApplication>(
+            WebMain,
+            new FastifyAdapter()
+        )
 
-        server.listen(this.client.config.images.bindPort)
+        server.listen(this.client.config.images.bindPort, '0.0.0.0')
     }
 
     async addImage(img: Buffer, name: string): Promise<string> {

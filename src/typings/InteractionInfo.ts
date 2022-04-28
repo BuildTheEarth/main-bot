@@ -2,6 +2,7 @@ import Placeholder from "../entities/Placeholder.entity.js"
 import Snippet from "../entities/Snippet.entity.js"
 import Discord from "discord.js"
 import Suggestion from "../entities/Suggestion.entity.js"
+import SuspiciousUser from "../entities/SuspiciousUser.entity.js"
 
 export interface SnippetModalInfo {
     name: string
@@ -32,6 +33,12 @@ export interface SuggestionModalInfo {
     modalType: "suggestionmodal"
 }
 
+export interface SuspiciousUserModalInfo {
+    suspiciousUser: SuspiciousUser
+    type: "approved" | "denied"
+    modalType: "suspicioususermodal"
+}
+
 export function isSnippetInfo(info: { modalType: string }): info is SnippetModalInfo {
     return info.modalType === "snippetmodal"
 }
@@ -46,6 +53,11 @@ export function isSuggestInfo(info: { modalType: string }): info is SuggestModal
     return info.modalType === "suggestmodal"
 }
 
+export function isSuspiciousUserModalInfo(info: { modalType: string }): info is SuspiciousUserModalInfo {
+    return info.modalType === "suspicioususermodal"
+}
+
+
 export function isSuggestionInfo(info: {
     modalType: string
 }): info is SuggestionModalInfo {
@@ -57,5 +69,6 @@ type InteractionInfo =
     | PlaceholderModalInfo
     | SuggestModalInfo
     | SuggestionModalInfo
+    | SuspiciousUserModalInfo
 
 export default InteractionInfo

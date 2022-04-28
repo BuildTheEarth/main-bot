@@ -61,6 +61,7 @@ export default class ConfigManager {
     database: DatabaseInfo
     submodules: Submodules
     envBindings: Record<string, string>
+    suspiciousUsers: string
 
     constructor(client: Client) {
         this.client = client

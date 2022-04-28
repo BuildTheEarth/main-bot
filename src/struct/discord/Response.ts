@@ -17,6 +17,12 @@ export default class Response {
     ): Promise<void>
 
     async sendError(
+        message: Discord.ButtonInteraction,
+        embed: string | Discord.MessageEmbedOptions,
+        ephemeral?: boolean
+    ): Promise<void>
+
+    async sendError(
         message: CommandMessage,
         embed: string | Discord.MessageEmbedOptions,
         ephemeral?: boolean
@@ -39,7 +45,8 @@ export default class Response {
             | CommandMessage
             | Discord.TextBasedChannel
             | Discord.Message
-            | Discord.ModalSubmitInteraction,
+            | Discord.ModalSubmitInteraction
+            | Discord.ButtonInteraction,
         embed: string | Discord.MessageEmbedOptions,
         ephemeral: boolean = true
     ): Promise<CommandMessage | Discord.Message | Discord.ModalSubmitInteraction | void> {
@@ -54,8 +61,16 @@ export default class Response {
             })
         else if (message instanceof Discord.ModalSubmitInteraction)
             return message.reply({ embeds: [embed], ephemeral: ephemeral })
+        else if (message instanceof Discord.ButtonInteraction)
+            return message.reply({ embeds: [embed], ephemeral: ephemeral })
         else return message.send({ embeds: [embed] })
     }
+
+    async sendSuccess(
+        message: Discord.ButtonInteraction,
+        embed: string | Discord.MessageEmbedOptions,
+        ephemeral?: boolean
+    ): Promise<void>
 
     async sendSuccess(
         message: Discord.ModalSubmitInteraction,
@@ -86,7 +101,8 @@ export default class Response {
             | CommandMessage
             | Discord.TextBasedChannel
             | Discord.Message
-            | Discord.ModalSubmitInteraction,
+            | Discord.ModalSubmitInteraction
+            | Discord.ButtonInteraction,
         embed: string | Discord.MessageEmbedOptions,
         ephemeral: boolean = false
     ): Promise<CommandMessage | Discord.Message | void> {
@@ -100,6 +116,8 @@ export default class Response {
                 allowedMentions: { repliedUser: false }
             })
         else if (message instanceof Discord.ModalSubmitInteraction)
+            return message.reply({ embeds: [embed], ephemeral: ephemeral })
+        else if (message instanceof Discord.ButtonInteraction)
             return message.reply({ embeds: [embed], ephemeral: ephemeral })
         else return message.send({ embeds: [embed] })
     }

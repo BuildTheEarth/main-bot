@@ -1,17 +1,18 @@
-import express from "express"
 import { Controller, Get, Post, Param, Req, Res, Body } from "@nestjs/common"
 import GuildMember from "../../../discord/GuildMember.js"
 import Discord from "discord.js"
+import { FastifyReply, FastifyRequest } from "fastify"
+import { ServerResponse } from "http"
 
 @Controller("/api/v1/builder")
 export default class BuilderController {
     @Get(":id")
     async builderGet(
-        @Req() req: express.Request,
-        @Res() res: express.Response,
+        @Req() req: FastifyRequest,
+        @Res() res: FastifyReply<ServerResponse>,
         @Param("id") id: string
     ): Promise<unknown> {
-        res.contentType("application/json")
+        res.type("application/json")
         if (!id) {
             return res.send({
                 error: "MISSING_PARAMETER",
@@ -59,12 +60,12 @@ export default class BuilderController {
 
     @Post(":id")
     async builderPost(
-        @Req() req: express.Request,
-        @Res() res: express.Response,
+        @Req() req: FastifyRequest,
+        @Res() res: FastifyReply<ServerResponse>,
         @Param("id") id: string,
         @Body("add") add: boolean
     ): Promise<unknown> {
-        res.contentType("application/json")
+        res.type("application/json")
 
         if (!id) {
             return res

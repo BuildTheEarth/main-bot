@@ -20,6 +20,8 @@ export default async function editSuggestion(
 
         const embed = await info.suggestion.displayEmbed(client)
         await info.message.edit({ embeds: [embed] })
+        //some nice cleanup
+        client.interactionInfo.delete(customId)
         return client.response.sendSuccess(interaction, {
             description: "Edited the suggestion!"
         })

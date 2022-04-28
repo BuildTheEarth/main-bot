@@ -38,7 +38,6 @@ export default class BannedWordFilter {
                 const wordExceptions = exceptions.filter(e => typeof e === "string")
                 const isException = this.findException(match, text, wordExceptions)
                 passes = passes && !isException
-                console.log(match)
             }
             return passes
         })

@@ -2,11 +2,14 @@ import { Module, NestModule, RequestMethod, MiddlewareConsumer } from "@nestjs/c
 import { ServeStaticModule } from "@nestjs/serve-static"
 import { ApiModule } from "./baseModules/api.module.js"
 import AuthProxy from "./middleware/AuthProxy.middleware.js"
+import pathModule from "path"
+import url from "url"
+import path from "path"
 
 @Module({
     imports: [
         ServeStaticModule.forRoot({
-            rootPath: "./images",
+            rootPath: path.join(pathModule.dirname(url.fileURLToPath(import.meta.url)), "../../../images"),
             serveRoot: "/image",
             serveStaticOptions: {
                 cacheControl: true,

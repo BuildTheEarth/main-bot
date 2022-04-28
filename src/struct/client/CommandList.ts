@@ -61,8 +61,10 @@ export default class CommandList extends Discord.Collection<string, Command> {
             }
             for await (const cmd of CommandUtils.commandToSlash(command)) {
                 const pushCmd = cmd
-                if (permsTemp[0] == globalThis.client.roles.ANY)
-                    pushCmd.setDefaultPermission(true)
+                //NOTE: Discord api major change hack fix
+                pushCmd.setDefaultPermission(true)
+                //if (permsTemp[0] == globalThis.client.roles.ANY)
+                //    pushCmd.setDefaultPermission(true)
                 registerCommands.push(pushCmd.toJSON())
                 if (
                     (await this.client.customGuilds.staff()) &&
@@ -82,9 +84,10 @@ export default class CommandList extends Discord.Collection<string, Command> {
                 .commands.set(registerCommands)
             for (const cmd of commands.values())
                 if (registerPermsMain[cmd.name]) registerPermsMain[cmd.name].id = cmd.id
-            await this.client.customGuilds.main().commands.permissions.set({
-                fullPermissions: Object.values(registerPermsMain)
-            })
+            //await this.client.customGuilds.main().commands.permissions.set({
+            //    fullPermissions: Object.values(registerPermsMain)
+            //})
+            //NOTE: Discord disabled the endpoint with 0 notice
         }
 
         if (this.client.customGuilds.staff()) {
@@ -93,9 +96,10 @@ export default class CommandList extends Discord.Collection<string, Command> {
                 .commands.set(registerCommands)
             for (const cmd of commands.values())
                 if (registerPermsStaff[cmd.name]) registerPermsStaff[cmd.name].id = cmd.id
-            await this.client.customGuilds.staff().commands.permissions.set({
-                fullPermissions: Object.values(registerPermsStaff)
-            })
+            // await this.client.customGuilds.staff().commands.permissions.set({
+            //    fullPermissions: Object.values(registerPermsStaff)
+            //})
+            //NOTE: Discord disabled the endpoint with 0 notice
         }
     }
 

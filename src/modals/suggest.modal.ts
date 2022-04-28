@@ -102,5 +102,7 @@ export default async function createSuggestion(
 
         await suggestionMessage.react(client.config.emojis.upvote)
         await suggestionMessage.react(client.config.emojis.downvote)
+        //some nice cleanup
+        globalThis.client.interactionInfo.delete(customId)
     }
 }

@@ -141,8 +141,17 @@ export default class CommandMessage {
         modalName: string,
         placeholders?: Record<string, string>
     ): Promise<string> {
-        const modal = this.client.modals.getLocaleModal(modalName, this.locale)
-        modal.customId += "." + this.id
+        return CommandMessage.showModal(this.client, this.message, modalName, placeholders)
+    }
+
+    public static async showModal(
+        client: Client,
+        interaction: Discord.CommandInteraction | Discord.ButtonInteraction,
+        modalName: string,
+        placeholders?: Record<string, string>
+    ): Promise<string> {
+        const modal = client.modals.getLocaleModal(modalName, interaction.locale)
+        modal.customId += "." + interaction.id
         if (placeholders) {
             modal.components.forEach(componentPar => {
                 const componentParPartialTyped = componentPar as {
@@ -159,7 +168,7 @@ export default class CommandMessage {
                 })
             })
         }
-        await this.message.showModal(
+        await interaction.showModal(
             new Discord.Modal(
                 modal as {
                     components:

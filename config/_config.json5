@@ -21,6 +21,7 @@
         main: 0,
         staff: 0
     },
+    suspiciousUsers: "",
     reactionRoles: {
         "<channel ID>": {
             "<message ID>": {

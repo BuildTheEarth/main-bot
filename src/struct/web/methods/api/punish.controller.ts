@@ -1,18 +1,19 @@
-import express from "express"
 import Discord from "discord.js"
 import typeorm from "typeorm"
 import { Controller, Get, Param, Req, Res } from "@nestjs/common"
 import ActionLog, { Action } from "../../../../entities/ActionLog.entity.js"
+import { FastifyReply, FastifyRequest } from "fastify"
+import { ServerResponse } from "http"
 
 @Controller("/api/v1/punish")
 export default class PunishController {
     @Get(":id")
     async getPunishment(
-        @Req() req: express.Request,
-        @Res() res: express.Response,
+        @Req() req: FastifyRequest,
+        @Res() res: FastifyReply<ServerResponse>,
         @Param("id") id: string
     ): Promise<unknown> {
-        res.contentType("application/json")
+        res.type("application/json")
         const params = req.query
         const showDeleted = params["showDeleted"] ? true : false
 

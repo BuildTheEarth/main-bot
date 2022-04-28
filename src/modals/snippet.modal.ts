@@ -35,5 +35,7 @@ export default async function createSnippet(
         const languageName = languages.getName(info.language)
         // prettier-ignore
         await client.response.sendSuccess(interaction, `${past} **${info.name}** ${info.type} in ${languageName}.`)
+        //some nice cleanup
+        client.interactionInfo.delete(customId)
     }
 }

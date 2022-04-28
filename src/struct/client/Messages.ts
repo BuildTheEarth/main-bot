@@ -12,7 +12,6 @@ export default class Messages {
         if (locale === "zh-CN") trueLocale = "zh-s"
         else if (locale === "zh-TW") trueLocale = "zh-t"
         else trueLocale = locale.split("-")[0]
-        console.log(trueLocale)
         if (this.client.config.submodules.messages.json[trueLocale][key] === undefined)
             if (this.client.config.submodules.messages.json["en"][key] === undefined)
                 return "Message not set in configuration!"
