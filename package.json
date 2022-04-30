@@ -28,6 +28,7 @@
     "mysql2": "2.3.0",
     "node-fetch": "^3.2.1",
     "nps-utils": "1.7.0",
+    "patch-package": "^6.4.7",
     "reflect-metadata": "0.1.13",
     "sharp": "^0.29.3",
     "sprintf-js": "^1.1.2",
@@ -69,7 +70,7 @@
   "scripts": {
     "start": "nps",
     "prepare": "husky install",
-    "postinstall": "node scripts/hack101.cjs"
+    "postinstall": "patch-package"
   },
   "config": {
     "commitizen": {

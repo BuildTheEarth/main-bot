@@ -1,0 +1,40 @@
+diff --git a/node_modules/@discordjs/builders/CHANGELOG.md b/node_modules/@discordjs/builders/CHANGELOG.md
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@discordjs/builders/LICENSE b/node_modules/@discordjs/builders/LICENSE
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@discordjs/builders/README.md b/node_modules/@discordjs/builders/README.md
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@discordjs/builders/dist/index.d.ts b/node_modules/@discordjs/builders/dist/index.d.ts
+old mode 100644
+new mode 100755
+index d3e84b1..2aa549e
+--- a/node_modules/@discordjs/builders/dist/index.d.ts
++++ b/node_modules/@discordjs/builders/dist/index.d.ts
+@@ -1,3 +1,6 @@
++//@ts-nocheck
++//@ts-nocheck
++//@ts-nocheck
+ import { APIEmbedField, APIEmbed, APIEmbedThumbnail, APIEmbedImage, APIEmbedVideo, APIEmbedAuthor, APIEmbedProvider, APIEmbedFooter, APIMessageComponentEmoji, APISelectMenuOption, ButtonStyle, ComponentType, APIMessageComponent, APIActionRowComponent, APIButtonComponent, APISelectMenuComponent, ApplicationCommandOptionType, APIApplicationCommandBasicOption, APIApplicationCommandBooleanOption, ChannelType, APIApplicationCommandChannelOption, APIApplicationCommandOptionChoice, APIApplicationCommandIntegerOption, APIApplicationCommandMentionableOption, APIApplicationCommandNumberOption, APIApplicationCommandRoleOption, APIApplicationCommandStringOption, APIApplicationCommandUserOption, APIApplicationCommandSubcommandGroupOption, APIApplicationCommandSubcommandOption, RESTPostAPIApplicationCommandsJSONBody, APIApplicationCommandOption, ApplicationCommandType } from 'discord-api-types/v9';
+ import { z } from 'zod';
+ import { Snowflake } from 'discord-api-types/globals';
+diff --git a/node_modules/@discordjs/builders/dist/index.js b/node_modules/@discordjs/builders/dist/index.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@discordjs/builders/dist/index.js.map b/node_modules/@discordjs/builders/dist/index.js.map
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@discordjs/builders/dist/index.mjs b/node_modules/@discordjs/builders/dist/index.mjs
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@discordjs/builders/dist/index.mjs.map b/node_modules/@discordjs/builders/dist/index.mjs.map
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@discordjs/builders/docs/README.md b/node_modules/@discordjs/builders/docs/README.md
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@discordjs/builders/docs/index.yml b/node_modules/@discordjs/builders/docs/index.yml
+old mode 100644
+new mode 100755
