@@ -33,7 +33,7 @@ export default new Command({
             { SEND_MESSAGES: null }
         ) // There is no non-hacky reason support here now
 
-        await client.response.sendSuccess(message, `Unlocked ${channel}.`)
+        await message.sendSuccessMessage("unlockedChannel", channel)
         await client.log({
             color: hexToRGB(client.config.colors.success),
             author: { name: "Unlocked" },

@@ -34,7 +34,7 @@ export default new Command({
             SEND_MESSAGES: false
         }) // There is no non-hacky reason support here now
 
-        await client.response.sendSuccess(message, `Locked ${channel}.`)
+        await message.sendSuccessMessage("lockedChannel", channel)
         await client.log({
             color: hexToRGB(client.config.colors.error),
             author: { name: "Locked" },

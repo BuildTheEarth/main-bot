@@ -27,7 +27,7 @@ export default new Command({
 
         try {
             const out = JSON5.stringify(await client.db.query(query), null, 2)
-            client.response.sendSuccess(message, {
+            message.sendSuccess({
                 author: { name: "Output" },
                 description: `\`\`\`${truncateString(out, 1994)}\`\`\``
             })

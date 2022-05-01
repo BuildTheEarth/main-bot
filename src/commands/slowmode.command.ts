@@ -40,10 +40,7 @@ export default new Command({
             const current = (channel as Discord.TextChannel).rateLimitPerUser
             const s = current === 1 ? "" : "s"
             const formatted = current === 0 ? "disabled" : `${current} second${s}`
-            return client.response.sendSuccess(
-                message,
-                `The slowmode is currently ${formatted}.`
-            )
+            return message.sendSuccessMessage("currentSlowmode", formatted)
         }
 
         if (slowmode < 0) return message.sendErrorMessage("slowmodeTooLow")
@@ -59,11 +56,10 @@ export default new Command({
         ;(channel as Discord.TextChannel).setRateLimitPerUser(slowmode, reason)
 
         const s = slowmode === 1 ? "" : "s"
-        client.response.sendSuccess(
-            message,
+        message.sendSuccess(
             slowmode === 0
-                ? `Disabled slowmode in ${channel}.`
-                : `Set slowmode in ${channel} to ${slowmode} second${s}.`
+                ? message.getMessage("disabledSlowmode", channel)
+                : message.getMessage("setSlowmode", channel, slowmode, s)
         )
     }
 })

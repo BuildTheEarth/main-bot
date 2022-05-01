@@ -74,10 +74,7 @@ export default new Command({
         const log = await punish(client, message, user, "ban", reason, image, length)
 
         const formattedLength = formatPunishmentTime(length)
-        await client.response.sendSuccess(
-            message,
-            `Banned ${user} ${formattedLength} (**#${log.id}**).`
-        )
+        await message.sendSuccessMessage("bannedMessage", user, formattedLength, log.id)
         await client.log(log)
     }
 })

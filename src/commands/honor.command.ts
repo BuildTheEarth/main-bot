@@ -74,7 +74,7 @@ export default new Command({
             })
             if (!record) return message.sendErrorMessage("notAdvancedBuilder")
             await record.removeBuilder(client)
-            return client.response.sendSuccess(message, `Removed ${user}.`)
+            return message.sendSuccessMessage("removedUser", user)
         } else {
             const existingRecord = await AdvancedBuilder.findOne(user.id)
             if (existingRecord) {
@@ -86,9 +86,10 @@ export default new Command({
                 oldTime.setMonth(oldTime.getMonth() + 3)
                 const formattedTime = ms(oldTime.getTime() - Date.now(), { long: true })
 
-                return client.response.sendSuccess(
-                    message,
-                    `Honored ${user} for 3 months (it was going to end in ${formattedTime}).`
+                return message.sendSuccessMessage(
+                    "honoredUserExisting",
+                    user,
+                    formattedTime
                 )
             } else {
                 const record = new AdvancedBuilder()
@@ -112,15 +113,9 @@ export default new Command({
                             ) as Discord.TextChannel
                     }
                     if (progressChannel) {
-                        client.response.sendSuccess(
-                            progressChannel,
-                            `<@${user.id}> has been awarded for their cool build! Congratulations and great work!`
-                        )
+                        await message.sendSuccessMessage("honoredProgressMessage", user)
                     }
-                    return client.response.sendSuccess(
-                        message,
-                        `Honored ${user} for 3 months.`
-                    )
+                    return message.sendSuccessMessage("honoredUserNew", user)
                 }
 
                 if (client.roles[roleName] === globalThis.client.roles.ADVANCED_BUILDER) {
@@ -138,10 +133,7 @@ export default new Command({
                             })
                         )
                         .catch(noop)
-                    return client.response.sendSuccess(
-                        message,
-                        `Honored ${user} for 3 months.`
-                    )
+                    return message.sendSuccessMessage("honoredUserNew", user)
                 }
             }
         }

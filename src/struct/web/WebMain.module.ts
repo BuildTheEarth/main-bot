@@ -9,7 +9,10 @@ import path from "path"
 @Module({
     imports: [
         ServeStaticModule.forRoot({
-            rootPath: path.join(pathModule.dirname(url.fileURLToPath(import.meta.url)), "../../../images"),
+            rootPath: path.join(
+                pathModule.dirname(url.fileURLToPath(import.meta.url)),
+                "../../../images"
+            ),
             serveRoot: "/image",
             serveStaticOptions: {
                 cacheControl: true,

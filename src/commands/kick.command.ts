@@ -59,7 +59,7 @@ export default new Command({
         const length = null
         const log = await punish(client, message, user, "kick", reason, image, length)
 
-        await client.response.sendSuccess(message, `Kicked ${user} (**#${log.id}**).`)
+        await message.sendSuccessMessage("kickedUser", user, log.id)
         await client.log(log)
     }
 })

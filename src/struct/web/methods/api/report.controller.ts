@@ -31,17 +31,20 @@ export default class ReportsController {
             })
         }
 
-        const userRecords = (await SuspiciousUser.findAndCount({where: {userId: userList}, withDeleted: showDeleted, select: [
-            "id",
-            "userId",
-            "submitterId",
-            "denied",
-            "approved",
-            "reason",
-            "evidence",
-            "moderatorId"
-        ]}))
-
+        const userRecords = await SuspiciousUser.findAndCount({
+            where: { userId: userList },
+            withDeleted: showDeleted,
+            select: [
+                "id",
+                "userId",
+                "submitterId",
+                "denied",
+                "approved",
+                "reason",
+                "evidence",
+                "moderatorId"
+            ]
+        })
 
         if (userRecords[1] === 0) {
             return res.send({ error: "NO_RECORDS", message: "No records: user" })
@@ -52,14 +55,16 @@ export default class ReportsController {
                 id: record.id,
                 userId: record.userId,
                 submitterId: record.submitterId,
-                status: record.approved ? "approved" : record.denied ? "denied" : "pending",
+                status: record.approved
+                    ? "approved"
+                    : record.denied
+                    ? "denied"
+                    : "pending",
                 reason: record.reason,
                 evidence: record.evidence,
                 moderatorId: record.moderatorId
             }
         })
-
-        
 
         res.send({
             id: userList,
@@ -78,7 +83,7 @@ export default class ReportsController {
         @Body("evidence") evidence: string
     ): Promise<unknown> {
         res.type("application/json")
-        
+
         user = typeof user === "string" ? user : null // we need to add proper multi-user support later
 
         if (!user) {
@@ -97,9 +102,8 @@ export default class ReportsController {
             })
         }
 
-
         evidence = typeof evidence === "string" ? evidence : null
-        
+
         if (!evidence) {
             return res.send({
                 error: "INVALID_PARAMETER",
@@ -109,7 +113,8 @@ export default class ReportsController {
 
         const guildMember = await globalThis.client.customGuilds
             .main()
-            .members.fetch({ user: user }).catch(noop())
+            .members.fetch({ user: user })
+            .catch(noop())
 
         if (!guildMember) {
             return res.send({ error: "NOT_FOUND", message: "Not found: user" })
@@ -117,7 +122,8 @@ export default class ReportsController {
 
         const submitterMember = await globalThis.client.customGuilds
             .main()
-            .members.fetch({ user: submitter }).catch(noop())
+            .members.fetch({ user: submitter })
+            .catch(noop())
 
         if (!submitterMember) {
             return res.send({ error: "NOT_FOUND", message: "Not found: submitter" })
@@ -131,16 +137,25 @@ export default class ReportsController {
         )
 
         if (!suspiciousUser) {
-            return res.status(500).send({ error: "SERVER_ERROR", message: "Creation Error: suspiciousUser" })
+            return res
+                .status(500)
+                .send({
+                    error: "SERVER_ERROR",
+                    message: "Creation Error: suspiciousUser"
+                })
         }
 
         return res.send({
             id: suspiciousUser.id,
             userId: suspiciousUser.userId,
             submitterId: suspiciousUser.submitterId,
-            status: suspiciousUser.approved ? "approved" : suspiciousUser.denied ? "denied" : "pending",
+            status: suspiciousUser.approved
+                ? "approved"
+                : suspiciousUser.denied
+                ? "denied"
+                : "pending",
             reason: suspiciousUser.reason,
-            evidence: suspiciousUser.evidence,
+            evidence: suspiciousUser.evidence
         })
     }
 }

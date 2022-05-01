@@ -80,9 +80,7 @@ export default new Command({
         const past = demote ? "Demoted" : "Promoted"
         const preposition = demote ? "from" : "to"
         await member.roles[method](role)
-        await client.response.sendSuccess(
-            message,
-            `${past} <@${user.id}> ${preposition} **${expanded}**!`
-        )
+        await message.sendSuccess(`${past} <@${user.id}> ${preposition} **${expanded}**!`)
+        // Realistically I see no point in translating this, cause its all placeholders, and its english.
     }
 })

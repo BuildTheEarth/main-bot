@@ -3,10 +3,7 @@ import path from "path"
 import fs from "fs"
 import util from "util"
 import { NestFactory } from "@nestjs/core"
-import {
-    FastifyAdapter,
-    NestFastifyApplication,
-} from '@nestjs/platform-fastify'
+import { FastifyAdapter, NestFastifyApplication } from "@nestjs/platform-fastify"
 import WebMain from "../web/WebMain.module.js"
 import url from "url"
 
@@ -30,7 +27,7 @@ export default class WebserverHandler {
             new FastifyAdapter()
         )
 
-        server.listen(this.client.config.images.bindPort, '0.0.0.0')
+        server.listen(this.client.config.images.bindPort, "0.0.0.0")
     }
 
     async addImage(img: Buffer, name: string): Promise<string> {

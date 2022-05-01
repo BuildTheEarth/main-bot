@@ -111,6 +111,6 @@ export default new Command({
         if (notes) embed.fields.push({ name: "Notes", value: notes.body, inline: true })
         if (!member) embed.footer = { text: "This user is not in the server." }
 
-        await client.response.sendSuccess(message, embed)
+        await message.sendSuccess(embed)
     }
 })

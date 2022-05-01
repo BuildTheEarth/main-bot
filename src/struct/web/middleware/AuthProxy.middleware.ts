@@ -4,8 +4,13 @@ import { ServerResponse } from "http"
 
 @Injectable()
 export default class AuthProxy implements NestMiddleware {
-    use(@Req() req: FastifyRequest, @Res() res: FastifyReply<ServerResponse>, @Next() next): void {
-        const ip = req.headers["x-forwarded-for"]?.toString() || req.raw.socket.remoteAddress
+    use(
+        @Req() req: FastifyRequest,
+        @Res() res: FastifyReply<ServerResponse>,
+        @Next() next: () => unknown
+    ): void {
+        const ip =
+            req.headers["x-forwarded-for"]?.toString() || req.raw.socket.remoteAddress
         if (
             req.headers.authorization === `Bearer ${globalThis.client.config.interKey}` &&
             globalThis.client.config.apiWhitelist.includes(ip)
@@ -16,7 +21,7 @@ export default class AuthProxy implements NestMiddleware {
             next()
         } else {
             console.log(res)
-            res.header('Content-Type', 'application/json; charset=utf-8')
+            res.header("Content-Type", "application/json; charset=utf-8")
             res.status(401).send({ error: "NO_AUTH", message: "No authorization" })
             globalThis.client.logger.error(
                 `API FAILED REQUEST ${req.raw.method} request to ${req.raw.url} from ${ip}`

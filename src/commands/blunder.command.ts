@@ -125,7 +125,7 @@ export default new Command({
             }
             if (!blunder) return message.sendErrorMessage("blunderNotFound")
             await blunder.reset(client)
-            client.response.sendSuccess(message, message.messages.blunderCommitted)
+            await message.sendSuccessMessage("blunderCommitted")
         } else if (subcommand == "new") {
             if (!canManage) return message.sendErrorMessage("noPerms")
 
@@ -158,7 +158,7 @@ export default new Command({
             )
             blunder.message = msg.id
             await blunder.save()
-            client.response.sendSuccess(message, "Blunder Tracker created!")
+            await message.sendSuccessMessage("blunderTrackerCreated")
         } else if (subcommand == "delete") {
             if (!canManage) return message.sendErrorMessage("noPerms")
 
@@ -174,7 +174,7 @@ export default new Command({
                 ).messages.fetch(blunder.message)
                 await msg?.delete()
                 await blunder.remove()
-                client.response.sendSuccess(message, `Blunder tracker \`${id}\` deleted!`)
+                await message.sendSuccessMessage("blunderTrackerDeleted", id)
             } else message.sendErrorMessage("noBlunderID")
         } else if (subcommand == "list") {
             let findOptions = {}
@@ -191,8 +191,8 @@ export default new Command({
 
             const blunders = await BlunderTracker.find(findOptions)
 
-            client.response.sendSuccess(message, {
-                title: "Blunder Trackers available to you:",
+            await message.sendSuccess({
+                title: message.getMessage("yourBlunderTrackers"),
                 description:
                     blunders
                         .map(
@@ -204,7 +204,7 @@ export default new Command({
                                 }${blunder.description}`
                         )
                         .join("\n") || "None :(",
-                footer: { text: "number is tracker ID, not the number of days" }
+                footer: { text: message.getMessage("blunderDisclaimer") }
             })
         }
     }

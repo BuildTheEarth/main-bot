@@ -53,10 +53,11 @@ export function isSuggestInfo(info: { modalType: string }): info is SuggestModal
     return info.modalType === "suggestmodal"
 }
 
-export function isSuspiciousUserModalInfo(info: { modalType: string }): info is SuspiciousUserModalInfo {
+export function isSuspiciousUserModalInfo(info: {
+    modalType: string
+}): info is SuspiciousUserModalInfo {
     return info.modalType === "suspicioususermodal"
 }
-
 
 export function isSuggestionInfo(info: {
     modalType: string

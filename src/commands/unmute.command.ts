@@ -61,10 +61,7 @@ export default new Command({
 
         await log.notifyMember(client)
         const formattedUser = user.id === message.member.id ? "*you*" : user.toString()
-        await client.response.sendSuccess(
-            message,
-            `Unmuted ${formattedUser} (**#${log.id}**).`
-        )
+        await message.sendSuccessMessage("unbannedUser", formattedUser, log.id)
         await client.log(log)
     }
 })

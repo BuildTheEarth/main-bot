@@ -141,7 +141,12 @@ export default class CommandMessage {
         modalName: string,
         placeholders?: Record<string, string>
     ): Promise<string> {
-        return CommandMessage.showModal(this.client, this.message, modalName, placeholders)
+        return CommandMessage.showModal(
+            this.client,
+            this.message,
+            modalName,
+            placeholders
+        )
     }
 
     public static async showModal(

@@ -66,6 +66,6 @@ export default new Command({
             }
         }
 
-        client.response.sendSuccess(message, `Reloaded ${fullname}.`)
+        await message.sendSuccessMessage("reloadedModule", fullname)
     }
 })

@@ -67,16 +67,13 @@ export default new Command({
             if (!banner) return message.sendErrorMessage("bannerDosentExist")
 
             await banner.remove()
-            await client.response.sendSuccess(
-                message,
-                `Removed banner **#${id}** from the queue.`
-            )
+            await message.sendSuccessMessage("removedBanner", banner.id)
         } else if (subcommand === "queue") {
             await message.continue()
             const banners = await BannerImage.find()
             const formatted = banners.map(banner => banner.format()).join("\n")
-            return client.response.sendSuccess(message, {
-                author: { name: "Banner queue" },
+            return message.sendSuccess({
+                author: { name: message.getMessage("bannerQueue") },
                 description: formatted || "*Empty.*"
             })
         } else if (subcommand === "show") {
@@ -104,7 +101,7 @@ export default new Command({
         } else if (subcommand === "cycle") {
             await message.continue()
             BannerImage.cycle(client)
-            await client.response.sendSuccess(message, "Forced a banner queue cycle.")
+            await message.sendSuccessMessage("forcedBannerCycle")
         }
     }
 })

@@ -454,7 +454,7 @@ export default new Command({
                 const list =
                     snippet.aliases.map(alias => `• \u200B \u200B ${alias}`).join("\n") ||
                     "*No aliases.*"
-                return client.response.sendSuccess(message, list)
+                return message.sendSuccess(list)
             }
 
             const alias = teams
@@ -465,9 +465,12 @@ export default new Command({
                 if (!snippet.aliases) snippet.aliases = []
                 snippet.aliases.push(alias)
                 await snippet.save()
-                return client.response.sendSuccess(
-                    message,
-                    `Added alias **${alias}** to **${name}** ${currType} in ${languageName}.`
+                return message.sendSuccessMessage(
+                    "addedAlias",
+                    alias,
+                    name,
+                    currType,
+                    languageName
                 )
             } else if (subcommand === "delete") {
                 if (!snippet.aliases.includes(alias))
@@ -475,9 +478,12 @@ export default new Command({
 
                 snippet.aliases.splice(snippet.aliases.indexOf(alias), 1)
                 await snippet.save()
-                return client.response.sendSuccess(
-                    message,
-                    `Removed the **${alias}** alias from **${name}** ${currType} in ${languageName}.`
+                return message.sendSuccessMessage(
+                    "removedAlias",
+                    alias,
+                    name,
+                    currType,
+                    languageName
                 )
             }
         }
@@ -574,16 +580,17 @@ export default new Command({
 
             snippet.body = body
             await snippet.save()
-            const past = subcommand === "add" ? "Added" : "Edited"
-            // prettier-ignore
-            await client.response.sendSuccess(message, `${past} **${name}** ${currType} in ${languageName}.`)
+            const messageToSend =
+                subcommand === "add"
+                    ? message.getMessage("addedSnippet", name, currType, language)
+                    : message.getMessage("editedSnippet", name, currType, language)
+            await message.sendSuccess(messageToSend)
             await client.log(snippet, subcommand, message.member.user)
         } else if (subcommand === "delete" && !subcommandGroup) {
             if (!existingSnippet) return message.sendErrorMessage("snippetNotFound")
 
             await existingSnippet.remove()
-            // prettier-ignore
-            await client.response.sendSuccess(message, `Deleted **${name}** ${currType} in ${languageName}.`)
+            await message.sendSuccessMessage("deletedSnippet", name, currType, language)
             await client.log(existingSnippet, "delete", message.member.user)
         } else if (subcommand === "source" && !subcommandGroup) {
             if (!existingSnippet) return message.sendErrorMessage("snippetNotFound")

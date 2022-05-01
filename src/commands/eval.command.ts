@@ -63,7 +63,7 @@ export default new Command({
                 .replace(modpackRegex, "")
                 .replace(pwRegex, "")
 
-            client.response.sendSuccess(message, {
+            message.sendSuccess({
                 author: { name: "Output" },
                 description: `\`\`\`js\n${truncateString(out, 1990)}\n\`\`\``
             })

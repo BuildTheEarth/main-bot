@@ -119,7 +119,7 @@ export default new Command({
                         inline: true
                     }
                 )
-            await client.response.sendSuccess(message, embed)
+            await message.sendSuccess(embed)
         } else if (!subcommand || subcommand === "add") {
             if (!body) return message.sendErrorMessage("noBody")
 
@@ -132,14 +132,14 @@ export default new Command({
                     note.updaters.push(message.member.id)
 
                 await note.save()
-                await client.response.sendSuccess(message, `Updated ${user}'s notes!`)
+                await message.sendSuccessMessage("updatedNotes", user)
             } else {
                 const newNote = new ModerationNote()
                 newNote.member = user.id
                 newNote.body = body
                 newNote.updaters = [message.member.id]
                 await newNote.save()
-                await client.response.sendSuccess(message, `Created ${user}'s notes!`)
+                await message.sendSuccessMessage("createdNotes", user)
             }
         } else if (subcommand === "edit") {
             if (!note) {
@@ -150,10 +150,10 @@ export default new Command({
                 note.updaters.push(message.member.id)
 
             await note.save()
-            await client.response.sendSuccess(message, `Updated ${user}'s notes!`)
+            await message.sendSuccessMessage("updatedNotes", user)
         } else if (subcommand === "clear") {
             await note.remove()
-            await client.response.sendSuccess(message, `Cleared ${user}'s notes!`)
+            await message.sendSuccessMessage("clearnedNotes", user)
         }
     }
 })

@@ -59,10 +59,7 @@ export default new Command({
         const log = await punish(client, message, user, "warn", reason, image, length)
 
         const formattedUser = user.id === message.member.id ? "*you*" : user.toString()
-        await client.response.sendSuccess(
-            message,
-            `Warned ${formattedUser} (**#${log.id}**).`
-        )
+        await message.sendSuccessMessage("warnedUser", formattedUser, log.id)
         await client.log(log)
     }
 })

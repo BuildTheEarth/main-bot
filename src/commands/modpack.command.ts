@@ -89,7 +89,7 @@ export default new Command({
             const queue = format("queue")
             const store = format("store")
 
-            client.response.sendSuccess(message, {
+            message.sendSuccess({
                 author: { name: "Image list" },
                 fields: [
                     { name: "Queue", value: queue },
@@ -129,7 +129,7 @@ export default new Command({
             await image.save()
 
             const header = key === "logo" ? "Saved logo!" : "Saved image!"
-            client.response.sendSuccess(message, header + "\n\n" + image.format())
+            message.sendSuccess(header + "\n\n" + image.format())
         } else if (subcommand === "delete") {
             const key = args.consume("key")
             if (!key || !ModpackImage.isValidKey(key))
@@ -141,16 +141,13 @@ export default new Command({
             if (!image) return message.sendErrorMessage("couldNotFindImage")
 
             await image.remove()
-            client.response.sendSuccess(message, "Deleted image.")
+            await message.sendSuccessMessage("deletedImage")
         } else if (subcommand === "fetch") {
             await message.continue()
 
             const { body } = await ModpackImage.fetch()
             const code = `\`\`\`${JSON5.stringify(body, null, 2)}\`\`\``
-            client.response.sendSuccess(
-                message,
-                `Updated data! Raw JSON response:\n\n${code}`
-            )
+            await message.sendSuccessMessage("updatedJsonData", code)
         } else if (subcommand === "push") {
             await message.continue()
 
@@ -167,9 +164,9 @@ export default new Command({
             }
 
             await ModpackImage.post(client.config.modpackAuth)
-            client.response.sendSuccess(message, "Pushed changes locally and to API!")
+            await message.sendSuccessMessage("pushedChanges")
         } else if (subcommand === "url") {
-            client.response.sendSuccess(message, ModpackImage.API_URL)
+            await message.sendSuccess(ModpackImage.API_URL)
         }
     }
 })

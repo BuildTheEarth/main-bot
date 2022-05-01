@@ -127,7 +127,7 @@ export default new Command({
             log.deleter = message.member.user.id
             log.deleteReason = reason
             await log.save()
-            await client.response.sendSuccess(message, `Deleted case **#${id}**.`)
+            await message.sendSuccessMessage("deletedCase", id)
             await client.log(log)
         }
     }

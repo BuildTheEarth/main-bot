@@ -51,7 +51,7 @@ export default new Command({
         log.length = null
         await log.save()
 
-        await client.response.sendSuccess(message, `Unbanned ${user} (**#${log.id}**).`)
+        await message.sendSuccessMessage("unbannedUser", user, log.id)
         await client.log(log)
     }
 })

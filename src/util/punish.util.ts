@@ -49,6 +49,7 @@ async function log(
             await client.response.sendSuccess(
                 reviewerChannel,
                 `Builder ${member.user} (${member.id}) was banned!`
+                //no need to translate this
             )
         await client.customGuilds.main().members.ban(user, {
             reason: reason.length <= 512 ? reason : (await log.contextUrl(client)).href

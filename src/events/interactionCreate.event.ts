@@ -65,7 +65,10 @@ export default async function (
                     await interaction.deferUpdate()
                     await interaction.followUp({
                         ephemeral: true,
-                        content: client.messages.getMessage("noPermsMod", interaction.locale)
+                        content: client.messages.getMessage(
+                            "noPermsMod",
+                            interaction.locale
+                        )
                     })
                     return
                 }

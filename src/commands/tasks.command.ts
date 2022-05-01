@@ -117,9 +117,10 @@ export default new Command({
             task.status = status as TaskStatus
             await task.save()
 
-            await client.response.sendSuccess(
-                message,
-                `Saved **${Discord.Util.escapeMarkdown(task.title)}**! (**#${task.id}**).`
+            await message.sendSuccessMessage(
+                "savedTask",
+                Discord.Util.escapeMarkdown(task.title),
+                task.id
             )
         } else if (subcommand === "status") {
             const id = Number(args.consume("task"))
@@ -135,7 +136,7 @@ export default new Command({
             task.status = status as TaskStatus
             await task.save()
 
-            await client.response.sendSuccess(message, `Updated task **#${task.id}**!`)
+            await message.sendSuccessMessage("updatedTask", task.id)
         } else if (subcommand === "list") {
             await message.continue()
 
@@ -156,11 +157,8 @@ export default new Command({
             if (!tasks.length) {
                 const assignees = Includes(message.member.id)
                 const all = await Task.find({ where: { assignees } })
-                const goodJob = all.length ? " Good job!" : ""
-                return client.response.sendSuccess(
-                    message,
-                    `You have no pending tasks.${goodJob}`
-                )
+                const goodJob = all.length ? " " + message.getMessage("goodJob") : ""
+                return message.sendSuccessMessage("noPendingTasks", goodJob)
             }
 
             const single = tasks.every(task => task.creator === tasks[0].creator)
@@ -204,10 +202,7 @@ export default new Command({
             }
 
             if (channel.id !== message.channel.id)
-                await client.response.sendSuccess(
-                    message,
-                    `Sent your task report to ${channel}!`
-                )
+                await message.sendSuccessMessage("sentTaskReport", channel)
         }
     }
 })

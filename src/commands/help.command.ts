@@ -49,7 +49,7 @@ export default new Command({
                 client
             )
 
-            return client.response.sendSuccess(message, embed)
+            return message.sendSuccess(embed)
         }
 
         let allowedCommands
@@ -65,18 +65,13 @@ export default new Command({
             .map(command => `• **${command.name}:** ${command.description}`)
             .join("\n")
 
-        return client.response.sendSuccess(message, {
-            author: { name: "Here are all the commands you have access to:" },
+        return message.sendSuccess({
+            author: { name: message.getMessage("yourCommands") },
             description: formattedCommands,
             fields: [
                 {
-                    name: "Arguments",
-                    value:
-                        "Argument names enclosed in `[square brackets]` are optional. " +
-                        "Ones enclosed in `<angle brackets>` are required. " +
-                        "Ones enclosed in `['single quotes']` mean that you should type their name to toggle an option " +
-                        "(instead of providing a value of your own). " +
-                        "Ones separated by `<vertical | bars>` mean you can choose between one of them (this also applies to quoted arguments)."
+                    name: message.getMessage("arguments"),
+                    value: message.getMessage("helpCommandArguments")
                 },
                 {
                     name: "More info",

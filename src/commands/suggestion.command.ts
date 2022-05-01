@@ -364,14 +364,17 @@ export default new Command({
             const displayNumber = await suggestion.getIdentifier()
             const url = suggestionMessage.url
             if (suggestion.deletedAt) {
-                return client.response.sendSuccess(
-                    message,
-                    `Looks like suggestion **#${displayNumber}** was deleted, but here it is: [*Deleted*](${url})`
+                return message.sendSuccessMessage(
+                    "suggestionWasDeleted",
+                    displayNumber,
+                    url
                 )
             } else {
-                return client.response.sendSuccess(
-                    message,
-                    `Here's the link to suggestion **#${displayNumber}**: [${suggestion.title}](${url})`
+                return message.sendSuccessMessage(
+                    "suggestionLink",
+                    displayNumber,
+                    suggestion.title,
+                    url
                 )
             }
         } else if (subcommand === "edit") {
@@ -407,7 +410,7 @@ export default new Command({
                 await thread.setArchived(true)
             }
 
-            client.response.sendSuccess(message, "Deleted the suggestion!")
+            message.sendSuccessMessage("deletedSuggestion")
         } else if (subcommand === "status") {
             if (!canManage) return
 
@@ -496,7 +499,7 @@ export default new Command({
                     status !== oldStatus))
                 )
             )
-                return client.response.sendSuccess(message, "Updated the suggestion!")
+                return message.sendSuccessMessage("updatedSuggestion")
         }
     }
 })

@@ -154,7 +154,7 @@ export default new Command({
                     .split("_")
                     .join("\\_")
             }
-            await client.response.sendSuccess(message, embed)
+            await message.sendSuccess(embed)
         } else if (subcommand === "add") {
             if (placeholders[name + " " + language])
                 return message.sendErrorMessage("alreadyExistsPlaceholder")
@@ -174,10 +174,7 @@ export default new Command({
                 })
             }
             await client.placeholder.addPlaceholder(name, language, body)
-            await client.response.sendSuccess(
-                message,
-                `Added placeholder ${name} (${language})`
-            )
+            await message.sendSuccessMessage("addedPlaceholder", name, language)
             client.log(placeholders[name + " " + language], "add", message.member.user)
         } else if (subcommand === "edit") {
             if (!name) return message.sendErrorMessage("noPlaceholderName")
@@ -197,10 +194,7 @@ export default new Command({
                 })
             }
             await client.placeholder.editPlaceholder(name, language, body)
-            await client.response.sendSuccess(
-                message,
-                `Edited placeholder ${name} (${language})`
-            )
+            await message.sendSuccessMessage("editedPlaceholder", name, language)
             client.log(placeholders[name + " " + language], "edit", message.member.user)
         } else if (subcommand === "delete") {
             if (!name) return message.sendErrorMessage("noPlaceholderName")
@@ -208,10 +202,7 @@ export default new Command({
             if (!placeholders[name + " " + language])
                 return message.sendErrorMessage("placeholderNotFound")
             client.placeholder.deletePlaceholder(name, language)
-            await client.response.sendSuccess(
-                message,
-                `Deleted placeholder ${name} (${language})`
-            )
+            await message.sendSuccessMessage("deletedPlaceholder", name, language)
             client.log(placeholders[name + " " + language], "delete", message.member.user)
         } else if (subcommand === "info") {
             if (!name) return message.sendErrorMessage("noPlaceholderName")

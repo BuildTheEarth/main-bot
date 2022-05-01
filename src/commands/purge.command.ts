@@ -41,9 +41,10 @@ export default new Command({
 
         const originMessageState = false && purged.has(message.message.id)
 
+        //using client.response is required here because the message is deleted
         client.response.sendSuccess(
             originMessageState ? message.channel : message,
-            `Purged ${purged.size} messages.`
+            message.getMessage("purgedXMessages", purged.size)
         )
     }
 })

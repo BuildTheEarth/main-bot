@@ -84,7 +84,7 @@ export default class Client extends Discord.Client {
             Object.assign(options, {
                 database: db.path,
                 type: "better-sqlite3",
-                prepareDatabase: (data: any) => {
+                prepareDatabase: (data: unknown) => {
                     const typedData = data as Database
                     typedData.function("FIND_IN_SET", (find: string, list: string) => {
                         if (find === null || list === null) {

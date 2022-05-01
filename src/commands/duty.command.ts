@@ -157,8 +157,7 @@ export default new Command({
                 dutyArray as ("MODERATOR" | "SUPPORT" | "HELPER")[],
                 client
             )
-            return client.response.sendSuccess(
-                message,
+            return message.sendSuccess(
                 `${
                     message.member.id === memberReal.id
                         ? "*You* are"
@@ -200,8 +199,7 @@ export default new Command({
                 dutyArray as ("MODERATOR" | "SUPPORT" | "HELPER")[]
             )
 
-            return client.response.sendSuccess(
-                message,
+            return message.sendSuccess(
                 `${message.messages.toggleScheduled}${
                     !scheduledDuty ? ` ${message.messages.scheduleCancelAuto}` : ""
                 }.`
@@ -216,10 +214,7 @@ export default new Command({
                 message.member
             )
             if (scheduledDuty) {
-                return client.response.sendSuccess(
-                    message,
-                    message.messages.scheduleCancel
-                )
+                return message.sendSuccessMessage("scheduleCancel")
             } else {
                 return message.sendErrorMessage("noCancellableSchedule")
             }
@@ -230,18 +225,13 @@ export default new Command({
                 : await client.customGuilds.main().members.fetch(message.member.id)
             const duty = await client.dutyScheduler.checkDuty(memberReal)
             if (duty !== null) {
-                client.response.sendSuccess(
-                    message,
-                    `<@${memberReal.id}> has a duty schedule for ${formatTimestamp(
-                        Math.floor(duty.getTime() / 1000),
-                        "T"
-                    )}`
+                await message.sendSuccessMessage(
+                    "hasDutySchedule",
+                    memberReal.id,
+                    formatTimestamp(Math.floor(duty.getTime() / 1000), "T")
                 )
             } else {
-                client.response.sendSuccess(
-                    message,
-                    `<@${memberReal.id}> does not have a duty schedule!`
-                )
+                await message.sendSuccessMessage("noDutySchedule", memberReal.id)
             }
         }
     }

@@ -30,13 +30,17 @@ export default new Command({
             return message.sendErrorMessageSeen("networkOffline")
         } else {
             const embed: Discord.MessageEmbedOptions = {
-                description: "The network is online!",
-                fields: [{ name: "Players", value: null }],
+                description: message.getMessage("networkOnline"),
+                fields: [{ name: message.getMessage("players"), value: null }],
                 footer: { text: "IP: BuildTheEarth.net, bedrock.BuildTheEarth.net" }
             }
 
             if (java.players.online) {
-                let players = `There are **${java.players.online}** / **${java.players.max}** players online.\n\n`
+                let players = message.getMessage(
+                    "playersOnline",
+                    java.players.online,
+                    java.players.max
+                )
                 if (java?.info?.clean)
                     players += java.info.clean
                         .filter(line => line.startsWith("["))
@@ -55,7 +59,7 @@ export default new Command({
                     : "The Bedrock proxy is offline right now."
             })
 
-            await client.response.sendSuccess(message, embed)
+            await message.sendSuccess(embed)
         }
     }
 })

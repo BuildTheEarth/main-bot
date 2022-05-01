@@ -8,7 +8,7 @@ import CommandMessage from "../struct/CommandMessage.js"
 import { formatTimestamp } from "@buildtheearth/bot-utils"
 import { isValidCron } from "cron-validator"
 
-const remindTimes = ["test", "weekly", "bi-weekly", "monthly", "bi-monthly", "yearly"]
+// remindtimes are ["test", "weekly", "bi-weekly", "monthly", "bi-monthly", "yearly"]
 
 export default new Command({
     name: "remind",
@@ -109,7 +109,7 @@ export default new Command({
                 )}) — ${message}\n`
             }
 
-            return client.response.sendSuccess(message, {
+            return message.sendSuccess({
                 author: { name: "Reminder list" },
                 description: list
             })
@@ -162,10 +162,7 @@ export default new Command({
             await reminder.save()
             reminder.schedule(client)
 
-            return client.response.sendSuccess(
-                message,
-                `Scheduled reminder for ${channel}!`
-            )
+            return message.sendSuccessMessage("scheduledReminder", channel)
         }
 
         const id = parseInt(args.consume("id"))
@@ -178,16 +175,13 @@ export default new Command({
         if (subcommand === "delete") {
             if (!reminder) return message.sendErrorMessage("reminderNotFound")
             await reminder.delete()
-            return client.response.sendSuccess(message, `Reminder **#${id}** deleted!`)
+            return message.sendSuccessMessage("deletedReminder", id)
         } else if (subcommand === "edit") {
             if (!reminder) return message.sendErrorMessage("reminderNotFound")
             const body = args.consumeRest(["message"])
             reminder.message = body
             await reminder.save()
-            return client.response.sendSuccess(
-                message,
-                `Set the message of reminder **#${id}** to:\n>>>${body}`
-            )
+            return message.sendSuccessMessage("setReminderBody", id, body)
         }
     }
 })

@@ -175,7 +175,7 @@ export default new Command({
                     client
                 )
 
-                return await client.response.sendSuccess(message, `Added the word!`)
+                return await message.sendSuccessMessage("addedWord")
             }
             if (subcommand === "remove") {
                 const word = args.consumeRest(["word"])
@@ -216,7 +216,7 @@ export default new Command({
                     client
                 )
 
-                return await client.response.sendSuccess(message, `Added the word!`)
+                return await message.sendSuccessMessage("addedWord")
             }
             if (subcommand === "remove") {
                 const word = args.consumeRest(["word"])
@@ -228,10 +228,7 @@ export default new Command({
                 })
                 if (!isThere) return message.sendErrorMessage("wordNotBanned")
                 await isThere.deleteWord(client)
-                return await client.response.sendSuccess(
-                    message,
-                    `The word has been deleted!`
-                )
+                return await message.sendSuccessMessage("deletedWord")
             }
         }
     }

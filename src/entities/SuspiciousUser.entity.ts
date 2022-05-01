@@ -20,16 +20,16 @@ export default class SuspiciousUser extends typeorm.BaseEntity {
     @SnowflakeColumn()
     messageId: string
 
-    @typeorm.Column({default: false})
+    @typeorm.Column({ default: false })
     denied: boolean
 
-    @typeorm.Column({default: false})
+    @typeorm.Column({ default: false })
     approved: boolean
 
-    @SnowflakeColumn({nullable: true, default: null})
+    @SnowflakeColumn({ nullable: true, default: null })
     moderatorId?: string
 
-    @typeorm.Column({nullable: true, default: null, type: "text"})
+    @typeorm.Column({ nullable: true, default: null, type: "text" })
     reason: string
 
     @typeorm.Column("text")
@@ -38,7 +38,7 @@ export default class SuspiciousUser extends typeorm.BaseEntity {
     @typeorm.DeleteDateColumn()
     deletedAt: Date
 
-    @SnowflakeColumn({nullable: true, default: null})
+    @SnowflakeColumn({ nullable: true, default: null })
     threadId?: string
 
     public static async fetchChannel(client: Client): Promise<Discord.TextChannel> {
@@ -76,7 +76,10 @@ export default class SuspiciousUser extends typeorm.BaseEntity {
         return user
     }
 
-    private async updateSubmitter(client: Client, payload: Discord.MessageOptions): Promise<void> {
+    private async updateSubmitter(
+        client: Client,
+        payload: Discord.MessageOptions
+    ): Promise<void> {
         const user = await this.fetchSubmitter(client)
         if (user) {
             await user.send(payload).catch(noop)
@@ -91,23 +94,27 @@ export default class SuspiciousUser extends typeorm.BaseEntity {
 
     private async denySubmitter(client: Client): Promise<void> {
         await this.updateSubmitter(client, {
-            embeds: [{
-                title: "Suspicious User Denied",
-                description: `Your suspicious user has been denied.\nReason: ${this.reason}`,
-                color: hexToRGB(client.config.colors.error),
-                timestamp: new Date()
-            }]
+            embeds: [
+                {
+                    title: "Suspicious User Denied",
+                    description: `Your suspicious user has been denied.\nReason: ${this.reason}`,
+                    color: hexToRGB(client.config.colors.error),
+                    timestamp: new Date()
+                }
+            ]
         }).catch(noop)
     }
 
     private async acceptSubmitter(client: Client): Promise<void> {
         await this.updateSubmitter(client, {
-            embeds: [{
-                title: "Suspicious User Accepted",
-                description: `Your suspicious user has been accepted.\nReason: ${this.reason}`,
-                color: hexToRGB(client.config.colors.success),
-                timestamp: new Date()
-            }]
+            embeds: [
+                {
+                    title: "Suspicious User Accepted",
+                    description: `Your suspicious user has been accepted.\nReason: ${this.reason}`,
+                    color: hexToRGB(client.config.colors.success),
+                    timestamp: new Date()
+                }
+            ]
         }).catch(noop)
     }
 
@@ -131,27 +138,26 @@ export default class SuspiciousUser extends typeorm.BaseEntity {
                     inline: false
                 }
             ],
-            color: hexToRGB(client.config.colors.info),
+            color: hexToRGB(client.config.colors.info)
         }
 
         if (this.denied) {
             embed.color = hexToRGB(client.config.colors.error)
             embed.fields.push({
                 name: "Denied",
-                value: `Denied by <@${this.moderatorId}> (${this.moderatorId}) for reason: ${this.reason}`,
+                value: `Denied by <@${this.moderatorId}> (${this.moderatorId}) for reason: ${this.reason}`
             })
-
         }
 
         if (this.approved) {
             embed.color = hexToRGB(client.config.colors.success)
             embed.fields.push({
                 name: "Approved",
-                value: `Approved by <@${this.moderatorId}> (${this.moderatorId}) for reason: ${this.reason}`,
+                value: `Approved by <@${this.moderatorId}> (${this.moderatorId}) for reason: ${this.reason}`
             })
         }
 
-        const options: Discord.MessageOptions = {embeds: [embed], components: []}
+        const options: Discord.MessageOptions = { embeds: [embed], components: [] }
 
         if (!(this.approved || this.denied)) {
             const actionRow = new Discord.MessageActionRow()
@@ -165,12 +171,14 @@ export default class SuspiciousUser extends typeorm.BaseEntity {
                 customId: `suspicious_user.${this.id}.denied`,
                 label: "Deny"
             }
-            actionRow.addComponents([new Discord.MessageButton(approvedButton), new Discord.MessageButton(deniedButton)])
+            actionRow.addComponents([
+                new Discord.MessageButton(approvedButton),
+                new Discord.MessageButton(deniedButton)
+            ])
             options.components.push(actionRow)
         }
 
         return options
-
     }
 
     createEditEmbed(): Discord.MessageEditOptions {
@@ -190,16 +198,18 @@ export default class SuspiciousUser extends typeorm.BaseEntity {
 
         const channel = await SuspiciousUser.fetchChannel(client)
         if (channel) {
-            sususer.messageId = ""; 
-            sususer.threadId = "";
+            sususer.messageId = ""
+            sususer.threadId = ""
             await sususer.save()
             const message = await channel.send(sususer.createEmbed())
             sususer.messageId = message.id
             if (message && channel.isText()) {
-                sususer.threadId = (await message.startThread({
-                    name: `Suspicious User Report: ${sususer.id}`,
-                    autoArchiveDuration: "MAX",
-                })).id
+                sususer.threadId = (
+                    await message.startThread({
+                        name: `Suspicious User Report: ${sususer.id}`,
+                        autoArchiveDuration: "MAX"
+                    })
+                ).id
             } else {
                 return null
             }
@@ -209,7 +219,6 @@ export default class SuspiciousUser extends typeorm.BaseEntity {
 
         await sususer.save()
         return sususer
-
     }
 
     async acceptReport(moderator: string, reason: string): Promise<void> {
@@ -238,26 +247,50 @@ export default class SuspiciousUser extends typeorm.BaseEntity {
         await this.softRemove()
     }
 
-    
-
-    public static async buttonPress(client: Client, button: Discord.ButtonInteraction): Promise<void> {
+    public static async buttonPress(
+        client: Client,
+        button: Discord.ButtonInteraction
+    ): Promise<void> {
         const id = button.customId.split(".")[1]
-        const sususer = await SuspiciousUser.findOne({where: {id: id}})
+        const sususer = await SuspiciousUser.findOne({ where: { id: id } })
         const user = button.user
-        const guildMember = await client.customGuilds.main().members.fetch(user.id).catch(noop)
-        if (!guildMember || !GuildMember.hasRole(guildMember, [client.roles.MODERATOR, client.roles.HELPER, client.roles.MANAGER], client)) {
-            await client.response.sendError(button, "You do not have permission to do that.")
+        const guildMember = await client.customGuilds
+            .main()
+            .members.fetch(user.id)
+            .catch(noop)
+        if (
+            !guildMember ||
+            !GuildMember.hasRole(
+                guildMember,
+                [client.roles.MODERATOR, client.roles.HELPER, client.roles.MANAGER],
+                client
+            )
+        ) {
+            await client.response.sendError(
+                button,
+                "You do not have permission to do that."
+            )
         }
         if (sususer) {
             if (button.customId.split(".")[2] === "approved") {
-                const modalId = await CommandMessage.showModal(client, button, "suspicious_user", {"reason": "The user was punished."})
+                const modalId = await CommandMessage.showModal(
+                    client,
+                    button,
+                    "suspicious_user",
+                    { reason: "The user was punished." }
+                )
                 client.interactionInfo.set(modalId, {
                     modalType: "suspicioususermodal",
                     suspiciousUser: sususer,
                     type: "approved"
                 })
             } else if (button.customId.split(".")[2] === "denied") {
-                const modalId = await CommandMessage.showModal(client, button, "suspicious_user", {"reason": "Denial Reason"})
+                const modalId = await CommandMessage.showModal(
+                    client,
+                    button,
+                    "suspicious_user",
+                    { reason: "Denial Reason" }
+                )
                 client.interactionInfo.set(modalId, {
                     modalType: "suspicioususermodal",
                     suspiciousUser: sususer,
@@ -266,6 +299,4 @@ export default class SuspiciousUser extends typeorm.BaseEntity {
             }
         }
     }
-
-
 }
