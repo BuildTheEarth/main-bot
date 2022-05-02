@@ -1,0 +1,22 @@
+{
+    title: "Joueur Suspicieux",
+    customId: "suspicioususermodal",
+    components: [
+        {
+            type: "ACTION_ROW",
+            components: [
+                {
+                    type: "TEXT_INPUT",
+                    customId: "reason",
+                    label: "Raison",
+                    maxLength: 1000,
+                    minLength: null,
+                    placeholder: null,
+                    required: true,
+                    style: "PARAGRAPH",
+                    value: null
+                }
+            ]
+        }
+    ]
+}

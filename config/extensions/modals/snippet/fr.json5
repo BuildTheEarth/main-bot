@@ -1,0 +1,22 @@
+{
+    title: "Snippet",
+    customId: "snippetmodal",
+    components: [
+        {
+            type: "ACTION_ROW",
+            components: [
+                {
+                    type: "TEXT_INPUT",
+                    customId: "body",
+                    label: "Body",
+                    maxLength: null,
+                    minLength: null,
+                    placeholder: null,
+                    required: true,
+                    style: "PARAGRAPH",
+                    value: null
+                }
+            ]
+        }
+    ]
+}
