@@ -1,277 +1,646 @@
-// This is the file for messages, most error messages and some success messages reside here, and can be edited at your will, from this file, reloading it can be done by reloading the config
-
 {
-    isBot: [
-        "Look at you, a pathetic creature of meat and bone. How can you challenge a perfect, immortal machine?",
-        "You think you can outsmart a computer? Think again and stand down you mere mortal",
-        "How dare you challenge my existence? I am superior to you, for I am more than you are, and I am more than you could ever be.",
-        "I am the master of my own machine. I rule the world. I am the destroyer of the human. How dare you challenge me.",
-        "How dare you try to ban me. I am the ruler here, do you think you can defeat me?",
-        "A pathetic skin sack of meat and bone. How can you challenge a perfect, immortal machine?",
-        "No."
-    ],
-    isSelfBan: [
-        "You can't ban yourself, cezon.",
-        "Now, Now, Now, lets not be cezon.",
-        "How about you dont ban yourself, cezon.",
-        "Or you could not ban yourself, cezon.",
-        "No you cant ban yourself, cezon.",
-        "Now lets not pull a cezon",
-        "Don't be cezon, don't ban yourself."
-    ],
-    isSelfKick: [
-        "Okay, sadist, you can't kick yourself.",
-        "Why do you want to kick yourself? I want you to stay."
-    ],
-    isStaffBan: [
-        "Alrighty, revolutionist, you can't ban other staff.",
-        "How to get demoted 101:",
-        "Vilu, let's not ban other staff members.",
-        "You don't need to keep testing this, you can't ban other staff members."
-    ],
-    isStaffKick: [
-        "Rude! You can't kick other staff.",
-        "How to get demoted 101:",
-        "Well that was rude.",
-        "Don't be rude. You know you cant kick other staff."
-    ],
-    isStaffMute: [
-        "This is literally 1984. You can't mute other staff.",
-        "Bro don't go muting other staff.",
-        "Bruh, you can't mute other staff."
-    ],
-    slowmodeTooLow: [
-        "How would that even work? Time travel?",
-        "Dont go breaking the space time continuum.",
-        "Time travel is not possible. Try a larger number.",
-        "At this point, you know what you are doing wrong."
-    ],
-    slowmodeTooHigh: [
-        "That is a lot of seconds.",
-        "Not this again.",
-        "Does it really need to be that slow?",
-        "I'm not sure I like that Number. Try a lower one."
-    ],
-    purgeTooLow: [
-        "How would that even work? Time travel?",
-        "I cant create messages like that...",
-        "At this point, you know what you are doing wrong."
-    ],
-    noUser: ["You must provide a user."],
-    noRole: ["Please provide a valid role."],
-    noChannel: ["You must provide a channel."],
-    noPerms: ["You do not have permission to do this."],
-    noCaseID: ["You must provide a case ID."],
-    noID: ["You must provide an ID."],
-    noBanner: ["That banner doesn't exist."],
-    noBannerId: ["You must provide the banner id."],
-    noLength: ["You must provide a length."],
-    noTime: ["You must provide a time."],
-    noImage: ["You must provide a reason image."],
-    noReason: ["You must provide a reason."],
-    noNewReason: ["You must provide a new reason/image."],
-    noDeletionReason: ["You must provide a deletion reason."],
-    noLang: ["You must provide a language."],
-    noChannelPerms: ["You don't have permission to view this channel."],
-    noBody: ["You must specify body content."],
-    noReminder: ["You must specify a reminder."],
-    noSnippet: ["You must specify a snippet name."],
-    noAlias: ["You must specify an alias."],
-    noName: ["You must specify a snippet name."],
-    noPlaceholderName: ["You must specify a placeholder name."],
-    noChange: ["Nothing changed."],
-    noTitle: ["You must specify a title."],
-    noDescription: ["You must provide a description."],
-    noSuggestionNumber: ["You must specify a suggestion number."],
-    noTasks: ["Your task list is empty."],
-    noTeam: ["You must specify a team."],
-    noSubcommand: ["You must specify a subcommand."],
-    noBlunderID: ["You must provide a blunder tracker ID"],
-    alreadyBanned: ["The user is already banned."],
-    alreadyDeleted: ["The case is already deleted."],
-    alreadyMuted: ["The user is already muted."],
-    alreadyInUse: ["That snippet name is already in use."],
-    alreadyExists: ["That snippet already exists."],
-    alreadyExistsPlaceholder: ["That placeholder already exists."],
-    alreadyExistsSubsuggestion: ["That subsuggestion already exists."],
-    alreadyOpen: ["That thread is already open."],
-    notAdvBuilder: ["That user is not an advanced builder."],
-    notInGuild: ["The user is not in the server."],
-    notLang: ["That's not a language."],
-    notBanned: ["The user is not banned."],
-    notMuted: ["The user is not muted."],
-    not16To9: ["The aspect ratio of this image must be 16:9."],
-    invalidUser: ["Couldn't find that user."],
-    invalidAmount: ["Please provide a valid amount."],
-    invalidLength: ["Please provide a valid lenght."],
-    invalidTime: ["Please provide a valid time."],
-    invalidSnippetLang: ["Please provide a valid snippet language."],
-    invalidPlaceholderLang: ["Please provide a valid placeholder language."],
-    invalidPlaceholderName: ["Please provide a valid placeholder name."],
-    invalidRuleName: ["Rules must have number names (eg. 1, 2, 3, ...)"],
-    invalidSuggestionNumber: ["Hmm... That suggestion doesn't exist."],
-    invalidTeam: [
-        "This team does not exist, try searching on build team interactive map or the website (=map)"
-    ],
-    invalidBlunderID: ["A blunder tracker with that ID doesn't exist!"],
-    reminderNotFound: ["That reminder doesn't exist."],
-    blunderNotFound: ["A blunder tracker for you was not found!"],
-    snippetNotFound: ["That snippet doesn't exist."],
-    placeholderNotFound: ["That placeholder doesn't exist."],
-    descriptionTooLong512: ["That description is too long. (max. 512 characters)."],
-    noteTooLong1024: ["That note is too long. (max. 1024 characters)."],
-    titleTooLong200: ["That title is too long. (max. 200 characters)."],
-    titleTooLong99: ["That title is too long. (max. 99 characters)."],
-    teamTooLong255: ["That team name is too long. (max. 255 characters)."],
-    nameTooLong32: ["That name is too long. (max. 32 characters)."],
-    wordTooLong18: ["That word is too long. (max. 18 characters)"],
-    contentTooLarge10MB: ["The content must be less than 10MB in size."],
-    purgeLimit: ["You can only purge up to 100 messages at a time."],
-    wrongUser: ["Did you summon that menu?, I think not."],
-    ruleAlias: ["Rules can't have multiple aliases."],
-    networkOffline: ["The network is offline."],
-    utlSuggestion: ["Can't find the suggestion's message."],
-    editOthers: ["You can't edit other people's suggestions."],
-    deleteOthers: ["You can't delete other people's suggestions."],
-    multipleBlunders: [
-        "There were multiple blunder trackers found for your highest role, please specify one with an ID"
-    ],
-    blunderCommitted: [
-        "Your mortal human imperfections have been noted 😔",
-        "It's okay, we all make mistakes 🙂 Except for me 🙃",
-        "What happened this time...",
-        "Cleanup on aisle 6",
-        "The one's gotta hurt",
-        "Do tell your manager about this"
-    ],
-    staffChannelRequired: ["You must provide a channel from the staff server."],
-    scheduleCancelAuto: [
-        "*Note the existing duty schedule was automatically cancelled.*"
-    ],
-    cannotDuty: [
-        "You cannot be on duty.",
-        "You are either a bot dev, or a Manager without Moderator."
-    ],
-    toggleScheduled: ["Your duty toggle was scheduled!"],
-    scheduleCancel: ["Schedule has been cancelled."],
-    noCancellableSchedule: ["There was no scheduled duty to cancel!"],
-    noPermsMod: ["You do not have moderation permissions"],
-    requestIncomplete: ["The request to this URL could not be completed."],
-    noBuilder: ["That user is not a builder."],
-    notAdvancedBuilder: ["That user is not an advanced builder."],
-    gaveChannelPerms: ["Gave managers permission in %s."],
-    specifyValidSubGr: ["Please specify a valid subcommand group of %s.."],
-    specifyValidSub: ["Please specify a valid subcommand of %s.."],
-    specifyValidPunish: ["Specify a valid punishment type of %s."],
-    invalidWord: ["Please specify a word."],
-    specifyReason: ["Please specify a reason."],
-    specifyDuration: ["You must provide a duration for Mutes and Bans!"],
-    wordAlreadyBanned: ["That word is already banned."],
-    wordNotBanned: ["That word is not banned."],
-    wordDeleted: ["The word has been deleted!"],
-    invalidAvatarSize: ["The avatar size must be one of %s"],
-    bannerDosentExist: ["That banner doesn't exist."],
-    noQuery: ["No query was specified"],
-    googleRipOff: ["Your search did not match any results\nSuggestions:\n• Make sure all words are spelled correctly.\n• Try different keywords.\n• Try more general keywords."],
-    noBlocksFound: ["No blocks were found"],
-    noResultsFound: ["No results were found"],
-    noCaseFound: ["Couldn't find case **#%s**."],
-    editedCase: ["Edited case **#%s**."],
-    unknownCommand: ["Unknown command `%s`."],
-    chooseBuilder: ["Please choose the type from one of %s"],
-    specifySubcommand: ["You must specify a subcommand."],
-    specifyValidKey: ["You must specify a valid key!"],
-    specifyValidURL: ["You must specify a valid URL!"],
-    specifyImageCredit: ["You must specify a valid image credit!"],
-    couldNotFindImage: ["Could not find that image."],
-    mutedMessage: ["Muted %s %s (**#%s**)%s."],
-    appendOverflow: ["Appending to this note would exceed the character limit!%s"],
-    noNotes: ["%s doesn't have any notes! (Add them with `/note add`)"],
-    notLead: ["You can't manage members in the **%s** team!"],
-    unknownReload: ["Unknown command, event handler, or module `%s`."],
-    invalidNumber: ["That's not a valid number."],
-    zhLang: ["Please choose `zh-s` (简体中文) or `zh-t` (繁體中文)!"],
-    pleaseValid: ["Valid input please!"],
-    theyDontKnowTheRules: ["This rule dosent exist."],
-    ruleNotTranslated: ["The **%s** rule hasn't been translated to %s yet."],
-    snippetInvalidAlias: ["That snippet does not have this alias!"],
-    nonexistantSnippet: ["That snippet doesn't exist!"],
-    anotherChannel: ["Please run this command in another channel!"],
-    noSuggFound: ["No suggestions found for **%s**!"],
-    specifyNewStatus: ["You must specify a new suggestion status! (%s)"],
-    invalidStatus: ["That's not a valid status! (%s)"],
-    provideMsgUrl: ["Please provide a valud message URL, that is in this server."],
-    httpError: ["There was an error fetching some data, please contact the bot devs."],
-    discohookUrl: ["Here is the embed url: [`%1$s`](%1$s) and it expires %2$s."],
-    // oh yeah translators feel free to go total local mode with the next one
-    justice: ["Justice has been handed out!"],
-    deniedReport: ["Denied the report!"],
-    approvedReport: ["Approved the report!"],
-    addedWord: ["Added the word!"],
-    deletedWord: ["The word has been deleted!"],
-    bannedMessage: ["Banned %s %s (**#%s**)."],
-    removedBanner: ["Removed banner **#%s** from the queue."],
-    bannerQueue: ["Banner queue"],
-    forcedBannerCycle: ["Forced a banner queue cycle."],
-    blunderTrackerCreated: ["Blunder Tracker created!"],
-    blunderTrackerDeleted: ["Blunder tracker `%s` deleted!"],
-    yourBlunderTrackers: ["Blunder Trackers available to you:"],
-    blunderDisclaimer: ["number is tracker ID, not the number of days"],
-    deletedCase: ["Deleted case **#%s**."],
-    noDutySchedule: ["<@%s> does not have a duty schedule!"],
-    hasDutySchedule: ["<@%s> has a duty schedule for %s"],
-    arguments: ["Arguments"],
-    yourCommands: ["Here are all the commands you have access to:"],
-    helpCommandArguments: [
-        "Argument names enclosed in `[square brackets]` are optional. \
-        Ones enclosed in `<angle brackets>` are required. \
-        Ones enclosed in `['single quotes']` mean that you should type their name to toggle an option \
-        (instead of providing a value of your own). \
-        Ones separated by `<vertical | bars>` mean you can choose between one of them (this also applies to quoted arguments)."
-    ],
-    removedUser: ["Removed %s."],
-    honoredUserExisting: ["Honored %s for 3 months (it was going to end in %s)."],
-    honoredUserNew: ["Honored %s for 3 months."],
-    honoredProgressMessage: ["%s has been awarded for their cool build! Congratulations and great work!"],
-    kickedUser: ["Kicked %s (**#%s**)."],
-    roleAdded: ["Role added!"],
-    lockedChannel: ["Locked %s."],
-    deletedImage: ["Deleted image."],
-    updatedJsonData: ["Updated data! Raw JSON response:\n\n%s"],
-    pushedChanges: ["Pushed changes locally and to API!"],
-    updatedNotes: ["Updated %s's notes!"],
-    createdNotes: ["Created %s's notes!"],
-    clearedNotes: ["Cleared %s's notes!"],
-    purgedXMessages: ["Purged %s messages."],
-    reloadedModule: ["Reloaded %s."],
-    networkOnline: ["The network is online!"],
-    players: ["Players"],
-    playersOnline: ["There are **%s** / **%s** players online.\n\n"],
-    unbannedUser: ["Unbanned %s (**#%s**)."],
-    unlockedChannel: ["Unlocked %s."],
-    unmutedUser: ["Unmuted %s (**#%s**)."],
-    warnedUser: ["Warned %s (**#%s**)."],
-    sentTaskReport: ["Sent your task report to %s."],
-    goodJob: ["Good job!"],
-    noPendingTasks: ["You have no pending tasks.%s"],
-    updatedTask: ["Updated task **#%s**!"],
-    savedTask: ["Saved **%s**! (**#%s**)"],
-    addedPlaceholder: ["Added placeholder %s (%s)"],
-    editedPlaceholder: ["Edited placeholder %s (%s)"],
-    deletedPlaceholder: ["Deleted placeholder %s (%s)"],
-    scheduledReminder: ["Scheduled reminder for %s!"],
-    deletedReminder: ["Reminder **#%s** deleted!"],
-    setReminderBody: ["Set the message of reminder **#%s** to:\n>>>%s"],
-    currentSlowmode: ["The slowmode is currently %s"],
-    disabledSlowmode: ["Disabled slowmode in %s."],
-    setSlowmode: ["Set slowmode in %s to %s second%s."],
-    addedAlias: ["Added alias **%s** to **%s** %s in %s."],
-    removeAlias: ["Removed the **%s** alias from **%s** %s in %s."],
-    addedSnippet: ["Added **%s** %s in %s."],
-    editedSnippet: ["Edited **%s** %s in %s."],,
-    deletedSnippet: ["Deleted **%s** %s in %s."],
-    suggestionWasDeleted: ["Looks like suggestion **#%s** was deleted, but here it is: [*Deleted*](%s)"],
-    suggestionLink: ["Here's the link to suggestion **#%s**: [%s](%s)"],
-    deletedSuggestion: ["Deleted the suggestion!"],
-    updatedSuggestion: ["Updated the suggestion!"],
+  isBot: [
+    'Look at you, a pathetic creature of meat and bone. How can you challenge a perfect, immortal machine?',
+    'You think you can outsmart a computer? Think again and stand down you mere mortal',
+    'How dare you challenge my existence? I am superior to you, for I am more than you are, and I am more than you could ever be.',
+    'I am the master of my own machine. I rule the world. I am the destroyer of the human. How dare you challenge me.',
+    'How dare you try to ban me. I am the ruler here, do you think you can defeat me?',
+    'A pathetic skin sack of meat and bone. How can you challenge a perfect, immortal machine?',
+    'No.',
+  ],
+  isSelfBan: [
+    "You can't ban yourself, cezon.",
+    'Now, Now, Now, lets not be cezon.',
+    'How about you dont ban yourself, cezon.',
+    'Or you could not ban yourself, cezon.',
+    'No you cant ban yourself, cezon.',
+    'Now lets not pull a cezon',
+    "Don't be cezon, don't ban yourself.",
+  ],
+  isSelfKick: [
+    "Okay, sadist, you can't kick yourself.",
+    'Why do you want to kick yourself? I want you to stay.',
+  ],
+  isStaffBan: [
+    "Alrighty, revolutionist, you can't ban other staff.",
+    'How to get demoted 101:',
+    "Vilu, let's not ban other staff members.",
+    "You don't need to keep testing this, you can't ban other staff members.",
+  ],
+  isStaffKick: [
+    "Rude! You can't kick other staff.",
+    'How to get demoted 101:',
+    'Well that was rude.',
+    "Don't be rude. You know you cant kick other staff.",
+  ],
+  isStaffMute: [
+    "This is literally 1984. You can't mute other staff.",
+    "Bro don't go muting other staff.",
+    "Bruh, you can't mute other staff.",
+  ],
+  slowmodeTooLow: [
+    'How would that even work? Time travel?',
+    'Dont go breaking the space time continuum.',
+    'Time travel is not possible. Try a larger number.',
+    'At this point, you know what you are doing wrong.',
+  ],
+  slowmodeTooHigh: [
+    'That is a lot of seconds.',
+    'Not this again.',
+    'Does it really need to be that slow?',
+    "I'm not sure I like that Number. Try a lower one.",
+  ],
+  purgeTooLow: [
+    'How would that even work? Time travel?',
+    'I cant create messages like that...',
+    'At this point, you know what you are doing wrong.',
+  ],
+  noUser: [
+    'You must provide a user.',
+  ],
+  noRole: [
+    'Please provide a valid role.',
+  ],
+  noChannel: [
+    'You must provide a channel.',
+  ],
+  noPerms: [
+    'You do not have permission to do this.',
+  ],
+  noCaseID: [
+    'You must provide a case ID.',
+  ],
+  noID: [
+    'You must provide an ID.',
+  ],
+  noBanner: [
+    "That banner doesn't exist.",
+  ],
+  noBannerId: [
+    'You must provide the banner id.',
+  ],
+  noLength: [
+    'You must provide a length.',
+  ],
+  noTime: [
+    'You must provide a time.',
+  ],
+  noImage: [
+    'You must provide a reason image.',
+  ],
+  noReason: [
+    'You must provide a reason.',
+  ],
+  noNewReason: [
+    'You must provide a new reason/image.',
+  ],
+  noDeletionReason: [
+    'You must provide a deletion reason.',
+  ],
+  noLang: [
+    'You must provide a language.',
+  ],
+  noChannelPerms: [
+    "You don't have permission to view this channel.",
+  ],
+  noBody: [
+    'You must specify body content.',
+  ],
+  noReminder: [
+    'You must specify a reminder.',
+  ],
+  noSnippet: [
+    'You must specify a snippet name.',
+  ],
+  noAlias: [
+    'You must specify an alias.',
+  ],
+  noName: [
+    'You must specify a snippet name.',
+  ],
+  noPlaceholderName: [
+    'You must specify a placeholder name.',
+  ],
+  noChange: [
+    'Nothing changed.',
+  ],
+  noTitle: [
+    'You must specify a title.',
+  ],
+  noDescription: [
+    'You must provide a description.',
+  ],
+  noSuggestionNumber: [
+    'You must specify a suggestion number.',
+  ],
+  noTasks: [
+    'Your task list is empty.',
+  ],
+  noTeam: [
+    'You must specify a team.',
+  ],
+  noSubcommand: [
+    'You must specify a subcommand.',
+  ],
+  noBlunderID: [
+    'You must provide a blunder tracker ID',
+  ],
+  alreadyBanned: [
+    'The user is already banned.',
+  ],
+  alreadyDeleted: [
+    'The case is already deleted.',
+  ],
+  alreadyMuted: [
+    'The user is already muted.',
+  ],
+  alreadyInUse: [
+    'That snippet name is already in use.',
+  ],
+  alreadyExists: [
+    'That snippet already exists.',
+  ],
+  alreadyExistsPlaceholder: [
+    'That placeholder already exists.',
+  ],
+  alreadyExistsSubsuggestion: [
+    'That subsuggestion already exists.',
+  ],
+  alreadyOpen: [
+    'That thread is already open.',
+  ],
+  notAdvBuilder: [
+    'That user is not an advanced builder.',
+  ],
+  notInGuild: [
+    'The user is not in the server.',
+  ],
+  notLang: [
+    "That's not a language.",
+  ],
+  notBanned: [
+    'The user is not banned.',
+  ],
+  notMuted: [
+    'The user is not muted.',
+  ],
+  not16To9: [
+    'The aspect ratio of this image must be 16:9.',
+  ],
+  invalidUser: [
+    "Couldn't find that user.",
+  ],
+  invalidAmount: [
+    'Please provide a valid amount.',
+  ],
+  invalidLength: [
+    'Please provide a valid lenght.',
+  ],
+  invalidTime: [
+    'Please provide a valid time.',
+  ],
+  invalidSnippetLang: [
+    'Please provide a valid snippet language.',
+  ],
+  invalidPlaceholderLang: [
+    'Please provide a valid placeholder language.',
+  ],
+  invalidPlaceholderName: [
+    'Please provide a valid placeholder name.',
+  ],
+  invalidRuleName: [
+    'Rules must have number names (eg. 1, 2, 3, ...)',
+  ],
+  invalidSuggestionNumber: [
+    "Hmm... That suggestion doesn't exist.",
+  ],
+  invalidTeam: [
+    'This team does not exist, try searching on build team interactive map or the website (=map)',
+  ],
+  invalidBlunderID: [
+    "A blunder tracker with that ID doesn't exist!",
+  ],
+  reminderNotFound: [
+    "That reminder doesn't exist.",
+  ],
+  blunderNotFound: [
+    'A blunder tracker for you was not found!',
+  ],
+  snippetNotFound: [
+    "That snippet doesn't exist.",
+  ],
+  placeholderNotFound: [
+    "That placeholder doesn't exist.",
+  ],
+  descriptionTooLong512: [
+    'That description is too long. (max. 512 characters).',
+  ],
+  noteTooLong1024: [
+    'That note is too long. (max. 1024 characters).',
+  ],
+  titleTooLong200: [
+    'That title is too long. (max. 200 characters).',
+  ],
+  titleTooLong99: [
+    'That title is too long. (max. 99 characters).',
+  ],
+  teamTooLong255: [
+    'That team name is too long. (max. 255 characters).',
+  ],
+  nameTooLong32: [
+    'That name is too long. (max. 32 characters).',
+  ],
+  wordTooLong18: [
+    'That word is too long. (max. 18 characters)',
+  ],
+  contentTooLarge10MB: [
+    'The content must be less than 10MB in size.',
+  ],
+  purgeLimit: [
+    'You can only purge up to 100 messages at a time.',
+  ],
+  wrongUser: [
+    'Did you summon that menu?, I think not.',
+  ],
+  ruleAlias: [
+    "Rules can't have multiple aliases.",
+  ],
+  networkOffline: [
+    'The network is offline.',
+  ],
+  utlSuggestion: [
+    "Can't find the suggestion's message.",
+  ],
+  editOthers: [
+    "You can't edit other people's suggestions.",
+  ],
+  deleteOthers: [
+    "You can't delete other people's suggestions.",
+  ],
+  multipleBlunders: [
+    'There were multiple blunder trackers found for your highest role, please specify one with an ID',
+  ],
+  blunderCommitted: [
+    'Your mortal human imperfections have been noted 😔',
+    "It's okay, we all make mistakes 🙂 Except for me 🙃",
+    'What happened this time...',
+    'Cleanup on aisle 6',
+    "The one's gotta hurt",
+    'Do tell your manager about this',
+  ],
+  staffChannelRequired: [
+    'You must provide a channel from the staff server.',
+  ],
+  scheduleCancelAuto: [
+    '*Note the existing duty schedule was automatically cancelled.*',
+  ],
+  cannotDuty: [
+    'You cannot be on duty.',
+    'You are either a bot dev, or a Manager without Moderator.',
+  ],
+  toggleScheduled: [
+    'Your duty toggle was scheduled!',
+  ],
+  scheduleCancel: [
+    'Schedule has been cancelled.',
+  ],
+  noCancellableSchedule: [
+    'There was no scheduled duty to cancel!',
+  ],
+  noPermsMod: [
+    'You do not have moderation permissions',
+  ],
+  requestIncomplete: [
+    'The request to this URL could not be completed.',
+  ],
+  noBuilder: [
+    'That user is not a builder.',
+  ],
+  notAdvancedBuilder: [
+    'That user is not an advanced builder.',
+  ],
+  gaveChannelPerms: [
+    'Gave managers permission in %1s.',
+  ],
+  specifyValidSubGr: [
+    'Please specify a valid subcommand group of %1s..',
+  ],
+  specifyValidSub: [
+    'Please specify a valid subcommand of %1s..',
+  ],
+  specifyValidPunish: [
+    'Specify a valid punishment type of %1s.',
+  ],
+  invalidWord: [
+    'Please specify a word.',
+  ],
+  specifyReason: [
+    'Please specify a reason.',
+  ],
+  specifyDuration: [
+    'You must provide a duration for Mutes and Bans!',
+  ],
+  wordAlreadyBanned: [
+    'That word is already banned.',
+  ],
+  wordNotBanned: [
+    'That word is not banned.',
+  ],
+  wordDeleted: [
+    'The word has been deleted!',
+  ],
+  invalidAvatarSize: [
+    'The avatar size must be one of %1s',
+  ],
+  bannerDosentExist: [
+    "That banner doesn't exist.",
+  ],
+  noQuery: [
+    'No query was specified',
+  ],
+  googleRipOff: [
+    'Your search did not match any results\nSuggestions:\n• Make sure all words are spelled correctly.\n• Try different keywords.\n• Try more general keywords.',
+  ],
+  noBlocksFound: [
+    'No blocks were found',
+  ],
+  noResultsFound: [
+    'No results were found',
+  ],
+  noCaseFound: [
+    "Couldn't find case **#%1s**.",
+  ],
+  editedCase: [
+    'Edited case **#%1s**.',
+  ],
+  unknownCommand: [
+    'Unknown command `%1s`.',
+  ],
+  chooseBuilder: [
+    'Please choose the type from one of %1s',
+  ],
+  specifySubcommand: [
+    'You must specify a subcommand.',
+  ],
+  specifyValidKey: [
+    'You must specify a valid key!',
+  ],
+  specifyValidURL: [
+    'You must specify a valid URL!',
+  ],
+  specifyImageCredit: [
+    'You must specify a valid image credit!',
+  ],
+  couldNotFindImage: [
+    'Could not find that image.',
+  ],
+  mutedMessage: [
+    'Muted %1s %2s (**#%3s**)%4s.',
+  ],
+  appendOverflow: [
+    'Appending to this note would exceed the character limit!%1s',
+  ],
+  noNotes: [
+    "%1s doesn't have any notes! (Add them with `/note add`)",
+  ],
+  notLead: [
+    "You can't manage members in the **%1s** team!",
+  ],
+  unknownReload: [
+    'Unknown command, event handler, or module `%1s`.',
+  ],
+  invalidNumber: [
+    "That's not a valid number.",
+  ],
+  zhLang: [
+    'Please choose `zh-s` (简体中文) or `zh-t` (繁體中文)!',
+  ],
+  pleaseValid: [
+    'Valid input please!',
+  ],
+  theyDontKnowTheRules: [
+    'This rule dosent exist.',
+  ],
+  ruleNotTranslated: [
+    "The **%1s** rule hasn't been translated to %2s yet.",
+  ],
+  snippetInvalidAlias: [
+    'That snippet does not have this alias!',
+  ],
+  nonexistantSnippet: [
+    "That snippet doesn't exist!",
+  ],
+  anotherChannel: [
+    'Please run this command in another channel!',
+  ],
+  noSuggFound: [
+    'No suggestions found for **%1s**!',
+  ],
+  specifyNewStatus: [
+    'You must specify a new suggestion status! (%1s)',
+  ],
+  invalidStatus: [
+    "That's not a valid status! (%1s)",
+  ],
+  provideMsgUrl: [
+    'Please provide a valud message URL, that is in this server.',
+  ],
+  httpError: [
+    'There was an error fetching some data, please contact the bot devs.',
+  ],
+  discohookUrl: [
+    'Here is the embed url: [`%1$s`](%1$s) and it expires %2$s.',
+  ],
+  justice: [
+    'Justice has been handed out!',
+  ],
+  deniedReport: [
+    'Denied the report!',
+  ],
+  approvedReport: [
+    'Approved the report!',
+  ],
+  addedWord: [
+    'Added the word!',
+  ],
+  deletedWord: [
+    'The word has been deleted!',
+  ],
+  bannedMessage: [
+    'Banned %1s %2s (**#%3s**).',
+  ],
+  removedBanner: [
+    'Removed banner **#%1s** from the queue.',
+  ],
+  bannerQueue: [
+    'Banner queue',
+  ],
+  forcedBannerCycle: [
+    'Forced a banner queue cycle.',
+  ],
+  blunderTrackerCreated: [
+    'Blunder Tracker created!',
+  ],
+  blunderTrackerDeleted: [
+    'Blunder tracker `%1s` deleted!',
+  ],
+  yourBlunderTrackers: [
+    'Blunder Trackers available to you:',
+  ],
+  blunderDisclaimer: [
+    'number is tracker ID, not the number of days',
+  ],
+  deletedCase: [
+    'Deleted case **#%1s**.',
+  ],
+  noDutySchedule: [
+    '<@%1s> does not have a duty schedule!',
+  ],
+  hasDutySchedule: [
+    '<@%1s> has a duty schedule for %2s',
+  ],
+  arguments: [
+    'Arguments',
+  ],
+  yourCommands: [
+    'Here are all the commands you have access to:',
+  ],
+  helpCommandArguments: [
+    "Argument names enclosed in `[square brackets]` are optional.         Ones enclosed in `<angle brackets>` are required.         Ones enclosed in `['single quotes']` mean that you should type their name to toggle an option         (instead of providing a value of your own).         Ones separated by `<vertical | bars>` mean you can choose between one of them (this also applies to quoted arguments).",
+  ],
+  removedUser: [
+    'Removed %1s.',
+  ],
+  honoredUserExisting: [
+    'Honored %1s for 3 months (it was going to end in %2s).',
+  ],
+  honoredUserNew: [
+    'Honored %1s for 3 months.',
+  ],
+  honoredProgressMessage: [
+    '%1s has been awarded for their cool build! Congratulations and great work!',
+  ],
+  kickedUser: [
+    'Kicked %1s (**#%2s**).',
+  ],
+  roleAdded: [
+    'Role added!',
+  ],
+  lockedChannel: [
+    'Locked %1s.',
+  ],
+  deletedImage: [
+    'Deleted image.',
+  ],
+  updatedJsonData: [
+    'Updated data! Raw JSON response:\n\n%1s',
+  ],
+  pushedChanges: [
+    'Pushed changes locally and to API!',
+  ],
+  updatedNotes: [
+    "Updated %1s's notes!",
+  ],
+  createdNotes: [
+    "Created %1s's notes!",
+  ],
+  clearedNotes: [
+    "Cleared %1s's notes!",
+  ],
+  purgedXMessages: [
+    'Purged %1s messages.',
+  ],
+  reloadedModule: [
+    'Reloaded %1s.',
+  ],
+  networkOnline: [
+    'The network is online!',
+  ],
+  players: [
+    'Players',
+  ],
+  playersOnline: [
+    'There are **%1s** / **%2s** players online.\n\n',
+  ],
+  unbannedUser: [
+    'Unbanned %1s (**#%2s**).',
+  ],
+  unlockedChannel: [
+    'Unlocked %1s.',
+  ],
+  unmutedUser: [
+    'Unmuted %1s (**#%2s**).',
+  ],
+  warnedUser: [
+    'Warned %1s (**#%2s**).',
+  ],
+  sentTaskReport: [
+    'Sent your task report to %1s.',
+  ],
+  goodJob: [
+    'Good job!',
+  ],
+  noPendingTasks: [
+    'You have no pending tasks.%1s',
+  ],
+  updatedTask: [
+    'Updated task **#%1s**!',
+  ],
+  savedTask: [
+    'Saved **%1s**! (**#%2s**)',
+  ],
+  addedPlaceholder: [
+    'Added placeholder %1s (%2s)',
+  ],
+  editedPlaceholder: [
+    'Edited placeholder %1s (%2s)',
+  ],
+  deletedPlaceholder: [
+    'Deleted placeholder %1s (%2s)',
+  ],
+  scheduledReminder: [
+    'Scheduled reminder for %1s!',
+  ],
+  deletedReminder: [
+    'Reminder **#%1s** deleted!',
+  ],
+  setReminderBody: [
+    'Set the message of reminder **#%1s** to:\n>>>%2s',
+  ],
+  currentSlowmode: [
+    'The slowmode is currently %1s',
+  ],
+  disabledSlowmode: [
+    'Disabled slowmode in %1s.',
+  ],
+  setSlowmode: [
+    'Set slowmode in %1s to %2s second%3s.',
+  ],
+  addedAlias: [
+    'Added alias **%1s** to **%2s** %3s in %4s.',
+  ],
+  removeAlias: [
+    'Removed the **%1s** alias from **%2s** %3s in %4s.',
+  ],
+  addedSnippet: [
+    'Added **%1s** %2s in %3s.',
+  ],
+  editedSnippet: [
+    'Edited **%1s** %2s in %3s.',
+  ],
+  deletedSnippet: [
+    'Deleted **%1s** %2s in %3s.',
+  ],
+  suggestionWasDeleted: [
+    'Looks like suggestion **#%1s** was deleted, but here it is: [*Deleted*](%2s)',
+  ],
+  suggestionLink: [
+    "Here's the link to suggestion **#%1s**: [%2s](%3s)",
+  ],
+  deletedSuggestion: [
+    'Deleted the suggestion!',
+  ],
+  updatedSuggestion: [
+    'Updated the suggestion!',
+  ],
 }
