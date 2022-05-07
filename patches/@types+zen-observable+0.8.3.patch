@@ -1,0 +1,13 @@
+diff --git a/node_modules/@types/zen-observable/index.d.ts b/node_modules/@types/zen-observable/index.d.ts
+index ef5c324..0111934 100644
+--- a/node_modules/@types/zen-observable/index.d.ts
++++ b/node_modules/@types/zen-observable/index.d.ts
+@@ -5,7 +5,7 @@
+ //                 Thomas <https://github.com/itomtom>
+ //                 BenoitZugmeyer <https://github.com/BenoitZugmeyer>
+ // Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped
+-
++// @ts-nocheck
+ declare global {
+     interface SymbolConstructor {
+         readonly observable: symbol;

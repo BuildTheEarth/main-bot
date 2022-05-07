@@ -1,0 +1,19 @@
+diff --git a/node_modules/rxjs/internal/symbol/observable.d.ts b/node_modules/rxjs/internal/symbol/observable.d.ts
+index 0625eb1..597f389 100644
+--- a/node_modules/rxjs/internal/symbol/observable.d.ts
++++ b/node_modules/rxjs/internal/symbol/observable.d.ts
+@@ -1,4 +1,5 @@
+ /** Symbol.observable addition */
++// @ts-nocheck
+ declare global  {
+     interface SymbolConstructor {
+         observable: symbol;
+diff --git a/node_modules/rxjs/internal/types.d.ts b/node_modules/rxjs/internal/types.d.ts
+index 4add9d3..4e9d2f3 100644
+--- a/node_modules/rxjs/internal/types.d.ts
++++ b/node_modules/rxjs/internal/types.d.ts
+@@ -1,3 +1,4 @@
++// @ts-nocheck
+ import { Observable } from './Observable';
+ import { Subscription } from './Subscription';
+ /** OPERATOR INTERFACES */
