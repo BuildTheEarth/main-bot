@@ -269,7 +269,7 @@
     addedAlias: ["Ajout de l'alias **%s** à **%s** %s dans %s."],
     removeAlias: ["Suppression de l'alias **%s** de **%s** %s dans %s."],
     addedSnippet: ["Ajouté **%s** %s dans %s."],
-    editedSnippet: ["Modifié **%s** %s dans %s."],,
+    editedSnippet: ["Modifié **%s** %s dans %s."],
     deletedSnippet: ["Supprimé **%s** %s dans %s."],
     suggestionWasDeleted: ["On dirait que la suggestion **#%s** a été supprimée, mais la voici: [*Deleted*](%s)"],
     suggestionLink: ["Voici le lien vers la suggestion **#%s**: [%s](%s)"],

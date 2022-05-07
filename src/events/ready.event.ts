@@ -8,6 +8,7 @@ import Guild from "../struct/discord/Guild.js"
 import Reminder from "../entities/Reminder.entity.js"
 import BlunderTracker from "../entities/BlunderTracker.entity.js"
 import { Cron } from "croner"
+import TeamPointsUser from "../entities/TeamPointsUser.entity.js"
 
 export default async function ready(this: Client): Promise<void> {
     this.logger.debug("Loading commands...")
@@ -23,6 +24,7 @@ export default async function ready(this: Client): Promise<void> {
     for (const builder of await AdvancedBuilder.find()) builder.schedule(this)
     for (const reminder of await Reminder.find()) await reminder.schedule(this)
     new Cron("0 0 * * *", () => BlunderTracker.inc(this))
+    TeamPointsUser.registerDailyReset()
 
     // cache reaction role messages
     for (const channelID of Object.keys(this.config.reactionRoles)) {

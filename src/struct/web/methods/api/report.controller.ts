@@ -137,12 +137,10 @@ export default class ReportsController {
         )
 
         if (!suspiciousUser) {
-            return res
-                .status(500)
-                .send({
-                    error: "SERVER_ERROR",
-                    message: "Creation Error: suspiciousUser"
-                })
+            return res.status(500).send({
+                error: "SERVER_ERROR",
+                message: "Creation Error: suspiciousUser"
+            })
         }
 
         return res.send({
