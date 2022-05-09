@@ -2,11 +2,9 @@ FROM node:16-alpine3.15
 
 WORKDIR /etc/buildtheearth/main-bot
 
-COPY package*.json ./
+COPY . ./
 
 RUN npm install
-
-COPY . ./
 
 RUN npm start build
 
