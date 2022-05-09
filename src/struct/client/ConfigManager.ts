@@ -30,6 +30,7 @@ export type DatabaseInfo = {
 export type LoggingConfig = {
     modLogs: string
     snippetLogs: string
+    pointLog: string
 }
 
 export type ImagesConfig = {
