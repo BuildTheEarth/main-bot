@@ -27,7 +27,7 @@ export function loadRoles(client: Client): Record<string, string[]> {
     }
 
     if (fs.existsSync(staffPath)) {
-        const staff = loadSyncJSON5(mainPath)
+        const staff = loadSyncJSON5(staffPath)
         for (const key of Object.keys(staff)) {
             if (roles[key] !== undefined) {
                 roles[key] = [...roles[key], staff[key]]
