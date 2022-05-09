@@ -10,6 +10,7 @@ export default class GuildMember {
         client: Client,
         botDevBypass = true
     ): boolean {
+        console.log(roles)
         let isStringArr = false
         roles.forEach(value => (isStringArr = typeof value != "object"))
         const isStringArrFunc = (roles: string[] | string[][]): roles is string[] =>
