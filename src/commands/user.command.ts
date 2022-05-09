@@ -119,11 +119,17 @@ export default new Command({
         }
 
         if (user.flags) {
-            const flags = user.flags
+            let feildName = "Acknowledgements"
+            const flagArr = member.user.flags
                 .toArray()
+            const flags = flagArr
                 .map(flag => userFlags[flag] || humanizeConstant(flag))
                 .join(", ")
-            if (flags) embed.fields.push({ name: "Acknowledgements", value: flags })
+            if (flagArr.includes("DISCORD_EMPLOYEE"||"PARTNERED_SERVER_OWNER"||"HYPESQUAD_EVENTS"||"DISCORD_CERTIFIED_MODERATOR") {
+                feildName += "\n(User Has a Notable Flag)"
+            }
+            if (flags) embed.fields.push({ name: feildName, value: flags })
+            }
         }
 
         // uh...
