@@ -14,13 +14,13 @@ import url from "url"
 const userFlags = loadSyncJSON5(
     path.join(
         path.dirname(url.fileURLToPath(import.meta.url)) +
-            "../../../config/extensions/userFlags.json5"
+        "../../../config/extensions/userFlags.json5"
     )
 )
 const activityTypes = loadSyncJSON5(
     path.join(
         path.dirname(url.fileURLToPath(import.meta.url)) +
-            "../../../config/extensions/activityTypes.json5"
+        "../../../config/extensions/activityTypes.json5"
     )
 )
 import CommandMessage from "../struct/CommandMessage.js"
@@ -119,17 +119,21 @@ export default new Command({
         }
 
         if (user.flags) {
-            let feildName = "Acknowledgements"
+            let fieldName = "Acknowledgements"
             const flagArr = member.user.flags
                 .toArray()
             const flags = flagArr
                 .map(flag => userFlags[flag] || humanizeConstant(flag))
                 .join(", ")
-            if (flagArr.includes("DISCORD_EMPLOYEE"||"PARTNERED_SERVER_OWNER"||"HYPESQUAD_EVENTS"||"DISCORD_CERTIFIED_MODERATOR") {
-                feildName += "\n(User Has a Notable Flag)"
+            if (
+                flagArr.includes("DISCORD_CERTIFIED_MODERATOR") ||
+                flagArr.includes("DISCORD_EMPLOYEE") ||
+                flagArr.includes("PARTNERED_SERVER_OWNER") ||
+                flagArr.includes("HYPESQUAD_EVENTS")
+            ) {
+                fieldName += "\n(User Has a Notable Flag)"
             }
-            if (flags) embed.fields.push({ name: feildName, value: flags })
-            }
+            if (flags) embed.fields.push({ name: fieldName, value: flags })
         }
 
         // uh...
@@ -141,10 +145,9 @@ export default new Command({
             (status.emoji ? humanizeEmoji(status.emoji) + " " : "") +
             (status.state ? Discord.Util.escapeMarkdown(status.state) : "")
         const humanizeActivity = (act: Discord.Activity) =>
-            `${activityTypes[act.type] || humanizeConstant(act.type)} **${
-                act.type === "CUSTOM"
-                    ? humanizeStatus(act)
-                    : Discord.Util.escapeMarkdown(act.name)
+            `${activityTypes[act.type] || humanizeConstant(act.type)} **${act.type === "CUSTOM"
+                ? humanizeStatus(act)
+                : Discord.Util.escapeMarkdown(act.name)
             }**`
         const activities = member.presence.activities.map(humanizeActivity).join("\n")
         const presenceStatusEmoji = client.config.emojis.text[member.presence.status]
