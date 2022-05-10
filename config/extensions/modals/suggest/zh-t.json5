@@ -1,5 +1,5 @@
 {
-    title: "Suggestion",
+    title: "建議",
     customId: "suggestmodal",
     components: [
         {
@@ -8,7 +8,7 @@
                 {
                     type: "TEXT_INPUT",
                     customId: "title",
-                    label: "पदवी",
+                    label: "標題",
                     maxLength: 200,
                     minLength: null,
                     placeholder: null,
@@ -24,7 +24,7 @@
                 {
                     type: "TEXT_INPUT",
                     customId: "body",
-                    label: "भीतर की सामग्री",
+                    label: "建議正文",
                     maxLength: null,
                     minLength: null,
                     placeholder: null,
@@ -40,7 +40,7 @@
                 {
                     type: "TEXT_INPUT",
                     customId: "teams",
-                    label: "जिम्मेदार लोग",
+                    label: "團隊",
                     maxLength: null,
                     minLength: null,
                     placeholder: null,

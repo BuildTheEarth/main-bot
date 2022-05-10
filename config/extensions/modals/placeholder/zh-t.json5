@@ -1,0 +1,22 @@
+{
+    title: "占位符",
+    customId: "placeholdermodal",
+    components: [
+        {
+            type: "ACTION_ROW",
+            components: [
+                {
+                    type: "TEXT_INPUT",
+                    customId: "body",
+                    label: "正文",
+                    maxLength: null,
+                    minLength: null,
+                    placeholder: null,
+                    required: true,
+                    style: "PARAGRAPH",
+                    value: null
+                }
+            ]
+        }
+    ]
+}
