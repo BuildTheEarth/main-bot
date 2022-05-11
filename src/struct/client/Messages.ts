@@ -12,18 +12,19 @@ export default class Messages {
         if (locale === "zh-CN") trueLocale = "zh-s"
         else if (locale === "zh-TW") trueLocale = "zh-t"
         else trueLocale = locale.split("-")[0]
-        if (this.client.config.submodules.messages.json[trueLocale][key] === undefined)
-            if (this.client.config.submodules.messages.json["en"][key] === undefined)
+        if (this.client.config.submodules.messages.json?.[trueLocale]?.[key] === undefined)
+            if (this.client.config.submodules.messages.json?.["en"]?.[key] === undefined)
                 return "Message not set in configuration!"
             else
                 return this.getRandomMessage(
-                    this.client.config.submodules.messages.json["en"][key]
+                    this.client.config.submodules.messages.json?.["en"]?.[key]
                 )
 
         return this.getRandomMessage(
-            this.client.config.submodules.messages.json[trueLocale][key]
+            this.client.config.submodules.messages.json?.[trueLocale]?.[key]
         )
     }
+    // Lots of optional chaining spam should fix it
 
     private getRandomMessage(arr: string[]): string {
         const arrayIndex = Math.floor(Math.random() * arr.length)

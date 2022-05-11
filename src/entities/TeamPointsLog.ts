@@ -1,4 +1,4 @@
-import { noop } from "@buildtheearth/bot-utils"
+import { hexToRGB, noop } from "@buildtheearth/bot-utils"
 import Discord from "discord.js"
 import typeorm, { FindManyOptions } from "typeorm"
 import SnowflakeColumn from "./decorators/SnowflakeColumn.decorator.js"
@@ -81,6 +81,21 @@ export default class TeamPointsLog extends typeorm.BaseEntity {
         }
         if (returnChannel.isText()) return returnChannel
         return null
+    }
+
+    public static async logAction(log: TeamPointsLog): Promise<void> {
+        const channel = await TeamPointsLog.getLogChannel()
+        if (!channel) {
+            return
+        }
+        const embed = new Discord.MessageEmbed()
+        embed.setTitle(`<@${log.actorId}> ${log.pointChange > 0 ? "gave" : "took"} ${log.pointChange} points to <@&${log.roleId}>`)
+        embed.setDescription(log.reason)
+        embed.setTimestamp(log.createdAt)
+        embed.setColor(log.pointChange > 0 ? hexToRGB(client.config.colors.success) : hexToRGB(client.config.colors.error))
+
+        await channel.send({embeds: [embed]})
+
     }
 
 

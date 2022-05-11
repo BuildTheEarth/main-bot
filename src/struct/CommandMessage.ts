@@ -62,7 +62,7 @@ export default class CommandMessage {
     }
 
     public getMessage(message: string, ...args: any[]): string {
-        return vsprintf(this.messages[message], args)
+        return vsprintf(this.messages?.[message], args)
     }
 
     public async sendSuccess(

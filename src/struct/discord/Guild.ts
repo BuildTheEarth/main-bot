@@ -12,6 +12,10 @@ export default class Guild {
         return guild?.roles?.cache?.find(role => name.includes(role.id))
     }
 
+    static roleByName(guild: Discord.Guild, name: string): Discord.Role {
+        return guild?.roles?.cache?.find(role => name === role.name)
+    }
+
     static async setVanityCode(
         guild: Discord.Guild,
         code: string,

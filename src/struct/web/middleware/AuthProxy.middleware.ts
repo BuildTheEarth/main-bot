@@ -20,7 +20,6 @@ export default class AuthProxy implements NestMiddleware {
             )
             next()
         } else {
-            console.log(res)
             res.header("Content-Type", "application/json; charset=utf-8")
             res.status(401).send({ error: "NO_AUTH", message: "No authorization" })
             globalThis.client.logger.error(

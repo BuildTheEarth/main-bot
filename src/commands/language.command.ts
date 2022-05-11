@@ -81,13 +81,13 @@ export default new Command({
         if (!member) return message.sendErrorMessage("notInGuild")
 
         const languageInput = args.consume("language").toLowerCase()
-        const language = LANGUAGE_ROLES[languageInput]
+        const language: string = LANGUAGE_ROLES[languageInput]
         if (!language)
             return message.sendErrorMessage(languageInput ? "notLang" : "noLang")
 
         await message.continue()
 
-        const role = Guild.role(await client.customGuilds.main(), language)
+        const role = Guild.roleByName(client.customGuilds.main(), language)
         await member.roles.add(role)
         await message.sendSuccessMessage("roleAdded")
     }
