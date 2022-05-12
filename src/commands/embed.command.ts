@@ -72,8 +72,12 @@ export default new Command({
             ]
         }
 
+        console.log(webhookJson)
+
         const buffer = Buffer.from(JSON.stringify(webhookJson))
         const discohookUrl = `https://discohook.org/?data=${buffer.toString("base64")}`
+
+        console.log(discohookUrl)
 
         //@ts-ignore
         const fetchedData = await fetch("https://share.discohook.app/create", {
