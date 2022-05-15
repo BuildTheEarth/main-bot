@@ -1,4 +1,4 @@
-import { hexToRGB, noop } from "@buildtheearth/bot-utils"
+import { hexToRGB, noop, truncateString } from "@buildtheearth/bot-utils"
 import Discord from "discord.js"
 import typeorm, { FindManyOptions } from "typeorm"
 import SnowflakeColumn from "./decorators/SnowflakeColumn.decorator.js"
@@ -66,7 +66,7 @@ export default class TeamPointsLog extends typeorm.BaseEntity {
         return TeamPointsLog.find(finalOpts)
     }
 
-    public static async canDoAction(roleId: string, actorId: string, pointChange: number, reason: string): Promise<{ canDo: boolean; error?: string }> {
+    public static async canDoAction(_roleId: string, actorId: string, pointChange: number, reason: string): Promise<{ canDo: boolean; error?: string }> {
         const sentiment = new Sentiment()
         if (!(await TeamPointsUser.shouldCommandPass(actorId, pointChange))) {
             return { canDo: false, error: "DAILY_LIMIT_OR_MAX" }
@@ -104,8 +104,8 @@ export default class TeamPointsLog extends typeorm.BaseEntity {
             return
         }
         const embed = new Discord.MessageEmbed()
-        embed.setTitle(`<@${this.actorId}> ${this.pointChange > 0 ? "gave" : "took"} ${this.pointChange} points to <@&${this.roleId}>`)
-        embed.setDescription(this.reason)
+        embed.setTitle(`${this.pointChange > 0 ? "Gave" : "Took"} points`)
+        embed.setDescription(`<@${this.actorId}> ${this.pointChange > 0 ? "gave" : "took"} ${this.pointChange} points to <@&${this.roleId}> for reason: ${truncateString(this.reason, 200)}`)
         embed.setTimestamp(this.createdAt)
         embed.setColor(this.pointChange > 0 ? hexToRGB(client.config.colors.success) : hexToRGB(client.config.colors.error))
 

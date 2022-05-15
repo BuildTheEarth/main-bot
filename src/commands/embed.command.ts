@@ -7,6 +7,7 @@ import { formatTimestamp, noop } from "@buildtheearth/bot-utils"
 import fetch from "node-fetch"
 import _ from "lodash"
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function isNil(value: any): value is null | undefined {
     return value?.length === 0 || _.isNil(value)
 }
