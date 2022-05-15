@@ -2,6 +2,8 @@ import { hexToRGB, noop } from "@buildtheearth/bot-utils"
 import Discord from "discord.js"
 import typeorm, { FindManyOptions } from "typeorm"
 import SnowflakeColumn from "./decorators/SnowflakeColumn.decorator.js"
+import TeamPointsUser from "./TeamPointsUser.entity.js"
+import Sentiment = require("sentiment")
 
 @typeorm.Entity({ name: "teampoints_log" })
 export default class TeamPointsLog extends typeorm.BaseEntity {
@@ -64,6 +66,17 @@ export default class TeamPointsLog extends typeorm.BaseEntity {
         return TeamPointsLog.find(finalOpts)
     }
 
+    public static async canDoAction(roleId: string, actorId: string, pointChange: number, reason: string): Promise<{ canDo: boolean; error?: string }> {
+        const sentiment = new Sentiment()
+        if (!(await TeamPointsUser.shouldCommandPass(actorId, pointChange))) {
+            return { canDo: false, error: "DAILY_LIMIT_OR_MAX" }
+        }
+        if (sentiment.analyze(reason).score < -2) {
+            return { canDo: false, error: "REASON_BAD" }
+        }
+        return { canDo: true }
+    }
+
     public static async addLog (roleId: string, actorId: string, pointChange: number, reason: string): Promise<TeamPointsLog> {
         const log = new TeamPointsLog()
         log.roleId = roleId
@@ -71,6 +84,8 @@ export default class TeamPointsLog extends typeorm.BaseEntity {
         log.pointChange = pointChange
         log.reason = reason
         await log.save()
+        await log.logAction()
+        await TeamPointsUser.addCommandUsage(actorId)
         return log
     }
 
@@ -83,16 +98,16 @@ export default class TeamPointsLog extends typeorm.BaseEntity {
         return null
     }
 
-    public static async logAction(log: TeamPointsLog): Promise<void> {
+    async logAction(): Promise<void> {
         const channel = await TeamPointsLog.getLogChannel()
         if (!channel) {
             return
         }
         const embed = new Discord.MessageEmbed()
-        embed.setTitle(`<@${log.actorId}> ${log.pointChange > 0 ? "gave" : "took"} ${log.pointChange} points to <@&${log.roleId}>`)
-        embed.setDescription(log.reason)
-        embed.setTimestamp(log.createdAt)
-        embed.setColor(log.pointChange > 0 ? hexToRGB(client.config.colors.success) : hexToRGB(client.config.colors.error))
+        embed.setTitle(`<@${this.actorId}> ${this.pointChange > 0 ? "gave" : "took"} ${this.pointChange} points to <@&${this.roleId}>`)
+        embed.setDescription(this.reason)
+        embed.setTimestamp(this.createdAt)
+        embed.setColor(this.pointChange > 0 ? hexToRGB(client.config.colors.success) : hexToRGB(client.config.colors.error))
 
         await channel.send({embeds: [embed]})
 

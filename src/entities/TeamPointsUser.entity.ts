@@ -101,7 +101,16 @@ export default class TeamPointsUser extends typeorm.BaseEntity {
             if (!limit) {
                 return false
             } else {
-                if (pointsGiven < limit.minPoints || pointsGiven > limit.maxPoints) {
+                if (limit.minPoints === -1 && limit.maxPoints === -1) {
+                    return true
+                }
+                else if (limit.minPoints === -1) {
+                    return pointsGiven <= limit.maxPoints
+                }
+                else if (limit.maxPoints === -1) {
+                    return pointsGiven >= limit.minPoints
+                }
+                else if (pointsGiven < limit.minPoints || pointsGiven > limit.maxPoints) {
                     return false
                 }
                 return true
@@ -111,7 +120,16 @@ export default class TeamPointsUser extends typeorm.BaseEntity {
         if (!role) {
             return false
         }
-        if (pointsGiven < role.minPoints || pointsGiven > role.maxPoints) {
+        if (role.minPoints === -1 && role.maxPoints === -1) {
+            return true
+        }
+        else if (role.minPoints === -1) {
+            return pointsGiven <= role.maxPoints
+        }
+        else if (role.maxPoints === -1) {
+            return pointsGiven >= role.minPoints
+        }
+        else if (pointsGiven < role.minPoints || pointsGiven > role.maxPoints) {
             return false
         }
         if (user.commandUsagesToday >= role.maxUsagesPerDay) {
