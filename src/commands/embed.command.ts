@@ -67,8 +67,11 @@ export default new Command({
             messages: [
                 {
                     data: {
-                        content: embedMessage.content === "" ? null : embedMessage.content,
-                        embeds: _.cloneDeep(embedMessage.embeds).map(embed => _.omitBy(_.omit(embed.toJSON(), "type"), isNil)),
+                        content:
+                            embedMessage.content === "" ? null : embedMessage.content,
+                        embeds: _.cloneDeep(embedMessage.embeds).map(embed =>
+                            _.omitBy(_.omit(embed.toJSON(), "type"), isNil)
+                        ),
                         username: embedMessage.author.username,
                         avatar_url: embedMessage.author.displayAvatarURL({
                             format: "png"
@@ -79,7 +82,9 @@ export default new Command({
         }
 
         const buffer = Buffer.from(JSON.stringify(webhookJson))
-        const discohookUrl = `https://discohook.org/?data=${encodeURIComponent(buffer.toString("base64"))}`
+        const discohookUrl = `https://discohook.org/?data=${encodeURIComponent(
+            buffer.toString("base64")
+        )}`
 
         //@ts-ignore
         const fetchedData = await fetch("https://share.discohook.app/create", {

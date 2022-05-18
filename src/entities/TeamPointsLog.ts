@@ -28,13 +28,13 @@ export default class TeamPointsLog extends typeorm.BaseEntity {
     //TODO: more data proccessing functions
 
     public static async getLogs(options: {
-        roleId?: string,
-        actorId?: string, 
-        order: "ASC" | "DESC", 
-        maxDate?: Date,
-        minDate?: Date, 
-        exactDate?: Date,
-        count?: number,
+        roleId?: string
+        actorId?: string
+        order: "ASC" | "DESC"
+        maxDate?: Date
+        minDate?: Date
+        exactDate?: Date
+        count?: number
     }): Promise<TeamPointsLog[]> {
         const opts: typeorm.FindConditions<TeamPointsLog> = {}
         if (options.roleId) {
@@ -56,7 +56,7 @@ export default class TeamPointsLog extends typeorm.BaseEntity {
         const finalOpts: FindManyOptions<TeamPointsLog> = {
             where: opts,
             order: {
-                createdAt: options.order? options.order : "DESC"
+                createdAt: options.order ? options.order : "DESC"
             }
         }
         if (options.count) {
@@ -66,7 +66,12 @@ export default class TeamPointsLog extends typeorm.BaseEntity {
         return TeamPointsLog.find(finalOpts)
     }
 
-    public static async canDoAction(_roleId: string, actorId: string, pointChange: number, reason: string): Promise<{ canDo: boolean; error?: string }> {
+    public static async canDoAction(
+        _roleId: string,
+        actorId: string,
+        pointChange: number,
+        reason: string
+    ): Promise<{ canDo: boolean; error?: string }> {
         const sentiment = new Sentiment()
         if (!(await TeamPointsUser.shouldCommandPass(actorId, pointChange))) {
             return { canDo: false, error: "DAILY_LIMIT_OR_MAX" }
@@ -77,7 +82,12 @@ export default class TeamPointsLog extends typeorm.BaseEntity {
         return { canDo: true }
     }
 
-    public static async addLog (roleId: string, actorId: string, pointChange: number, reason: string): Promise<TeamPointsLog> {
+    public static async addLog(
+        roleId: string,
+        actorId: string,
+        pointChange: number,
+        reason: string
+    ): Promise<TeamPointsLog> {
         const log = new TeamPointsLog()
         log.roleId = roleId
         log.actorId = actorId
@@ -90,7 +100,9 @@ export default class TeamPointsLog extends typeorm.BaseEntity {
     }
 
     public static async getLogChannel(): Promise<Discord.TextBasedChannel> {
-        const returnChannel = await client.channels.fetch(client.config.logging.pointLog).catch(noop)
+        const returnChannel = await client.channels
+            .fetch(client.config.logging.pointLog)
+            .catch(noop)
         if (!returnChannel) {
             return null
         }
@@ -105,13 +117,21 @@ export default class TeamPointsLog extends typeorm.BaseEntity {
         }
         const embed = new Discord.MessageEmbed()
         embed.setTitle(`${this.pointChange > 0 ? "Gave" : "Took"} points`)
-        embed.setDescription(`<@${this.actorId}> ${this.pointChange > 0 ? "gave" : "took"} ${this.pointChange} points to <@&${this.roleId}> for reason: ${truncateString(this.reason, 200)}`)
+        embed.setDescription(
+            `<@${this.actorId}> ${this.pointChange > 0 ? "gave" : "took"} ${
+                this.pointChange
+            } points to <@&${this.roleId}> for reason: ${truncateString(
+                this.reason,
+                200
+            )}`
+        )
         embed.setTimestamp(this.createdAt)
-        embed.setColor(this.pointChange > 0 ? hexToRGB(client.config.colors.success) : hexToRGB(client.config.colors.error))
+        embed.setColor(
+            this.pointChange > 0
+                ? hexToRGB(client.config.colors.success)
+                : hexToRGB(client.config.colors.error)
+        )
 
-        await channel.send({embeds: [embed]})
-
+        await channel.send({ embeds: [embed] })
     }
-
-
 }

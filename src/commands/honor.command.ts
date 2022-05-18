@@ -113,7 +113,10 @@ export default new Command({
                             ) as Discord.TextChannel
                     }
                     if (progressChannel) {
-                        await client.response.sendSuccess(progressChannel, message.getMessage("honoredProgressMessage", user))
+                        await client.response.sendSuccess(
+                            progressChannel,
+                            message.getMessage("honoredProgressMessage", user)
+                        )
                     }
                     return message.sendSuccessMessage("honoredUserNew", user)
                 }
