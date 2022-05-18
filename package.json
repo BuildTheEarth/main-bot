@@ -87,7 +87,7 @@
     },
     "overrides": {
         "@buildtheearth/bot-utils": {
-            "discord.js": "github:discordjs/discord.js#v13"
+            "discord.js": "^13.7.0"
         }
     },
     "repository": "BuildTheEarth/main-bot",
