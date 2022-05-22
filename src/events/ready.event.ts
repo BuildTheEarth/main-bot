@@ -1,4 +1,4 @@
-import chalk from "chalk"
+import chalk = require("chalk")
 import Discord from "discord.js"
 import BannerImage from "../entities/BannerImage.entity.js"
 import TimedPunishment from "../entities/TimedPunishment.entity.js"
@@ -11,6 +11,9 @@ import { Cron } from "croner"
 import TeamPointsUser from "../entities/TeamPointsUser.entity.js"
 
 export default async function ready(this: Client): Promise<void> {
+
+    if (!this.user) return //never gonna happen, its on ready, discord.js needs some better type assertion
+
     this.logger.debug("Loading commands...")
     await this.commands.load()
     this.logger.info("Loaded commands.")
@@ -28,9 +31,11 @@ export default async function ready(this: Client): Promise<void> {
 
     // cache reaction role messages
     for (const channelID of Object.keys(this.config.reactionRoles)) {
-        const channel: Discord.TextChannel = await this.channels
+        const channelTemp = await this.channels
             .fetch(channelID)
             .catch(() => null)
+        let channel: Discord.TextChannel | null = null
+        if (channelTemp instanceof Discord.TextChannel) channel = channelTemp
         if (channel) {
             for (const messageID of Object.keys(this.config.reactionRoles[channelID])) {
                 await channel.messages.fetch(messageID).catch(() => null)
@@ -38,7 +43,7 @@ export default async function ready(this: Client): Promise<void> {
         }
     }
 
-    if ((await this.customGuilds.main()).features.includes("VANITY_URL")) {
+    if (this.customGuilds.main().features.includes("VANITY_URL")) {
         const current = await (await this.customGuilds.main()).fetchVanityData()
         const outdated = current?.code !== this.config.vanity
         if (outdated) {

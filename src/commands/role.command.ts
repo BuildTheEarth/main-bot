@@ -54,14 +54,15 @@ export default new Command({
         }
         await message.continue()
 
-        if (!["download"].includes(subcommand)) {
+        if (!subcommand || !["download"].includes(subcommand)) {
+            const iconUrlTemp = role.iconURL()
             const roleMessage = await message.send({
                 embeds: [
                     {
                         color: role.hexColor,
                         title: role.name,
                         thumbnail: {
-                            url: role.iconURL()
+                            url:  iconUrlTemp? iconUrlTemp: undefined
                         },
                         fields: [
                             {
@@ -125,7 +126,7 @@ export default new Command({
                         color: role.hexColor,
                         title: role.name,
                         thumbnail: {
-                            url: role.iconURL()
+                            url: iconUrlTemp? iconUrlTemp: undefined
                         },
                         fields: [
                             {

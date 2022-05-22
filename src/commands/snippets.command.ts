@@ -341,7 +341,7 @@ export default new Command({
             let page = 1
             let old = 1
 
-            const interactionFunc = async interaction => {
+            const interactionFunc = async (interaction: Discord.Interaction) => {
                 if (
                     !(
                         interaction.isButton() &&
@@ -531,7 +531,7 @@ export default new Command({
             (subcommand === "edit" && !subcommandGroup)
         ) {
             const body = args.consumeRest(["body"])
-            let snippet: Snippet
+            let snippet: Snippet | null = null
 
             if (subcommand === "add") {
                 if (client.commands.search(name))
@@ -578,14 +578,14 @@ export default new Command({
                 snippet = existingSnippet
             }
 
-            snippet.body = body
-            await snippet.save()
+            if (snippet) snippet.body = body
+            await snippet?.save()
             const messageToSend =
                 subcommand === "add"
                     ? message.getMessage("addedSnippet", name, currType, language)
                     : message.getMessage("editedSnippet", name, currType, language)
             await message.sendSuccess(messageToSend)
-            await client.log(snippet, subcommand, message.member.user)
+            if (snippet) await client.log(snippet, subcommand, message.member.user)
         } else if (subcommand === "delete" && !subcommandGroup) {
             if (!existingSnippet) return message.sendErrorMessage("snippetNotFound")
 

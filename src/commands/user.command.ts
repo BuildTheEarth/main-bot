@@ -24,6 +24,7 @@ const activityTypes = loadSyncJSON5(
     )
 )
 import CommandMessage from "../struct/CommandMessage.js"
+import { nodeModuleNameResolver } from "typescript"
 
 export default new Command({
     name: "user",
@@ -45,11 +46,11 @@ export default new Command({
 
         await message.continue()
 
-        const member: Discord.GuildMember = await message.guild.members
+        const member: Discord.GuildMember | null = await message.guild.members
             .fetch({ user, cache: true })
             .catch(() => null)
 
-        const embed: Discord.MessageEmbedOptions = {
+        const embed = <Discord.MessageEmbedOptions>{
             color: hexToRGB(client.config.colors.info),
             thumbnail: {
                 url: user.displayAvatarURL({ size: 64, format: "png", dynamic: true })
@@ -68,6 +69,8 @@ export default new Command({
                 }
             ]
         }
+
+        if (!embed.fields) return // again never gonna happen
 
         if (member) {
             if (member.nickname)
@@ -106,7 +109,7 @@ export default new Command({
         if (member)
             embed.fields.push({
                 name: member ? "Join date" : "\u200B",
-                value: member ? formatTimestamp(member.joinedAt, "f") : "\u200B",
+                value: member ? formatTimestamp(member.joinedAt? member.joinedAt: 0, "f") : "\u200B",
                 inline: true
             })
 
@@ -120,7 +123,8 @@ export default new Command({
 
         if (user.flags) {
             let fieldName = "Acknowledgements"
-            const flagArr = member.user.flags.toArray()
+            const flagArrTemp = member?.user.flags?.toArray()
+            const flagArr = flagArrTemp? flagArrTemp: []
             const flags = flagArr
                 .map(flag => userFlags[flag] || humanizeConstant(flag))
                 .join(", ")
@@ -149,15 +153,23 @@ export default new Command({
                     ? humanizeStatus(act)
                     : Discord.Util.escapeMarkdown(act.name)
             }**`
-        const activities = member.presence.activities.map(humanizeActivity).join("\n")
-        const presenceStatusEmoji = client.config.emojis.text[member.presence.status]
-        const presenceStatusName =
-            member.presence.status === "dnd"
-                ? "Do Not Disturb"
-                : humanizeConstant(member.presence.status)
-
-        const presence = `\\${presenceStatusEmoji} **${presenceStatusName}**\n${activities}`
-        embed.fields.push({ name: "Presence", value: presence })
+        
+        if (member?.partial) await member.fetch()
+        
+        const activities = member?.presence?.activities.map(humanizeActivity).join("\n")
+        let presence : string | null = null
+        if (member?.presence) {
+            const presenceStatusEmoji = client.config.emojis.text[member.presence.status]
+            const presenceStatusName =
+                member?.presence?.status === "dnd"
+                    ? "Do Not Disturb"
+                    : member?.presence?.status? humanizeConstant(member?.presence?.status): "Offline"
+            if (activities)
+                presence = `\\${presenceStatusEmoji} **${presenceStatusName}**\n${activities}`
+            else
+                presence = `\\${presenceStatusEmoji} **${presenceStatusName}**`
+        }
+        if (presence) embed.fields.push({ name: "Presence", value: presence })
         await message.send({ embeds: [embed] })
     }
 })

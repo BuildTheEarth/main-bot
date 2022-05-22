@@ -7,7 +7,7 @@ import { FastifyAdapter, NestFastifyApplication } from "@nestjs/platform-fastify
 import WebMain from "../web/WebMain.module.js"
 import url from "url"
 
-async function ensureDirectoryExistence(filePath) {
+async function ensureDirectoryExistence(filePath: string) {
     const dirname = path.dirname(filePath)
     if (fs.existsSync(dirname)) {
         return true

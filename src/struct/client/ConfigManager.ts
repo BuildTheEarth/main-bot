@@ -40,29 +40,29 @@ export type ImagesConfig = {
 
 export default class ConfigManager {
     client: Client
-    prefix: string
-    appeal: string
-    vanity: string
-    isDev: boolean
-    developers: string[]
-    jenkinsEnv: boolean
-    logging: LoggingConfig
-    guilds: GuildCategories
-    suggestions: GuildCategories & { discussion: GuildCategories }
-    suggestionOffset: GuildCategories<number>
-    reactionRoles: ReactionRole
-    images: ImagesConfig
-    emojis: EmojiList
-    colors: ColorPalette & { suggestions: SuggestionCategories }
-    assets: AssetList
-    token: string
-    modpackAuth: string
-    interKey: string
-    apiWhitelist: string[]
-    database: DatabaseInfo
+    prefix!: string
+    appeal!: string
+    vanity!: string
+    isDev!: boolean
+    developers!: string[]
+    jenkinsEnv!: boolean
+    logging!: LoggingConfig
+    guilds!: GuildCategories
+    suggestions!: GuildCategories & { discussion: GuildCategories }
+    suggestionOffset!: GuildCategories<number>
+    reactionRoles!: ReactionRole
+    images!: ImagesConfig
+    emojis!: EmojiList
+    colors!: ColorPalette & { suggestions: SuggestionCategories }
+    assets!: AssetList
+    token!: string
+    modpackAuth!: string
+    interKey!: string
+    apiWhitelist!: string[]
+    database!: DatabaseInfo
     submodules: Submodules
     envBindings: Record<string, string>
-    suspiciousUsers: string
+    suspiciousUsers!: string
 
     constructor(client: Client) {
         this.client = client
@@ -96,7 +96,7 @@ export default class ConfigManager {
                 process.exit(1)
             })
         for (const [key, value] of Object.entries(config))
-            if (this[key] !== null) this[key] = value
+            if ((this as Record<string, unknown>)[key] !== null) (this as Record<string, unknown>)[key] = value
         for (const [key, value] of Object.entries(process.env)) {
             if (key in this.envBindings) {
                 const replacer = `function(self, v) {${this.envBindings[key]} = v}`
@@ -111,7 +111,7 @@ export default class ConfigManager {
     unload(): void {
         const excemptKeys = ["submodules", "client", "envBindings"]
         for (const key of Object.keys(this).filter(key => !excemptKeys.includes(key))) {
-            delete this[key]
+            delete (this as Record<string, unknown>)[key]
         }
         for (const submodule of Object.values(this.submodules)) submodule.unload()
     }

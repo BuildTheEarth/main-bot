@@ -5,10 +5,10 @@ import Client from "../Client.js"
 import { Cron } from "croner"
 
 export default class DutyScheduler {
-    dutyScheduler: Map<Discord.Snowflake, [NodeJS.Timeout, Cron]>
+    dutyScheduler: Map<Discord.Snowflake, [Cron, Date]>
     client: Client
     public constructor(client: Client) {
-        this.dutyScheduler = new Map<Discord.Snowflake, [NodeJS.Timeout, Cron]>()
+        this.dutyScheduler = new Map<Discord.Snowflake, [Cron, Date]>()
         this.client = client
     }
 
@@ -23,7 +23,7 @@ export default class DutyScheduler {
         } else if (roles.includes("HELPER") && roles.includes("MODERATOR")) {
             roles.pop()
         }
-        this.dutyScheduler[user.id] = [
+        this.dutyScheduler.set(user.id, [
             new Cron(new Date(Date.now() + time), async () => {
                 const dutyToggle = await toggleDutyRole(user, roles, this.client)
                 await user.send({
@@ -36,19 +36,19 @@ export default class DutyScheduler {
                         }
                     ]
                 })
-                delete this.dutyScheduler[user.id]
+                this.dutyScheduler.delete(user.id)
             }),
             new Date(Date.now() + time)
-        ]
+        ])
     }
 
     public async cancelWithCheck(
         user: Discord.GuildMember,
         userWhoDid: Discord.GuildMember
     ): Promise<boolean> {
-        if (this.dutyScheduler[user.id] !== undefined) {
-            this.dutyScheduler[user.id][0].stop()
-            delete this.dutyScheduler[user.id]
+        if (this.dutyScheduler.has(user.id)) {
+            this.dutyScheduler.get(user.id)?.[0].stop()
+            this.dutyScheduler.delete(user.id)
             if (user.id !== userWhoDid.id)
                 await user.send({
                     embeds: [
@@ -64,10 +64,10 @@ export default class DutyScheduler {
         }
     }
 
-    public checkDuty(user: Discord.GuildMember): Promise<Date> {
-        if (this.dutyScheduler[user.id] !== undefined) {
-            const date = this.dutyScheduler[user.id][1]
-            return date
+    public checkDuty(user: Discord.GuildMember): Date | null {
+        if (this.dutyScheduler.has(user.id)) {
+            const date = this.dutyScheduler.get(user.id)?.[1]
+            return date? date: null
         } else {
             return null
         }

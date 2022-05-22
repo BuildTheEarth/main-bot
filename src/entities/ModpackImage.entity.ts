@@ -1,9 +1,10 @@
 import fetch, { Response } from "node-fetch"
 import typeorm from "typeorm"
+import unicode from "./transformers/unicode.transformer.js"
 
 export type ModpackImageKey = "logo" | 1 | 2 | 3 | 4 | 5
 export type ModpackImageSetName = "queue" | "store"
-export type ModpackImageData = { url: string; credit: string }
+export type ModpackImageData = { url: string; credit: string | null }
 export type ModpackImageSet = Partial<Record<ModpackImageKey, ModpackImageData>>
 
 @typeorm.Entity({ name: "modpack_images" })
@@ -11,18 +12,18 @@ export default class ModpackImage extends typeorm.BaseEntity {
     static readonly API_URL = "https://buildtheearth.net/api/modpack/images"
 
     @typeorm.PrimaryGeneratedColumn()
-    id: number
+    id!: number
 
     @typeorm.Column({ type: "varchar" })
-    key: ModpackImageKey
+    key!: ModpackImageKey
 
     @typeorm.Column()
-    set: ModpackImageSetName
+    set!: ModpackImageSetName
 
     @typeorm.Column()
-    url: string
+    url!: string
 
-    @typeorm.Column({ nullable: true })
+    @typeorm.Column({ nullable: true, transformer: unicode })
     credit?: string
 
     format(compact = false): string {
@@ -44,7 +45,7 @@ export default class ModpackImage extends typeorm.BaseEntity {
     static async fetch(): Promise<{ response: Response; body: ModpackImageSet }> {
         const images = await this.find({ set: "store" })
         const response: Response = await fetch(this.API_URL)
-        const object: ModpackImageSet = await response.json()
+        const object: ModpackImageSet = <ModpackImageSet>(await response.json())
 
         for (const [key, data] of Object.entries(object)) {
             if (!ModpackImage.isValidKey(key)) continue
@@ -56,7 +57,7 @@ export default class ModpackImage extends typeorm.BaseEntity {
             image.key = key as ModpackImageKey
             image.set = "store"
             image.url = data.url
-            image.credit = data.credit
+            image.credit = data.credit? data.credit: undefined
 
             await image.save()
         }
@@ -71,7 +72,7 @@ export default class ModpackImage extends typeorm.BaseEntity {
         for (const image of images) {
             object[image.key] = {
                 url: image.url,
-                credit: image.credit
+                credit: image.credit? image.credit: null
             }
         }
 

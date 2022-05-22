@@ -6,6 +6,8 @@ import { loadRoles } from "./util/roles.util.js"
 declare global {
     // eslint-disable-next-line no-var
     var client: Client
+    // eslint-disable-next-line no-var
+    var fileExtension: string
 }
 
 const client = new Client({
@@ -62,13 +64,7 @@ async function main() {
 
 globalThis.fileExtension = "js"
 
-try {
-    if (process[Symbol.for("ts-node.register.instance")]) {
-        globalThis.fileExtension = "ts"
-    }
-} finally {
-    null
-}
+global.fileExtension = "js"
 
 main()
 

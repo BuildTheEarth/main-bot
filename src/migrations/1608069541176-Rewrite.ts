@@ -1,6 +1,7 @@
 import typeorm from "typeorm"
 import Discord from "discord.js"
 import Client from "../struct/Client.js"
+//@ts-ignore
 import chalk from "chalk"
 import { promisify } from "util"
 import { ms } from "@buildtheearth/bot-utils"
@@ -92,9 +93,11 @@ CREATE TABLE \`action_logs\` (
         const logs = await queryRunner.query("SELECT * FROM Logs ORDER BY ID ASC")
         for (const log of logs) {
             const msLength = log.Length === null ? 0 : ms(log.Length) || 0
+            //@ts-ignore
             let length = Math.round(msLength / 1000)
             // (MAX_INT as seconds is equal to 24,855 days!)
             if (length > MAX_INT) length = 0 // (-> permanent)
+            //@ts-ignore
             if (!["mute", "ban"].includes(log.Action)) length = null
             if (log.Action.startsWith("perm"))
                 (length = 0) && (log.Action = log.Action.slice(4))
@@ -248,6 +251,7 @@ CREATE TABLE \`suggestions\` (
             // skip test suggestions
             if (oldSuggestion.id < 342) continue
             const { messageID } = oldSuggestion
+            //@ts-ignore
             const message: Discord.Message = await suggestionsChannel.messages
                 .fetch(messageID, { force: true })
                 .catch(() => null)
@@ -259,6 +263,7 @@ CREATE TABLE \`suggestions\` (
 
             const embed = message.embeds[0]
             const description = embed.description
+            //@ts-ignore
             const statusField = embed.fields.find(field => field.name === "Status").value
             const statusUpdaterName = statusField.match(/ by (.+)/)?.[1]
 
@@ -266,9 +271,12 @@ CREATE TABLE \`suggestions\` (
             const _extends = null
             const author = message.author.id
             const anonymous = false
+            //@ts-ignore
             const title = description.match(/\*\*(.+)\*\*\n/)?.[1] || ""
+            //@ts-ignore
             const body = description.split("\n").slice(1).join("\n")
             const teams = oldSuggestion.team === "none" ? null : oldSuggestion.team
+            //@ts-ignore
             const statusUpdater = KNOWN_USERS[statusUpdaterName] || null
             const statusReason = statusField.match(/Reason : \*\*(.+)\*\*/)?.[1] || null
             const _message = message.id

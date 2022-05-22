@@ -12,25 +12,27 @@ async function log(
     user: Discord.User,
     type: "warn" | "mute" | "kick" | "ban",
     reason: string,
-    image: string,
-    length: number,
-    punishment: TimedPunishment,
+    image: string | null,
+    length: number | null,
+    punishment: TimedPunishment | null,
     messageId: string = message.id
 ): Promise<ActionLog> {
     const log = new ActionLog()
+
     log.action = type
     log.member = user.id
-    log.executor = message.member.user.id
+    if (message.member) log.executor = message.member.user.id
     log.reason = reason
-    log.reasonImage = image
-    log.length = length
+    log.reasonImage = image? image: undefined
+    log.length = length? length : undefined
     if (message instanceof ButtonInteraction) log.channel = message.channelId
     else log.channel = message.channel.id
     log.message = messageId
-    if (type === "ban" || type === "mute") log.punishment = punishment
+    if ((type === "ban" || type === "mute") && punishment ) log.punishment = punishment
     await log.save()
-
-    const member: Discord.GuildMember = await message.guild.members
+    
+    if (!message.guild) return log
+    const member: Discord.GuildMember | null = await message.guild.members
         .fetch({ user, cache: true })
         .catch(noop)
 
@@ -90,12 +92,12 @@ export default async function punish(
     member: Discord.User,
     type: "warn" | "mute" | "kick" | "ban",
     reason: string,
-    image: string,
-    length: number,
+    image: string | null,
+    length: number | null,
     messageId: string = message.id
 ): Promise<ActionLog> {
-    let punishment: TimedPunishment
-    if (type === "ban" || type === "mute") {
+    let punishment: TimedPunishment | null
+    if (length && (type === "ban" || type === "mute")) {
         punishment = await timedPunishment(client, member, type, length)
     } else punishment = null
 

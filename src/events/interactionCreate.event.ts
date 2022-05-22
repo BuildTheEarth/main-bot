@@ -5,7 +5,7 @@ import CommandMessage from "../struct/CommandMessage.js"
 import GuildMember from "../struct/discord/GuildMember.js"
 import Role from "../struct/discord/Role.js"
 
-import chalk from "chalk"
+import chalk = require("chalk")
 import ModerationMenu from "../entities/ModerationMenu.entity.js"
 import createSuggestion from "../modals/suggest.modal.js"
 import createBanner from "../modals/banner.modal.js"
@@ -20,7 +20,7 @@ export default async function (
     this: Client,
     interaction: Discord.Interaction
 ): Promise<unknown> {
-    if (interaction.member.user.bot) return
+    if (interaction.user.bot) return
 
     if (interaction.type === "MESSAGE_COMPONENT") {
         if (interaction.isSelectMenu()) {
@@ -119,7 +119,7 @@ export default async function (
             const tag =
                 command.name === "suggest" && !interaction.guild
                     ? "(Anonymous)"
-                    : (interaction.member.user as Discord.User).tag
+                    : (interaction.user as Discord.User).tag
 
             try {
                 await command.run(
@@ -132,14 +132,17 @@ export default async function (
                     new CommandMessage(interaction as Discord.CommandInteraction, this),
                     "An unknown error occurred! Please contact one of the bot developers for help."
                 )
+                if (error instanceof Error) {
+                    const stack = (error.stack as string)
+                        .split("\n")
+                        .map(line => "    " + line)
+                        .join("\n")
+                    return this.logger.error(
+                        `${label} ${tag} tried to run '${command.name}' command:\n${stack}`
+                    )
+                }
+                
 
-                const stack = (error.stack as string)
-                    .split("\n")
-                    .map(line => "    " + line)
-                    .join("\n")
-                return this.logger.error(
-                    `${label} ${tag} tried to run '${command.name}' command:\n${stack}`
-                )
             }
 
             return this.logger.info(`${label} ${tag} ran '${command.name}' command.`)

@@ -9,11 +9,11 @@ export default class Guild {
     }
 
     static role(guild: Discord.Guild, name: string[]): Discord.Role {
-        return guild?.roles?.cache?.find(role => name.includes(role.id))
+        return guild?.roles?.cache?.find(role => name.includes(role.id)) || guild.roles.highest
     }
 
     static roleByName(guild: Discord.Guild, name: string): Discord.Role {
-        return guild?.roles?.cache?.find(role => name === role.name)
+        return guild?.roles?.cache?.find(role => name === role.name) || guild.roles.highest
     }
 
     static async setVanityCode(

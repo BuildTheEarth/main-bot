@@ -3,23 +3,22 @@ import SnowflakePrimaryColumn from "./decorators/SnowflakePrimaryColumn.decorato
 import Client from "../struct/Client.js"
 import Guild from "../struct/discord/Guild.js"
 import { noop } from "@buildtheearth/bot-utils"
-
 import { Cron } from "croner"
 
 @typeorm.Entity({ name: "advanced_builders" })
 export default class AdvancedBuilder extends typeorm.BaseEntity {
     @SnowflakePrimaryColumn()
-    builder: string
+    builder!: string
 
     @typeorm.CreateDateColumn({ name: "given_at" })
-    givenAt: Date
+    givenAt!: Date
 
     @typeorm.Column({ name: "role_name", default: "ADVANCED_BUILDER", nullable: false })
-    roleName: "ADVANCED_BUILDER" | "COOL_BUILD"
+    roleName!: "ADVANCED_BUILDER" | "COOL_BUILD"
 
     async removeBuilder(client: Client): Promise<void> {
         if (client.honorBuilderTimeouts.has(this.builder))
-            client.honorBuilderTimeouts.get(this.builder).stop()
+            client.honorBuilderTimeouts.get(this.builder)?.stop()
         const role = Guild.role(
             await client.customGuilds.main(),
             client.roles[this.roleName]
@@ -35,7 +34,7 @@ export default class AdvancedBuilder extends typeorm.BaseEntity {
 
     schedule(client: Client): void {
         if (client.honorBuilderTimeouts.has(this.builder))
-            client.honorBuilderTimeouts.get(this.builder).stop()
+            client.honorBuilderTimeouts.get(this.builder)?.stop()
         const time = this.givenAt || new Date()
         time.setMonth(time.getMonth() + 3)
 

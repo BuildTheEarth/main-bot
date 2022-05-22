@@ -7,17 +7,17 @@ import TeamPointPerms from "./TeamPointPerms.entity.js"
 @typeorm.Entity({ name: "teampoint_users" })
 export default class TeamPointsUser extends typeorm.BaseEntity {
     @SnowflakePrimaryColumn()
-    userId: string
+    userId!: string
 
     @typeorm.Column({ type: "integer", default: 0 })
-    commandUsagesToday: number
+    commandUsagesToday!: number
 
     private async getMaxUsages(): Promise<{
-        roleId: string
+        roleId: string | null
         maxPoints: number
         minPoints: number
         maxUsagesPerDay: number
-    }> {
+    } | null> {
         return await TeamPointPerms.getHighestPermsId(client, this.userId).catch(noop)
     }
 

@@ -2,6 +2,7 @@ import { TextChannel } from "discord.js"
 import typeorm from "typeorm"
 import Client from "../struct/Client.js"
 import SnowflakeColumn from "./decorators/SnowflakeColumn.decorator.js"
+import unicode from "./transformers/unicode.transformer.js"
 const NO_PLURAL = [
     "staff of the month",
     "the author",
@@ -33,22 +34,22 @@ const NO_PLURAL = [
 @typeorm.Entity({ name: "blunder_tracker" })
 export default class BlunderTracker extends typeorm.BaseEntity {
     @typeorm.PrimaryGeneratedColumn()
-    id: number
+    id!: number
 
-    @typeorm.Column()
-    description: string
+    @typeorm.Column({transformer: unicode})
+    description!: string
 
     @SnowflakeColumn({ nullable: true })
-    role: string
+    role?: string
 
     @typeorm.Column({ type: "date", name: "last_blunder", nullable: true })
-    lastBlunder: Date
+    lastBlunder?: Date
 
     @SnowflakeColumn()
-    message: string
+    message!: string
 
     @SnowflakeColumn()
-    channel: string
+    channel!: string
 
     static async inc(client: Client): Promise<void> {
         for (const count of await this.find()) count.update(client)
@@ -91,6 +92,7 @@ export default class BlunderTracker extends typeorm.BaseEntity {
     }
 
     async roleToTeam(client: Client): Promise<string> {
+        if (!this.role) return "the team"
         const role = (await client.customGuilds.staff()).roles.cache.get(this.role)
         if (!role) return ""
         if (NO_PLURAL.includes(role.name.toLowerCase())) return role.name

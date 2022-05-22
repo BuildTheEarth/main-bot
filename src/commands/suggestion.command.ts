@@ -135,7 +135,7 @@ export default new Command({
         }
     ],
     async run(this: Command, client: Client, message: CommandMessage, args: Args) {
-        const Suggestions = client.db.getRepository(Suggestion)
+        const Suggestions = client.db?.getRepository(Suggestion)
         const staff = message.guild?.id === client.config.guilds.staff
         const category = staff ? "staff" : "main"
         const canManage = message.member
@@ -159,7 +159,7 @@ export default new Command({
         }
 
         const subcommand = args.consumeSubcommand()
-        const availableSubcommands = this.subcommands.filter(sub =>
+        const availableSubcommands = this.subcommands?.filter(sub =>
             message.member
                 ? GuildMember.hasRole(
                       message.member,
@@ -169,19 +169,24 @@ export default new Command({
                 : false
         )
 
-        const availableSubcommandNames = availableSubcommands.map(sub => sub.name)
-        const allSubcommandNames = this.subcommands.map(sub => sub.name)
-        if (!allSubcommandNames.includes(subcommand))
+        const availableSubcommandNames = availableSubcommands?.map(sub => sub.name)
+        const allSubcommandNames = this.subcommands?.map(sub => sub.name)
+        if (!allSubcommandNames?.includes(subcommand))
             // prettier-ignore
             return message.sendErrorMessage(
                 "specifyValidSub",
-                humanizeArray(availableSubcommandNames)
+                humanizeArray(availableSubcommandNames? availableSubcommandNames: [])
             )
 
         const suggestionsID = client.config.suggestions[category]
-        const suggestions: Discord.TextChannel = await client.channels
+        const suggestionsChannelRaw = await client.channels
             .fetch(suggestionsID, { force: true })
             .catch(() => null)
+        if (!suggestionsChannelRaw || !(suggestionsChannelRaw instanceof Discord.TextChannel)) return 
+
+        //TODO: Migrate to the new qna channels when they come out
+
+        const suggestions: Discord.TextChannel | null = suggestionsChannelRaw
 
         if (subcommand === "search") {
             const PER_PAGE = 10
@@ -196,10 +201,10 @@ export default new Command({
             if (!statuses.length) statuses = Object.keys(SuggestionStatuses)
             const cleanQuery = Discord.Util.escapeMarkdown(truncateString(query, 50))
 
-            const queryBuilder = Suggestions.createQueryBuilder("suggestion")
+            const queryBuilder = Suggestions?.createQueryBuilder("suggestion")
             const selection = queryBuilder
-                .where(`INSTR(suggestion.${field}, :query)`, { query })
-                .andWhere(`suggestion.staff = :staff`, { staff })
+                ?.where(`INSTR(suggestion.${field}, :query)`, { query })
+                ?.andWhere(`suggestion.staff = :staff`, { staff })
                 .andWhere(
                     new typeorm.Brackets(query =>
                         query
@@ -208,13 +213,17 @@ export default new Command({
                     )
                 )
                 .orderBy("COALESCE(suggestion.number, suggestion.extends)", "DESC")
-            const total = await selection.getCount()
-            const results = await selection.take(PER_PAGE).getMany()
-            const paginate = total > PER_PAGE
+            const total = await selection?.getCount()
+            const results = await selection?.take(PER_PAGE).getMany()
 
             if (!total) return message.sendErrorMessage("noSuggFound", cleanQuery)
+            if (results === null || results === undefined) return message.sendErrorMessage("noSuggFound", cleanQuery)
 
-            const embed: Discord.MessageEmbedOptions = {
+            const paginate = total > PER_PAGE
+
+            
+
+            const embed = <Discord.MessageEmbedOptions>{
                 color: hexToRGB(client.config.colors.success),
                 description: `Results found for **${cleanQuery}**:`,
                 footer: {}
@@ -239,7 +248,7 @@ export default new Command({
             if (!paginate) return message.send({ embeds: [embed] })
 
             const pages = Math.ceil(total / PER_PAGE)
-            embed.footer.text = `${total} results total, page 1/${pages}`
+            if (embed.footer !== undefined) embed.footer.text = `${total} results total, page 1/${pages}`
             let row = new Discord.MessageActionRow().addComponents(
                 new Discord.MessageButton()
                     .setCustomId(`${message.id}.forwards`)
@@ -254,7 +263,7 @@ export default new Command({
             let old = 1
             let page = 1
 
-            const interactionFunc = async interaction => {
+            const interactionFunc = async (interaction: Discord.Interaction) => {
                 if (
                     !(
                         interaction.isButton() &&
@@ -313,9 +322,9 @@ export default new Command({
                 if (old === page) return
                 old = page
 
-                const results = await selection.skip((page - 1) * PER_PAGE).getMany()
-                await formatResults(results, embed)
-                embed.footer.text = `${total} results total, page ${page}/${pages}`
+                const results = await selection?.skip((page - 1) * PER_PAGE).getMany()
+                if (results) await formatResults(results, embed)
+                if (embed.footer !== undefined) embed.footer.text = `${total} results total, page ${page}/${pages}`
                 await (interaction as Discord.ButtonInteraction).update({
                     components: [row]
                 })
@@ -348,17 +357,22 @@ export default new Command({
         const suggestion = await Suggestion.findByIdentifier(identifier, staff)
         if (!suggestion) return message.sendErrorMessage("invalidSuggestionNumber")
 
-        const suggestionMessage: Discord.Message = await suggestions.messages
+        const suggestionMessage: Discord.Message | null = await suggestions.messages
             .fetch(suggestion.message)
-            .catch(() => null)
+            .catch(noop)
         if (!suggestionMessage) return message.sendErrorMessage("utlSuggestion")
 
-        let thread = await (
-            client.channels.cache.get(
-                client.config.suggestions.discussion[category]
-            ) as Discord.TextChannel
-        ).threads.fetch(suggestion.thread)
-        if ((thread as unknown as FetchedThreads).threads) thread = null
+        let thread: Discord.ThreadChannel | null = null
+        
+        if (suggestion.thread) {
+            thread = await (
+                client.channels.cache.get(
+                    client.config.suggestions.discussion[category]
+                ) as Discord.TextChannel
+            ).threads.fetch(suggestion.thread)
+            if ((thread as unknown as FetchedThreads).threads) thread = null
+        }
+
 
         if (subcommand === "link") {
             const displayNumber = await suggestion.getIdentifier()
@@ -424,7 +438,7 @@ export default new Command({
 
             suggestion.status = status as SuggestionStatus
             suggestion.statusUpdater = message.author.id
-            suggestion.statusReason = reason || null
+            suggestion.statusReason = reason || undefined
 
             await suggestion.save()
             const embed = await suggestion.displayEmbed(client)
@@ -461,7 +475,7 @@ export default new Command({
             }
 
             if (status !== oldStatus) {
-                const author: Discord.User = await client.users
+                const author: Discord.User | null = await client.users
                     .fetch(suggestion.author, { force: true })
                     .catch(noop)
                 if (author) {
@@ -480,7 +494,7 @@ export default new Command({
                     dms.send({
                         embeds: [
                             {
-                                color: hexToRGB(client.config.colors.suggestions[status]),
+                                color: hexToRGB((client.config.colors.suggestions as Record<string, string>)[status]),
                                 description: update
                             }
                         ]

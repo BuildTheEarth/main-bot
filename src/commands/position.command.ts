@@ -66,7 +66,7 @@ export default new Command({
             return message.sendErrorMessage("notLead", expanded)
         const role = Guild.role(await client.customGuilds.main(), client.roles[expanded])
 
-        const member: Discord.GuildMember = await (
+        const member: Discord.GuildMember | null = await (
             await client.customGuilds.main()
         ).members
             .fetch({ user, cache: true })

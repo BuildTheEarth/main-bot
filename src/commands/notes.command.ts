@@ -1,6 +1,7 @@
 import Client from "../struct/Client.js"
 import Args from "../struct/Args.js"
 import Command from "../struct/Command.js"
+import Discord from "discord.js"
 
 import ModerationNote from "../entities/ModerationNote.entity.js"
 import CommandMessage from "../struct/CommandMessage.js"
@@ -97,7 +98,7 @@ export default new Command({
         const note = await ModerationNote.findOne(user.id)
 
         if ((!subcommand && !body) || (subcommand === "check" && !body)) {
-            const embed = {
+            const embed = <Discord.MessageEmbedOptions>{
                 thumbnail: {
                     url: user.displayAvatarURL({ size: 64, format: "png", dynamic: true })
                 },
@@ -107,7 +108,7 @@ export default new Command({
                 fields: []
             }
             if (note)
-                embed.fields.push(
+                embed.fields?.push(
                     {
                         name: "Updated by",
                         value: note.updaters.map(id => `<@${id}>`).join(", "),
@@ -152,7 +153,7 @@ export default new Command({
             await note.save()
             await message.sendSuccessMessage("updatedNotes", user)
         } else if (subcommand === "clear") {
-            await note.remove()
+            await note?.remove()
             await message.sendSuccessMessage("clearnedNotes", user)
         }
     }

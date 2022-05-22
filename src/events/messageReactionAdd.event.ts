@@ -11,10 +11,15 @@ export default async function messageReactionAdd(
 ): Promise<void> {
     if (reaction.partial) await reaction.fetch().catch(noop)
     const channel = this.config.reactionRoles?.[reaction.message.channel.id]
-    const role = channel?.[reaction.message.id]?.[reaction.emoji.name]
+    
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const role: any  = null
+
+    if (reaction.emoji.name) channel?.[reaction.message.id]?.[reaction.emoji.name]
+
     const guild = reaction.message.guild
     if (guild) {
-        const member: Discord.GuildMember = await guild.members
+        const member: Discord.GuildMember | null = await guild.members
             .fetch({ user, cache: true })
             .catch(() => null)
         if (member && role) await member.roles.add(role).catch(noop)
@@ -30,11 +35,12 @@ export default async function messageReactionAdd(
             guild.id === this.config.guilds.staff &&
             channel.name === "weekly-updates" &&
             reaction.emoji.name === "📣" &&
+            member &&
             GuildMember.hasRole(member, globalThis.client.roles.MANAGER, this)
         ) {
             await reaction.users.remove(user)
             let update = reaction.message.content
-            if (reaction.message.author.id !== this.user.id)
+            if (reaction.message.author?.id !== this.user?.id)
                 update = `Weekly update from ${reaction.message.author}:\n\n` + update
 
             const updates = this.channels.cache.find(
@@ -45,7 +51,7 @@ export default async function messageReactionAdd(
                     channel.guild?.id === this.config.guilds.main
             ) as Discord.TextChannel
 
-            await updates.send(update)
+            if (update) await updates.send(update)
             await this.response.sendSuccess(
                 logChannel,
                 `<@${member.id}> published message with id ${reaction.message.id} (https://discord.com/channels/${this.config.guilds.staff}/${channel.id}/${reaction.message.id})`
@@ -55,13 +61,14 @@ export default async function messageReactionAdd(
         if (
             guild.id === this.config.guilds.main &&
             channelRaw.isThread() &&
-            channelRaw.parent.id === this.config.suggestions.main &&
+            channelRaw.parent?.id === this.config.suggestions.main &&
             (reaction.emoji.identifier ===
                 this.config.emojis.delete
                     .toString()
                     .replaceAll("<", "")
                     .replaceAll(">", "")) !=
                 (reaction.emoji.name === this.config.emojis.delete) &&
+            member &&
             GuildMember.hasRole(
                 member,
                 [
@@ -107,8 +114,8 @@ export default async function messageReactionAdd(
             ) {
                 // checking if the id matches
                 if (
-                    this.emojis.resolveId(reaction.emoji) !== downvoteEmoji.id &&
-                    this.emojis.resolveId(reaction.emoji) !== upvoteEmoji.id
+                    this.emojis.resolveId(reaction.emoji) !== downvoteEmoji?.id &&
+                    this.emojis.resolveId(reaction.emoji) !== upvoteEmoji?.id
                 ) {
                     await reaction.users.remove(user)
                 }
@@ -118,13 +125,14 @@ export default async function messageReactionAdd(
         if (
             guild.id === this.config.guilds.main &&
             channelRaw.isThread() &&
-            channelRaw.parent.id === this.config.suggestions.main &&
+            channelRaw.parent?.id === this.config.suggestions.main &&
             (reaction.emoji.identifier ===
                 this.config.emojis.pin
                     .toString()
                     .replaceAll("<", "")
                     .replaceAll(">", "")) !=
                 (reaction.emoji.name === this.config.emojis.pin) &&
+            member &&
             GuildMember.hasRole(
                 member,
                 [

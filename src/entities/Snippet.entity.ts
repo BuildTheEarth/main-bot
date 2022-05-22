@@ -3,26 +3,27 @@ import Discord from "discord.js"
 import Client from "../struct/Client.js"
 import languages from "../struct/client/iso6391.js"
 import { hexToRGB } from "@buildtheearth/bot-utils"
+import unicode from "./transformers/unicode.transformer.js"
 
 @typeorm.Entity({ name: "snippets" })
 export default class Snippet extends typeorm.BaseEntity {
     @typeorm.PrimaryGeneratedColumn()
-    id: number
+    id!: number
 
     @typeorm.Column({ length: 32 })
-    name: string
+    name!: string
 
     @typeorm.Column({ length: 4 })
-    language: string
+    language!: string
 
-    @typeorm.Column({ length: 2000 })
-    body: string
+    @typeorm.Column({ length: 2000, transformer: unicode })
+    body!: string
 
     @typeorm.Column()
-    type: "snippet" | "rule" | "team"
+    type!: "snippet" | "rule" | "team"
 
     @typeorm.Column("simple-array")
-    aliases: string[]
+    aliases!: string[]
 
     displayEmbed(client: Client): Discord.MessageEmbedOptions {
         const language = languages.getName(this.language)

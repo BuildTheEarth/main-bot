@@ -32,6 +32,7 @@ export default new Command({
         if (!messageUrl) return message.sendErrorMessage("provideMsgUrl")
         if (!urlRegex.test(messageUrl)) return message.sendErrorMessage("provideMsgUrl")
         const messagePropsTemp = urlRegex.exec(messageUrl)
+        if (!messagePropsTemp) return message.sendErrorMessage("provideMsgUrl")
         const messageProps = {
             guildId: messagePropsTemp[3],
             channelId: messagePropsTemp[5],
@@ -46,9 +47,13 @@ export default new Command({
 
         const channel = await guild.channels.fetch(messageProps.channelId).catch(noop)
 
+        if (!channel) return message.sendErrorMessage("provideMsgUrl")
+
+        if (!client.user) return message.sendErrorMessage("provideMsgUrl")
+
         const perms =
             channel.permissionsFor(message.member) &&
-            channel.permissionsFor(client.user).has("VIEW_CHANNEL")
+            channel.permissionsFor(client.user)?.has("VIEW_CHANNEL")
         if (!perms) return message.sendErrorMessage("noChannelPerms")
 
         if (!channel || !channel.isText()) {

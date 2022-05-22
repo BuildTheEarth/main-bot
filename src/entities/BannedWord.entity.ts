@@ -2,6 +2,7 @@ import typeorm from "typeorm"
 import type Client from "../struct/Client.js"
 import SnowflakePrimaryColumn from "./decorators/SnowflakePrimaryColumn.decorator.js"
 import milliseconds from "./transformers/milliseconds.transformer.js"
+import unicode from "./transformers/unicode.transformer.js"
 
 export type bannedTypes = Map<string, BannedWord>
 
@@ -22,27 +23,29 @@ export interface bannedWordsOptions {
 @typeorm.Entity({ name: "banned_words" })
 export default class BannedWord extends typeorm.BaseEntity {
     private constructor(
-        word: string = null,
+        word: string | null = null,
         punishment_type?: "BAN" | "WARN" | "MUTE" | "KICK" | "DELETE",
-        reason: string = null,
-        duration: number = null,
-        exception: boolean = null,
+        reason: string | null= null,
+        duration: number | null= null,
+        exception: boolean| null = null,
         client?: Client
     ) {
         super()
         if (word !== null) this.word = word
         if (punishment_type) this.punishment_type = punishment_type
-        if (reason !== undefined) this.reason = reason
-        if (duration !== undefined) this.duration = duration
+        if (reason !== undefined) this.reason = reason? reason : undefined
+        if (duration !== undefined) this.duration = duration? duration : undefined
         if (exception !== null) this.exception = exception
         if (client) {
-            if (exception) client.filterWordsCached.except.push(word)
-            else
-                client.filterWordsCached.banned[word] = {
-                    punishment_type: punishment_type,
-                    reason: reason === null ? "none" : reason,
-                    duration: duration === null ? 0 : duration
-                }
+            if (word) {
+                if (exception) client.filterWordsCached.except.push(word)
+                else
+                    client.filterWordsCached.banned.set(word, <BannedWord>{
+                        punishment_type: punishment_type,
+                        reason: reason === null ? "none" : reason,
+                        duration: duration === null ? 0 : duration
+                    })
+            }
         }
     }
 
@@ -64,10 +67,10 @@ export default class BannedWord extends typeorm.BaseEntity {
     word!: string
 
     @typeorm.Column({ nullable: true })
-    punishment_type!: "BAN" | "WARN" | "MUTE" | "KICK" | "DELETE"
+    punishment_type?: "BAN" | "WARN" | "MUTE" | "KICK" | "DELETE"
 
-    @typeorm.Column({ length: 1024, nullable: true })
-    reason!: string
+    @typeorm.Column({ length: 1024, nullable: true, transformer: unicode })
+    reason?: string
 
     @typeorm.Column({ nullable: true, transformer: milliseconds })
     duration?: number
@@ -81,7 +84,7 @@ export default class BannedWord extends typeorm.BaseEntity {
         const except: Array<string> = []
         values.forEach(word => {
             if (word.exception) except.push(word.word)
-            else banned[word.word] = word
+            else banned.set(word.word, word)
         })
         return { banned: banned, except: except }
     }
@@ -91,7 +94,7 @@ export default class BannedWord extends typeorm.BaseEntity {
             client.filterWordsCached.except = client.filterWordsCached.except.filter(
                 value => value !== this.word
             )
-        else delete client.filterWordsCached.banned[this.word]
+        else client.filterWordsCached.banned.delete(this.word)
         await this.remove()
         return
     }

@@ -3,22 +3,23 @@ import Discord from "discord.js"
 import type Client from "../struct/Client.js"
 import { quote } from "@buildtheearth/bot-utils"
 import { Cron } from "croner"
+import unicode from "./transformers/unicode.transformer.js"
 
 @typeorm.Entity({ name: "banner_images" })
 export default class BannerImage extends typeorm.BaseEntity {
     @typeorm.PrimaryGeneratedColumn()
-    id: number
+    id!: number
 
     @typeorm.Column()
-    url: string
+    url!: string
 
     @typeorm.Column()
-    credit: string
+    credit!: string
 
     @typeorm.Column()
-    location: string
+    location!: string
 
-    @typeorm.Column({ length: 512, nullable: true })
+    @typeorm.Column({ length: 512, nullable: true, transformer: unicode })
     description?: string
 
     @typeorm.DeleteDateColumn({ name: "deleted_at" })

@@ -87,8 +87,9 @@ export default new Command({
         }
     ],
     async run(this: Command, client: Client, message: CommandMessage, args: Args) {
+        if (!client.db) return
         const Tasks = client.db.getRepository(Task)
-        const subcommand = args.consumeSubcommandIf(this.subcommands.map(sub => sub.name))
+        const subcommand = args.consumeSubcommandIf(this.subcommands?.map(sub => sub.name))
 
         if (subcommand === "add" || !subcommand) {
             const regex = /\d{18}/g
@@ -100,10 +101,10 @@ export default new Command({
             const status = args.consume("status").toLowerCase() || null
 
             const statuses = humanizeArray(Object.keys(TaskStatuses))
-            let error: string
+            let error: string | null = null
             if (title.length > 99) error = message.messages.titleTooLong99
             if (!title || !description) error = message.messages.noBody
-            if (status && !TaskStatuses[status])
+            if (status && !(status in TaskStatuses))
                 error = message.messages.invalidStatus.replace("%s", statuses)
             if (error) return message.sendError(error)
 
@@ -127,16 +128,17 @@ export default new Command({
             if (Number.isNaN(id)) return message.sendErrorMessage("noID")
             const status = args.consume("status").toLowerCase()
             const statuses = humanizeArray(Object.keys(TaskStatuses))
-            if (!TaskStatuses[status])
+            if (!(status in TaskStatuses))
                 return message.sendErrorMessage("invalidStatus", statuses)
 
             await message.continue()
 
             const task = await Task.findOne(id)
-            task.status = status as TaskStatus
-            await task.save()
-
-            await message.sendSuccessMessage("updatedTask", task.id)
+            if (task) {
+                task.status = status as TaskStatus
+                await task.save()
+                await message.sendSuccessMessage("updatedTask", task.id)
+            }
         } else if (subcommand === "list") {
             await message.continue()
 

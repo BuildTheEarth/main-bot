@@ -100,12 +100,12 @@ export default new Command({
 
         if (subcommand == "commit") {
             const id = parseInt(args.consume("id"))
-            let blunder: BlunderTracker
+            let blunder: BlunderTracker | undefined
             await message.continue()
 
             if (id) {
                 blunder = await BlunderTracker.findOne(id)
-                if (!blunder) return message.sendErrorMessage("invalidBlunderID")
+                if (!blunder || !blunder.role) return message.sendErrorMessage("invalidBlunderID")
                 if (!staffMember.roles.cache.has(blunder.role) && !canManage)
                     return message.sendErrorMessage("noPerms")
             } else {
@@ -146,8 +146,8 @@ export default new Command({
             await message.continue()
 
             const blunder = new BlunderTracker()
-            blunder.lastBlunder = null
-            blunder.role = role?.id || null
+            blunder.lastBlunder = undefined
+            blunder.role = role?.id || undefined
             blunder.channel = channel.id
             blunder.description = description
 

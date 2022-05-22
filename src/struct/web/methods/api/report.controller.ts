@@ -78,9 +78,9 @@ export default class ReportsController {
     async builderPost(
         @Req() req: FastifyRequest,
         @Res() res: FastifyReply<ServerResponse>,
-        @Param("id") user: string,
-        @Body("submitter") submitter: string,
-        @Body("evidence") evidence: string
+        @Param("id") user: string | null,
+        @Body("submitter") submitter: string | null,
+        @Body("evidence") evidence: string | null
     ): Promise<unknown> {
         res.type("application/json")
 

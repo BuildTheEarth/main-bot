@@ -156,7 +156,7 @@ export default new Command({
             }
             await message.sendSuccess(embed)
         } else if (subcommand === "add") {
-            if (placeholders[name + " " + language])
+            if (placeholders.has(name + " " + language))
                 return message.sendErrorMessage("alreadyExistsPlaceholder")
             if (!name) return message.sendErrorMessage("noPlaceholderName")
             if (!language) return message.sendErrorMessage("noLang")
@@ -175,41 +175,50 @@ export default new Command({
             }
             await client.placeholder.addPlaceholder(name, language, body)
             await message.sendSuccessMessage("addedPlaceholder", name, language)
-            client.log(placeholders[name + " " + language], "add", message.member.user)
+            const placeholderTemp = placeholders.get(name + " " + language)
+            if (placeholderTemp)
+                client.log(placeholderTemp, "add", message.member.user)
         } else if (subcommand === "edit") {
             if (!name) return message.sendErrorMessage("noPlaceholderName")
             if (!language) return message.sendErrorMessage("noLang")
-            if (!placeholders[name + " " + language])
+            if (!placeholders.has(name + " " + language))
                 return message.sendErrorMessage("placeholderNotFound")
             if (!body) {
-                const modalId = await message.showModal("placeholder", {
-                    body: placeholders[name + " " + language].body
-                })
-                return client.interactionInfo.set(modalId, {
-                    name: name,
-                    language: language,
-                    subcommand: "edit",
-                    modalType: "placeholdermodal",
-                    existingPlaceholder: placeholders[name + " " + language]
-                })
+                const placeholderTemp = placeholders.get(name + " " + language)
+                if (placeholderTemp) {// this should never not happen unless theres some fatal error
+                    const modalId = await message.showModal("placeholder", {
+                        body: placeholderTemp.body
+                    })
+                    return client.interactionInfo.set(modalId, {
+                        name: name,
+                        language: language,
+                        subcommand: "edit",
+                        modalType: "placeholdermodal",
+                        existingPlaceholder: placeholderTemp
+                    })
+                }
             }
             await client.placeholder.editPlaceholder(name, language, body)
             await message.sendSuccessMessage("editedPlaceholder", name, language)
-            client.log(placeholders[name + " " + language], "edit", message.member.user)
+            const placeholderTemp = placeholders.get(name + " " + language)
+            if (placeholderTemp)
+                client.log(placeholderTemp, "edit", message.member.user)
         } else if (subcommand === "delete") {
             if (!name) return message.sendErrorMessage("noPlaceholderName")
             if (!language) return message.sendErrorMessage("noLang")
-            if (!placeholders[name + " " + language])
+            const placeholderTemp = placeholders.get(name + " " + language)
+            if (!placeholderTemp)
                 return message.sendErrorMessage("placeholderNotFound")
             client.placeholder.deletePlaceholder(name, language)
             await message.sendSuccessMessage("deletedPlaceholder", name, language)
-            client.log(placeholders[name + " " + language], "delete", message.member.user)
+            client.log(placeholderTemp, "delete", message.member.user)
         } else if (subcommand === "info") {
             if (!name) return message.sendErrorMessage("noPlaceholderName")
             if (!language) return message.sendErrorMessage("noLang")
-            if (!placeholders[name + " " + language])
+            const placeholderTemp = placeholders.get(name + " " + language)
+            if (!placeholderTemp)
                 return message.sendErrorMessage("placeholderNotFound")
-            const placeholder = placeholders[name + " " + language]
+            const placeholder = placeholderTemp
             const embed = {
                 color: hexToRGB(client.config.colors.info),
                 description:

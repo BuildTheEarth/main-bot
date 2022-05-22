@@ -17,13 +17,16 @@ export default async function createPlaceholder(
                 interaction,
                 `Added placeholder ${info.name} (${info.language})`
             )
-            client.log(
-                client.placeholder.cache[info.name + " " + info.language],
+
+            const placeholderTemp = client.placeholder.cache.get(info.name + " " + info.language)
+
+            if (placeholderTemp) await client.log(
+                placeholderTemp,
                 "add",
                 interaction.user
             )
         } else if (info.subcommand === "edit") {
-            if (info.existingPlaceholder.body === body)
+            if (info.existingPlaceholder?.body === body)
                 return client.response.sendError(
                     interaction,
                     client.messages.getMessage("noChange", interaction.locale)
@@ -33,8 +36,11 @@ export default async function createPlaceholder(
                 interaction,
                 `Edited placeholder ${info.name} (${info.language})`
             )
-            client.log(
-                client.placeholder.cache[info.name + " " + info.language],
+
+            const placeholderTemp = client.placeholder.cache.get(info.name + " " + info.language)
+
+            if (placeholderTemp) await client.log(
+                placeholderTemp,
                 "edit",
                 interaction.user
             )

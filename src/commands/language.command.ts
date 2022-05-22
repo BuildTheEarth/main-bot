@@ -18,7 +18,7 @@ const ROLE_NAMES = [
     "Ø",
     "中文"
 ]
-const LANGUAGE_ROLES = {
+const LANGUAGE_ROLES: Record<string, string> = {
     english: "English",
     en: "English",
     espanol: "Español",
@@ -73,7 +73,7 @@ export default new Command({
         if (!user)
             return message.sendErrorMessage(user === undefined ? "noUser" : "invalidUser")
 
-        const member: Discord.GuildMember = await (
+        const member: Discord.GuildMember | null = await (
             await client.customGuilds.main()
         ).members
             .fetch({ user, cache: true })

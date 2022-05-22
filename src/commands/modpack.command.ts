@@ -71,7 +71,7 @@ export default new Command({
     ],
     async run(this: Command, client: Client, message: CommandMessage, args: Args) {
         const subcommand = args.consumeSubcommand().toLowerCase()
-        if (!this.subcommands.map(sub => sub.name).includes(subcommand))
+        if (!this.subcommands?.map(sub => sub.name).includes(subcommand))
             return message.sendErrorMessage("specifySubcommand")
 
         if (subcommand === "list") {
@@ -125,7 +125,7 @@ export default new Command({
             image.key = key as ModpackImageKey
             image.set = "queue"
             image.url = url
-            image.credit = key === "logo" ? null : credit
+            image.credit = key === "logo" ? undefined : credit
             await image.save()
 
             const header = key === "logo" ? "Saved logo!" : "Saved image!"

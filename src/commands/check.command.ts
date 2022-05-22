@@ -38,6 +38,10 @@ export default new Command({
     ],
     async run(this: Command, client: Client, message: CommandMessage, args: Args) {
         const user = await args.consumeUser("user")
+
+        if (!user)
+            return message.sendErrorMessage(user === undefined ? "noUser" : "invalidUser")
+
         const showDeleted = args.consume("deleted").toLowerCase() === "deleted"
         const member = await (await client.customGuilds.main()).members
             .fetch({ user })
@@ -103,12 +107,12 @@ export default new Command({
                 const actionTitle = action[0].toUpperCase() + action.slice(1) + "s"
                 const name = `${actionTitle} (${logs.length})`
                 const value = logs.map(log => log.format()).join("\n") || "\u200B"
-                embed.fields.push({ name, value, inline: true })
+                embed.fields?.push({ name, value, inline: true })
             }
         }
 
         const notes = await ModerationNote.findOne(user.id)
-        if (notes) embed.fields.push({ name: "Notes", value: notes.body, inline: true })
+        if (notes) embed.fields?.push({ name: "Notes", value: notes.body, inline: true })
         if (!member) embed.footer = { text: "This user is not in the server." }
 
         await message.sendSuccess(embed)

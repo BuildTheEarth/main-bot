@@ -23,13 +23,15 @@ export default new Command({
     ],
     async run(this: Command, client: Client, message: CommandMessage, args: Args) {
         const channel = (await args.consumeChannel("channel")) || message.channel
+        if (!channel.isText()) return
+        if (!client.user) return
         const perms =
             (channel as Discord.TextChannel)
                 .permissionsFor(message.member)
                 .has("VIEW_CHANNEL") &&
             (channel as Discord.TextChannel)
                 .permissionsFor(client.user)
-                .has("VIEW_CHANNEL")
+                ?.has("VIEW_CHANNEL")
         if (!perms) return message.sendErrorMessage("noChannelPerms")
 
         await message.continue()

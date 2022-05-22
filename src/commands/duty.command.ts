@@ -209,7 +209,7 @@ export default new Command({
             const memberReal = member
                 ? await client.customGuilds.main().members.fetch(member.id)
                 : await client.customGuilds.main().members.fetch(message.member.id)
-            const scheduledDuty = client.dutyScheduler.cancelWithCheck(
+            const scheduledDuty = await client.dutyScheduler.cancelWithCheck(
                 memberReal,
                 message.member
             )

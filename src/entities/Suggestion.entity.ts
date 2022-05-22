@@ -5,6 +5,7 @@ import path from "path"
 import url from "url"
 import Client from "../struct/Client.js"
 import { hexToRGB, loadSyncJSON5, replaceAsync } from "@buildtheearth/bot-utils"
+import unicode from "./transformers/unicode.transformer.js"
 const suggestionStatusActions = loadSyncJSON5(
     path.join(
         path.dirname(url.fileURLToPath(import.meta.url)) +
@@ -25,7 +26,7 @@ export enum SuggestionStatuses {
 
 export interface Identifier {
     number: number
-    extension: string
+    extension: string | null
 }
 
 @typeorm.Entity({ name: "suggestions" })
@@ -33,7 +34,7 @@ export default class Suggestion extends typeorm.BaseEntity {
     static ALPHABET = "abcdefghijklmnopqrstuvwxyz"
 
     @typeorm.PrimaryGeneratedColumn()
-    id: number
+    id!: number
 
     @typeorm.Column({ nullable: true })
     number?: number
@@ -42,16 +43,16 @@ export default class Suggestion extends typeorm.BaseEntity {
     extends?: number
 
     @SnowflakeColumn()
-    author: string
+    author!: string
 
     @typeorm.Column()
-    anonymous: boolean
+    anonymous!: boolean
 
     @typeorm.Column()
-    title: string
+    title!: string
 
-    @typeorm.Column({ length: 2048 })
-    body: string
+    @typeorm.Column({ length: 2048, transformer: unicode })
+    body!: string
 
     @typeorm.Column({ nullable: true })
     teams?: string
@@ -66,19 +67,19 @@ export default class Suggestion extends typeorm.BaseEntity {
     statusReason?: string
 
     @SnowflakeColumn()
-    message: string
+    message!: string
 
     @SnowflakeColumn({ nullable: true })
-    thread: string
+    thread?: string
 
     @typeorm.Column()
-    staff: boolean
+    staff!: boolean
 
     @typeorm.CreateDateColumn({ name: "created_at" })
-    createdAt: Date
+    createdAt!: Date
 
     @typeorm.DeleteDateColumn({ name: "deleted_at" })
-    deletedAt: Date
+    deletedAt?: Date
 
     @SnowflakeColumn({ nullable: true })
     deleter?: string
@@ -97,7 +98,7 @@ export default class Suggestion extends typeorm.BaseEntity {
     }
 
     async getIdentifier(): Promise<string> {
-        if (!this.extends) {
+        if (!this.extends && this.number) {
             return this.number.toString()
         } else {
             const extenders = await Suggestion.find({
@@ -112,7 +113,7 @@ export default class Suggestion extends typeorm.BaseEntity {
     static async findByIdentifier(
         identifier: Identifier,
         staff: boolean
-    ): Promise<Suggestion> {
+    ): Promise<Suggestion | undefined> {
         if (!identifier.extension)
             return await this.findOne({ number: identifier.number, staff })
 
@@ -164,19 +165,19 @@ export default class Suggestion extends typeorm.BaseEntity {
             }
         }
 
-        const embed: Discord.MessageEmbedOptions = {
+        const embed = <Discord.MessageEmbedOptions>{
             color: "#999999",
             author: { name: `#${identifier} — ${this.title}` },
-            thumbnail: { url: null },
+            thumbnail: { url: undefined },
             description: this.body,
             fields: []
         }
 
         if (!this.anonymous) {
-            embed.fields.push({ name: "Author", value: `<@${this.author}>` })
+            embed.fields?.push({ name: "Author", value: `<@${this.author}>` })
             if (!this.status) {
                 const author = client.users.cache.get(this.author)
-                if (author) {
+                if (author && embed.thumbnail) {
                     embed.thumbnail.url = author.displayAvatarURL({
                         size: 128,
                         format: "png",
@@ -185,16 +186,16 @@ export default class Suggestion extends typeorm.BaseEntity {
                 }
             }
         }
-        if (this.teams) embed.fields.push({ name: "Team/s", value: this.teams })
+        if (this.teams) embed.fields?.push({ name: "Team/s", value: this.teams })
 
         if (this.status) {
             embed.color = hexToRGB(client.config.colors.suggestions[this.status])
-            embed.thumbnail.url = client.config.assets.suggestions[this.status]
+            if (embed.thumbnail) embed.thumbnail.url = client.config.assets.suggestions[this.status]
 
             let action = suggestionStatusActions[this.status] as string
             let reason = this.statusReason || ""
             let refers = ""
-            if (["forwarded", "duplicate"].includes(this.status)) {
+            if (this.status === "forwarded" || this.status === "duplicate") {
                 const prep = { forwarded: "to", duplicate: "of" }[this.status]
                 // "to/of ($1). ($2)"
                 const regex = new RegExp(`^${prep}\\s+([^.]+)(?:\\.\\s+)?(.+)?`, "i")
@@ -220,7 +221,7 @@ export default class Suggestion extends typeorm.BaseEntity {
             refers = await replaceAsync(refers, regex, replacer)
             reason = await replaceAsync(reason, regex, replacer)
 
-            embed.fields.push({
+            embed.fields?.push({
                 name: "Status",
                 value: `*${action}${refers} by <@${this.statusUpdater}>.*\n\n${reason}`
             })

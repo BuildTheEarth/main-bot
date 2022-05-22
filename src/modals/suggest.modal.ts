@@ -1,5 +1,5 @@
 import Discord from "discord.js"
-import Suggestion from "../entities/Suggestion.entity.js"
+import Suggestion, {Identifier} from "../entities/Suggestion.entity.js"
 import { truncateString } from "@buildtheearth/bot-utils"
 import { isSuggestInfo } from "../typings/InteractionInfo.js"
 
@@ -23,9 +23,9 @@ export default async function createSuggestion(
             )
 
         const identifier = info.subsuggestion
-        const extend = identifier && Suggestion.parseIdentifier(identifier)
+        const extend = identifier? Suggestion.parseIdentifier(identifier): null
 
-        let error: string
+        let error: string | null = null
         if (extend && !(await Suggestion.findOne({ number: extend.number })))
             error = `The suggestion you're trying to extend (**#${extend}**) doesn't exist!`
         if (!body) error = client.messages.getMessage("noBody", interaction.locale)
@@ -36,7 +36,7 @@ export default async function createSuggestion(
             extend &&
             (await Suggestion.find({ where: { extends: extend.number } })).some(
                 async suggestion =>
-                    (await suggestion.getIdentifier()).match(/\d+(?<l>[a-z])/).groups.l ==
+                    (await suggestion.getIdentifier()).match(/\d+(?<l>[a-z])/)?.groups?.l ==
                     extend.extension
             )
         )
@@ -55,7 +55,7 @@ export default async function createSuggestion(
         suggestion.anonymous = anon
         suggestion.title = title
         suggestion.body = body
-        suggestion.teams = teams || null
+        suggestion.teams = teams || undefined
         suggestion.staff = staff
 
         const category = staff ? "staff" : "main"
@@ -70,17 +70,19 @@ export default async function createSuggestion(
 
         if (extend?.extension) {
             const old = await Suggestion.findOne({ number: extend.number })
-            const thread = await (
-                client.channels.cache.get(
-                    client.config.suggestions.discussion[staff ? "staff" : "main"]
-                ) as Discord.TextChannel
-            ).threads.fetch(old.thread)
-            client.response.sendSuccess(thread, {
-                description: `**New subsuggestion:** [${title}](${suggestion.getURL(
-                    client
-                )},)`
-            })
-            await suggestion.save()
+            if (old?.thread) {
+                const thread = await (
+                    client.channels.cache.get(
+                        client.config.suggestions.discussion[staff ? "staff" : "main"]
+                    ) as Discord.TextChannel
+                ).threads.fetch(old.thread)
+                if (thread) client.response.sendSuccess(thread, {
+                    description: `**New subsuggestion:** [${title}](${suggestion.getURL(
+                        client
+                    )},)`
+                })
+                await suggestion.save()
+            }
         } else {
             const newIdentifier = await suggestion.getIdentifier()
             const thread = await (

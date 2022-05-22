@@ -5,11 +5,11 @@ import { vsprintf } from "sprintf-js"
 
 export default class CommandMessage {
     message: Discord.CommandInteraction
-    channel: Discord.TextBasedChannel
+    channel!: Discord.TextBasedChannel
     member: Discord.GuildMember
     author: Discord.User
     client: Client
-    guild: Discord.Guild
+    guild!: Discord.Guild
     id: Discord.Snowflake
     createdTimestamp: number
     messages: Record<string, string>
@@ -18,8 +18,8 @@ export default class CommandMessage {
     constructor(message: Discord.CommandInteraction, client: Client) {
         this.client = client
         this.message = message
-        this.channel = message.channel
-        this.guild = message.guild
+        if (message.channel) this.channel = message.channel
+        if (message.guild) this.guild = message.guild
         this.id = message.id
         this.createdTimestamp = message.createdTimestamp
         //set author property to message author
@@ -139,7 +139,7 @@ export default class CommandMessage {
 
     async showModal(
         modalName: string,
-        placeholders?: Record<string, string>
+        placeholders?: Record<string, string | undefined>
     ): Promise<string> {
         return CommandMessage.showModal(
             this.client,
@@ -153,9 +153,10 @@ export default class CommandMessage {
         client: Client,
         interaction: Discord.CommandInteraction | Discord.ButtonInteraction,
         modalName: string,
-        placeholders?: Record<string, string>
+        placeholders?: Record<string, string | undefined>
     ): Promise<string> {
         const modal = client.modals.getLocaleModal(modalName, interaction.locale)
+        if (!modal) throw new Error(`Modal ${modalName} not found`)
         modal.customId += "." + interaction.id
         if (placeholders) {
             modal.components.forEach(componentPar => {

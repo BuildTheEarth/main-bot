@@ -49,6 +49,8 @@ export default new Command({
         }
     ],
     async run(this: Command, client: Client, message: CommandMessage, args: Args) {
+        if (!client.token) return
+        if (!client.config.database.pass) return
         const code = args.removeCodeblock(args.consumeRest(["code"]))
         await message.continue()
 
@@ -68,12 +70,14 @@ export default new Command({
                 description: `\`\`\`js\n${truncateString(out, 1990)}\n\`\`\``
             })
         } catch (error) {
-            const err = `${error.name || "Error"}: ${error.message}`
+            if (error instanceof Error) {
+                const err = `${error.name || "Error"}: ${error.message}`
 
-            message.sendError({
-                author: { name: "Error" },
-                description: `\`\`\`${truncateString(err, 1994)}\`\`\``
-            })
+                message.sendError({
+                    author: { name: "Error" },
+                    description: `\`\`\`${truncateString(err, 1994)}\`\`\``
+                })
+            }
         }
     }
 })

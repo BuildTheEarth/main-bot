@@ -120,7 +120,7 @@ export default new Command({
         if (!subcommandGroup)
             return message.sendErrorMessage(
                 "specifyValidSubGr",
-                humanizeArray(this.subcommands.map(ele => ele.name))
+                humanizeArray(this.subcommands?.map(ele => ele.name) || [])
             )
         if (subcommandGroup === "block") {
             const validSubcommands = ["add", "remove", "list"]
@@ -155,7 +155,7 @@ export default new Command({
                     punishment !== "DELETE"
                 )
                     return await message.sendErrorMessage("specifyDuration")
-                const isAlreadyThere = client.filterWordsCached.banned[word]
+                const isAlreadyThere = client.filterWordsCached.banned.get(word)
                 if (isAlreadyThere)
                     return await message.sendErrorMessage("wordAlreadyBanned")
 
@@ -169,7 +169,7 @@ export default new Command({
                             | "KICK"
                             | "DELETE",
                         reason: reason,
-                        duration: isNaN(duration) ? null : duration,
+                        duration: isNaN(duration? duration: NaN) ? undefined : (duration? duration: undefined),
                         exception: false
                     },
                     client
@@ -181,7 +181,7 @@ export default new Command({
                 const word = args.consumeRest(["word"])
                 if (!word) return await message.sendErrorMessage("invalidWord")
                 await message.continue()
-                const isThere = client.filterWordsCached.banned[word]
+                const isThere = client.filterWordsCached.banned.get(word)
                 if (!isThere) return message.sendErrorMessage("wordNotBanned")
                 await isThere?.deleteWord(client)
                 return await message.sendSuccessMessage("wordDeleted")
@@ -208,9 +208,9 @@ export default new Command({
                 await BannedWord.createBannedWord(
                     {
                         word: word,
-                        punishment_type: null,
-                        reason: null,
-                        duration: null,
+                        punishment_type: undefined,
+                        reason: undefined,
+                        duration: undefined,
                         exception: true
                     },
                     client
@@ -256,11 +256,11 @@ async function getList(
                     wordEmbeds[currentEmbed].description +
                     (exception
                         ? `• ${word.word}\n`
-                        : `• ||${word.word}|| - ${humanizeConstant(
+                        : `• ||${word.word}|| - ${word.punishment_type? humanizeConstant(
                               word.punishment_type
-                          )} ${formatPunishmentTime(
+                          ): ""} ${word.duration? formatPunishmentTime(
                               word.duration
-                          )} for reason ${truncateString(word.reason, 20)}\n`)
+                          ): ""} for reason ${word.reason? truncateString(word.reason, 20): ""}\n`)
                 )
                     .split("_")
                     .join("\\_")
@@ -279,12 +279,12 @@ async function getList(
         }
         wordEmbeds[currentEmbed].description += exception
             ? `• ${word.word}\n`
-            : `• ||${word.word}|| - ${humanizeConstant(
+            : `• ||${word.word}|| - ${word.punishment_type? humanizeConstant(
                   word.punishment_type
-              )} ${formatPunishmentTime(word.duration)} for reason ${truncateString(
+              ): ""} ${word.duration? formatPunishmentTime(word.duration): ""} for reason ${word.reason? truncateString(
                   word.reason,
                   20
-              )}\n`
+              ): ""}\n`
     }
     if (wordEmbeds.length <= 1) return message.send({ embeds: wordEmbeds })
     let row = new Discord.MessageActionRow().addComponents(
@@ -301,7 +301,7 @@ async function getList(
     let page = 1
     let old = 1
 
-    const interactionFunc = async interaction => {
+    const interactionFunc = async (interaction: Discord.Interaction) => {
         if (
             !(
                 interaction.isButton() &&

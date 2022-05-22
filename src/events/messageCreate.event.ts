@@ -4,7 +4,7 @@ import Guild from "../struct/discord/Guild.js"
 import Snippet from "../entities/Snippet.entity.js"
 import languages from "../struct/client/iso6391.js"
 
-import chalk from "chalk"
+import chalk = require("chalk")
 import { noop } from "@buildtheearth/bot-utils"
 import Discord from "discord.js"
 import typeorm from "typeorm"
@@ -151,6 +151,7 @@ export default async function (this: Client, message: Discord.Message): Promise<
     const suggestions = Object.values(this.config.suggestions)
     if (
         suggestions.includes(message.channel.id) &&
+        message.member &&
         !GuildMember.hasRole(message.member, globalThis.client.roles.MANAGER, this)
     ) {
         const error = await this.response.sendError(

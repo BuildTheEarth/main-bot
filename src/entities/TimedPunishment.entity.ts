@@ -9,19 +9,19 @@ import { Cron } from "croner"
 @typeorm.Entity({ name: "timed_punishments" })
 export default class TimedPunishment extends typeorm.BaseEntity {
     @typeorm.PrimaryGeneratedColumn()
-    id: number
+    id!: number
 
     @SnowflakeColumn()
-    member: string
+    member!: string
 
     @typeorm.Column()
-    type: "mute" | "ban"
+    type!: "mute" | "ban"
 
     @typeorm.Column({ transformer: milliseconds })
-    length: number
+    length!: number
 
     @typeorm.CreateDateColumn({ name: "created_at" })
-    createdAt: Date
+    createdAt!: Date
 
     get end(): Date {
         return new Date(this.createdAt.getTime() + this.length)
@@ -30,8 +30,8 @@ export default class TimedPunishment extends typeorm.BaseEntity {
     async undo(client: Client): Promise<void> {
         if (client.punishmentTimeouts.has(this.member)) {
             const setPunish = client.punishmentTimeouts.get(this.member)
-            if (setPunish[this.type]) {
-                setPunish[this.type].stop()
+            if (setPunish && setPunish[this.type]) {
+                setPunish[this.type]?.stop()
             }
         }
         await this.remove()
@@ -56,9 +56,13 @@ export default class TimedPunishment extends typeorm.BaseEntity {
     }
 
     schedule(client: Client): void {
-        let setPunish = { ban: null, mute: null }
+        let setPunish: {
+            ban: Cron | null
+            mute: Cron | null
+        }= { ban: null, mute: null }
         if (client.punishmentTimeouts.has(this.member)) {
-            setPunish = client.punishmentTimeouts.get(this.member)
+            const setPunishTemp = client.punishmentTimeouts.get(this.member)
+            if (setPunishTemp) setPunish = setPunishTemp
         }
         setPunish[this.type] = new Cron(this.end, () => {
             this.undo(client)

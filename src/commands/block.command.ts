@@ -37,7 +37,7 @@ export default new Command({
     ],
     async run(this: Command, client: Client, message: CommandMessage, args: Args) {
         const subcommand = args.consumeSubcommandIf(["block", "search"])
-        let results //TODO: Fix this huge mess
+        let results: any[] = [] //TODO: Fix this huge mess
         if (subcommand === "search") {
             const query = args.consumeRest(["query"])
             if (!query) return message.sendErrorMessage("noQuery")
@@ -50,7 +50,7 @@ export default new Command({
             const blocks = args.consumeRest(["blocks"])
             if (!blocks) return message.sendErrorMessage("noBlocksFound")
             const blocksInput = blocks.trim().split(",")
-            const newBlocks = []
+            const newBlocks: any[] = []
             blocksInput.forEach(element => newBlocks.push(element.trim()))
 
             await message.continue()
@@ -76,10 +76,13 @@ export default new Command({
         else if (results.length === 1)
             message.send({
                 embeds: [
-                    new Discord.MessageEmbed()
-                        .setTitle("Results")
-                        .setImage(file)
-                        .setColor(hexToRGB(client.config.colors.info))
+                    {
+                        title: "Results",
+                        image: {
+                            url: file
+                        },
+                        color: hexToRGB(client.config.colors.info)
+                    }
                 ]
             })
         else {
@@ -90,16 +93,19 @@ export default new Command({
                     .setLabel(client.config.emojis.right.toString())
                     .setStyle("SUCCESS")
             )
-            let page = new Discord.MessageEmbed()
-                .setTitle(`Page ${pageNum + 1}`)
-                .setImage(file)
-                .setFooter({ text: `Page ${pageNum + 1}/${results.length}` })
+            let page : Discord.MessageEmbedOptions = {
+                title: `Page ${pageNum + 1}`,
+                image: {
+                    url: file
+                },
+                footer: { text: `Page ${pageNum + 1}/${results.length}` }
+            }
             const sentMessage = await message.send({
                 embeds: [page],
                 components: [row]
             })
 
-            const interactionFunc = async interaction => {
+            const interactionFunc = async (interaction: Discord.Interaction) => {
                 if (
                     !(
                         interaction.isButton() &&
@@ -169,21 +175,25 @@ export default new Command({
                         buffIMG,
                         `${message.id}/image${pageNum}.png`
                     )
-                    page = new Discord.MessageEmbed()
-                        .setTitle(`Page ${pageNum + 1}`)
-                        .setImage(file)
-                        .setFooter({ text: `Page ${pageNum + 1}/${results.length}` })
-                        .setColor(hexToRGB(client.config.colors.info))
+                    page = {
+                        title: `Page ${pageNum + 1}`,
+                        image: {
+                            url: file
+                        },
+                        footer: { text: `Page ${pageNum + 1}/${results.length}` },
+                        color: hexToRGB(client.config.colors.info)
+                    }
                 } else {
-                    page = new Discord.MessageEmbed()
-                        .setTitle(`Page ${pageNum + 1}`)
-                        .setImage(
-                            client.webserver.getURLfromPath(
+                    page = {
+                        title: `Page ${pageNum + 1}`,
+                        image: {
+                            url: client.webserver.getURLfromPath(
                                 `${message.id}/image${pageNum}.png`
                             )
-                        )
-                        .setFooter({ text: `Page ${pageNum + 1}/${results.length}` })
-                        .setColor(hexToRGB(client.config.colors.info))
+                        },
+                        footer: { text: `Page ${pageNum + 1}/${results.length}` },
+                        color: hexToRGB(client.config.colors.info)
+                    }
                 }
                 await (interaction as Discord.ButtonInteraction).update({
                     components: [row]

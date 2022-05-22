@@ -1,5 +1,6 @@
 import typeorm from "typeorm"
 import SnowflakeColumn from "./decorators/SnowflakeColumn.decorator.js"
+import unicode from "./transformers/unicode.transformer.js"
 
 export type TaskStatus = keyof typeof TaskStatuses
 export enum TaskStatuses {
@@ -13,19 +14,19 @@ export enum TaskStatuses {
 @typeorm.Entity({ name: "tasks" })
 export default class Task extends typeorm.BaseEntity {
     @typeorm.PrimaryGeneratedColumn()
-    id: number
+    id!: number
 
     @typeorm.Column()
-    title: string
+    title!: string
 
-    @typeorm.Column({ length: 2048 })
-    description: string
+    @typeorm.Column({ length: 2048, transformer: unicode })
+    description!: string
 
     @SnowflakeColumn()
-    creator: string
+    creator!: string
 
     @typeorm.Column("simple-array")
-    assignees: string[]
+    assignees!: string[]
 
     @typeorm.Column({ nullable: true })
     status?: TaskStatus

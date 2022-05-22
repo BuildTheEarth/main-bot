@@ -14,37 +14,38 @@ export default class Args {
     }
 
     split(argNames: string[]): string[] {
-        const returnArgs = []
-        argNames.forEach(element =>
-            returnArgs.push(
-                (this.message.message as Discord.CommandInteraction).options
+        const returnArgs: string[] = []
+        argNames.forEach(element => {
+                const tempEle = (this.message.message as Discord.CommandInteraction).options
                     .get(element)
-                    .value.toString()
-            )
+                    ?.value?.toString()
+                if (tempEle) returnArgs.push(
+                    tempEle
+                )
+            }
         )
         return returnArgs
     }
 
     splitMultiple(argNames: string[]): string[] {
-        const returnArgs = []
-        argNames.forEach(element =>
-            returnArgs.push(
-                (this.message.message as Discord.CommandInteraction).options
-                    .get(element)
-                    .value.toString()
-            )
+        const returnArgs: string[] = []
+        argNames.forEach(element => {
+                const tempEle = (this.message.message as Discord.CommandInteraction).options.get(element)?.value?.toString()
+                if (tempEle) returnArgs.push(
+                    tempEle
+                )
+            }
         )
         return returnArgs
     }
 
     get(argName: string): string
-    get(argName: string, count: number): string[]
-    get(argName: string): string | string[] {
-        if ((this.message.message as Discord.CommandInteraction).options.get(argName))
-            return (this.message.message as Discord.CommandInteraction).options
-                .get(argName)
-                .value.toString()
-                .replace(/\\n/g, "\n")
+    get(argName: string, count: number | undefined): string[]
+    get(argName: string): string | string[] | null {
+        const retVal = (this.message.message as Discord.CommandInteraction).options.get(argName)
+        if (retVal) {
+            if (retVal.value) return retVal.value.toString().replace(/\\n/g, "\n")
+        }
         return ""
     }
 
@@ -62,14 +63,11 @@ export default class Args {
     consumeIf(
         equals: string | string[] | RegExp | ((arg: string) => boolean),
         argName: string
-    ): string {
-        let arg: string = null
+    ): string | null {
+        let arg: string | null = null
 
-        if (this.message.message.options.get(argName))
-            arg = this.message.message.options
-                .get(argName)
-                .value.toString()
-                .replace(/\\n/g, "\n")
+        const tempArg = this.message.message.options.get(argName)
+        if (tempArg && tempArg.value) arg = tempArg.value.toString().replace(/\\n/g, "\n")
         else arg = ""
         let valid = false
 
@@ -86,19 +84,15 @@ export default class Args {
 
     consumeRest(argNames: string[]): string
     consumeRest(argNames: string[], count: number): string[]
-    consumeRest(argNames: string[]): string | string[] {
-        const returnArgs = []
+    consumeRest(argNames: string[]): string | string[] | null {
+        const returnArgs: string[] = []
         argNames.forEach(element => {
-            let option: string
+            let option: string | null = null
+            const tempValue = (this.message.message as Discord.CommandInteraction).options.get(element)?.value
             if (
-                (this.message.message as Discord.CommandInteraction).options
-                    .get(element)
-                    ?.value.toString()
+                tempValue
             )
-                option = (this.message.message as Discord.CommandInteraction).options
-                    .get(element)
-                    .value.toString()
-                    .replace(/\\n/g, "\n")
+                option = tempValue.toString().replace(/\\n/g, "\n")
             if (option) returnArgs.push(option)
         })
         if (returnArgs.length === 1) return returnArgs[0]
@@ -113,7 +107,7 @@ export default class Args {
             .trim()
     }
 
-    consumeLength(argName: string): number {
+    consumeLength(argName: string): number | null {
         if (this.message.isNormalCommand()) {
             try {
                 let parsed = ms(this.consume(argName))
@@ -125,21 +119,26 @@ export default class Args {
         }
         if (this.message.isSlashCommand()) {
             try {
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                let parsed: any = ms(this.message.message.options.getString(argName))
-                if (parsed === undefined) parsed = Number(parsed)
-                return Number.isNaN(parsed) ? null : parsed
+                const gettedString = this.message.message.options.getString(argName)
+                
+                if (gettedString){
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    let parsed: any = ms(gettedString)
+                    if (parsed === undefined) parsed = Number(parsed)
+                    return Number.isNaN(parsed) ? null : parsed
+                }
             } catch {
                 return null
             }
         }
+        return null
     }
 
     async consumeChannel(argName: string): Promise<Discord.Channel> {
         return this.message.message.options.getChannel(argName) as Discord.Channel
     }
 
-    async consumeUser(argName: string): Promise<Discord.User> {
+    async consumeUser(argName: string): Promise<Discord.User | null> {
         return this.message.message.options.getUser(argName)
     }
 
@@ -150,19 +149,23 @@ export default class Args {
     consumeAttachment(
         check?: (attachment: Discord.MessageAttachment) => boolean
         // ill keep the lint error for now until 13.7, so i remember, so dont fix this
-    ): Discord.MessageAttachment {
+    ): Discord.MessageAttachment | null {
         //NOTE: USE THE ATTACHMENT STUFF WHEN 13.7 IS AVAILABLE
         return null
     }
 
-    consumeImage(argName: string): string {
+    consumeImage(argName: string): string | null {
         //NOTE: USE THE ATTACHMENT STUFF WHEN 13.7 IS AVAILABLE
         const url = this.consumeIf(/https?:\/\/(.+)?\.(jpe?g|png|gif)/i, argName)
-        if (url)
-            return url.replace(
-                /.(jpe?g|png|gif)/i,
-                url.match(/.(jpe?g|png|gif)/i)[0].toLowerCase()
-            )
+        if (url) {
+            const match = url.match(/.(jpe?g|png|gif)/i)?.[0].toLowerCase()
+            if (match)
+                return url.replace(
+                    /.(jpe?g|png|gif)/i,
+                    match
+                )
+        }
+
 
         return null
     }
@@ -177,9 +180,9 @@ export default class Args {
 
     consumeSubcommandIf(
         equals?: string | string[] | RegExp | ((arg: string) => boolean)
-    ): string {
+    ): string | null {
         if (equals) {
-            let arg: string = null
+            let arg: string | null = null
 
             try {
                 arg = this.message.message.options.getSubcommand()
@@ -200,13 +203,14 @@ export default class Args {
                 ? this.consumeSubcommand()
                 : this.consumeSubcommand().toLowerCase()
         }
+        return null
     }
 
     consumeSubcommandGroupIf(
         equals?: string | string[] | RegExp | ((arg: string) => boolean)
-    ): string {
+    ): string | null {
         if (equals) {
-            let arg: string = null
+            let arg: string | null = null
 
             try {
                 arg = this.message.message.options.getSubcommandGroup()
@@ -227,6 +231,7 @@ export default class Args {
                 ? this.consumeSubcommandGroup()
                 : this.consumeSubcommandGroup().toLowerCase()
         }
+        return null
     }
 
     consumeSubcommand(): string {

@@ -26,8 +26,10 @@ export default new Command({
             message: string
             html_url: string
         }
-        const embed = new Discord.MessageEmbed()
-            .addFields([
+        const embed = <Discord.MessageEmbedOptions>{
+            title: "Info about main-bot",
+            thumbnail: {url: client.user?.displayAvatarURL()},
+            fields: [
                 { name: "Environment", value: currentEnv() },
                 { name: "Version", value: packageJson.version },
                 {
@@ -38,13 +40,11 @@ export default new Command({
                     name: "Latest Commit",
                     value: `**[${commit.committer.name}](https://github.com/${commit.committer.name})** - [\`${commit.message}\`](${commit.html_url})`
                 }
-            ])
-            .setTitle("Info about main-bot")
-            .setThumbnail(client.user.displayAvatarURL())
-            .setColor(hexToRGB(client.config.colors.info))
-            .setDescription(
-                "**[Github repo](https://github.com/BuildtheEarth/main-bot) | [Bug report](https://github.com/BuildTheEarth/main-bot/issues/new?template=bug_report.md)**"
-            )
+            ],
+            color: hexToRGB(client.config.colors.info),
+            description: "**[Github repo](https://github.com/BuildtheEarth/main-bot) | [Bug report](https://github.com/BuildTheEarth/main-bot/issues/new?template=bug_report.md)**"
+        }
+
         await message.send({ embeds: [embed] })
     }
 })

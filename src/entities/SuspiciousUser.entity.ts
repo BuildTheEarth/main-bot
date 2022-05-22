@@ -5,52 +5,53 @@ import { hexToRGB, noop } from "@buildtheearth/bot-utils"
 import SnowflakeColumn from "./decorators/SnowflakeColumn.decorator.js"
 import GuildMember from "../struct/discord/GuildMember.js"
 import CommandMessage from "../struct/CommandMessage.js"
+import unicode from "./transformers/unicode.transformer.js"
 
 @typeorm.Entity({ name: "suspicious_users" })
 export default class SuspiciousUser extends typeorm.BaseEntity {
     @typeorm.PrimaryGeneratedColumn()
-    id: number
+    id!: number
 
     @SnowflakeColumn()
-    userId: string
+    userId!: string
 
     @SnowflakeColumn()
-    submitterId: string
+    submitterId!: string
 
     @SnowflakeColumn()
-    messageId: string
+    messageId!: string
 
     @typeorm.Column({ default: false })
-    denied: boolean
+    denied!: boolean
 
     @typeorm.Column({ default: false })
-    approved: boolean
+    approved!: boolean
 
     @SnowflakeColumn({ nullable: true, default: null })
     moderatorId?: string
 
-    @typeorm.Column({ nullable: true, default: null, type: "text" })
-    reason: string
+    @typeorm.Column({ nullable: true, default: null, type: "text", transformer: unicode })
+    reason?: string
 
-    @typeorm.Column("text")
-    evidence: string
+    @typeorm.Column({type: "text", transformer: unicode})
+    evidence!: string
 
     @typeorm.DeleteDateColumn()
-    deletedAt: Date
+    deletedAt?: Date
 
     @SnowflakeColumn({ nullable: true, default: null })
     threadId?: string
 
-    public static async fetchChannel(client: Client): Promise<Discord.TextChannel> {
+    public static async fetchChannel(client: Client): Promise<Discord.TextChannel | null> {
         const channelID = client.config.suspiciousUsers
         const channel = await client.channels.fetch(channelID).catch(noop)
-        if (channel.isText()) {
+        if (channel?.isText()) {
             return channel as Discord.TextChannel
         }
         return null
     }
 
-    private async fetchMessage(client: Client): Promise<Discord.Message> {
+    private async fetchMessage(client: Client): Promise<Discord.Message | null> {
         const channel = await SuspiciousUser.fetchChannel(client)
         if (channel) {
             return channel.messages.fetch(this.messageId).catch(noop)
@@ -58,20 +59,20 @@ export default class SuspiciousUser extends typeorm.BaseEntity {
         return null
     }
 
-    private async fetchUser(client: Client): Promise<Discord.User> {
+    private async fetchUser(client: Client): Promise<Discord.User | null> {
         const user = await client.users.fetch(this.userId).catch(noop)
         return user
     }
 
-    private async fetchThread(client: Client): Promise<Discord.ThreadChannel> {
+    private async fetchThread(client: Client): Promise<Discord.ThreadChannel | null> {
         const channel = await SuspiciousUser.fetchChannel(client)
-        if (channel) {
+        if (channel && this.threadId) {
             return channel.threads.fetch(this.threadId).catch(noop)
         }
         return null
     }
 
-    private async fetchSubmitter(client: Client): Promise<Discord.User> {
+    private async fetchSubmitter(client: Client): Promise<Discord.User | null> {
         const user = await client.users.fetch(this.submitterId).catch(noop)
         return user
     }
@@ -119,7 +120,7 @@ export default class SuspiciousUser extends typeorm.BaseEntity {
     }
 
     createEmbed(): Discord.MessageOptions {
-        const embed: Discord.MessageEmbedOptions = {
+        const embed = <Discord.MessageEmbedOptions>{
             title: "Suspicious User Report",
             fields: [
                 {
@@ -143,7 +144,7 @@ export default class SuspiciousUser extends typeorm.BaseEntity {
 
         if (this.denied) {
             embed.color = hexToRGB(client.config.colors.error)
-            embed.fields.push({
+            embed.fields?.push({
                 name: "Denied",
                 value: `Denied by <@${this.moderatorId}> (${this.moderatorId}) for reason: ${this.reason}`
             })
@@ -151,7 +152,7 @@ export default class SuspiciousUser extends typeorm.BaseEntity {
 
         if (this.approved) {
             embed.color = hexToRGB(client.config.colors.success)
-            embed.fields.push({
+            embed.fields?.push({
                 name: "Approved",
                 value: `Approved by <@${this.moderatorId}> (${this.moderatorId}) for reason: ${this.reason}`
             })
@@ -175,7 +176,7 @@ export default class SuspiciousUser extends typeorm.BaseEntity {
                 new Discord.MessageButton(approvedButton),
                 new Discord.MessageButton(deniedButton)
             ])
-            options.components.push(actionRow)
+            options.components?.push(actionRow)
         }
 
         return options
@@ -190,7 +191,7 @@ export default class SuspiciousUser extends typeorm.BaseEntity {
         user: string,
         submitter: string,
         evidence: string
-    ): Promise<SuspiciousUser> {
+    ): Promise<SuspiciousUser | null> {
         const sususer = new SuspiciousUser()
         sususer.userId = user
         sususer.submitterId = submitter

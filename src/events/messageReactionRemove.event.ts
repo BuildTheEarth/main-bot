@@ -9,7 +9,9 @@ export default async function messageReactionRemove(
     user: Discord.User
 ): Promise<void> {
     const channel = this.config.reactionRoles?.[reaction.message.channel.id]
-    const role = channel?.[reaction.message.id]?.[reaction.emoji.name]
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const role: any = null
+    if (reaction.emoji.name) channel?.[reaction.message.id]?.[reaction.emoji.name]
     const guild = reaction.message.guild
     if (guild) {
         const member = await guild.members.fetch({ user, cache: true }).catch(noop)
@@ -24,13 +26,14 @@ export default async function messageReactionRemove(
         if (
             guild.id === this.config.guilds.main &&
             channelRaw.isThread() &&
-            channelRaw.parent.id === this.config.suggestions.main &&
+            channelRaw.parent?.id === this.config.suggestions.main &&
             (reaction.emoji.identifier ===
                 this.config.emojis.pin
                     .toString()
                     .replaceAll("<", "")
                     .replaceAll(">", "")) !=
                 (reaction.emoji.name === this.config.emojis.pin) &&
+            member &&
             GuildMember.hasRole(
                 member,
                 [

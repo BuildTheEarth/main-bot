@@ -29,9 +29,9 @@ export default new Command({
         if (!java?.online) {
             return message.sendErrorMessageSeen("networkOffline")
         } else {
-            const embed: Discord.MessageEmbedOptions = {
+            const embed = <Discord.MessageEmbedOptions>{
                 description: message.getMessage("networkOnline"),
-                fields: [{ name: message.getMessage("players"), value: null }],
+                fields: [{ name: message.getMessage("players")}],
                 footer: { text: "IP: BuildTheEarth.net, bedrock.BuildTheEarth.net" }
             }
 
@@ -47,12 +47,12 @@ export default new Command({
                         .join("\n")
                         .replace(/\[(\d+)]/g, "**$1**")
 
-                embed.fields[0].value = players
+                if (embed.fields) embed.fields[0].value = players
             } else {
-                embed.fields[0].value = "There are no players online right now."
+                if (embed.fields) embed.fields[0].value = "There are no players online right now."
             }
 
-            embed.fields.push({
+            embed.fields?.push({
                 name: "Bedrock",
                 value: bedrock?.online
                     ? "The Bedrock proxy is online!"

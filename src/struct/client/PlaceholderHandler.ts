@@ -24,7 +24,7 @@ export default class PlaceholderHandler {
 
         await placeholder.save()
 
-        this.cache[name + " " + language] = placeholder
+        this.cache.set(name + " " + language, placeholder)
     }
 
     async editPlaceholder(
@@ -41,7 +41,7 @@ export default class PlaceholderHandler {
             placeholder.body = newBody
             await placeholder.save()
         }
-        this.cache[name + " " + language] = placeholder
+        if (placeholder) this.cache.set(name + " " + language, placeholder)
     }
 
     async deletePlaceholder(name: string, language: string): Promise<void> {
@@ -53,7 +53,7 @@ export default class PlaceholderHandler {
         if (placeholder) {
             await placeholder.remove()
         }
-        delete this.cache[name + " " + language]
+        this.cache.delete(name + " " + language)
     }
 
     replacePlaceholders(text: string): string {
@@ -67,7 +67,7 @@ export default class PlaceholderHandler {
                 if (trimmedString.split(" ").length > 2) return substring
                 if (trimmedString.split(" ").length == 1) trimmedString += " en"
 
-                return this.cache[trimmedString]?.body || substring
+                return this.cache.get(trimmedString)?.body || substring
             }
         )
     }

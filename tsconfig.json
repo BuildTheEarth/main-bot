@@ -6,7 +6,9 @@
         "module": "esnext",
         "target": "esnext",
         "outDir": "./dist",
-        "moduleResolution": "nodenext"
+        "moduleResolution": "nodenext",
+        "strict": true,
+        "skipLibCheck": true
     },
     "include": [
         "src/**/**/*",

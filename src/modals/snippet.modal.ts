@@ -13,7 +13,7 @@ export default async function createSnippet(
     if (client.interactionInfo.has(customId) && isSnippetInfo(info)) {
         const body = interaction.fields.getTextInputValue("body")
 
-        let snippet: Snippet
+        let snippet: Snippet | null = null
         if (info.subcommand === "add") {
             snippet = new Snippet()
             snippet.name = info.name
@@ -22,15 +22,15 @@ export default async function createSnippet(
             snippet.aliases = []
             snippet.type = info.type
         } else if (info.subcommand === "edit") {
-            if (info.existingSnippet.body === body)
+            if (info.existingSnippet?.body === body)
                 return client.response.sendError(
                     interaction,
                     client.messages.getMessage("noChange", interaction.locale)
                 )
-            snippet = info.existingSnippet
-            snippet.body = body
+            if (info.existingSnippet) snippet = info.existingSnippet
+            if (snippet) snippet.body = body
         }
-        await snippet.save()
+        await snippet?.save()
         const past = info.subcommand === "add" ? "Added" : "Edited"
         const languageName = languages.getName(info.language)
         // prettier-ignore

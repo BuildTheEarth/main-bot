@@ -48,7 +48,7 @@ export default new Command({
         const user = await args.consumeUser("member")
         if (!user)
             return message.sendErrorMessage(user === undefined ? "noUser" : "invalidUser")
-        const member: Discord.GuildMember = await message.guild.members
+        const member: Discord.GuildMember | null = await message.guild.members
             .fetch({ user, cache: false })
             .catch(noop)
         if (member) {

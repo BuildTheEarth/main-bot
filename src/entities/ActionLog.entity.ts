@@ -4,6 +4,7 @@ import Discord from "discord.js"
 import Client from "../struct/Client.js"
 import TimedPunishment from "./TimedPunishment.entity.js"
 import milliseconds from "./transformers/milliseconds.transformer.js"
+import unicode from "./transformers/unicode.transformer.js"
 import {
     formatPunishmentTime,
     formatTimestamp,
@@ -28,19 +29,19 @@ export enum Actions {
 @typeorm.Entity({ name: "action_logs" })
 export default class ActionLog extends typeorm.BaseEntity {
     @typeorm.PrimaryGeneratedColumn()
-    id: number
+    id!: number
 
     @typeorm.Column()
-    action: Action
+    action!: Action
 
     @SnowflakeColumn()
-    member: string
+    member!: string
 
     @SnowflakeColumn()
-    executor: string
+    executor!: string
 
-    @typeorm.Column({ length: 1024 })
-    reason: string
+    @typeorm.Column({ length: 1024, transformer: unicode })
+    reason!: string
 
     @typeorm.Column({ nullable: true, name: "reason_image" })
     reasonImage?: string
@@ -49,24 +50,24 @@ export default class ActionLog extends typeorm.BaseEntity {
     length?: number
 
     @SnowflakeColumn()
-    channel: string
+    channel!: string
 
     @SnowflakeColumn()
-    message: string
+    message!: string
 
     @SnowflakeColumn({ nullable: true })
-    notification: string
+    notification?: string
 
     @typeorm.CreateDateColumn({ name: "created_at" })
-    createdAt: Date
+    createdAt!: Date
 
     @typeorm.DeleteDateColumn({ name: "deleted_at" })
-    deletedAt: Date
+    deletedAt?: Date
 
     @SnowflakeColumn({ nullable: true })
     deleter?: string
 
-    @typeorm.Column({ name: "delete_reason", length: 1024, nullable: true })
+    @typeorm.Column({ name: "delete_reason", length: 1024, nullable: true, transformer: unicode })
     deleteReason?: string
 
     @typeorm.OneToOne(() => TimedPunishment, {
@@ -94,7 +95,7 @@ export default class ActionLog extends typeorm.BaseEntity {
 
     async displayEmbed(client: Client): Promise<Discord.MessageEmbedOptions> {
         const length =
-            this.length !== null ? formatPunishmentTime(this.length, true) : "\u200B"
+            (this.length !== null && this.length !== undefined)  ? formatPunishmentTime(this.length, true) : "\u200B"
         const embed: Discord.MessageEmbedOptions = {
             color: hexToRGB(client.config.colors.success),
             author: { name: `Case #${this.id} (${this.action})` },
@@ -117,9 +118,9 @@ export default class ActionLog extends typeorm.BaseEntity {
             const formattedTimestamp = formatTimestamp(this.deletedAt, "d")
             embed.description = "*This case has been deleted.*"
             embed.color = hexToRGB(client.config.colors.error)
-            embed.fields.push(
+            embed.fields?.push(
                 { name: "Deleter", value: `<@${this.deleter}>`, inline: true },
-                { name: "Deletion reason", value: this.deleteReason, inline: true },
+                { name: "Deletion reason", value: this.deleteReason? this.deleteReason: "", inline: true },
                 { name: "Deletion time", value: formattedTimestamp, inline: true }
             )
         }
@@ -139,7 +140,7 @@ export default class ActionLog extends typeorm.BaseEntity {
         const embed: Discord.MessageEmbedOptions = {
             color: hexToRGB(client.config.colors[color]),
             description: `*<@${this.executor}> has ${actioned} you${length}:*\n\n${this.reason}`,
-            image: this.reasonImage ? { url: this.reasonImage } : null
+            image: this.reasonImage ? { url: this.reasonImage } : undefined
         }
 
         if (this.action === "ban") {

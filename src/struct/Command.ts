@@ -9,11 +9,11 @@ export default class Command implements CommandProperties {
     inheritGlobalArgs?: boolean
     description: string
     permission: string[] | string[][]
-    basesubcommand?: string
+    basesubcommand?: string | null
     dms: boolean
     args?: CommandArgs[]
     seperator?: string
-    subcommands: SubCommandProperties[]
+    subcommands: SubCommandProperties[] | null
     devOnly?: boolean
     run: (client: Client, message: CommandMessage, args: Args) => void | Promise<void>
 
@@ -40,9 +40,9 @@ export interface CommandProperties extends SubCommandProperties {
     aliases: string[]
     inheritGlobalArgs?: boolean
     devOnly?: boolean
-    subcommands?: SubCommandProperties[]
+    subcommands?: SubCommandProperties[] | null
     permission: string[] | string[][]
-    basesubcommand?: string
+    basesubcommand?: string | null
     dms?: boolean
     seperator?: string
     run: (client: Client, message: CommandMessage, args: Args) => void
@@ -53,7 +53,7 @@ export interface SubCommandProperties {
     description: string
     permission?: string[] | string[][]
     group?: boolean
-    subcommands?: SubCommandProperties[]
+    subcommands?: SubCommandProperties[] | null
     args?: CommandArgs[]
     seperator?: string
 }

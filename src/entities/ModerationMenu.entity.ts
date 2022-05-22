@@ -3,6 +3,7 @@ import _ from "lodash"
 import path from "path"
 import url from "url"
 import typeorm from "typeorm"
+import unicode from "./transformers/unicode.transformer.js"
 import {
     formatPunishmentTime,
     hexToRGB,
@@ -38,7 +39,8 @@ export default class ModerationMenu extends typeorm.BaseEntity {
         message: Discord.Message,
         filterResponse: BannedWordObj[],
         client: Client
-    ): Promise<ModerationMenu> {
+    ): Promise<ModerationMenu | undefined> {
+        if (!message.member) return
         if (
             GuildMember.hasRole(
                 message.member,
@@ -58,7 +60,7 @@ export default class ModerationMenu extends typeorm.BaseEntity {
 
         if (truePunishments[0].punishment_type === "DELETE") {
             const embed = new Discord.MessageEmbed()
-                .addFields([
+                .addFields(<Discord.EmbedFieldData[]>[
                     {
                         name: "User",
                         value: `<@${message.author.id}> (${message.author.id})`
@@ -89,11 +91,11 @@ export default class ModerationMenu extends typeorm.BaseEntity {
             const truePunishments = getMostSevereList(filterResponse, client)
             existingMenu.punishments.push(...truePunishments)
             existingMenu.punishments = _.uniqBy(existingMenu.punishments, "word")
-            existingMenu.current_word = existingMenu.punishments[0].word
+            if (existingMenu.punishments[0].word) existingMenu.current_word = existingMenu.punishments[0].word
             existingMenu.save()
 
             const embed = new Discord.MessageEmbed()
-                .addFields([
+                .addFields(<Discord.EmbedFieldData[]>[
                     {
                         name: "User",
                         value: `<@${existingMenu.member}> (${existingMenu.member})`
@@ -113,21 +115,22 @@ export default class ModerationMenu extends typeorm.BaseEntity {
                     },
                     {
                         name: "Duration",
-                        value: getDuration(existingMenu.punishments[0].duration)
+                        value: getDuration(existingMenu.punishments[0].duration? existingMenu.punishments[0].duration: 0)
                     },
                     { name: "Reason", value: existingMenu.punishments[0].reason },
                     { name: "Trigger", value: existingMenu.punishments[0].word }
                 ])
                 .setColor(hexToRGB(client.config.colors.error))
+            
 
             const punishmentOptions = existingMenu.punishments.map(punishment => {
                 const punish = {
                     label:
-                        truncateString(punishment.reason, 15).trim().length <= 0
+                        truncateString(punishment.reason? punishment.reason: "", 15).trim().length <= 0
                             ? "No reason"
-                            : truncateString(punishment.reason, 15),
+                            : truncateString(punishment.reason? punishment.reason: "", 15),
                     description: `${punishment.punishment_type} for ${getDuration(
-                        punishment.duration
+                        punishment.duration? punishment.duration: 0
                     )}, Word is ${punishment.word}`,
                     value: punishment.word,
                     default: false
@@ -175,10 +178,10 @@ export default class ModerationMenu extends typeorm.BaseEntity {
         modMenu.message_text = message.content
         modMenu.punishments = truePunishments
         modMenu.offenses = 1
-        modMenu.current_word = modMenu.punishments[0].word
+        if (modMenu.punishments[0].word) modMenu.current_word = modMenu.punishments[0].word
 
         const embed = new Discord.MessageEmbed()
-            .addFields([
+            .addFields(<Discord.EmbedFieldData[]>[
                 { name: "User", value: `<@${modMenu.member}> (${modMenu.member})` },
                 {
                     name: "Message",
@@ -192,7 +195,7 @@ export default class ModerationMenu extends typeorm.BaseEntity {
                 { name: "Punishment", value: modMenu.punishments[0].punishment_type },
                 {
                     name: "Duration",
-                    value: getDuration(modMenu.punishments[0].duration)
+                    value: getDuration(modMenu.punishments[0].duration? modMenu.punishments[0].duration: 0)
                 },
                 { name: "Reason", value: modMenu.punishments[0].reason },
                 { name: "Trigger", value: modMenu.punishments[0].word }
@@ -201,9 +204,9 @@ export default class ModerationMenu extends typeorm.BaseEntity {
 
         const punishmentOptions = modMenu.punishments.map(punishment => {
             const punish = {
-                label: truncateString(punishment.reason, 15),
+                label: truncateString(punishment.reason? punishment.reason: "", 15),
                 description: `${punishment.punishment_type} for ${getDuration(
-                    punishment.duration
+                    punishment.duration? punishment.duration: 0
                 )}, Word is ${punishment.word}`,
                 value: punishment.word,
                 default: false
@@ -247,7 +250,7 @@ export default class ModerationMenu extends typeorm.BaseEntity {
         id: string,
         interaction: Discord.SelectMenuInteraction,
         client: Client
-    ): Promise<ModerationMenu> {
+    ): Promise<ModerationMenu | null> {
         const modMenu = await ModerationMenu.findOne({ member: id })
 
         if (!modMenu) return null
@@ -256,8 +259,10 @@ export default class ModerationMenu extends typeorm.BaseEntity {
             punishment => punishment.word === interaction.values[0]
         )
 
+        if (!punishment) return null
+
         const embed = new Discord.MessageEmbed()
-            .addFields([
+            .addFields(<Discord.EmbedFieldData[]>[
                 { name: "User", value: `<@${modMenu.member}> (${modMenu.member})` },
                 {
                     name: "Message",
@@ -271,7 +276,7 @@ export default class ModerationMenu extends typeorm.BaseEntity {
                 { name: "Punishment", value: punishment.punishment_type },
                 {
                     name: "Duration",
-                    value: getDuration(punishment.duration)
+                    value: getDuration(punishment.duration? punishment.duration: 0)
                 },
                 { name: "Reason", value: punishment.reason },
                 { name: "Trigger", value: punishment.word }
@@ -279,8 +284,9 @@ export default class ModerationMenu extends typeorm.BaseEntity {
             .setColor(hexToRGB(client.config.colors.error))
 
         interaction.editReply({ embeds: [embed] })
-        modMenu.current_word = punishment.word
+        modMenu.current_word = punishment.word? punishment.word: ""
         await modMenu.save()
+        return modMenu
     }
     public static async punishPerson(
         id: string,
@@ -296,9 +302,11 @@ export default class ModerationMenu extends typeorm.BaseEntity {
 
         if (!modMenu) return
 
-        const punishment: bannedWordsOptions = modMenu.punishments.find(
+        const punishment: bannedWordsOptions | undefined = modMenu.punishments.find(
             punishment => punishment.word === modMenu.current_word
         )
+
+        if (!punishment) return
 
         if (punishment.punishment_type === "BAN") {
             messages.alreadyPunished = client.messages.getMessage(
@@ -326,7 +334,10 @@ export default class ModerationMenu extends typeorm.BaseEntity {
 
             return
         }
-        const member: Discord.GuildMember = await interaction.guild.members
+
+        if (!interaction.guild) return
+
+        const member: Discord.GuildMember | null = await interaction.guild.members
             .fetch({ user, cache: false })
             .catch(noop)
 
@@ -379,18 +390,20 @@ export default class ModerationMenu extends typeorm.BaseEntity {
             }
         }
 
+        if (!punishment.punishment_type) return
+
         const log = await punish(
             client,
             interaction,
             user,
             punishment.punishment_type.toLowerCase() as "mute" | "ban" | "warn" | "kick",
-            punishment.reason,
+            punishment.reason? punishment.reason: "",
             null,
-            punishment.duration,
+            punishment.duration? punishment.duration: 0,
             modMenu.message
         )
 
-        let formattedPunishment: string
+        let formattedPunishment: string | null = null
 
         switch (punishment.punishment_type.toLowerCase()) {
             case "mute": {
@@ -412,7 +425,7 @@ export default class ModerationMenu extends typeorm.BaseEntity {
             }
         }
 
-        const formattedLength = formatPunishmentTime(punishment.duration)
+        const formattedLength = formatPunishmentTime(punishment.duration? punishment.duration: 0)
         await replyInteraction.editReply({
             content: `${formattedPunishment} ${user} ${formattedLength} (**#${log.id}**).`
         })
@@ -452,7 +465,7 @@ export default class ModerationMenu extends typeorm.BaseEntity {
     ): Promise<void> {
         const modMenu = await ModerationMenu.findOne({ member: id })
 
-        if (!modMenu) return null
+        if (!modMenu) return
 
         const embed = new Discord.MessageEmbed()
             .addFields([
@@ -611,27 +624,27 @@ export default class ModerationMenu extends typeorm.BaseEntity {
     }
 
     @SnowflakePrimaryColumn()
-    member: string
+    member!: string
 
     @SnowflakeColumn()
-    message: string
+    message!: string
 
     @typeorm.Column({ length: 2000 })
-    message_text: string
+    message_text!: string
 
     @typeorm.Column("text", {
         transformer: {
-            to: (value: bannedWordsOptions[]) => JSON5.stringify(value),
-            from: (value: string) => JSON5.parse(value)
+            to: (value: bannedWordsOptions[]) => unicode.to(JSON5.stringify(value)),
+            from: (value: string) => JSON5.parse(unicode.from(value))
         }
     })
-    punishments: bannedWordsOptions[]
+    punishments!: bannedWordsOptions[]
 
     @typeorm.Column()
-    offenses: number
+    offenses!: number
 
-    @typeorm.Column()
-    current_word: string
+    @typeorm.Column({transformer: unicode})
+    current_word!: string
 }
 
 function getMostSevereList(
@@ -640,14 +653,15 @@ function getMostSevereList(
 ): bannedWordsOptions[] {
     const punishmentWords: bannedWordsOptions[] = []
     for (const punishment of punishments) {
-        const word = client.filterWordsCached.banned[punishment.base]
+        if (!punishment.base) return []
+        const word = client.filterWordsCached.banned.get(punishment.base)
         if (!word) return []
 
         punishmentWords.push({
             word: punishment.base,
             punishment_type: word.punishment_type,
-            duration: word.duration,
-            reason: word.reason,
+            duration: word.duration? word.duration: undefined,
+            reason: word.reason? word.reason: undefined,
             exception: false
         })
     }
@@ -657,9 +671,11 @@ function getMostSevereList(
 }
 
 function wordGreaterThanOther(a: bannedWordsOptions, b: bannedWordsOptions): number {
-    const diffrence =
-        punishmentValues[a.punishment_type] - punishmentValues[b.punishment_type]
-    if (diffrence === 0) return 0
-    if (diffrence > 0) return 1
+    if (a.punishment_type && b.punishment_type) {
+        const diffrence =
+            punishmentValues[a.punishment_type] - punishmentValues[b.punishment_type]
+        if (diffrence === 0) return 0
+        if (diffrence > 0) return 1
+    }
     return -1
 }

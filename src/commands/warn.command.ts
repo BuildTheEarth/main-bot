@@ -48,7 +48,7 @@ export default new Command({
             args.consumeRest(["reason"])
         )
         if (!reason) return message.sendErrorMessage("noReason")
-        const member: Discord.GuildMember = await message.guild.members
+        const member: Discord.GuildMember | null = await message.guild.members
             .fetch({ user, cache: false })
             .catch(() => null)
         if (!member) return message.sendErrorMessage("notInGuild")

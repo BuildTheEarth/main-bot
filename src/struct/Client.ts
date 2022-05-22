@@ -26,7 +26,7 @@ import { Database } from "better-sqlite3"
 export default class Client extends Discord.Client {
     declare guilds: Discord.GuildManager
     customGuilds = new GuildManager(this)
-    db: typeorm.Connection
+    db: typeorm.Connection | null = null
     // @ts-ignore weird issues with call signatures
     logger = createLogger({
         filePath: path.dirname(url.fileURLToPath(import.meta.url)) + "/../../logs/"
@@ -43,10 +43,10 @@ export default class Client extends Discord.Client {
         except: new Array<string>()
     }
 
-    punishmentTimeouts: Map<string, { mute: Cron; ban: Cron }> = new Map()
+    punishmentTimeouts: Map<string, { mute: Cron | null; ban: Cron | null}> = new Map()
     honorBuilderTimeouts: Map<string, Cron> = new Map()
     reminderTimeouts: Map<number, Cron> = new Map()
-    bannerCycleTimeout: Cron
+    bannerCycleTimeout: Cron | null = null
     filter = new BannedWordFilter(this)
     dutyScheduler = new DutyScheduler(this)
     messages = new Messages(this)
@@ -116,19 +116,19 @@ export default class Client extends Discord.Client {
         action?: "add" | "edit" | "delete",
         executor?: Discord.User
     ): Promise<void> {
-        const channel: Discord.TextChannel = await this.channels
+        const channel: Discord.TextChannel | null = await this.channels
             .fetch(
                 log instanceof Snippet || log instanceof Placeholder
                     ? this.config.logging.snippetLogs
                     : this.config.logging.modLogs,
                 { force: true }
             )
-            .catch(() => null)
+            .catch(() => null) as Discord.TextChannel | null
         if (!channel) return
 
         if (log instanceof ActionLog) {
             const embed = await log.displayEmbed(this)
-            if (embed.color === this.config.colors.error) {
+            if (embed.author && embed.color === this.config.colors.error) {
                 delete embed.description
                 embed.author.name += " deleted"
             } else if (embed.color === this.config.colors.success) {
@@ -139,22 +139,22 @@ export default class Client extends Discord.Client {
         } else if (log instanceof Snippet || log instanceof Placeholder) {
             const embed = log.displayEmbed(this)
             embed.thumbnail = {
-                url: executor.displayAvatarURL({ format: "png", dynamic: true, size: 64 })
+                url: executor?.displayAvatarURL({ format: "png", dynamic: true, size: 64 })
             }
-
-            switch (action) {
-                case "add":
-                    embed.author.name += " created"
-                    break
-                case "edit":
-                    embed.author.name += " edited"
-                    embed.color = hexToRGB(this.config.colors.info)
-                    break
-                case "delete":
-                    embed.author.name += " deleted"
-                    embed.color = hexToRGB(this.config.colors.error)
-                    break
-            }
+            if (embed.author)
+                switch (action) {
+                    case "add":
+                        embed.author.name += " created"
+                        break
+                    case "edit":
+                        embed.author.name += " edited"
+                        embed.color = hexToRGB(this.config.colors.info)
+                        break
+                    case "delete":
+                        embed.author.name += " deleted"
+                        embed.color = hexToRGB(this.config.colors.error)
+                        break
+                }
             await channel.send({ embeds: [embed] })
         } else {
             await channel.send({ embeds: [log] })

@@ -1,4 +1,4 @@
-import chalk from "chalk"
+import chalk = require("chalk")
 import Discord from "discord.js"
 
 export default class Role {

@@ -3,27 +3,28 @@ import Discord from "discord.js"
 import typeorm, { FindManyOptions } from "typeorm"
 import SnowflakeColumn from "./decorators/SnowflakeColumn.decorator.js"
 import TeamPointsUser from "./TeamPointsUser.entity.js"
+import unicode from "./transformers/unicode.transformer.js"
 import Sentiment = require("sentiment")
 
 @typeorm.Entity({ name: "teampoints_log" })
 export default class TeamPointsLog extends typeorm.BaseEntity {
     @typeorm.PrimaryGeneratedColumn()
-    id: number
+    id!: number
 
     @typeorm.CreateDateColumn()
-    createdAt: Date
+    createdAt!: Date
 
     @SnowflakeColumn()
-    roleId: string
+    roleId!: string
 
     @SnowflakeColumn()
-    actorId: string
+    actorId!: string
 
     @typeorm.Column({ type: "float" })
-    pointChange: number
+    pointChange!: number
 
-    @typeorm.Column({ type: "text" })
-    reason: string
+    @typeorm.Column({ type: "text", transformer: unicode })
+    reason!: string
 
     //TODO: more data proccessing functions
 
@@ -99,7 +100,7 @@ export default class TeamPointsLog extends typeorm.BaseEntity {
         return log
     }
 
-    public static async getLogChannel(): Promise<Discord.TextBasedChannel> {
+    public static async getLogChannel(): Promise<Discord.TextBasedChannel | null> {
         const returnChannel = await client.channels
             .fetch(client.config.logging.pointLog)
             .catch(noop)

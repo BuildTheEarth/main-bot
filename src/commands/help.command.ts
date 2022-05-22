@@ -62,7 +62,7 @@ export default new Command({
             allowedCommands = client.commands.filter(command => command.dms === true)
         }
         const formattedCommands = allowedCommands
-            .map(command => `• **${command.name}:** ${command.description}`)
+            ?.map(command => `• **${command.name}:** ${command.description}`)
             .join("\n")
 
         return message.sendSuccess({

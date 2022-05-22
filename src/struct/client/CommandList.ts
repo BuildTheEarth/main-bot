@@ -24,7 +24,7 @@ export default class CommandList extends Discord.Collection<string, Command> {
         const commands = await loadDir<Command>(
             pathModule.dirname(url.fileURLToPath(import.meta.url)) + "/../../commands/",
             this.client,
-            null,
+            undefined,
             this
         )
 
@@ -81,6 +81,7 @@ export default class CommandList extends Discord.Collection<string, Command> {
         if (this.client.customGuilds.main()) {
             const commands = await this.client.customGuilds
                 .main()
+                //@ts-ignore
                 .commands.set(registerCommands)
             for (const cmd of commands.values())
                 if (registerPermsMain[cmd.name]) registerPermsMain[cmd.name].id = cmd.id
@@ -93,6 +94,7 @@ export default class CommandList extends Discord.Collection<string, Command> {
         if (this.client.customGuilds.staff()) {
             const commands = await this.client.customGuilds
                 .staff()
+                //@ts-ignore
                 .commands.set(registerCommands)
             for (const cmd of commands.values())
                 if (registerPermsStaff[cmd.name]) registerPermsStaff[cmd.name].id = cmd.id
@@ -103,7 +105,7 @@ export default class CommandList extends Discord.Collection<string, Command> {
         }
     }
 
-    search(name: string): Command {
+    search(name: string): Command | undefined {
         name = name.toLowerCase()
         return this.find(command => {
             return command.name === name || command.aliases.includes(name)
@@ -122,14 +124,16 @@ export default class CommandList extends Discord.Collection<string, Command> {
             await this.client.customGuilds
                 .main()
                 .commands.delete(
+                    //@ts-ignore
                     this.client.customGuilds
                         .main()
                         .commands.cache.find(command => command.name === name)
                 )
-            for await (const alias of command.aliases) {
+            for await (const alias of ((command?.aliases)? command?.aliases: [])) {
                 await this.client.customGuilds
                     .main()
                     .commands.delete(
+                        //@ts-ignore
                         this.client.customGuilds
                             .main()
                             .commands.cache.find(command => command.name === alias)
@@ -141,14 +145,16 @@ export default class CommandList extends Discord.Collection<string, Command> {
             await this.client.customGuilds
                 .staff()
                 .commands.delete(
+                    //@ts-ignore
                     this.client.customGuilds
                         .staff()
                         .commands.cache.find(command => command.name === name)
                 )
-            for await (const alias of command.aliases) {
+            for await (const alias of ((command?.aliases)? command?.aliases: [])) {
                 await this.client.customGuilds
                     .staff()
                     .commands.delete(
+                        //@ts-ignore
                         this.client.customGuilds
                             .staff()
                             .commands.cache.find(command => command.name === alias)
@@ -161,8 +167,8 @@ export default class CommandList extends Discord.Collection<string, Command> {
     }
 
     async loadOne(name: string): Promise<void> {
-        let registerPermsMain: Discord.ApplicationCommandPermissionData[] = null
-        let registerPermsStaff: Discord.ApplicationCommandPermissionData[] = null
+        let registerPermsMain: Discord.ApplicationCommandPermissionData[] | null = null
+        let registerPermsStaff: Discord.ApplicationCommandPermissionData[] | null = null
 
         const registerCommands = []
         const path =
@@ -209,6 +215,7 @@ export default class CommandList extends Discord.Collection<string, Command> {
         if (this.client.customGuilds.main()) {
             for (const cmd of registerCommands) {
                 const commandRegistered: Discord.ApplicationCommand =
+                    //@ts-ignore
                     await this.client.customGuilds.main().commands.create(cmd)
                 if (registerPermsMain !== null)
                     await commandRegistered.permissions.set({
@@ -220,6 +227,7 @@ export default class CommandList extends Discord.Collection<string, Command> {
         if (this.client.customGuilds.staff()) {
             for (const cmd of registerCommands) {
                 const commandRegistered: Discord.ApplicationCommand =
+                    //@ts-ignore
                     await this.client.customGuilds.staff().commands.create(cmd)
                 if (registerPermsStaff !== null)
                     await commandRegistered.permissions.set({

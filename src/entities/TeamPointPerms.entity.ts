@@ -7,20 +7,20 @@ import SnowflakePrimaryColumn from "./decorators/SnowflakePrimaryColumn.decorato
 @typeorm.Entity({ name: "teampoint_permissions" })
 export default class TeamPointPerms extends typeorm.BaseEntity {
     @SnowflakePrimaryColumn()
-    roleId: string
+    roleId!: string
 
     // -1 is unlimited
     @typeorm.Column({ type: "float", default: 0 })
-    maxPoints: number
+    maxPoints!: number
 
     // -1 is unlimited
     @typeorm.Column({ type: "float", default: 0 })
-    minPoints: number
+    minPoints!: number
 
     // the -1 rule applies
     // Just gonna default at 10 for practical reasons
     @typeorm.Column({ type: "int", default: 10 })
-    maxUsagesPerDay: number
+    maxUsagesPerDay!: number
 
     // Ngl copilot did like this whole file and it impresses me
 
@@ -149,7 +149,7 @@ export default class TeamPointPerms extends typeorm.BaseEntity {
         client: Client,
         memberId: string
     ): Promise<{
-        roleId: string
+        roleId: string | null
         maxPoints: number
         minPoints: number
         maxUsagesPerDay: number

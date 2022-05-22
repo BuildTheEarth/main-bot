@@ -9,12 +9,16 @@ export default class GuildManager {
     }
 
     main(): Discord.Guild {
-        return this.client.guilds.cache.get(this.client.config.guilds.main)
+        const returnValue = this.client.guilds.cache.get(this.client.config.guilds.main)
+        if (!returnValue) throw new Error("main guild not found")
+        return returnValue
         //this is called with async just so i dont need to go renaming stuff everywhere when I may need to change it in the future:tm:
     }
 
     staff(): Discord.Guild {
-        return this.client.guilds.cache.get(this.client.config.guilds.staff)
+        const returnValue = this.client.guilds.cache.get(this.client.config.guilds.staff)
+        if (!returnValue) throw new Error("staff guild not found")
+        return returnValue
         //this is called with async just so i dont need to go renaming stuff everywhere when I may need to change it in the future:tm:
     }
 }

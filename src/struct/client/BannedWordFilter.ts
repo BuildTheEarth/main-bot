@@ -28,10 +28,12 @@ export default class BannedWordFilter {
             const matches = this.findWord.bind(this)(text, word)
             profanities = profanities.concat(matches)
         }
-        const indices = []
+        const indices: number[] = []
         profanities = profanities.filter((match, i) => {
-            let passes = !indices.includes(profanities[i].index)
-            indices.push(profanities[i].index)
+            const currIdx = profanities[i].index
+            if (currIdx === undefined) return false
+            let passes = !indices.includes(currIdx)
+            indices.push(currIdx)
 
             const exceptions = this.client.filterWordsCached.except
             if (exceptions) {
@@ -49,7 +51,7 @@ export default class BannedWordFilter {
         const profanities = []
         const regexBody = this.createWordRegex(word, 25)
         const regex = new RegExp(regexBody, "g")
-        let match: RegExpExecArray
+        let match: RegExpExecArray | null
 
         while ((match = regex.exec(text)) != null) {
             profanities.push({
@@ -63,6 +65,10 @@ export default class BannedWordFilter {
     }
 
     findException(match: BannedWordObj, input: string, exceptions: string[]): boolean {
+        if (match.index === undefined) return false
+        if (match.raw === undefined) return false
+        if (match.base === undefined) return false
+        
         const before = input.slice(0, match.index)
         const after = input.slice(match.index + match.raw.length)
         let isException = false

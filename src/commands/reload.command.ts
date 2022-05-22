@@ -24,7 +24,7 @@ export default new Command({
         const command = client.commands.search(name)
         const handler = client.events.get(name)
         const config = name.toLowerCase() === "config"
-        let file: string
+        let file: string | null
         try {
             file = require.resolve(name)
         } catch {
@@ -39,7 +39,7 @@ export default new Command({
 
         await message.continue()
 
-        let fullname: string
+        let fullname: string | null = null
         if (command) {
             fullname = `\`${command.name}\` command`
             await client.commands.unloadOne(command.name)
