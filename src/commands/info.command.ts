@@ -28,7 +28,7 @@ export default new Command({
         }
         const embed = <Discord.MessageEmbedOptions>{
             title: "Info about main-bot",
-            thumbnail: {url: client.user?.displayAvatarURL()},
+            thumbnail: { url: client.user?.displayAvatarURL() },
             fields: [
                 { name: "Environment", value: currentEnv() },
                 { name: "Version", value: packageJson.version },
@@ -42,7 +42,8 @@ export default new Command({
                 }
             ],
             color: hexToRGB(client.config.colors.info),
-            description: "**[Github repo](https://github.com/BuildtheEarth/main-bot) | [Bug report](https://github.com/BuildTheEarth/main-bot/issues/new?template=bug_report.md)**"
+            description:
+                "**[Github repo](https://github.com/BuildtheEarth/main-bot) | [Bug report](https://github.com/BuildTheEarth/main-bot/issues/new?template=bug_report.md)**"
         }
 
         await message.send({ embeds: [embed] })

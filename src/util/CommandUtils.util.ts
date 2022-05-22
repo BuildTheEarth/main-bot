@@ -31,11 +31,17 @@ export default abstract class CommandUtils {
 
         if (command.basesubcommand) {
             const baseSubCom = _.cloneDeep(command)
-            baseSubCom.name = baseSubCom.basesubcommand?  baseSubCom.basesubcommand : command.name
+            baseSubCom.name = baseSubCom.basesubcommand
+                ? baseSubCom.basesubcommand
+                : command.name
             builder.addSubcommand(addSubcommand(baseSubCom))
         }
 
-        if (command.subcommands && command.subcommands.length == 0 && !command.basesubcommand)
+        if (
+            command.subcommands &&
+            command.subcommands.length == 0 &&
+            !command.basesubcommand
+        )
             if (command.args)
                 _.cloneDeep(command.args)
                     .sort((x, y) => {
@@ -112,7 +118,9 @@ function argsToStrSubCommand(
     client: Client
 ): string {
     let args = "\n\n**Subcommands**\n"
-    const subcommands: Array<SubCommandProperties> | null = _.cloneDeep(command.subcommands)
+    const subcommands: Array<SubCommandProperties> | null = _.cloneDeep(
+        command.subcommands
+    )
     if (slashcommand && command.basesubcommand) {
         const pushCmd = _.cloneDeep(command)
         pushCmd.name = command.basesubcommand
@@ -129,7 +137,8 @@ function argsToStrSubCommand(
             subcommand.subcommands.forEach(subsubcommand => {
                 if (command.seperator === " " && !slashcommand && subsubcommand.seperator)
                     trueSeperator = subsubcommand.seperator
-                else if (!slashcommand && command.seperator) trueSeperator = command.seperator
+                else if (!slashcommand && command.seperator)
+                    trueSeperator = command.seperator
                 args += `   *${subsubcommand.name}:* ${subsubcommand.description}\n`
                 let argList: CommandArgs[] = []
                 if (subsubcommand.args) argList.push(...subsubcommand.args)
@@ -154,7 +163,8 @@ function argsToStrSubCommand(
                         if (arg.required) args += ">" + trueSeperator
                         else args += "]" + trueSeperator
                     })
-                else if (command.inheritGlobalArgs) argList.push(...(command.args? command.args: []))
+                else if (command.inheritGlobalArgs)
+                    argList.push(...(command.args ? command.args : []))
                 args += subcommand.name + " " + subsubcommand.name + " "
                 argList.forEach(arg => {
                     if (arg.required) args += "<"
@@ -197,7 +207,8 @@ function argsToStrSubCommand(
                     if (arg.required) args += ">" + trueSeperator
                     else args += "]" + trueSeperator
                 })
-            else if (command.inheritGlobalArgs) argList.push(...(command.args? command.args: []))
+            else if (command.inheritGlobalArgs)
+                argList.push(...(command.args ? command.args : []))
             args += subcommand.name + " "
             argList.forEach(arg => {
                 if (arg.required) args += "<"

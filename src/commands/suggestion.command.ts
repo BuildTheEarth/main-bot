@@ -182,7 +182,11 @@ export default new Command({
         const suggestionsChannelRaw = await client.channels
             .fetch(suggestionsID, { force: true })
             .catch(() => null)
-        if (!suggestionsChannelRaw || !(suggestionsChannelRaw instanceof Discord.TextChannel)) return 
+        if (
+            !suggestionsChannelRaw ||
+            !(suggestionsChannelRaw instanceof Discord.TextChannel)
+        )
+            return
 
         //TODO: Migrate to the new qna channels when they come out
 
@@ -217,11 +221,10 @@ export default new Command({
             const results = await selection?.take(PER_PAGE).getMany()
 
             if (!total) return message.sendErrorMessage("noSuggFound", cleanQuery)
-            if (results === null || results === undefined) return message.sendErrorMessage("noSuggFound", cleanQuery)
+            if (results === null || results === undefined)
+                return message.sendErrorMessage("noSuggFound", cleanQuery)
 
             const paginate = total > PER_PAGE
-
-            
 
             const embed = <Discord.MessageEmbedOptions>{
                 color: hexToRGB(client.config.colors.success),
@@ -248,7 +251,8 @@ export default new Command({
             if (!paginate) return message.send({ embeds: [embed] })
 
             const pages = Math.ceil(total / PER_PAGE)
-            if (embed.footer !== undefined) embed.footer.text = `${total} results total, page 1/${pages}`
+            if (embed.footer !== undefined)
+                embed.footer.text = `${total} results total, page 1/${pages}`
             let row = new Discord.MessageActionRow().addComponents(
                 new Discord.MessageButton()
                     .setCustomId(`${message.id}.forwards`)
@@ -324,7 +328,8 @@ export default new Command({
 
                 const results = await selection?.skip((page - 1) * PER_PAGE).getMany()
                 if (results) await formatResults(results, embed)
-                if (embed.footer !== undefined) embed.footer.text = `${total} results total, page ${page}/${pages}`
+                if (embed.footer !== undefined)
+                    embed.footer.text = `${total} results total, page ${page}/${pages}`
                 await (interaction as Discord.ButtonInteraction).update({
                     components: [row]
                 })
@@ -363,7 +368,7 @@ export default new Command({
         if (!suggestionMessage) return message.sendErrorMessage("utlSuggestion")
 
         let thread: Discord.ThreadChannel | null = null
-        
+
         if (suggestion.thread) {
             thread = await (
                 client.channels.cache.get(
@@ -372,7 +377,6 @@ export default new Command({
             ).threads.fetch(suggestion.thread)
             if ((thread as unknown as FetchedThreads).threads) thread = null
         }
-
 
         if (subcommand === "link") {
             const displayNumber = await suggestion.getIdentifier()
@@ -494,7 +498,14 @@ export default new Command({
                     dms.send({
                         embeds: [
                             {
-                                color: hexToRGB((client.config.colors.suggestions as Record<string, string>)[status]),
+                                color: hexToRGB(
+                                    (
+                                        client.config.colors.suggestions as Record<
+                                            string,
+                                            string
+                                        >
+                                    )[status]
+                                ),
                                 description: update
                             }
                         ]

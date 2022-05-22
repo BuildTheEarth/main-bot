@@ -121,44 +121,36 @@ export default class CommandList extends Discord.Collection<string, Command> {
         )
         const command = this.get(name)
         if (this.client.customGuilds.main()) {
-            await this.client.customGuilds
-                .main()
-                .commands.delete(
+            await this.client.customGuilds.main().commands.delete(
+                //@ts-ignore
+                this.client.customGuilds
+                    .main()
+                    .commands.cache.find(command => command.name === name)
+            )
+            for await (const alias of command?.aliases ? command?.aliases : []) {
+                await this.client.customGuilds.main().commands.delete(
                     //@ts-ignore
                     this.client.customGuilds
                         .main()
-                        .commands.cache.find(command => command.name === name)
+                        .commands.cache.find(command => command.name === alias)
                 )
-            for await (const alias of ((command?.aliases)? command?.aliases: [])) {
-                await this.client.customGuilds
-                    .main()
-                    .commands.delete(
-                        //@ts-ignore
-                        this.client.customGuilds
-                            .main()
-                            .commands.cache.find(command => command.name === alias)
-                    )
             }
         }
 
         if (this.client.customGuilds.staff()) {
-            await this.client.customGuilds
-                .staff()
-                .commands.delete(
+            await this.client.customGuilds.staff().commands.delete(
+                //@ts-ignore
+                this.client.customGuilds
+                    .staff()
+                    .commands.cache.find(command => command.name === name)
+            )
+            for await (const alias of command?.aliases ? command?.aliases : []) {
+                await this.client.customGuilds.staff().commands.delete(
                     //@ts-ignore
                     this.client.customGuilds
                         .staff()
-                        .commands.cache.find(command => command.name === name)
+                        .commands.cache.find(command => command.name === alias)
                 )
-            for await (const alias of ((command?.aliases)? command?.aliases: [])) {
-                await this.client.customGuilds
-                    .staff()
-                    .commands.delete(
-                        //@ts-ignore
-                        this.client.customGuilds
-                            .staff()
-                            .commands.cache.find(command => command.name === alias)
-                    )
             }
         }
 

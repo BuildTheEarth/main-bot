@@ -67,7 +67,12 @@ export default class ActionLog extends typeorm.BaseEntity {
     @SnowflakeColumn({ nullable: true })
     deleter?: string
 
-    @typeorm.Column({ name: "delete_reason", length: 1024, nullable: true, transformer: unicode })
+    @typeorm.Column({
+        name: "delete_reason",
+        length: 1024,
+        nullable: true,
+        transformer: unicode
+    })
     deleteReason?: string
 
     @typeorm.OneToOne(() => TimedPunishment, {
@@ -95,7 +100,9 @@ export default class ActionLog extends typeorm.BaseEntity {
 
     async displayEmbed(client: Client): Promise<Discord.MessageEmbedOptions> {
         const length =
-            (this.length !== null && this.length !== undefined)  ? formatPunishmentTime(this.length, true) : "\u200B"
+            this.length !== null && this.length !== undefined
+                ? formatPunishmentTime(this.length, true)
+                : "\u200B"
         const embed: Discord.MessageEmbedOptions = {
             color: hexToRGB(client.config.colors.success),
             author: { name: `Case #${this.id} (${this.action})` },
@@ -120,7 +127,11 @@ export default class ActionLog extends typeorm.BaseEntity {
             embed.color = hexToRGB(client.config.colors.error)
             embed.fields?.push(
                 { name: "Deleter", value: `<@${this.deleter}>`, inline: true },
-                { name: "Deletion reason", value: this.deleteReason? this.deleteReason: "", inline: true },
+                {
+                    name: "Deletion reason",
+                    value: this.deleteReason ? this.deleteReason : "",
+                    inline: true
+                },
                 { name: "Deletion time", value: formattedTimestamp, inline: true }
             )
         }

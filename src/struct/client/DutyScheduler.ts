@@ -67,7 +67,7 @@ export default class DutyScheduler {
     public checkDuty(user: Discord.GuildMember): Date | null {
         if (this.dutyScheduler.has(user.id)) {
             const date = this.dutyScheduler.get(user.id)?.[1]
-            return date? date: null
+            return date ? date : null
         } else {
             return null
         }

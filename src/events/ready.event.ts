@@ -11,7 +11,6 @@ import { Cron } from "croner"
 import TeamPointsUser from "../entities/TeamPointsUser.entity.js"
 
 export default async function ready(this: Client): Promise<void> {
-
     if (!this.user) return //never gonna happen, its on ready, discord.js needs some better type assertion
 
     this.logger.debug("Loading commands...")
@@ -31,9 +30,7 @@ export default async function ready(this: Client): Promise<void> {
 
     // cache reaction role messages
     for (const channelID of Object.keys(this.config.reactionRoles)) {
-        const channelTemp = await this.channels
-            .fetch(channelID)
-            .catch(() => null)
+        const channelTemp = await this.channels.fetch(channelID).catch(() => null)
         let channel: Discord.TextChannel | null = null
         if (channelTemp instanceof Discord.TextChannel) channel = channelTemp
         if (channel) {

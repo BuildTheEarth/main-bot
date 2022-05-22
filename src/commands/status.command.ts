@@ -31,7 +31,7 @@ export default new Command({
         } else {
             const embed = <Discord.MessageEmbedOptions>{
                 description: message.getMessage("networkOnline"),
-                fields: [{ name: message.getMessage("players")}],
+                fields: [{ name: message.getMessage("players") }],
                 footer: { text: "IP: BuildTheEarth.net, bedrock.BuildTheEarth.net" }
             }
 
@@ -49,7 +49,8 @@ export default new Command({
 
                 if (embed.fields) embed.fields[0].value = players
             } else {
-                if (embed.fields) embed.fields[0].value = "There are no players online right now."
+                if (embed.fields)
+                    embed.fields[0].value = "There are no players online right now."
             }
 
             embed.fields?.push({

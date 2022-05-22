@@ -53,7 +53,9 @@ export default new Command({
         }
     ],
     async run(this: Command, client: Client, message: CommandMessage, args: Args) {
-        const subcommand = args.consumeSubcommandIf(this.subcommands?.map(sub => sub.name))
+        const subcommand = args.consumeSubcommandIf(
+            this.subcommands?.map(sub => sub.name)
+        )
 
         if (subcommand === "add") {
             await message.showModal("banner")

@@ -36,7 +36,7 @@ export default class BlunderTracker extends typeorm.BaseEntity {
     @typeorm.PrimaryGeneratedColumn()
     id!: number
 
-    @typeorm.Column({transformer: unicode})
+    @typeorm.Column({ transformer: unicode })
     description!: string
 
     @SnowflakeColumn({ nullable: true })

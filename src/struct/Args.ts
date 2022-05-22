@@ -16,33 +16,31 @@ export default class Args {
     split(argNames: string[]): string[] {
         const returnArgs: string[] = []
         argNames.forEach(element => {
-                const tempEle = (this.message.message as Discord.CommandInteraction).options
-                    .get(element)
-                    ?.value?.toString()
-                if (tempEle) returnArgs.push(
-                    tempEle
-                )
-            }
-        )
+            const tempEle = (this.message.message as Discord.CommandInteraction).options
+                .get(element)
+                ?.value?.toString()
+            if (tempEle) returnArgs.push(tempEle)
+        })
         return returnArgs
     }
 
     splitMultiple(argNames: string[]): string[] {
         const returnArgs: string[] = []
         argNames.forEach(element => {
-                const tempEle = (this.message.message as Discord.CommandInteraction).options.get(element)?.value?.toString()
-                if (tempEle) returnArgs.push(
-                    tempEle
-                )
-            }
-        )
+            const tempEle = (this.message.message as Discord.CommandInteraction).options
+                .get(element)
+                ?.value?.toString()
+            if (tempEle) returnArgs.push(tempEle)
+        })
         return returnArgs
     }
 
     get(argName: string): string
     get(argName: string, count: number | undefined): string[]
     get(argName: string): string | string[] | null {
-        const retVal = (this.message.message as Discord.CommandInteraction).options.get(argName)
+        const retVal = (this.message.message as Discord.CommandInteraction).options.get(
+            argName
+        )
         if (retVal) {
             if (retVal.value) return retVal.value.toString().replace(/\\n/g, "\n")
         }
@@ -88,11 +86,10 @@ export default class Args {
         const returnArgs: string[] = []
         argNames.forEach(element => {
             let option: string | null = null
-            const tempValue = (this.message.message as Discord.CommandInteraction).options.get(element)?.value
-            if (
-                tempValue
-            )
-                option = tempValue.toString().replace(/\\n/g, "\n")
+            const tempValue = (
+                this.message.message as Discord.CommandInteraction
+            ).options.get(element)?.value
+            if (tempValue) option = tempValue.toString().replace(/\\n/g, "\n")
             if (option) returnArgs.push(option)
         })
         if (returnArgs.length === 1) return returnArgs[0]
@@ -120,8 +117,8 @@ export default class Args {
         if (this.message.isSlashCommand()) {
             try {
                 const gettedString = this.message.message.options.getString(argName)
-                
-                if (gettedString){
+
+                if (gettedString) {
                     // eslint-disable-next-line @typescript-eslint/no-explicit-any
                     let parsed: any = ms(gettedString)
                     if (parsed === undefined) parsed = Number(parsed)
@@ -159,13 +156,8 @@ export default class Args {
         const url = this.consumeIf(/https?:\/\/(.+)?\.(jpe?g|png|gif)/i, argName)
         if (url) {
             const match = url.match(/.(jpe?g|png|gif)/i)?.[0].toLowerCase()
-            if (match)
-                return url.replace(
-                    /.(jpe?g|png|gif)/i,
-                    match
-                )
+            if (match) return url.replace(/.(jpe?g|png|gif)/i, match)
         }
-
 
         return null
     }

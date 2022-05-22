@@ -43,7 +43,7 @@ export default class Client extends Discord.Client {
         except: new Array<string>()
     }
 
-    punishmentTimeouts: Map<string, { mute: Cron | null; ban: Cron | null}> = new Map()
+    punishmentTimeouts: Map<string, { mute: Cron | null; ban: Cron | null }> = new Map()
     honorBuilderTimeouts: Map<string, Cron> = new Map()
     reminderTimeouts: Map<number, Cron> = new Map()
     bannerCycleTimeout: Cron | null = null
@@ -116,14 +116,14 @@ export default class Client extends Discord.Client {
         action?: "add" | "edit" | "delete",
         executor?: Discord.User
     ): Promise<void> {
-        const channel: Discord.TextChannel | null = await this.channels
+        const channel: Discord.TextChannel | null = (await this.channels
             .fetch(
                 log instanceof Snippet || log instanceof Placeholder
                     ? this.config.logging.snippetLogs
                     : this.config.logging.modLogs,
                 { force: true }
             )
-            .catch(() => null) as Discord.TextChannel | null
+            .catch(() => null)) as Discord.TextChannel | null
         if (!channel) return
 
         if (log instanceof ActionLog) {
@@ -139,7 +139,11 @@ export default class Client extends Discord.Client {
         } else if (log instanceof Snippet || log instanceof Placeholder) {
             const embed = log.displayEmbed(this)
             embed.thumbnail = {
-                url: executor?.displayAvatarURL({ format: "png", dynamic: true, size: 64 })
+                url: executor?.displayAvatarURL({
+                    format: "png",
+                    dynamic: true,
+                    size: 64
+                })
             }
             if (embed.author)
                 switch (action) {

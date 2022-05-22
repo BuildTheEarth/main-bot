@@ -190,7 +190,8 @@ export default class Suggestion extends typeorm.BaseEntity {
 
         if (this.status) {
             embed.color = hexToRGB(client.config.colors.suggestions[this.status])
-            if (embed.thumbnail) embed.thumbnail.url = client.config.assets.suggestions[this.status]
+            if (embed.thumbnail)
+                embed.thumbnail.url = client.config.assets.suggestions[this.status]
 
             let action = suggestionStatusActions[this.status] as string
             let reason = this.statusReason || ""

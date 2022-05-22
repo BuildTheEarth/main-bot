@@ -68,7 +68,7 @@ export default class BannedWordFilter {
         if (match.index === undefined) return false
         if (match.raw === undefined) return false
         if (match.base === undefined) return false
-        
+
         const before = input.slice(0, match.index)
         const after = input.slice(match.index + match.raw.length)
         let isException = false

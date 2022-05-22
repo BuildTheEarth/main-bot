@@ -91,7 +91,8 @@ export default class ModerationMenu extends typeorm.BaseEntity {
             const truePunishments = getMostSevereList(filterResponse, client)
             existingMenu.punishments.push(...truePunishments)
             existingMenu.punishments = _.uniqBy(existingMenu.punishments, "word")
-            if (existingMenu.punishments[0].word) existingMenu.current_word = existingMenu.punishments[0].word
+            if (existingMenu.punishments[0].word)
+                existingMenu.current_word = existingMenu.punishments[0].word
             existingMenu.save()
 
             const embed = new Discord.MessageEmbed()
@@ -115,22 +116,31 @@ export default class ModerationMenu extends typeorm.BaseEntity {
                     },
                     {
                         name: "Duration",
-                        value: getDuration(existingMenu.punishments[0].duration? existingMenu.punishments[0].duration: 0)
+                        value: getDuration(
+                            existingMenu.punishments[0].duration
+                                ? existingMenu.punishments[0].duration
+                                : 0
+                        )
                     },
                     { name: "Reason", value: existingMenu.punishments[0].reason },
                     { name: "Trigger", value: existingMenu.punishments[0].word }
                 ])
                 .setColor(hexToRGB(client.config.colors.error))
-            
 
             const punishmentOptions = existingMenu.punishments.map(punishment => {
                 const punish = {
                     label:
-                        truncateString(punishment.reason? punishment.reason: "", 15).trim().length <= 0
+                        truncateString(
+                            punishment.reason ? punishment.reason : "",
+                            15
+                        ).trim().length <= 0
                             ? "No reason"
-                            : truncateString(punishment.reason? punishment.reason: "", 15),
+                            : truncateString(
+                                  punishment.reason ? punishment.reason : "",
+                                  15
+                              ),
                     description: `${punishment.punishment_type} for ${getDuration(
-                        punishment.duration? punishment.duration: 0
+                        punishment.duration ? punishment.duration : 0
                     )}, Word is ${punishment.word}`,
                     value: punishment.word,
                     default: false
@@ -178,7 +188,8 @@ export default class ModerationMenu extends typeorm.BaseEntity {
         modMenu.message_text = message.content
         modMenu.punishments = truePunishments
         modMenu.offenses = 1
-        if (modMenu.punishments[0].word) modMenu.current_word = modMenu.punishments[0].word
+        if (modMenu.punishments[0].word)
+            modMenu.current_word = modMenu.punishments[0].word
 
         const embed = new Discord.MessageEmbed()
             .addFields(<Discord.EmbedFieldData[]>[
@@ -195,7 +206,11 @@ export default class ModerationMenu extends typeorm.BaseEntity {
                 { name: "Punishment", value: modMenu.punishments[0].punishment_type },
                 {
                     name: "Duration",
-                    value: getDuration(modMenu.punishments[0].duration? modMenu.punishments[0].duration: 0)
+                    value: getDuration(
+                        modMenu.punishments[0].duration
+                            ? modMenu.punishments[0].duration
+                            : 0
+                    )
                 },
                 { name: "Reason", value: modMenu.punishments[0].reason },
                 { name: "Trigger", value: modMenu.punishments[0].word }
@@ -204,9 +219,9 @@ export default class ModerationMenu extends typeorm.BaseEntity {
 
         const punishmentOptions = modMenu.punishments.map(punishment => {
             const punish = {
-                label: truncateString(punishment.reason? punishment.reason: "", 15),
+                label: truncateString(punishment.reason ? punishment.reason : "", 15),
                 description: `${punishment.punishment_type} for ${getDuration(
-                    punishment.duration? punishment.duration: 0
+                    punishment.duration ? punishment.duration : 0
                 )}, Word is ${punishment.word}`,
                 value: punishment.word,
                 default: false
@@ -276,7 +291,7 @@ export default class ModerationMenu extends typeorm.BaseEntity {
                 { name: "Punishment", value: punishment.punishment_type },
                 {
                     name: "Duration",
-                    value: getDuration(punishment.duration? punishment.duration: 0)
+                    value: getDuration(punishment.duration ? punishment.duration : 0)
                 },
                 { name: "Reason", value: punishment.reason },
                 { name: "Trigger", value: punishment.word }
@@ -284,7 +299,7 @@ export default class ModerationMenu extends typeorm.BaseEntity {
             .setColor(hexToRGB(client.config.colors.error))
 
         interaction.editReply({ embeds: [embed] })
-        modMenu.current_word = punishment.word? punishment.word: ""
+        modMenu.current_word = punishment.word ? punishment.word : ""
         await modMenu.save()
         return modMenu
     }
@@ -397,9 +412,9 @@ export default class ModerationMenu extends typeorm.BaseEntity {
             interaction,
             user,
             punishment.punishment_type.toLowerCase() as "mute" | "ban" | "warn" | "kick",
-            punishment.reason? punishment.reason: "",
+            punishment.reason ? punishment.reason : "",
             null,
-            punishment.duration? punishment.duration: 0,
+            punishment.duration ? punishment.duration : 0,
             modMenu.message
         )
 
@@ -425,7 +440,9 @@ export default class ModerationMenu extends typeorm.BaseEntity {
             }
         }
 
-        const formattedLength = formatPunishmentTime(punishment.duration? punishment.duration: 0)
+        const formattedLength = formatPunishmentTime(
+            punishment.duration ? punishment.duration : 0
+        )
         await replyInteraction.editReply({
             content: `${formattedPunishment} ${user} ${formattedLength} (**#${log.id}**).`
         })
@@ -643,7 +660,7 @@ export default class ModerationMenu extends typeorm.BaseEntity {
     @typeorm.Column()
     offenses!: number
 
-    @typeorm.Column({transformer: unicode})
+    @typeorm.Column({ transformer: unicode })
     current_word!: string
 }
 
@@ -660,8 +677,8 @@ function getMostSevereList(
         punishmentWords.push({
             word: punishment.base,
             punishment_type: word.punishment_type,
-            duration: word.duration? word.duration: undefined,
-            reason: word.reason? word.reason: undefined,
+            duration: word.duration ? word.duration : undefined,
+            reason: word.reason ? word.reason : undefined,
             exception: false
         })
     }

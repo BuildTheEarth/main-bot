@@ -33,7 +33,7 @@ export default class SuspiciousUser extends typeorm.BaseEntity {
     @typeorm.Column({ nullable: true, default: null, type: "text", transformer: unicode })
     reason?: string
 
-    @typeorm.Column({type: "text", transformer: unicode})
+    @typeorm.Column({ type: "text", transformer: unicode })
     evidence!: string
 
     @typeorm.DeleteDateColumn()
@@ -42,7 +42,9 @@ export default class SuspiciousUser extends typeorm.BaseEntity {
     @SnowflakeColumn({ nullable: true, default: null })
     threadId?: string
 
-    public static async fetchChannel(client: Client): Promise<Discord.TextChannel | null> {
+    public static async fetchChannel(
+        client: Client
+    ): Promise<Discord.TextChannel | null> {
         const channelID = client.config.suspiciousUsers
         const channel = await client.channels.fetch(channelID).catch(noop)
         if (channel?.isText()) {

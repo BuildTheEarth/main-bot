@@ -23,14 +23,14 @@ async function log(
     log.member = user.id
     if (message.member) log.executor = message.member.user.id
     log.reason = reason
-    log.reasonImage = image? image: undefined
-    log.length = length? length : undefined
+    log.reasonImage = image ? image : undefined
+    log.length = length ? length : undefined
     if (message instanceof ButtonInteraction) log.channel = message.channelId
     else log.channel = message.channel.id
     log.message = messageId
-    if ((type === "ban" || type === "mute") && punishment ) log.punishment = punishment
+    if ((type === "ban" || type === "mute") && punishment) log.punishment = punishment
     await log.save()
-    
+
     if (!message.guild) return log
     const member: Discord.GuildMember | null = await message.guild.members
         .fetch({ user, cache: true })

@@ -93,7 +93,7 @@ export default new Command({
                     .setLabel(client.config.emojis.right.toString())
                     .setStyle("SUCCESS")
             )
-            let page : Discord.MessageEmbedOptions = {
+            let page: Discord.MessageEmbedOptions = {
                 title: `Page ${pageNum + 1}`,
                 image: {
                     url: file

@@ -59,7 +59,7 @@ export default class TimedPunishment extends typeorm.BaseEntity {
         let setPunish: {
             ban: Cron | null
             mute: Cron | null
-        }= { ban: null, mute: null }
+        } = { ban: null, mute: null }
         if (client.punishmentTimeouts.has(this.member)) {
             const setPunishTemp = client.punishmentTimeouts.get(this.member)
             if (setPunishTemp) setPunish = setPunishTemp

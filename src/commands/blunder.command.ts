@@ -105,7 +105,8 @@ export default new Command({
 
             if (id) {
                 blunder = await BlunderTracker.findOne(id)
-                if (!blunder || !blunder.role) return message.sendErrorMessage("invalidBlunderID")
+                if (!blunder || !blunder.role)
+                    return message.sendErrorMessage("invalidBlunderID")
                 if (!staffMember.roles.cache.has(blunder.role) && !canManage)
                     return message.sendErrorMessage("noPerms")
             } else {

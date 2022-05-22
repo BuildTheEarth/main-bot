@@ -176,8 +176,7 @@ export default new Command({
             await client.placeholder.addPlaceholder(name, language, body)
             await message.sendSuccessMessage("addedPlaceholder", name, language)
             const placeholderTemp = placeholders.get(name + " " + language)
-            if (placeholderTemp)
-                client.log(placeholderTemp, "add", message.member.user)
+            if (placeholderTemp) client.log(placeholderTemp, "add", message.member.user)
         } else if (subcommand === "edit") {
             if (!name) return message.sendErrorMessage("noPlaceholderName")
             if (!language) return message.sendErrorMessage("noLang")
@@ -185,7 +184,8 @@ export default new Command({
                 return message.sendErrorMessage("placeholderNotFound")
             if (!body) {
                 const placeholderTemp = placeholders.get(name + " " + language)
-                if (placeholderTemp) {// this should never not happen unless theres some fatal error
+                if (placeholderTemp) {
+                    // this should never not happen unless theres some fatal error
                     const modalId = await message.showModal("placeholder", {
                         body: placeholderTemp.body
                     })
@@ -201,14 +201,12 @@ export default new Command({
             await client.placeholder.editPlaceholder(name, language, body)
             await message.sendSuccessMessage("editedPlaceholder", name, language)
             const placeholderTemp = placeholders.get(name + " " + language)
-            if (placeholderTemp)
-                client.log(placeholderTemp, "edit", message.member.user)
+            if (placeholderTemp) client.log(placeholderTemp, "edit", message.member.user)
         } else if (subcommand === "delete") {
             if (!name) return message.sendErrorMessage("noPlaceholderName")
             if (!language) return message.sendErrorMessage("noLang")
             const placeholderTemp = placeholders.get(name + " " + language)
-            if (!placeholderTemp)
-                return message.sendErrorMessage("placeholderNotFound")
+            if (!placeholderTemp) return message.sendErrorMessage("placeholderNotFound")
             client.placeholder.deletePlaceholder(name, language)
             await message.sendSuccessMessage("deletedPlaceholder", name, language)
             client.log(placeholderTemp, "delete", message.member.user)
@@ -216,8 +214,7 @@ export default new Command({
             if (!name) return message.sendErrorMessage("noPlaceholderName")
             if (!language) return message.sendErrorMessage("noLang")
             const placeholderTemp = placeholders.get(name + " " + language)
-            if (!placeholderTemp)
-                return message.sendErrorMessage("placeholderNotFound")
+            if (!placeholderTemp) return message.sendErrorMessage("placeholderNotFound")
             const placeholder = placeholderTemp
             const embed = {
                 color: hexToRGB(client.config.colors.info),

@@ -96,7 +96,8 @@ export default class ConfigManager {
                 process.exit(1)
             })
         for (const [key, value] of Object.entries(config))
-            if ((this as Record<string, unknown>)[key] !== null) (this as Record<string, unknown>)[key] = value
+            if ((this as Record<string, unknown>)[key] !== null)
+                (this as Record<string, unknown>)[key] = value
         for (const [key, value] of Object.entries(process.env)) {
             if (key in this.envBindings) {
                 const replacer = `function(self, v) {${this.envBindings[key]} = v}`

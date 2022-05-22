@@ -141,8 +141,6 @@ export default async function (
                         `${label} ${tag} tried to run '${command.name}' command:\n${stack}`
                     )
                 }
-                
-
             }
 
             return this.logger.info(`${label} ${tag} ran '${command.name}' command.`)

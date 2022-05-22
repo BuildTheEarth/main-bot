@@ -62,7 +62,7 @@ export default new Command({
                         color: role.hexColor,
                         title: role.name,
                         thumbnail: {
-                            url:  iconUrlTemp? iconUrlTemp: undefined
+                            url: iconUrlTemp ? iconUrlTemp : undefined
                         },
                         fields: [
                             {
@@ -126,7 +126,7 @@ export default new Command({
                         color: role.hexColor,
                         title: role.name,
                         thumbnail: {
-                            url: iconUrlTemp? iconUrlTemp: undefined
+                            url: iconUrlTemp ? iconUrlTemp : undefined
                         },
                         fields: [
                             {

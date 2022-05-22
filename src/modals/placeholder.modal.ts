@@ -18,13 +18,12 @@ export default async function createPlaceholder(
                 `Added placeholder ${info.name} (${info.language})`
             )
 
-            const placeholderTemp = client.placeholder.cache.get(info.name + " " + info.language)
-
-            if (placeholderTemp) await client.log(
-                placeholderTemp,
-                "add",
-                interaction.user
+            const placeholderTemp = client.placeholder.cache.get(
+                info.name + " " + info.language
             )
+
+            if (placeholderTemp)
+                await client.log(placeholderTemp, "add", interaction.user)
         } else if (info.subcommand === "edit") {
             if (info.existingPlaceholder?.body === body)
                 return client.response.sendError(
@@ -37,13 +36,12 @@ export default async function createPlaceholder(
                 `Edited placeholder ${info.name} (${info.language})`
             )
 
-            const placeholderTemp = client.placeholder.cache.get(info.name + " " + info.language)
-
-            if (placeholderTemp) await client.log(
-                placeholderTemp,
-                "edit",
-                interaction.user
+            const placeholderTemp = client.placeholder.cache.get(
+                info.name + " " + info.language
             )
+
+            if (placeholderTemp)
+                await client.log(placeholderTemp, "edit", interaction.user)
         }
     }
 }

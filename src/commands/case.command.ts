@@ -92,7 +92,7 @@ export default new Command({
 
         if (!log) return message.sendErrorMessage("noCaseFound", id)
 
-        if ( !subcommand || !["edit", "delete"].includes(subcommand)) {
+        if (!subcommand || !["edit", "delete"].includes(subcommand)) {
             const embed = await log.displayEmbed(client)
             await message.send({ embeds: [embed] })
         } else if (subcommand === "edit") {

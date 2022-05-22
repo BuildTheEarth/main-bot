@@ -25,16 +25,16 @@ export default class BannedWord extends typeorm.BaseEntity {
     private constructor(
         word: string | null = null,
         punishment_type?: "BAN" | "WARN" | "MUTE" | "KICK" | "DELETE",
-        reason: string | null= null,
-        duration: number | null= null,
-        exception: boolean| null = null,
+        reason: string | null = null,
+        duration: number | null = null,
+        exception: boolean | null = null,
         client?: Client
     ) {
         super()
         if (word !== null) this.word = word
         if (punishment_type) this.punishment_type = punishment_type
-        if (reason !== undefined) this.reason = reason? reason : undefined
-        if (duration !== undefined) this.duration = duration? duration : undefined
+        if (reason !== undefined) this.reason = reason ? reason : undefined
+        if (duration !== undefined) this.duration = duration ? duration : undefined
         if (exception !== null) this.exception = exception
         if (client) {
             if (word) {

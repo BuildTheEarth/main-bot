@@ -45,7 +45,7 @@ export default class ModpackImage extends typeorm.BaseEntity {
     static async fetch(): Promise<{ response: Response; body: ModpackImageSet }> {
         const images = await this.find({ set: "store" })
         const response: Response = await fetch(this.API_URL)
-        const object: ModpackImageSet = <ModpackImageSet>(await response.json())
+        const object: ModpackImageSet = <ModpackImageSet>await response.json()
 
         for (const [key, data] of Object.entries(object)) {
             if (!ModpackImage.isValidKey(key)) continue
@@ -57,7 +57,7 @@ export default class ModpackImage extends typeorm.BaseEntity {
             image.key = key as ModpackImageKey
             image.set = "store"
             image.url = data.url
-            image.credit = data.credit? data.credit: undefined
+            image.credit = data.credit ? data.credit : undefined
 
             await image.save()
         }
@@ -72,7 +72,7 @@ export default class ModpackImage extends typeorm.BaseEntity {
         for (const image of images) {
             object[image.key] = {
                 url: image.url,
-                credit: image.credit? image.credit: null
+                credit: image.credit ? image.credit : null
             }
         }
 

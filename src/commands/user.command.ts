@@ -109,7 +109,9 @@ export default new Command({
         if (member)
             embed.fields.push({
                 name: member ? "Join date" : "\u200B",
-                value: member ? formatTimestamp(member.joinedAt? member.joinedAt: 0, "f") : "\u200B",
+                value: member
+                    ? formatTimestamp(member.joinedAt ? member.joinedAt : 0, "f")
+                    : "\u200B",
                 inline: true
             })
 
@@ -124,7 +126,7 @@ export default new Command({
         if (user.flags) {
             let fieldName = "Acknowledgements"
             const flagArrTemp = member?.user.flags?.toArray()
-            const flagArr = flagArrTemp? flagArrTemp: []
+            const flagArr = flagArrTemp ? flagArrTemp : []
             const flags = flagArr
                 .map(flag => userFlags[flag] || humanizeConstant(flag))
                 .join(", ")
@@ -153,21 +155,22 @@ export default new Command({
                     ? humanizeStatus(act)
                     : Discord.Util.escapeMarkdown(act.name)
             }**`
-        
+
         if (member?.partial) await member.fetch()
-        
+
         const activities = member?.presence?.activities.map(humanizeActivity).join("\n")
-        let presence : string | null = null
+        let presence: string | null = null
         if (member?.presence) {
             const presenceStatusEmoji = client.config.emojis.text[member.presence.status]
             const presenceStatusName =
                 member?.presence?.status === "dnd"
                     ? "Do Not Disturb"
-                    : member?.presence?.status? humanizeConstant(member?.presence?.status): "Offline"
+                    : member?.presence?.status
+                    ? humanizeConstant(member?.presence?.status)
+                    : "Offline"
             if (activities)
                 presence = `\\${presenceStatusEmoji} **${presenceStatusName}**\n${activities}`
-            else
-                presence = `\\${presenceStatusEmoji} **${presenceStatusName}**`
+            else presence = `\\${presenceStatusEmoji} **${presenceStatusName}**`
         }
         if (presence) embed.fields.push({ name: "Presence", value: presence })
         await message.send({ embeds: [embed] })

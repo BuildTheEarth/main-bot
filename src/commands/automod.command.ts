@@ -169,7 +169,11 @@ export default new Command({
                             | "KICK"
                             | "DELETE",
                         reason: reason,
-                        duration: isNaN(duration? duration: NaN) ? undefined : (duration? duration: undefined),
+                        duration: isNaN(duration ? duration : NaN)
+                            ? undefined
+                            : duration
+                            ? duration
+                            : undefined,
                         exception: false
                     },
                     client
@@ -256,11 +260,15 @@ async function getList(
                     wordEmbeds[currentEmbed].description +
                     (exception
                         ? `• ${word.word}\n`
-                        : `• ||${word.word}|| - ${word.punishment_type? humanizeConstant(
+                        : `• ||${word.word}|| - ${
                               word.punishment_type
-                          ): ""} ${word.duration? formatPunishmentTime(
-                              word.duration
-                          ): ""} for reason ${word.reason? truncateString(word.reason, 20): ""}\n`)
+                                  ? humanizeConstant(word.punishment_type)
+                                  : ""
+                          } ${
+                              word.duration ? formatPunishmentTime(word.duration) : ""
+                          } for reason ${
+                              word.reason ? truncateString(word.reason, 20) : ""
+                          }\n`)
                 )
                     .split("_")
                     .join("\\_")
@@ -279,12 +287,11 @@ async function getList(
         }
         wordEmbeds[currentEmbed].description += exception
             ? `• ${word.word}\n`
-            : `• ||${word.word}|| - ${word.punishment_type? humanizeConstant(
-                  word.punishment_type
-              ): ""} ${word.duration? formatPunishmentTime(word.duration): ""} for reason ${word.reason? truncateString(
-                  word.reason,
-                  20
-              ): ""}\n`
+            : `• ||${word.word}|| - ${
+                  word.punishment_type ? humanizeConstant(word.punishment_type) : ""
+              } ${word.duration ? formatPunishmentTime(word.duration) : ""} for reason ${
+                  word.reason ? truncateString(word.reason, 20) : ""
+              }\n`
     }
     if (wordEmbeds.length <= 1) return message.send({ embeds: wordEmbeds })
     let row = new Discord.MessageActionRow().addComponents(

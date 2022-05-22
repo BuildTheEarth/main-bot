@@ -39,29 +39,45 @@ export interface SuspiciousUserModalInfo {
     modalType: "suspicioususermodal"
 }
 
-export function isSnippetInfo(info: { modalType: string | undefined } | undefined): info is SnippetModalInfo {
+export function isSnippetInfo(
+    info: { modalType: string | undefined } | undefined
+): info is SnippetModalInfo {
     return info?.modalType === "snippetmodal"
 }
 
-export function isPlaceholderInfo(info: {
-    modalType: string | undefined
-} | undefined): info is PlaceholderModalInfo {
+export function isPlaceholderInfo(
+    info:
+        | {
+              modalType: string | undefined
+          }
+        | undefined
+): info is PlaceholderModalInfo {
     return info?.modalType === "placeholdermodal"
 }
 
-export function isSuggestInfo(info: { modalType: string  | undefined } | undefined): info is SuggestModalInfo {
+export function isSuggestInfo(
+    info: { modalType: string | undefined } | undefined
+): info is SuggestModalInfo {
     return info?.modalType === "suggestmodal"
 }
 
-export function isSuspiciousUserModalInfo(info: {
-    modalType: string | undefined
-} | undefined): info is SuspiciousUserModalInfo {
+export function isSuspiciousUserModalInfo(
+    info:
+        | {
+              modalType: string | undefined
+          }
+        | undefined
+): info is SuspiciousUserModalInfo {
     return info?.modalType === "suspicioususermodal"
 }
 
-export function isSuggestionInfo(info: {
-    modalType: string | undefined
-} | undefined): info is SuggestionModalInfo {
+export function isSuggestionInfo(
+    info:
+        | {
+              modalType: string | undefined
+          }
+        | undefined
+): info is SuggestionModalInfo {
     return info?.modalType === "suggestionmodal"
 }
 
