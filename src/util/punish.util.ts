@@ -25,7 +25,7 @@ async function log(
     log.reason = reason
     console.log(length)
     if (image) log.reasonImage = image
-    if (length) log.length = length
+    log.length = length
     if (message instanceof ButtonInteraction) log.channel = message.channelId
     else log.channel = message.channel.id
     log.message = messageId
