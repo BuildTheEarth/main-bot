@@ -8,9 +8,15 @@ export default async function (
     oldMessage: Discord.Message,
     newMessage: Discord.Message
 ): Promise<unknown> {
-    if (newMessage.partial) await newMessage.fetch().catch(noop)
+    if (newMessage?.partial) await newMessage.fetch().catch(noop)
 
-    if (newMessage.author.bot) return
+    if (newMessage?.author.partial) await newMessage.author.fetch().catch(noop)
+
+    if (newMessage?.author?.bot) return
+
+    //just weird redundancy
+
+    if (oldMessage?.author?.bot) return
 
     const bannedWords = this.filter.findBannedWord(newMessage.content)
     if (bannedWords.length >= 1)
