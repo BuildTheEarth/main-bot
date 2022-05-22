@@ -23,6 +23,7 @@ async function log(
     log.member = user.id
     if (message.member) log.executor = message.member.user.id
     log.reason = reason
+    console.log(length)
     if (image) log.reasonImage = image
     if (length) log.length = length
     if (message instanceof ButtonInteraction) log.channel = message.channelId

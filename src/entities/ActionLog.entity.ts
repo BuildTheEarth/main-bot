@@ -46,7 +46,7 @@ export default class ActionLog extends typeorm.BaseEntity {
     @typeorm.Column({ nullable: true, name: "reason_image" })
     reasonImage?: string
 
-    @typeorm.Column({ nullable: true, transformer: milliseconds, default: null })
+    @typeorm.Column({ nullable: true, transformer: milliseconds})
     length?: number
 
     @SnowflakeColumn()
