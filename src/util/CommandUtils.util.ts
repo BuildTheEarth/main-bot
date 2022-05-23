@@ -296,7 +296,7 @@ function addOption(
     if (arg.choices) {
         trueChoices = []
         arg.choices.forEach(choice => {
-            trueChoices.push([choice.toString(), choice])
+            trueChoices.push({name: choice.toString(), value:  choice})
         })
     }
     if (arg.optionType === "STRING") {
@@ -304,21 +304,21 @@ function addOption(
             .setName(arg.name)
             .setDescription(arg.description)
             .setRequired(arg.required)
-        if (trueChoices) tempBuilder.addChoices(trueChoices)
+        if (trueChoices) tempBuilder.addChoices(...trueChoices)
         builder.addStringOption(tempBuilder)
     } else if (arg.optionType === "INTEGER") {
         const tempBuilder = new DBuilders.SlashCommandIntegerOption()
             .setName(arg.name)
             .setDescription(arg.description)
             .setRequired(arg.required)
-        if (trueChoices) tempBuilder.addChoices(trueChoices)
+        if (trueChoices) tempBuilder.addChoices(...trueChoices)
         builder.addIntegerOption(tempBuilder)
     } else if (arg.optionType === "NUMBER") {
         const tempBuilder = new DBuilders.SlashCommandNumberOption()
             .setName(arg.name)
             .setDescription(arg.description)
             .setRequired(arg.required)
-        if (trueChoices) tempBuilder.addChoices(trueChoices)
+        if (trueChoices) tempBuilder.addChoices(...trueChoices)
         builder.addNumberOption(tempBuilder)
     } else if (arg.optionType === "BOOLEAN") {
         const tempBuilder = new DBuilders.SlashCommandBooleanOption()
