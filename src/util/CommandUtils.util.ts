@@ -338,7 +338,11 @@ function addOption(
             .setDescription(arg.description)
             .setRequired(arg.required)
 
-        if (arg.channelTypes) tempBuilder.addChannelTypes(arg.channelTypes as []) //hacky fix, but works
+        if (arg.channelTypes) {
+            if (arg.channelTypes instanceof Array)
+                tempBuilder.addChannelTypes(...arg.channelTypes)
+            else tempBuilder.addChannelTypes(arg.channelTypes)
+        } //hacky fix, but works
         builder.addChannelOption(tempBuilder)
     } else if (arg.optionType === "ROLE") {
         const tempBuilder = new DBuilders.SlashCommandRoleOption()
@@ -352,6 +356,12 @@ function addOption(
             .setDescription(arg.description)
             .setRequired(arg.required)
         builder.addMentionableOption(tempBuilder)
+    } else if (arg.optionType === "ATTACHMENT") {
+        const tempBuilder = new DBuilders.SlashCommandAttachmentOption()
+            .setName(arg.name)
+            .setDescription(arg.description)
+            .setRequired(arg.required)
+        builder.addAttachmentOption(tempBuilder)
     }
     return builder
 }

@@ -68,6 +68,8 @@ export const ArgTypes = {
     MENTIONABLE: "MENTIONABLE"
 }
 
+export type ChannelTypes = Exclude<ApiTypes.ChannelType, ApiTypes.ChannelType.DM | ApiTypes.ChannelType.GroupDM | ApiTypes.ChannelType.GuildDirectory | ApiTypes.ChannelType.GuildForum>
+
 export interface CommandArgs {
     name: string
     description: string
@@ -82,8 +84,6 @@ export interface CommandArgs {
         | "CHANNEL"
         | "ROLE"
         | "MENTIONABLE"
-    channelTypes?: Exclude<
-        ApiTypes.ChannelType,
-        ApiTypes.ChannelType.GroupDM | ApiTypes.ChannelType.DM
-    >[]
+        | "ATTACHMENT"
+    channelTypes?: ChannelTypes | ChannelTypes[]
 }
