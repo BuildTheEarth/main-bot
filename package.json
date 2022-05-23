@@ -5,7 +5,7 @@
     "description": "The main official bot for the BuildTheEarth Discord server.",
     "dependencies": {
         "@buildtheearth/bot-logger": "1.0.3",
-        "@buildtheearth/bot-utils": "^1.0.0",
+        "@buildtheearth/bot-utils": "^1.0.5",
         "@discordjs/builders": "^0.14.0-dev.1653091712-fdeac9d",
         "@fastify/static": "^5.0.0",
         "@nestjs/common": "6.7.2",
