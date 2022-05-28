@@ -10,8 +10,8 @@ export default async function messageReactionRemove(
 ): Promise<void> {
     const channel = this.config.reactionRoles?.[reaction.message.channel.id]
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const role: any = null
-    if (reaction.emoji.name) channel?.[reaction.message.id]?.[reaction.emoji.name]
+    let role: any = null
+    if (reaction.emoji.name) role = channel?.[reaction.message.id]?.[reaction.emoji.name]
     const guild = reaction.message.guild
     if (guild) {
         const member = await guild.members.fetch({ user, cache: true }).catch(noop)
