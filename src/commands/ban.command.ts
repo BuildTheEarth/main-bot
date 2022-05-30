@@ -31,7 +31,7 @@ export default new Command({
             name: "image_url",
             description: "Ban image URL (required if used as slashcommand).",
             required: true,
-            optionType: "STRING"
+            optionType: "ATTACHMENT"
         },
         {
             name: "reason",
@@ -58,7 +58,7 @@ export default new Command({
         }
 
         const length = args.consumeLength("length")
-        if (length == null) return message.sendErrorMessage("noLength")
+        if (length == null || length < 0) return message.sendErrorMessage("noLength")
         const image = args.consumeImage("image_url")
         if (!image) return message.sendErrorMessage("noImage")
         const reason = client.placeholder.replacePlaceholders(

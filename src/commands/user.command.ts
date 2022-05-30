@@ -24,7 +24,6 @@ const activityTypes = loadSyncJSON5(
     )
 )
 import CommandMessage from "../struct/CommandMessage.js"
-import { nodeModuleNameResolver } from "typescript"
 
 export default new Command({
     name: "user",

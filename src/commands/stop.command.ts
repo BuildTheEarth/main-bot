@@ -14,12 +14,11 @@ export default new Command({
             name: "bye",
             description: "Goodbye.",
             required: false,
-            choices: ["bye"],
-            optionType: "STRING"
+            optionType: "BOOLEAN"
         }
     ],
     async run(this: Command, client: Client, message: CommandMessage, args: Args) {
-        if (!args.consumeIf("bye", "bye")) await message.react("👋").catch(() => null)
+        if (!args.consumeBoolean("bye")) await message.react("👋").catch(() => null)
         process.exit(0)
     }
 })

@@ -19,7 +19,7 @@ export default class GuildMemberManager extends Discord.GuildMemberManager {
         options?: FetchMembersOptions
     ): Promise<Collection<Snowflake, Discord.GuildMember>>
     fetch(
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/explicit-module-boundary-types
         options: any
     ): Promise<Discord.GuildMember | Collection<Snowflake, Discord.GuildMember>> {
         return <

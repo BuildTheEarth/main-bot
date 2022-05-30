@@ -1,0 +1,54 @@
+{
+    title: "建议",
+    customId: "suggestionmodal",
+    components: [
+        {
+            type: "ACTION_ROW",
+            components: [
+                {
+                    type: "TEXT_INPUT",
+                    customId: "title",
+                    label: "标题",
+                    maxLength: 200,
+                    minLength: null,
+                    placeholder: null,
+                    required: true,
+                    style: "PARAGRAPH",
+                    value: null
+                }
+            ]
+        },
+        {
+            type: "ACTION_ROW",
+            components: [
+                {
+                    type: "TEXT_INPUT",
+                    customId: "body",
+                    label: "建议正文",
+                    maxLength: null,
+                    minLength: null,
+                    placeholder: null,
+                    required: true,
+                    style: "PARAGRAPH",
+                    value: null
+                }
+            ]
+        },
+        {
+            type: "ACTION_ROW",
+            components: [
+                {
+                    type: "TEXT_INPUT",
+                    customId: "teams",
+                    label: "团队",
+                    maxLength: null,
+                    minLength: null,
+                    placeholder: null,
+                    required: true,
+                    style: "SHORT",
+                    value: null
+                }
+            ]
+        }
+    ]
+}

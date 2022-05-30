@@ -11,8 +11,7 @@ export default new Command({
             name: "anon",
             description: "Wheter the suggestion is anonymous or not.",
             required: false,
-            optionType: "STRING",
-            choices: ["anon"]
+            optionType: "BOOLEAN"
         },
         {
             name: "number",
@@ -25,7 +24,7 @@ export default new Command({
     permission: globalThis.client.roles.ANY,
     dms: true,
     async run(this: Command, _client: Client, message: CommandMessage, args: Args) {
-        const anon = args.consume("anon")
+        const anon = args.consumeBoolean("anon")
         const subsuggestion = args.consume("number")
         const modalId = await message.showModal("suggest")
         return client.interactionInfo.set(modalId, {

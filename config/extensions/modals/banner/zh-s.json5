@@ -1,0 +1,70 @@
+{
+    title: "旗帜",
+    customId: "bannermodal",
+    components: [
+        {
+            type: "ACTION_ROW",
+            components: [
+                {
+                    type: "TEXT_INPUT",
+                    customId: "img_url",
+                    label: "图片网址",
+                    maxLength: null,
+                    minLength: null,
+                    placeholder: null,
+                    required: true,
+                    style: "SHORT",
+                    value: null
+                }
+            ]
+        },
+        {
+            type: "ACTION_ROW",
+            components: [
+                {
+                    type: "TEXT_INPUT",
+                    customId: "location",
+                    label: "位置",
+                    maxLength: null,
+                    minLength: null,
+                    placeholder: null,
+                    required: true,
+                    style: "SHORT",
+                    value: null
+                }
+            ]
+        },
+        {
+            type: "ACTION_ROW",
+            components: [
+                {
+                    type: "TEXT_INPUT",
+                    customId: "credit",
+                    label: "信用",
+                    maxLength: null,
+                    minLength: null,
+                    placeholder: null,
+                    required: true,
+                    style: "SHORT",
+                    value: null
+                }
+            ]
+        },
+        {
+            type: "ACTION_ROW",
+            components: [
+                {
+                    type: "TEXT_INPUT",
+                    customId: "description",
+                    label: "描述",
+                    maxLength: 512,
+                    minLength: null,
+                    placeholder: null,
+                    required: true,
+                    style: "PARAGRAPH",
+                    value: null
+                }
+            ]
+        }
+    ]
+}

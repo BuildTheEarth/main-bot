@@ -22,7 +22,7 @@ export interface PlaceholderModalInfo {
 }
 
 export interface SuggestModalInfo {
-    anon: string
+    anon: boolean
     subsuggestion: string
     modalType: "suggestmodal"
 }

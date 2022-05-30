@@ -1,5 +1,5 @@
 import Discord from "discord.js"
-import Suggestion, { Identifier } from "../entities/Suggestion.entity.js"
+import Suggestion from "../entities/Suggestion.entity.js"
 import { truncateString } from "@buildtheearth/bot-utils"
 import { isSuggestInfo } from "../typings/InteractionInfo.js"
 
@@ -9,7 +9,7 @@ export default async function createSuggestion(
     const customId = interaction.customId
     const info = client.interactionInfo.get(customId)
     if (client.interactionInfo.has(customId) && isSuggestInfo(info)) {
-        const anon = info.anon.toLowerCase() === "anon" ? true : false
+        const anon = info.anon
         const title = interaction.fields.getTextInputValue("title")
         const body = interaction.fields.getTextInputValue("body")
         const teams = interaction.fields.getTextInputValue("teams")

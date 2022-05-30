@@ -66,7 +66,7 @@ export default class Client extends Discord.Client {
             ],
             synchronize: true, //process.env.NODE_ENV !== "production",
             //TODO: Fix this after db updates
-            logging: "all", //process.env.NODE_ENV !== "production" ? "all" : false
+            logging: "all" //process.env.NODE_ENV !== "production" ? "all" : false
         }
 
         if (!["mariadb", "mysql", "sqlite"].includes(db.type)) {

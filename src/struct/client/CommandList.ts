@@ -7,6 +7,7 @@ import Guild from "../discord/Guild.js"
 
 import pathModule from "path"
 import url from "url"
+import TranslateUtils from "../../util/TranslateUtils.util.js"
 
 interface PermsObj {
     [name: string]: Discord.GuildApplicationCommandPermissionData
@@ -24,7 +25,7 @@ export default class CommandList extends Discord.Collection<string, Command> {
         const commands = await loadDir<Command>(
             pathModule.dirname(url.fileURLToPath(import.meta.url)) + "/../../commands/",
             this.client,
-            undefined,
+            TranslateUtils.injectTranslations,
             this
         )
 

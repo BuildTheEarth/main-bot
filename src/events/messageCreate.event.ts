@@ -129,23 +129,7 @@ export default async function (this: Client, message: Discord.Message): Promise<
             return await runBtCommand(client, message, team)
         }
 
-        const member = (
-            message.guild
-                ? message.member
-                : await mainGuild.members
-                      .fetch({ user: message.author, cache: true })
-                      .catch(() => null)
-        ) as Discord.GuildMember
-
-        const hasPermission =
-            member && GuildMember.hasRole(member, command.permission, this)
-        if (message.channel.type === "DM" && !command.dms) return
-        if (command.permission !== globalThis.client.roles.ANY && !hasPermission) return
-
-        return client.response.sendError(
-            message,
-            "Due to new features presented by Discord we have decided to deprecate normal Message Commands, please use SlashCommands by typing `/` to open the menu, Snippets still may be used with Message Commands."
-        )
+        return // do Absolutely Nothing
     }
 
     const suggestions = Object.values(this.config.suggestions)

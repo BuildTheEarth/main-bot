@@ -35,7 +35,7 @@ export default new Command({
             name: "image_url",
             description: "Mute image URL.",
             required: false,
-            optionType: "STRING"
+            optionType: "ATTACHMENT"
         },
         {
             name: "reason",
@@ -58,7 +58,7 @@ export default new Command({
         }
 
         const length = args.consumeLength("length")
-        if (length == null) return message.sendErrorMessage("invalidLength")
+        if (length == null || length < 0) return message.sendErrorMessage("invalidLength")
 
         const image = args.consumeImage("image_url")
         const reason = client.placeholder.replacePlaceholders(

@@ -24,7 +24,7 @@ export default new Command({
             name: "image_url",
             description: "Kick image URL.",
             required: false,
-            optionType: "STRING"
+            optionType: "ATTACHMENT"
         },
         {
             name: "reason",

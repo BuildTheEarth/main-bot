@@ -8,7 +8,7 @@ import url from "url"
 export default async function loadDir<T>(
     dir: string,
     client: Client,
-    process?: (value: T) => T,
+    process?: (value: T) => T | Promise<T>,
     baseCollection?: Discord.Collection<string, T>
 ): Promise<Discord.Collection<string, T>> {
     const result = baseCollection || new Discord.Collection<string, T>()
@@ -17,7 +17,7 @@ export default async function loadDir<T>(
         const name = file.replace(/.js|.ts$/, "")
         const filepath = path.join(dir, file)
         let value: T = (await import(url.pathToFileURL(filepath).toString())).default
-        if (process) value = process(value)
+        if (process) value = await process(value)
         if (!client.config.isDev && value instanceof Command && value.devOnly) continue
         else result.set(name, value)
     }

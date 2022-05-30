@@ -1,0 +1,205 @@
+{
+    name: "snippets",
+    translated_name: "स्निपेट",
+    aliases: [],
+    translated_aliases: [],
+    description: "List and manage snippets.",
+    translated_description: "स्निपेट की सूची बनाएं और प्रबंधित करें",
+    args: [
+        {
+            name: "subsnippet",
+            translated_name: "सबस्निपेट",
+            description: "The subsnippet type.",
+            translated_description: "सबस्निपेट के प्रकार.",
+        }
+    ],
+    subcommands: [
+        {
+            name: "list",
+            translated_name: "सूची",
+            description: "List all snippets.",
+            translated_description: "सभी स्निपेट की सूची देखें.",
+            args: [
+                {
+                    name: "date",
+                    translated_name: "दिनांक",
+                    description: "To use the date sorting mode or not",
+                    translated_description: "दिनांक के स्वरूप में का उपयोग करने के लिए या नहीं",
+                }
+            ]
+        },
+        {
+            name: "add",
+            translated_name: "जोड़ें",
+            description: "Add a snippet.",
+            translated_description: "एक स्निपेट जोड़ें.",
+            args: [
+                {
+                    name: "name",
+                    translated_name: "नाम",
+                    description: "Snippet name.",
+                    translated_description: "स्निपेट का नाम.",
+                },
+                {
+                    name: "language",
+                    translated_name: "भाषा",
+                    description: "Snippet language.",
+                    translated_description: "स्निपेट का भाषा.",
+                },
+                {
+                    name: "body",
+                    translated_name: "मुख्य-भाग",
+                    description: "Snippet body.",
+                    translated_description: "स्निपेट का मुख्य-भाग.",
+                }
+            ]
+        },
+        {
+            name: "edit",
+            translated_name: "पादित-करें",
+            description: "Edit a snippet.",
+            translated_description: "एक स्निपेट संपादित करें.",
+            args: [
+                {
+                    name: "name",
+                    translated_name: "नाम",
+                    description: "Snippet name.",
+                    translated_description: "स्निपेट का नाम.",
+                },
+                {
+                    name: "language",
+                    translated_name: "भाषा",
+                    description: "Snippet language.",
+                    translated_description: "स्निपेट का भाषा.",
+                },
+                {
+                    name: "body",
+                    translated_name: "मुख्य-भाग",
+                    description: "Snippet body.",
+                    translated_description: "स्निपेट का मुख्य-भाग.",
+                }
+            ]
+        },
+        {
+            name: "delete",
+            translated_name: "हटाएँ",
+            description: "Delete a snippet.",
+            translated_description: "एक स्निपेट हटाएँ.",
+            args: [
+                {
+                    name: "name",
+                    translated_name: "नाम",
+                    description: "Snippet name.",
+                    translated_description: "स्निपेट का नाम.",
+                },
+                {
+                    name: "language",
+                    translated_name: "भाषा",
+                    description: "Snippet language.",
+                    translated_description: "स्निपेट का भाषा.",
+                }
+            ]
+        },
+        {
+            name: "source",
+            translated_name: "स्रोत",
+            description: "Get the source response of a specific snippet.",
+            translated_description: "एक विशिष्ट स्निपेट के स्रोत प्रतिक्रिया प्राप्त करें.",
+            args: [
+                {
+                    name: "name",
+                    translated_name: "नाम",
+                    description: "Snippet name.",
+                    translated_description: "स्निपेट का नाम.",
+                },
+                {
+                    name: "language",
+                    translated_name: "भाषा",
+                    description: "Snippet language.",
+                    translated_description: "स्निपेट का भाषा.",
+                }
+            ]
+        },
+        {
+            name: "aliases",
+            translated_name: "उपनाम",
+            description: "Add aliases to a snippet",
+            translated_description: "एक स्निपेट को उपनाम जोड़ें.",
+            group: true,
+            subcommands: [
+                {
+                    name: "list",
+                    translated_name: "सूची",
+                    description: "List all snippet aliases for a snippet.",
+                    translated_description: "एक स्निपेट के लिए सभी उपनाम की सूची देखें.",
+                    args: [
+                        {
+                            name: "name",
+                            translated_name: "नाम",
+                            description: "Snippet name.",
+                            translated_description: "स्निपेट का नाम.",
+                        },
+                        {
+                            name: "language",
+                            translated_name: "भाषा",
+                            description: "Snippet language.",
+                            translated_description: "स्निपेट का भाषा.",
+                        }
+                    ]
+                },
+                {
+                    name: "add",
+                    translated_name: "जोड़ें",
+                    description: "Add a snippet alias.",
+                    translated_description: "एक स्निपेट उपनाम जोड़ें.",
+                    args: [
+                        {
+                            name: "name",
+                            translated_name: "नाम",
+                            description: "Snippet name.",
+                            translated_description: "स्निपेट का नाम.",
+                        },
+                        {
+                            name: "language",
+                            translated_name: "भाषा",
+                            description: "Snippet language.",
+                            translated_description: "स्निपेट का भाषा.",
+                        },
+                        {
+                            name: "alias",
+                            translated_name: "उपनाम",
+                            description: "Snippet alias.",
+                            translated_description: "स्निपेट उपनाम.",
+                        }
+                    ]
+                },
+                {
+                    name: "delete",
+                    translated_name: "हटाएँ",
+                    description: "Deletes a snippet alias.",
+                    translated_description: "एक स्निपेट उपनाम हटाएँ.",
+                    args: [
+                        {
+                            name: "name",
+                            translated_name: "नाम",
+                            description: "Snippet name.",
+                            translated_description: "स्निपेट का नाम.",
+                        },
+                        {
+                            name: "language",
+                            translated_name: "भाषा",
+                            description: "Snippet language.",
+                            translated_description: "स्निपेट का भाषा.",
+                        },
+                        {
+                            name: "alias",
+                            translated_name: "उपनाम",
+                            description: "Snippet alias.",
+                            translated_description: "स्निपेट उपनाम.",
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

@@ -14,38 +14,21 @@ const ROLE_NAMES = [
     "Deutsch",
     "Pусский",
     "Português",
-    "Italiana",
+    "Italiano",
     "Ø",
     "中文"
 ]
+//strictly speaking we dont need this anymore but hey if we do ever need it the future, abstraction is better than not
 const LANGUAGE_ROLES: Record<string, string> = {
-    english: "English",
-    en: "English",
-    espanol: "Español",
-    español: "Español",
-    spanish: "Español",
-    es: "Español",
-    francais: "Français",
-    français: "Français",
-    french: "Français",
-    fr: "Français",
-    deutsch: "Deutsch",
-    german: "Deutsch",
-    de: "Deutsch",
-    russian: "Pусский",
-    pусский: "Pусский",
-    ru: "Pусский",
-    portuguese: "Português",
-    português: "Português",
-    pt: "Português",
-    italian: "Italiana",
-    italiana: "Italiana",
-    it: "Italiana",
-    international: "Ø",
-    chinese: "中文",
-    中文: "中文",
-    zh: "中文",
-    cn: "中文"
+    English: "English",
+    Español: "Español",
+    Français: "Français",
+    Deutsch: "Deutsch",
+    Pусский: "Pусский",
+    Português: "Português",
+    Italiano: "Italiana",
+    Ø: "Ø",
+    中文: "中文"
 }
 
 export default new Command({
@@ -80,7 +63,7 @@ export default new Command({
             .catch(noop)
         if (!member) return message.sendErrorMessage("notInGuild")
 
-        const languageInput = args.consume("language").toLowerCase()
+        const languageInput = args.consume("language")
         const language: string = LANGUAGE_ROLES[languageInput]
         if (!language)
             return message.sendErrorMessage(languageInput ? "notLang" : "noLang")

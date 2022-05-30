@@ -40,8 +40,7 @@ export default new Command({
                     name: "extended",
                     description: "Whether to include extended role information.",
                     required: false,
-                    optionType: "STRING",
-                    choices: ["extended"]
+                    optionType: "BOOLEAN"
                 }
             ]
         }
@@ -190,11 +189,11 @@ export default new Command({
             )
                 return
             await role.guild.members.fetch()
-            const extended = args.consume("extended")
+            const extended = args.consumeBoolean("extended")
 
             let members: Array<Record<string, string | Array<string> | number>>
 
-            if (extended === "extended") {
+            if (extended) {
                 members = role.members.map(m => {
                     return {
                         tag: m.user.tag,

@@ -31,9 +31,8 @@ export default new Command({
         {
             name: "deleted",
             description: "Optional arg to check for deleted cases",
-            optionType: "STRING",
-            required: false,
-            choices: ["deleted"]
+            optionType: "BOOLEAN",
+            required: false
         }
     ],
     async run(this: Command, client: Client, message: CommandMessage, args: Args) {
@@ -42,7 +41,7 @@ export default new Command({
         if (!user)
             return message.sendErrorMessage(user === undefined ? "noUser" : "invalidUser")
 
-        const showDeleted = args.consume("deleted").toLowerCase() === "deleted"
+        const showDeleted = args.consumeBoolean("deleted")
         const member = await (await client.customGuilds.main()).members
             .fetch({ user })
             .catch(noop)

@@ -32,7 +32,7 @@ async function log(
     if ((type === "ban" || type === "mute") && punishment) log.punishment = punishment
     await log.save()
 
-    const memberTemp  = await message.guild?.members
+    const memberTemp = await message.guild?.members
         .fetch({ user, cache: true })
         .catch(noop)
 
@@ -76,7 +76,7 @@ async function timedPunishment(
     client: Client,
     member: Discord.User,
     type: "mute" | "ban",
-    length: number | null,
+    length: number | null
 ) {
     const punishment = new TimedPunishment()
     punishment.member = member.id
@@ -99,7 +99,7 @@ export default async function punish(
     messageId: string = message.id
 ): Promise<ActionLog> {
     let punishment: TimedPunishment | null
-    if ((type === "ban" || type === "mute")) {
+    if (type === "ban" || type === "mute") {
         punishment = await timedPunishment(client, member, type, length)
         console.log(punishment)
     } else punishment = null

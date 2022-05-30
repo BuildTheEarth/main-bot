@@ -37,6 +37,7 @@ export default new Command({
     ],
     async run(this: Command, client: Client, message: CommandMessage, args: Args) {
         const subcommand = args.consumeSubcommandIf(["block", "search"])
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         let results: any[] = [] //TODO: Fix this huge mess
         if (subcommand === "search") {
             const query = args.consumeRest(["query"])
@@ -50,6 +51,7 @@ export default new Command({
             const blocks = args.consumeRest(["blocks"])
             if (!blocks) return message.sendErrorMessage("noBlocksFound")
             const blocksInput = blocks.trim().split(",")
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             const newBlocks: any[] = []
             blocksInput.forEach(element => newBlocks.push(element.trim()))
 

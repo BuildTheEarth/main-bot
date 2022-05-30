@@ -42,9 +42,9 @@ export default new Command({
                 },
                 {
                     name: "image_url",
-                    description: "Image URL (required if used as slashcommand).",
+                    description: "Image URL.",
                     required: true,
-                    optionType: "STRING"
+                    optionType: "ATTACHMENT"
                 },
                 {
                     name: "reason",

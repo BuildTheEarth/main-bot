@@ -31,15 +31,14 @@ export default new Command({
             name: "webp",
             description: "Optional arg to get as webp.",
             required: false,
-            optionType: "STRING",
-            choices: ["webp"]
+            optionType: "BOOLEAN"
         }
     ],
     async run(this: Command, client: Client, message: CommandMessage, args: Args) {
         const user = (await args.consumeUser("user")) || message.member
         const size =
             Number(args.consumeIf(arg => !Number.isNaN(Number(arg)), "size")) || 512
-        const format = args.consumeIf("webp", "webp") || "png"
+        const format = args.consumeBoolean("webp") || "png"
         if (!user)
             return message.sendErrorMessage(user === undefined ? "noUser" : "invalidUser")
         if (!VALID_IMAGE_SIZES.includes(size))

@@ -5,11 +5,15 @@ import CommandMessage from "./CommandMessage.js"
 
 export default class Command implements CommandProperties {
     name: string
+    name_translations: Record<string, string> = {}
     aliases: string[]
+    aliases_translations: Record<string, string[]> = {}
     inheritGlobalArgs?: boolean
     description: string
+    description_translations: Record<string, string> = {}
     permission: string[] | string[][]
-    basesubcommand?: string | null
+    basesubcommand?: string
+    basesubcommand_translations?: Record<string, string>
     dms: boolean
     args?: CommandArgs[]
     seperator?: string
@@ -21,7 +25,7 @@ export default class Command implements CommandProperties {
         this.seperator = properties.seperator || " "
         this.args = properties.args
         this.name = properties.name
-        this.basesubcommand = properties.basesubcommand || null
+        this.basesubcommand = properties.basesubcommand || undefined
         this.inheritGlobalArgs = properties.inheritGlobalArgs || false
         this.devOnly = properties.devOnly || false
         this.aliases = properties.aliases
@@ -42,7 +46,7 @@ export interface CommandProperties extends SubCommandProperties {
     devOnly?: boolean
     subcommands?: SubCommandProperties[] | null
     permission: string[] | string[][]
-    basesubcommand?: string | null
+    basesubcommand?: string
     dms?: boolean
     seperator?: string
     run: (client: Client, message: CommandMessage, args: Args) => void
@@ -50,7 +54,9 @@ export interface CommandProperties extends SubCommandProperties {
 
 export interface SubCommandProperties {
     name: string
+    name_translations?: Record<string, string>
     description: string
+    description_translations?: Record<string, string>
     permission?: string[] | string[][]
     group?: boolean
     subcommands?: SubCommandProperties[] | null
@@ -68,11 +74,19 @@ export const ArgTypes = {
     MENTIONABLE: "MENTIONABLE"
 }
 
-export type ChannelTypes = Exclude<ApiTypes.ChannelType, ApiTypes.ChannelType.DM | ApiTypes.ChannelType.GroupDM | ApiTypes.ChannelType.GuildDirectory | ApiTypes.ChannelType.GuildForum>
+export type ChannelTypes = Exclude<
+    ApiTypes.ChannelType,
+    | ApiTypes.ChannelType.DM
+    | ApiTypes.ChannelType.GroupDM
+    | ApiTypes.ChannelType.GuildDirectory
+    | ApiTypes.ChannelType.GuildForum
+>
 
 export interface CommandArgs {
     name: string
+    name_translations?: Record<string, string>
     description: string
+    description_translations?: Record<string, string>
     choices?: Array<number | string>
     required: boolean
     optionType:
@@ -86,4 +100,17 @@ export interface CommandArgs {
         | "MENTIONABLE"
         | "ATTACHMENT"
     channelTypes?: ChannelTypes | ChannelTypes[]
+}
+
+export interface CommandArgsTranslation {
+    translated_description: string
+    translated_name: string
+}
+
+export interface SubCommandTranslation {
+    translated_description: string
+    translated_name: string
+    args?: CommandArgsTranslation[]
+    group?: boolean
+    subcommands?: SubCommandTranslation[]
 }

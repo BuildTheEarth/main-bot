@@ -144,16 +144,31 @@ export default class Args {
     }
 
     consumeAttachment(
+        argName: string,
         check?: (attachment: Discord.MessageAttachment) => boolean
-        // ill keep the lint error for now until 13.7, so i remember, so dont fix this
     ): Discord.MessageAttachment | null {
-        //NOTE: USE THE ATTACHMENT STUFF WHEN 13.7 IS AVAILABLE
+        const attachment = this.message.message.options.getAttachment(argName)
+        if (attachment && (!check || check(attachment))) return attachment
         return null
     }
 
+    consumeBoolean(argName: string): boolean {
+        const returnBool = this.message.message.options.getBoolean(argName)
+        if (returnBool) return returnBool
+        return false
+    }
+
     consumeImage(argName: string): string | null {
-        //NOTE: USE THE ATTACHMENT STUFF WHEN 13.7 IS AVAILABLE
-        const url = this.consumeIf(/https?:\/\/(.+)?\.(jpe?g|png|gif)/i, argName)
+        let url: string | null = null
+        const attachment = this.consumeAttachment(
+            argName,
+            (attachment: Discord.MessageAttachment) => {
+                if (attachment.contentType?.startsWith("image/")) return true
+                return false
+            }
+        )
+        if (attachment) url = attachment.url
+        if (!url) url = this.consumeIf(/https?:\/\/(.+)?\.(jpe?g|png|gif)/i, argName)
         if (url) {
             const match = url.match(/.(jpe?g|png|gif)/i)?.[0].toLowerCase()
             if (match) return url.replace(/.(jpe?g|png|gif)/i, match)

@@ -14,13 +14,13 @@ export default new Command({
     args: [
         {
             name: "member",
-            description: "Member to ban.",
+            description: "Member to unban.",
             required: true,
             optionType: "USER"
         },
         {
             name: "reason",
-            description: "Ban reason.",
+            description: "Unban reason.",
             required: true,
             optionType: "STRING"
         }
