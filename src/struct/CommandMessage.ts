@@ -2,6 +2,7 @@
 import Discord from "discord.js"
 import Client from "../struct/Client.js"
 import { vsprintf } from "sprintf-js"
+import _ from "lodash"
 
 export default class CommandMessage {
     message: Discord.CommandInteraction
@@ -155,7 +156,7 @@ export default class CommandMessage {
         modalName: string,
         placeholders?: Record<string, string | undefined>
     ): Promise<string> {
-        const modal = client.modals.getLocaleModal(modalName, interaction.locale)
+        const modal = _.cloneDeep(client.modals.getLocaleModal(modalName, interaction.locale))
         if (!modal) throw new Error(`Modal ${modalName} not found`)
         modal.customId += "." + interaction.id
         if (placeholders) {
