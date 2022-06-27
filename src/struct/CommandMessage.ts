@@ -185,6 +185,7 @@ export default class CommandMessage {
                 }
             )
         )
+        console.log(modal)
         return modal.customId
     }
 }
