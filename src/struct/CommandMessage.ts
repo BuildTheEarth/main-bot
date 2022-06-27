@@ -3,6 +3,7 @@ import Discord from "discord.js"
 import Client from "../struct/Client.js"
 import { vsprintf } from "sprintf-js"
 import _ from "lodash"
+import { noop } from "@buildtheearth/bot-utils"
 
 export default class CommandMessage {
     message: Discord.CommandInteraction
@@ -110,7 +111,7 @@ export default class CommandMessage {
 
     async delete(): Promise<CommandMessage | void> {
         try {
-            this.message.deleteReply()
+            if (!this.message.ephemeral) await this.message.deleteReply().catch(noop)
         } catch {
             return
         }
