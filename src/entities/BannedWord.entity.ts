@@ -1,6 +1,5 @@
 import typeorm from "typeorm"
 import type Client from "../struct/Client.js"
-import SnowflakePrimaryColumn from "./decorators/SnowflakePrimaryColumn.decorator.js"
 import milliseconds from "./transformers/milliseconds.transformer.js"
 import unicode from "./transformers/unicode.transformer.js"
 
@@ -45,7 +44,7 @@ export default class BannedWord extends typeorm.BaseEntity {
         return created
     }
 
-    @typeorm.Column({ length: 1024, nullable: true, transformer: unicode, primary: true })
+    @typeorm.Column({ length: 300, nullable: true, transformer: unicode, primary: true })
     word!: string
 
     @typeorm.Column({ nullable: true })
