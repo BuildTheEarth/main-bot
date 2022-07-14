@@ -10,7 +10,7 @@ export default async function (
 ): Promise<unknown> {
     if (newMessage?.partial) await newMessage.fetch().catch(noop)
 
-    if (newMessage?.author.partial) await newMessage.author.fetch().catch(noop)
+    if (newMessage?.author?.partial) await newMessage.author.fetch().catch(noop)
 
     if (newMessage?.author?.bot) return
 

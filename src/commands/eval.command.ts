@@ -50,7 +50,6 @@ export default new Command({
     ],
     async run(this: Command, client: Client, message: CommandMessage, args: Args) {
         if (!client.token) return
-        if (!client.config.database.pass) return
         const code = args.removeCodeblock(args.consumeRest(["code"]))
         await message.continue()
 
@@ -59,13 +58,13 @@ export default new Command({
 
             const tokenRegex = new RegExp(client.token, "g")
             const modpackRegex = new RegExp(client.config.modpackAuth, "g")
-            const pwRegex = new RegExp(client.config.database.pass, "g")
+            const pwRegex = new RegExp(client.config.database.pass? client.config.database.pass: client.token, "g")
             const out = stringifyAnything(await eval(wrapped))
                 .replace(tokenRegex, "")
                 .replace(modpackRegex, "")
                 .replace(pwRegex, "")
 
-            message.sendSuccess({
+            return await message.sendSuccess({
                 author: { name: "Output" },
                 description: `\`\`\`js\n${truncateString(out, 1990)}\n\`\`\``
             })
@@ -73,7 +72,7 @@ export default new Command({
             if (error instanceof Error) {
                 const err = `${error.name || "Error"}: ${error.message}`
 
-                message.sendError({
+                return await message.sendError({
                     author: { name: "Error" },
                     description: `\`\`\`${truncateString(err, 1994)}\`\`\``
                 })

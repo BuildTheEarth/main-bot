@@ -22,48 +22,30 @@ export interface bannedWordsOptions {
 
 @typeorm.Entity({ name: "banned_words" })
 export default class BannedWord extends typeorm.BaseEntity {
-    private constructor(
-        word: string | null = null,
-        punishment_type?: "BAN" | "WARN" | "MUTE" | "KICK" | "DELETE",
-        reason: string | null = null,
-        duration: number | null = null,
-        exception: boolean | null = null,
-        client?: Client
-    ) {
-        super()
-        if (word !== null) this.word = word
-        if (punishment_type) this.punishment_type = punishment_type
-        if (reason !== undefined) this.reason = reason ? reason : undefined
-        if (duration !== undefined) this.duration = duration ? duration : undefined
-        if (exception !== null) this.exception = exception
-        if (client) {
-            if (word) {
-                if (exception) client.filterWordsCached.except.push(word)
-                else
-                    client.filterWordsCached.banned.set(word, <BannedWord>{
-                        punishment_type: punishment_type,
-                        reason: reason === null ? "none" : reason,
-                        duration: duration === null ? 0 : duration
-                    })
-            }
-        }
-    }
-
     static async createBannedWord(
         options: bannedWordsOptions,
         client: Client
     ): Promise<BannedWord> {
-        return await new BannedWord(
-            options.word,
-            options.punishment_type,
-            options.reason,
-            options.duration,
-            options.exception,
-            client
-        ).save()
+        const created = new BannedWord()
+        if (options.word) {
+            created.word = options.word
+            if (options.exception) client.filterWordsCached.except.push(options.word)
+            else
+                    client.filterWordsCached.banned.set(options.word, <BannedWord>{
+                        punishment_type: options.punishment_type,
+                        reason: options.reason === null ? "none" : options.reason,
+                        duration: options.duration === null ? 0 : options.duration
+                })
+        }
+        if (options.punishment_type) created.punishment_type = options.punishment_type
+        if (options.reason) created.reason = options.reason
+        if (options.duration) created.duration = options.duration
+        if (options.exception) created.exception = options.exception
+        await created.save()
+        return created
     }
 
-    @SnowflakePrimaryColumn()
+    @typeorm.Column({ length: 1024, nullable: true, transformer: unicode, primary: true })
     word!: string
 
     @typeorm.Column({ nullable: true })

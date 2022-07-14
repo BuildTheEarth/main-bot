@@ -110,13 +110,19 @@ export default new Command({
             await message.continue()
 
             let buff: Buffer
+            let response: Awaited<ReturnType<typeof fetch>>
             try {
-                const response = await fetch(url)
+                response = await fetch(url)
                 const arrayBuffer = await response.arrayBuffer()
                 buff = Buffer.from(arrayBuffer)
             } catch {
                 return message.sendErrorMessage("requestIncomplete")
             }
+
+            const isImage = response.headers.get("content-type")?.startsWith("image/")
+
+            if (!isImage) return message.sendErrorMessage("pleaseImage")
+
             const dimensions = sizeOf(buff)
             if (dimensions.width / dimensions.height !== 16 / 9)
                 return message.sendErrorMessage("not16To9")

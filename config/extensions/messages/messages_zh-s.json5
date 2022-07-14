@@ -122,7 +122,7 @@
     titleTooLong99: ["那个标题太长了。(最多99字符)。"],
     teamTooLong255: ["那个团队名称太长了。(最多255字符)。"],
     nameTooLong32: ["那个名称太长了。(最多32字符)。"],
-    wordTooLong18: ["那个词汇太长了。(最多18字符)。"],
+    wordTooLong1024: ["那个词汇太长了。(最多18字符)。"],
     contentTooLarge10MB: ["内容的大小必须小于10MB。"],
     purgeLimit: ["你一次最多只能清除100则讯息。"],
     wrongUser: ["你有召唤那个菜单吗？我想没有。"],

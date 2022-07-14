@@ -134,8 +134,8 @@ export default new Command({
 
                 await message.continue()
                 const punishment = args.consume("punishment").toUpperCase()
-                if (word.length > 18) {
-                    return await message.sendErrorMessage("wordTooLong18")
+                if (word.length > 1024) {
+                    return await message.sendErrorMessage("wordTooLong1024")
                 }
                 if (!punishmentTypes.includes(punishment))
                     return message.sendErrorMessage(
@@ -201,8 +201,8 @@ export default new Command({
                 const word = args.consumeRest(["word"])
 
                 if (!word) return await message.sendErrorMessage("invalidWord")
-                if (word.length > 18) {
-                    return message.sendErrorMessage("wordTooLong18")
+                if (word.length > 1024) {
+                    return message.sendErrorMessage("wordTooLong1024")
                 }
                 await message.continue()
                 const isAlreadyThere = client.filterWordsCached.except.includes(word)
