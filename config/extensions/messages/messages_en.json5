@@ -122,7 +122,7 @@
     titleTooLong99: ["That title is too long. (max. 99 characters)."],
     teamTooLong255: ["That team name is too long. (max. 255 characters)."],
     nameTooLong32: ["That name is too long. (max. 32 characters)."],
-    wordTooLong300: ["That word is too long. (max. 300 characters)"],
+    wordTooLong16: ["That word is too long. (max. 300 characters)"],
     contentTooLarge10MB: ["The content must be less than 10MB in size."],
     purgeLimit: ["You can only purge up to 100 messages at a time."],
     wrongUser: ["Did you summon that menu?, I think not."],
