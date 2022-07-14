@@ -44,7 +44,7 @@ export default class BannedWord extends typeorm.BaseEntity {
         return created
     }
 
-    @typeorm.Column({ length: 300, nullable: true, transformer: unicode, primary: true })
+    @typeorm.Column({ length: 16, nullable: true, transformer: unicode, primary: true })
     word!: string
 
     @typeorm.Column({ nullable: true })
