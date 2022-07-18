@@ -59,8 +59,8 @@ export default class ModerationMenu extends typeorm.BaseEntity {
         const truePunishments = getMostSevereList(filterResponse, client)
 
         if (truePunishments[0].punishment_type === "DELETE") {
-            const embed = new Discord.MessageEmbed()
-                .addFields(<Discord.EmbedFieldData[]>[
+            const embed = new Discord.EmbedBuilder()
+                .addFields(<Discord.EmbedField[]>[
                     {
                         name: "User",
                         value: `<@${message.author.id}> (${message.author.id})`
@@ -95,8 +95,8 @@ export default class ModerationMenu extends typeorm.BaseEntity {
                 existingMenu.current_word = existingMenu.punishments[0].word
             existingMenu.save()
 
-            const embed = new Discord.MessageEmbed()
-                .addFields(<Discord.EmbedFieldData[]>[
+            const embed = new Discord.EmbedBuilder()
+                .addFields(<Discord.EmbedField[]>[
                     {
                         name: "User",
                         value: `<@${existingMenu.member}> (${existingMenu.member})`
@@ -144,27 +144,27 @@ export default class ModerationMenu extends typeorm.BaseEntity {
                     )}, Word is ${punishment.word}`,
                     value: punishment.word,
                     default: false
-                } as Discord.MessageSelectOptionData
+                } as Discord.SelectMenuComponentOptionData
                 return punish
             })
 
             const row = [
-                new Discord.MessageActionRow().addComponents(
-                    new Discord.MessageSelectMenu()
+                new Discord.ActionRowBuilder<Discord.SelectMenuBuilder>().addComponents(
+                    new Discord.SelectMenuBuilder()
                         .setCustomId(`modmenu.${existingMenu.member}.menu`)
                         .setMinValues(1)
                         .setMaxValues(1)
                         .addOptions(punishmentOptions)
                         .setPlaceholder("Select a punishment")
                 ),
-                new Discord.MessageActionRow().addComponents(
-                    new Discord.MessageButton()
+                new Discord.ActionRowBuilder<Discord.ButtonBuilder>().addComponents(
+                    new Discord.ButtonBuilder()
                         .setCustomId(`modmenu.${existingMenu.member}.punish`)
-                        .setStyle("PRIMARY")
+                        .setStyle(Discord.ButtonStyle.Primary)
                         .setLabel("Punish"),
-                    new Discord.MessageButton()
+                    new Discord.ButtonBuilder()
                         .setCustomId(`modmenu.${existingMenu.member}.pardon`)
-                        .setStyle("DANGER")
+                        .setStyle(Discord.ButtonStyle.Danger)
                         .setLabel("Pardon")
                 )
             ]
@@ -173,7 +173,8 @@ export default class ModerationMenu extends typeorm.BaseEntity {
                 client.config.logging.modLogs
             )) as Discord.TextChannel
 
-            const modMenuMessage = await channel.messages.fetch(existingMenu.message, {
+            const modMenuMessage = await channel.messages.fetch({
+                message: existingMenu.message,
                 force: true
             })
             if (modMenuMessage) {
@@ -191,8 +192,8 @@ export default class ModerationMenu extends typeorm.BaseEntity {
         if (modMenu.punishments[0].word)
             modMenu.current_word = modMenu.punishments[0].word
 
-        const embed = new Discord.MessageEmbed()
-            .addFields(<Discord.EmbedFieldData[]>[
+        const embed = new Discord.EmbedBuilder()
+            .addFields(<Discord.EmbedField[]>[
                 { name: "User", value: `<@${modMenu.member}> (${modMenu.member})` },
                 {
                     name: "Message",
@@ -225,27 +226,27 @@ export default class ModerationMenu extends typeorm.BaseEntity {
                 )}, Word is ${punishment.word}`,
                 value: punishment.word,
                 default: false
-            } as Discord.MessageSelectOptionData
+            } as Discord.SelectMenuComponentOptionData
             return punish
         })
 
         const row = [
-            new Discord.MessageActionRow().addComponents(
-                new Discord.MessageSelectMenu()
+            new Discord.ActionRowBuilder<Discord.SelectMenuBuilder>().addComponents(
+                new Discord.SelectMenuBuilder()
                     .setCustomId(`modmenu.${modMenu.member}.menu`)
                     .setMinValues(1)
                     .setMaxValues(1)
                     .addOptions(punishmentOptions)
                     .setPlaceholder("Select a punishment")
             ),
-            new Discord.MessageActionRow().addComponents(
-                new Discord.MessageButton()
+            new Discord.ActionRowBuilder<Discord.ButtonBuilder>().addComponents(
+                new Discord.ButtonBuilder()
                     .setCustomId(`modmenu.${modMenu.member}.punish`)
-                    .setStyle("DANGER")
+                    .setStyle(Discord.ButtonStyle.Danger)
                     .setLabel("Punish"),
-                new Discord.MessageButton()
+                new Discord.ButtonBuilder()
                     .setCustomId(`modmenu.${modMenu.member}.pardon`)
-                    .setStyle("SUCCESS")
+                    .setStyle(Discord.ButtonStyle.Success)
                     .setLabel("Pardon")
             )
         ]
@@ -276,8 +277,8 @@ export default class ModerationMenu extends typeorm.BaseEntity {
 
         if (!punishment) return null
 
-        const embed = new Discord.MessageEmbed()
-            .addFields(<Discord.EmbedFieldData[]>[
+        const embed = new Discord.EmbedBuilder()
+            .addFields(<Discord.EmbedField[]>[
                 { name: "User", value: `<@${modMenu.member}> (${modMenu.member})` },
                 {
                     name: "Message",
@@ -448,7 +449,7 @@ export default class ModerationMenu extends typeorm.BaseEntity {
         })
         await client.log(log)
 
-        const embed = new Discord.MessageEmbed()
+        const embed = new Discord.EmbedBuilder()
             .addFields([
                 { name: "User", value: `<@${modMenu.member}> (${modMenu.member})` },
                 {
@@ -484,7 +485,7 @@ export default class ModerationMenu extends typeorm.BaseEntity {
 
         if (!modMenu) return
 
-        const embed = new Discord.MessageEmbed()
+        const embed = new Discord.EmbedBuilder()
             .addFields([
                 { name: "User", value: `<@${modMenu.member}> (${modMenu.member})` },
                 {
@@ -517,14 +518,14 @@ export default class ModerationMenu extends typeorm.BaseEntity {
         client: Client
     ): Promise<void> {
         const components = [
-            new Discord.MessageActionRow().addComponents(
-                new Discord.MessageButton()
+            new Discord.ActionRowBuilder<Discord.ButtonBuilder>().addComponents(
+                new Discord.ButtonBuilder()
                     .setCustomId(`yes.${interaction.id}.modmenu`)
-                    .setStyle("DANGER")
+                    .setStyle(Discord.ButtonStyle.Danger)
                     .setLabel("Pardon"),
-                new Discord.MessageButton()
+                new Discord.ButtonBuilder()
                     .setCustomId(`no.${interaction.id}.modmenu`)
-                    .setStyle("SUCCESS")
+                    .setStyle(Discord.ButtonStyle.Success)
                     .setLabel("No")
             )
         ]
@@ -580,14 +581,14 @@ export default class ModerationMenu extends typeorm.BaseEntity {
         client: Client
     ): Promise<void> {
         const components = [
-            new Discord.MessageActionRow().addComponents(
-                new Discord.MessageButton()
+            new Discord.ActionRowBuilder<Discord.ButtonBuilder>().addComponents(
+                new Discord.ButtonBuilder()
                     .setCustomId(`yes.${interaction.id}.modmenu`)
-                    .setStyle("DANGER")
+                    .setStyle(Discord.ButtonStyle.Danger)
                     .setLabel("Punish"),
-                new Discord.MessageButton()
+                new Discord.ButtonBuilder()
                     .setCustomId(`no.${interaction.id}.modmenu`)
-                    .setStyle("SUCCESS")
+                    .setStyle(Discord.ButtonStyle.Success)
                     .setLabel("No")
             )
         ]

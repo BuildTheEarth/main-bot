@@ -10,6 +10,7 @@ import Suggestion, {
 import path from "path"
 import url from "url"
 import {
+    hexToNum,
     hexToRGB,
     humanizeArray,
     loadSyncJSON5,
@@ -203,7 +204,7 @@ export default new Command({
                 .split(/,? ?/)
                 .map(s => s.toLowerCase())
             if (!statuses.length) statuses = Object.keys(SuggestionStatuses)
-            const cleanQuery = Discord.Util.escapeMarkdown(truncateString(query, 50))
+            const cleanQuery = Discord.escapeMarkdown(truncateString(query, 50))
 
             const queryBuilder = Suggestions?.createQueryBuilder("suggestion")
             const selection = queryBuilder
@@ -226,15 +227,15 @@ export default new Command({
 
             const paginate = total > PER_PAGE
 
-            const embed = <Discord.MessageEmbedOptions>{
-                color: hexToRGB(client.config.colors.success),
+            const embed = <Discord.APIEmbed>{
+                color: hexToNum(client.config.colors.success),
                 description: `Results found for **${cleanQuery}**:`,
                 footer: {}
             }
 
             const formatResults = async (
                 results: Suggestion[],
-                embed: Discord.MessageEmbedOptions
+                embed: Discord.APIEmbed
             ) => {
                 embed.fields = []
                 for (const suggestion of results) {
@@ -253,11 +254,11 @@ export default new Command({
             const pages = Math.ceil(total / PER_PAGE)
             if (embed.footer !== undefined)
                 embed.footer.text = `${total} results total, page 1/${pages}`
-            let row = new Discord.MessageActionRow().addComponents(
-                new Discord.MessageButton()
+            let row = new Discord.ActionRowBuilder<Discord.ButtonBuilder>().addComponents(
+                new Discord.ButtonBuilder()
                     .setCustomId(`${message.id}.forwards`)
                     .setLabel(client.config.emojis.right.toString())
-                    .setStyle("SUCCESS")
+                    .setStyle(Discord.ButtonStyle.Success)
             )
             const sentMessage = await message.send({
                 embeds: [embed],
@@ -293,33 +294,35 @@ export default new Command({
                 )
                     page -= 1
                 if (page === 1) {
-                    row = new Discord.MessageActionRow().addComponents(
-                        new Discord.MessageButton()
-                            .setCustomId(`${message.id}.forwards`)
-                            .setLabel(client.config.emojis.right.toString())
-                            .setStyle("SUCCESS")
-                    )
-                } else if (page === pages) {
-                    row = new Discord.MessageActionRow().addComponents(
-                        new Discord.MessageButton()
-                            .setCustomId(`${message.id}.back`)
-                            .setLabel(client.config.emojis.left.toString())
-                            .setStyle("SUCCESS")
-                    )
-                } else {
-                    row = new Discord.MessageActionRow()
-
-                        .addComponents(
-                            new Discord.MessageButton()
-                                .setCustomId(`${message.id}.back`)
-                                .setLabel(client.config.emojis.left.toString())
-                                .setStyle("SUCCESS")
-                        )
-                        .addComponents(
-                            new Discord.MessageButton()
+                    row =
+                        new Discord.ActionRowBuilder<Discord.ButtonBuilder>().addComponents(
+                            new Discord.ButtonBuilder()
                                 .setCustomId(`${message.id}.forwards`)
                                 .setLabel(client.config.emojis.right.toString())
-                                .setStyle("SUCCESS")
+                                .setStyle(Discord.ButtonStyle.Success)
+                        )
+                } else if (page === pages) {
+                    row =
+                        new Discord.ActionRowBuilder<Discord.ButtonBuilder>().addComponents(
+                            new Discord.ButtonBuilder()
+                                .setCustomId(`${message.id}.back`)
+                                .setLabel(client.config.emojis.left.toString())
+                                .setStyle(Discord.ButtonStyle.Success)
+                        )
+                } else {
+                    row = new Discord.ActionRowBuilder<Discord.ButtonBuilder>()
+
+                        .addComponents(
+                            new Discord.ButtonBuilder()
+                                .setCustomId(`${message.id}.back`)
+                                .setLabel(client.config.emojis.left.toString())
+                                .setStyle(Discord.ButtonStyle.Success)
+                        )
+                        .addComponents(
+                            new Discord.ButtonBuilder()
+                                .setCustomId(`${message.id}.forwards`)
+                                .setLabel(client.config.emojis.right.toString())
+                                .setStyle(Discord.ButtonStyle.Success)
                         )
                 }
 
@@ -342,10 +345,12 @@ export default new Command({
                 } else interaction.editReply({ embeds: [embed] })
             }
 
+            //@ts-ignore die
             client.on("interactionCreate", interactionFunc)
 
             setTimeout(async () => {
                 await sentMessage.edit({ content: "Expired", components: [] })
+                //@ts-ignore die
                 client.off("interactionCreate", interactionFunc)
             }, 600000)
 
@@ -492,13 +497,13 @@ export default new Command({
                         .trim()
                     const number = await suggestion.getIdentifier()
                     const title = `[${suggestion.title}](${suggestion.getURL(client)})`
-                    const cleanTitle = Discord.Util.escapeMarkdown(title)
+                    const cleanTitle = Discord.escapeMarkdown(title)
 
                     const update = `${updater} ${actioned}: **#${number} — ${cleanTitle}**.`
                     dms.send({
                         embeds: [
                             {
-                                color: hexToRGB(
+                                color: hexToNum(
                                     (
                                         client.config.colors.suggestions as Record<
                                             string,

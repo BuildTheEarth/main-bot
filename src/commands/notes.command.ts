@@ -98,9 +98,13 @@ export default new Command({
         const note = await ModerationNote.findOne(user.id)
 
         if ((!subcommand && !body) || (subcommand === "check" && !body)) {
-            const embed = <Discord.MessageEmbedOptions>{
+            const embed = <Discord.APIEmbed>{
                 thumbnail: {
-                    url: user.displayAvatarURL({ size: 64, format: "png", dynamic: true })
+                    url: user.displayAvatarURL({
+                        size: 64,
+                        extension: "png",
+                        forceStatic: false
+                    })
                 },
                 description: note
                     ? `Here are ${user}'s moderation notes (you can also read them with \`${client.config.prefix}check @${user.tag}\`):\n\n${note.body}\n\u200B`

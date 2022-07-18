@@ -5,7 +5,7 @@ import Command from "../struct/Command.js"
 import Discord from "discord.js"
 import ApiTypes = require("discord-api-types/v10")
 import CommandMessage from "../struct/CommandMessage.js"
-import { hexToRGB } from "@buildtheearth/bot-utils"
+import { hexToNum, hexToRGB } from "@buildtheearth/bot-utils"
 
 export default new Command({
     name: "unlock",
@@ -30,12 +30,12 @@ export default new Command({
         /*eslint-enable */
         await (channel as Discord.TextChannel).permissionOverwrites.edit(
             message.guild.id,
-            { SEND_MESSAGES: null }
+            { SendMessages: null }
         ) // There is no non-hacky reason support here now
 
         await message.sendSuccessMessage("unlockedChannel", channel)
         await client.log({
-            color: hexToRGB(client.config.colors.success),
+            color: hexToNum(client.config.colors.success),
             author: { name: "Unlocked" },
             description: `Channel ${channel} unlocked by ${message.member}.`
         })

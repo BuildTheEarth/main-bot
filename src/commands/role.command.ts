@@ -5,7 +5,8 @@ import CommandMessage from "../struct/CommandMessage.js"
 import Args from "../struct/Args.js"
 import GuildMember from "../struct/discord/GuildMember.js"
 import Discord from "discord.js"
-import { humanizeConstant } from "@buildtheearth/bot-utils"
+import { hexToNum, humanizeConstant } from "@buildtheearth/bot-utils"
+import { discordEpoch } from "../util/discordEpoch.js"
 
 export default new Command({
     name: "role",
@@ -58,11 +59,15 @@ export default new Command({
             const roleMessage = await message.send({
                 embeds: [
                     {
-                        color: role.hexColor,
+                        color: hexToNum(role.hexColor),
                         title: role.name,
-                        thumbnail: {
-                            url: iconUrlTemp ? iconUrlTemp : undefined
-                        },
+                        ...(iconUrlTemp
+                            ? {
+                                  thumbnail: {
+                                      url: iconUrlTemp
+                                  }
+                              }
+                            : {}),
                         fields: [
                             {
                                 name: "Members",
@@ -112,7 +117,7 @@ export default new Command({
                         footer: {
                             text: `Role ID: ${role.id} • Created on`
                         },
-                        timestamp: role.createdAt
+                        timestamp: discordEpoch(role.createdAt)
                     }
                 ]
             })
@@ -122,11 +127,15 @@ export default new Command({
             await roleMessage.edit({
                 embeds: [
                     {
-                        color: role.hexColor,
+                        color: hexToNum(role.hexColor),
                         title: role.name,
-                        thumbnail: {
-                            url: iconUrlTemp ? iconUrlTemp : undefined
-                        },
+                        ...(iconUrlTemp
+                            ? {
+                                  thumbnail: {
+                                      url: iconUrlTemp
+                                  }
+                              }
+                            : {}),
                         fields: [
                             {
                                 name: "Members",
@@ -174,7 +183,7 @@ export default new Command({
                         footer: {
                             text: `Role ID: ${role.id} • Created on`
                         },
-                        timestamp: role.createdAt
+                        timestamp: discordEpoch(role.createdAt)
                     }
                 ]
             })
@@ -230,7 +239,9 @@ export default new Command({
             }
 
             const buf = Buffer.from(JSON.stringify(roleData, null, 4))
-            const file = new Discord.MessageAttachment(buf, "roleData.json")
+            const file = new Discord.AttachmentBuilder(buf)
+                .setFile(buf)
+                .setName("roleData.json")
             await message.send({ files: [file] })
         }
     }

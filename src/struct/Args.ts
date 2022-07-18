@@ -145,8 +145,8 @@ export default class Args {
 
     consumeAttachment(
         argName: string,
-        check?: (attachment: Discord.MessageAttachment) => boolean
-    ): Discord.MessageAttachment | null {
+        check?: (attachment: Discord.Attachment) => boolean
+    ): Discord.Attachment | null {
         const attachment = this.message.message.options.getAttachment(argName)
         if (attachment && (!check || check(attachment))) return attachment
         return null
@@ -162,7 +162,7 @@ export default class Args {
         let url: string | null = null
         const attachment = this.consumeAttachment(
             argName,
-            (attachment: Discord.MessageAttachment) => {
+            (attachment: Discord.Attachment) => {
                 if (attachment.contentType?.startsWith("image/")) return true
                 return false
             }
@@ -225,6 +225,8 @@ export default class Args {
                 arg = ""
             }
 
+            if (!arg) arg = ""
+
             let valid = false
 
             if (typeof equals === "string")
@@ -251,7 +253,7 @@ export default class Args {
 
     consumeSubcommandGroup(): string {
         try {
-            return this.message.message.options.getSubcommandGroup()
+            return this.message.message.options.getSubcommandGroup() || ""
         } catch {
             return ""
         }

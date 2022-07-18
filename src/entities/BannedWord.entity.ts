@@ -31,10 +31,10 @@ export default class BannedWord extends typeorm.BaseEntity {
             created.word = options.word
             if (options.exception) client.filterWordsCached.except.push(options.word)
             else
-                    client.filterWordsCached.banned.set(options.word, <BannedWord>{
-                        punishment_type: options.punishment_type,
-                        reason: options.reason === null ? "none" : options.reason,
-                        duration: options.duration === null ? 0 : options.duration
+                client.filterWordsCached.banned.set(options.word, <BannedWord>{
+                    punishment_type: options.punishment_type,
+                    reason: options.reason === null ? "none" : options.reason,
+                    duration: options.duration === null ? 0 : options.duration
                 })
         }
         if (options.punishment_type) created.punishment_type = options.punishment_type

@@ -1,11 +1,12 @@
 import typeorm from "typeorm"
-import Discord from "discord.js"
+import Discord, { ButtonBuilder } from "discord.js"
 import Client from "../struct/Client.js"
-import { hexToRGB, noop } from "@buildtheearth/bot-utils"
+import { hexToNum, hexToRGB, noop } from "@buildtheearth/bot-utils"
 import SnowflakeColumn from "./decorators/SnowflakeColumn.decorator.js"
 import GuildMember from "../struct/discord/GuildMember.js"
 import CommandMessage from "../struct/CommandMessage.js"
 import unicode from "./transformers/unicode.transformer.js"
+import { discordEpoch } from "../util/discordEpoch.js"
 
 @typeorm.Entity({ name: "suspicious_users" })
 export default class SuspiciousUser extends typeorm.BaseEntity {
@@ -47,7 +48,7 @@ export default class SuspiciousUser extends typeorm.BaseEntity {
     ): Promise<Discord.TextChannel | null> {
         const channelID = client.config.suspiciousUsers
         const channel = await client.channels.fetch(channelID).catch(noop)
-        if (channel?.isText()) {
+        if (channel?.type === Discord.ChannelType.GuildText) {
             return channel as Discord.TextChannel
         }
         return null
@@ -101,8 +102,8 @@ export default class SuspiciousUser extends typeorm.BaseEntity {
                 {
                     title: "Suspicious User Denied",
                     description: `Your suspicious user has been denied.\nReason: ${this.reason}`,
-                    color: hexToRGB(client.config.colors.error),
-                    timestamp: new Date()
+                    color: hexToNum(client.config.colors.error),
+                    timestamp: discordEpoch(new Date())
                 }
             ]
         }).catch(noop)
@@ -114,15 +115,15 @@ export default class SuspiciousUser extends typeorm.BaseEntity {
                 {
                     title: "Suspicious User Accepted",
                     description: `Your suspicious user has been accepted.\nReason: ${this.reason}`,
-                    color: hexToRGB(client.config.colors.success),
-                    timestamp: new Date()
+                    color: hexToNum(client.config.colors.success),
+                    timestamp: discordEpoch(new Date())
                 }
             ]
         }).catch(noop)
     }
 
     createEmbed(): Discord.MessageOptions {
-        const embed = <Discord.MessageEmbedOptions>{
+        const embed = <Discord.APIEmbed>{
             title: "Suspicious User Report",
             fields: [
                 {
@@ -141,11 +142,11 @@ export default class SuspiciousUser extends typeorm.BaseEntity {
                     inline: false
                 }
             ],
-            color: hexToRGB(client.config.colors.info)
+            color: hexToNum(client.config.colors.info)
         }
 
         if (this.denied) {
-            embed.color = hexToRGB(client.config.colors.error)
+            embed.color = hexToNum(client.config.colors.error)
             embed.fields?.push({
                 name: "Denied",
                 value: `Denied by <@${this.moderatorId}> (${this.moderatorId}) for reason: ${this.reason}`
@@ -153,7 +154,7 @@ export default class SuspiciousUser extends typeorm.BaseEntity {
         }
 
         if (this.approved) {
-            embed.color = hexToRGB(client.config.colors.success)
+            embed.color = hexToNum(client.config.colors.success)
             embed.fields?.push({
                 name: "Approved",
                 value: `Approved by <@${this.moderatorId}> (${this.moderatorId}) for reason: ${this.reason}`
@@ -163,20 +164,22 @@ export default class SuspiciousUser extends typeorm.BaseEntity {
         const options: Discord.MessageOptions = { embeds: [embed], components: [] }
 
         if (!(this.approved || this.denied)) {
-            const actionRow = new Discord.MessageActionRow()
-            const approvedButton: Discord.MessageButtonOptions = {
-                style: "PRIMARY",
+            const actionRow = new Discord.ActionRowBuilder<ButtonBuilder>()
+            const approvedButton: Discord.InteractionButtonComponentData = {
+                style: Discord.ButtonStyle.Primary,
                 customId: `suspicious_user.${this.id}.approved`,
-                label: "Approve"
+                label: "Approve",
+                type: Discord.ComponentType.Button
             }
-            const deniedButton: Discord.MessageButtonOptions = {
-                style: "DANGER",
+            const deniedButton: Discord.InteractionButtonComponentData = {
+                style: Discord.ButtonStyle.Danger,
                 customId: `suspicious_user.${this.id}.denied`,
-                label: "Deny"
+                label: "Deny",
+                type: Discord.ComponentType.Button
             }
             actionRow.addComponents([
-                new Discord.MessageButton(approvedButton),
-                new Discord.MessageButton(deniedButton)
+                new Discord.ButtonBuilder(approvedButton),
+                new Discord.ButtonBuilder(deniedButton)
             ])
             options.components?.push(actionRow)
         }
@@ -206,11 +209,11 @@ export default class SuspiciousUser extends typeorm.BaseEntity {
             await sususer.save()
             const message = await channel.send(sususer.createEmbed())
             sususer.messageId = message.id
-            if (message && channel.isText()) {
+            if (message && channel.type === Discord.ChannelType.GuildText) {
                 sususer.threadId = (
                     await message.startThread({
                         name: `Suspicious User Report: ${sususer.id}`,
-                        autoArchiveDuration: "MAX"
+                        autoArchiveDuration: Discord.ThreadAutoArchiveDuration.OneWeek
                     })
                 ).id
             } else {

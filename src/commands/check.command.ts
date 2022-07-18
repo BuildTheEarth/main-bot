@@ -76,9 +76,13 @@ export default new Command({
         const clean = !actionLogs.length
         for (const log of actionLogs) categorizedLogs[log.action].push(log)
 
-        const embed: Discord.MessageEmbedOptions = {
+        const embed: Discord.APIEmbed = {
             thumbnail: {
-                url: user.displayAvatarURL({ size: 64, format: "png", dynamic: true })
+                url: user.displayAvatarURL({
+                    size: 64,
+                    extension: "png",
+                    forceStatic: false
+                })
             },
             fields: []
         }

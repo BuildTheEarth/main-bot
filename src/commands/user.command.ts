@@ -3,6 +3,7 @@ import Client from "../struct/Client.js"
 import Args from "../struct/Args.js"
 import {
     formatTimestamp,
+    hexToNum,
     hexToRGB,
     humanizeConstant,
     loadSyncJSON5
@@ -49,16 +50,20 @@ export default new Command({
             .fetch({ user, cache: true })
             .catch(() => null)
 
-        const embed = <Discord.MessageEmbedOptions>{
-            color: hexToRGB(client.config.colors.info),
+        const embed = <Discord.APIEmbed>{
+            color: hexToNum(client.config.colors.info),
             thumbnail: {
-                url: user.displayAvatarURL({ size: 64, format: "png", dynamic: true })
+                url: user.displayAvatarURL({
+                    size: 64,
+                    extension: "png",
+                    forceStatic: false
+                })
             },
             description: `Information on ${user}:`,
             fields: [
                 {
                     name: "Tag",
-                    value: Discord.Util.escapeMarkdown(user.tag),
+                    value: Discord.escapeMarkdown(user.tag),
                     inline: true
                 },
                 {
@@ -75,7 +80,7 @@ export default new Command({
             if (member.nickname)
                 embed.fields.push({
                     name: "Nick",
-                    value: Discord.Util.escapeMarkdown(member.nickname),
+                    value: Discord.escapeMarkdown(member.nickname),
                     inline: true
                 })
 
@@ -130,10 +135,10 @@ export default new Command({
                 .map(flag => userFlags[flag] || humanizeConstant(flag))
                 .join(", ")
             if (
-                flagArr.includes("DISCORD_CERTIFIED_MODERATOR") ||
-                flagArr.includes("DISCORD_EMPLOYEE") ||
-                flagArr.includes("PARTNERED_SERVER_OWNER") ||
-                flagArr.includes("HYPESQUAD_EVENTS")
+                flagArr.includes("CertifiedModerator") ||
+                flagArr.includes("Staff") ||
+                flagArr.includes("Partner") ||
+                flagArr.includes("Hypesquad")
             ) {
                 fieldName += "\n(User Has a Notable Flag)"
             }
@@ -147,12 +152,12 @@ export default new Command({
                 : `<${emoji.animated ? "a" : ""}:${emoji.name}:${emoji.id}>`
         const humanizeStatus = (status: Discord.Activity) =>
             (status.emoji ? humanizeEmoji(status.emoji) + " " : "") +
-            (status.state ? Discord.Util.escapeMarkdown(status.state) : "")
+            (status.state ? Discord.escapeMarkdown(status.state) : "")
         const humanizeActivity = (act: Discord.Activity) =>
-            `${activityTypes[act.type] || humanizeConstant(act.type)} **${
-                act.type === "CUSTOM"
+            `${activityTypes[act.type] || Discord.ActivityType[act.type]} **${
+                act.type === Discord.ActivityType.Custom
                     ? humanizeStatus(act)
-                    : Discord.Util.escapeMarkdown(act.name)
+                    : Discord.escapeMarkdown(act.name)
             }**`
 
         if (member?.partial) await member.fetch()

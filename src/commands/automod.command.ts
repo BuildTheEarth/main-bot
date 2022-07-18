@@ -7,6 +7,7 @@ import BannedWord from "../entities/BannedWord.entity.js"
 import Discord from "discord.js"
 import {
     formatPunishmentTime,
+    hexToNum,
     hexToRGB,
     humanizeArray,
     humanizeConstant,
@@ -247,7 +248,7 @@ async function getList(
     const words = await BannedWord.find({ exception: exception })
     const wordEmbeds = [
         {
-            color: hexToRGB("#1EAD2F"),
+            color: hexToNum("#1EAD2F"),
             author: { name: `${!exception ? "Word" : "Exception"} list` },
             description: ""
         }
@@ -276,7 +277,7 @@ async function getList(
         ) {
             currentEmbed += 1
             wordEmbeds.push({
-                color: hexToRGB("#1EAD2F"),
+                color: hexToNum("#1EAD2F"),
                 author: {
                     name: `${!exception ? "Word" : "Exception"} list pt. ${
                         currentEmbed + 1
@@ -294,11 +295,11 @@ async function getList(
               }\n`
     }
     if (wordEmbeds.length <= 1) return message.send({ embeds: wordEmbeds })
-    let row = new Discord.MessageActionRow().addComponents(
-        new Discord.MessageButton()
+    let row = new Discord.ActionRowBuilder<Discord.ButtonBuilder>().addComponents(
+        new Discord.ButtonBuilder()
             .setCustomId(`${message.id}.forwards`)
             .setLabel(client.config.emojis.right.toString())
-            .setStyle("SUCCESS")
+            .setStyle(Discord.ButtonStyle.Success)
     )
     const sentMessage = await message.send({
         embeds: [wordEmbeds[0]],
@@ -331,33 +332,33 @@ async function getList(
         if ((interaction as Discord.ButtonInteraction).customId === `${message.id}.back`)
             page -= 1
         if (page === 1) {
-            row = new Discord.MessageActionRow().addComponents(
-                new Discord.MessageButton()
+            row = new Discord.ActionRowBuilder<Discord.ButtonBuilder>().addComponents(
+                new Discord.ButtonBuilder()
                     .setCustomId(`${message.id}.forwards`)
                     .setLabel(client.config.emojis.right.toString())
-                    .setStyle("SUCCESS")
+                    .setStyle(Discord.ButtonStyle.Success)
             )
         } else if (page === wordEmbeds.length) {
-            row = new Discord.MessageActionRow().addComponents(
-                new Discord.MessageButton()
+            row = new Discord.ActionRowBuilder<Discord.ButtonBuilder>().addComponents(
+                new Discord.ButtonBuilder()
                     .setCustomId(`${message.id}.back`)
                     .setLabel(client.config.emojis.left.toString())
-                    .setStyle("SUCCESS")
+                    .setStyle(Discord.ButtonStyle.Success)
             )
         } else {
-            row = new Discord.MessageActionRow()
+            row = new Discord.ActionRowBuilder<Discord.ButtonBuilder>()
 
                 .addComponents(
-                    new Discord.MessageButton()
+                    new Discord.ButtonBuilder()
                         .setCustomId(`${message.id}.back`)
                         .setLabel(client.config.emojis.left.toString())
-                        .setStyle("SUCCESS")
+                        .setStyle(Discord.ButtonStyle.Success)
                 )
                 .addComponents(
-                    new Discord.MessageButton()
+                    new Discord.ButtonBuilder()
                         .setCustomId(`${message.id}.forwards`)
                         .setLabel(client.config.emojis.right.toString())
-                        .setStyle("SUCCESS")
+                        .setStyle(Discord.ButtonStyle.Success)
                 )
         }
 
@@ -376,10 +377,11 @@ async function getList(
             }
         } else interaction.editReply({ embeds: [embed] })
     }
-
+    // @ts-ignore Honestly this is so annoying
     client.on("interactionCreate", interactionFunc)
     setTimeout(async () => {
         await sentMessage.edit({ content: "Expired", components: [] })
+        // @ts-ignore Honestly this is so annoying
         client.off("interactionCreate", interactionFunc)
     }, 600000)
 }

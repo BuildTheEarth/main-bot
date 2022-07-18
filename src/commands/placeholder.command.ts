@@ -4,7 +4,7 @@ import Command from "../struct/Command.js"
 import CommandMessage from "../struct/CommandMessage.js"
 
 import iso6391 from "../struct/client/iso6391.js"
-import { hexToRGB } from "@buildtheearth/bot-utils"
+import { hexToNum, hexToRGB } from "@buildtheearth/bot-utils"
 
 export default new Command({
     name: "placeholder",
@@ -217,7 +217,7 @@ export default new Command({
             if (!placeholderTemp) return message.sendErrorMessage("placeholderNotFound")
             const placeholder = placeholderTemp
             const embed = {
-                color: hexToRGB(client.config.colors.info),
+                color: hexToNum(client.config.colors.info),
                 description:
                     `The **${placeholder.name}** placeholder responds with ` +
                     `the following text in ${iso6391.getName(placeholder.language)}:` +

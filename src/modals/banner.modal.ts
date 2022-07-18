@@ -16,17 +16,20 @@ export default async function createBanner(
         if (res == undefined) throw new Error()
         isBig = Number.parseInt(res) > 10485760
     } catch (e) {
-        return client.response.sendError(
+        await client.response.sendError(
             interaction,
             client.messages.getMessage("requestIncomplete", interaction.locale)
         )
+        return
     }
 
-    if (isBig)
-        return client.response.sendError(
+    if (isBig) {
+        await client.response.sendError(
             interaction,
             client.messages.getMessage("contentTooLarge10MB", interaction.locale)
         )
+        return
+    }
 
     const banner = new BannerImage()
     banner.url = image

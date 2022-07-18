@@ -1,4 +1,4 @@
-import { hexToRGB } from "@buildtheearth/bot-utils"
+import { hexToNum, hexToRGB } from "@buildtheearth/bot-utils"
 import Discord from "discord.js"
 import Client from "../Client.js"
 import CommandMessage from "../CommandMessage.js"
@@ -12,31 +12,31 @@ export default class Response {
 
     async sendError(
         message: Discord.ModalSubmitInteraction,
-        embed: string | Discord.MessageEmbedOptions,
+        embed: string | Discord.APIEmbed,
         ephemeral?: boolean
-    ): Promise<void>
+    ): Promise<Discord.InteractionResponse>
 
     async sendError(
         message: Discord.ButtonInteraction,
-        embed: string | Discord.MessageEmbedOptions,
+        embed: string | Discord.APIEmbed,
         ephemeral?: boolean
-    ): Promise<void>
+    ): Promise<Discord.InteractionResponse>
 
     async sendError(
         message: CommandMessage,
-        embed: string | Discord.MessageEmbedOptions,
+        embed: string | Discord.APIEmbed,
         ephemeral?: boolean
     ): Promise<CommandMessage>
 
     async sendError(
         message: Discord.TextBasedChannel | Discord.Message,
-        embed: string | Discord.MessageEmbedOptions,
+        embed: string | Discord.APIEmbed,
         ephemeral?: boolean
     ): Promise<Discord.Message>
 
     async sendError(
         message: CommandMessage | Discord.TextBasedChannel | Discord.Message,
-        embed: string | Discord.MessageEmbedOptions,
+        embed: string | Discord.APIEmbed,
         ephemeral?: boolean
     ): Promise<Discord.Message | CommandMessage>
 
@@ -47,11 +47,16 @@ export default class Response {
             | Discord.Message
             | Discord.ModalSubmitInteraction
             | Discord.ButtonInteraction,
-        embed: string | Discord.MessageEmbedOptions,
+        embed: string | Discord.APIEmbed,
         ephemeral: boolean = true
-    ): Promise<CommandMessage | Discord.Message | Discord.ModalSubmitInteraction | void> {
+    ): Promise<
+        | CommandMessage
+        | Discord.Message
+        | Discord.ModalSubmitInteraction
+        | Discord.InteractionResponse
+    > {
         if (typeof embed === "string") embed = { description: embed }
-        embed.color = hexToRGB(this.client.config.colors.error)
+        embed.color = hexToNum(this.client.config.colors.error)
         if (message instanceof CommandMessage)
             return message.send({ embeds: [embed], ephemeral: ephemeral })
         else if (message instanceof Discord.Message)
@@ -68,31 +73,31 @@ export default class Response {
 
     async sendSuccess(
         message: Discord.ButtonInteraction,
-        embed: string | Discord.MessageEmbedOptions,
+        embed: string | Discord.APIEmbed,
         ephemeral?: boolean
-    ): Promise<void>
+    ): Promise<Discord.InteractionResponse>
 
     async sendSuccess(
         message: Discord.ModalSubmitInteraction,
-        embed: string | Discord.MessageEmbedOptions,
+        embed: string | Discord.APIEmbed,
         ephemeral?: boolean
-    ): Promise<void>
+    ): Promise<Discord.InteractionResponse>
 
     async sendSuccess(
         message: CommandMessage,
-        embed: string | Discord.MessageEmbedOptions,
+        embed: string | Discord.APIEmbed,
         ephemeral?: boolean
     ): Promise<CommandMessage>
 
     async sendSuccess(
         message: Discord.TextBasedChannel | Discord.Message,
-        embed: string | Discord.MessageEmbedOptions,
+        embed: string | Discord.APIEmbed,
         ephemeral?: boolean
     ): Promise<Discord.Message>
 
     async sendSuccess(
         message: CommandMessage | Discord.TextBasedChannel | Discord.Message,
-        embed: string | Discord.MessageEmbedOptions,
+        embed: string | Discord.APIEmbed,
         ephemeral?: boolean
     ): Promise<Discord.Message | CommandMessage>
 
@@ -103,11 +108,11 @@ export default class Response {
             | Discord.Message
             | Discord.ModalSubmitInteraction
             | Discord.ButtonInteraction,
-        embed: string | Discord.MessageEmbedOptions,
+        embed: string | Discord.APIEmbed,
         ephemeral: boolean = false
-    ): Promise<CommandMessage | Discord.Message | void> {
+    ): Promise<CommandMessage | Discord.Message | Discord.InteractionResponse> {
         if (typeof embed === "string") embed = { description: embed }
-        embed.color = hexToRGB(this.client.config.colors.success)
+        embed.color = hexToNum(this.client.config.colors.success)
         if (message instanceof CommandMessage)
             return message.send({ embeds: [embed], ephemeral: ephemeral })
         else if (message instanceof Discord.Message)

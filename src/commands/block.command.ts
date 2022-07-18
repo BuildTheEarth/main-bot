@@ -5,7 +5,7 @@ import Discord from "discord.js"
 import Args from "../struct/Args.js"
 import mcBlockInfo from "minecraft-block-info"
 import CommandMessage from "../struct/CommandMessage.js"
-import { hexToRGB } from "@buildtheearth/bot-utils"
+import { hexToNum, hexToRGB } from "@buildtheearth/bot-utils"
 
 export default new Command({
     name: "block",
@@ -83,19 +83,19 @@ export default new Command({
                         image: {
                             url: file
                         },
-                        color: hexToRGB(client.config.colors.info)
+                        color: hexToNum(client.config.colors.info)
                     }
                 ]
             })
         else {
             let pageNum = 0
-            let row = new Discord.MessageActionRow().addComponents(
-                new Discord.MessageButton()
+            let row = new Discord.ActionRowBuilder<Discord.ButtonBuilder>().addComponents(
+                new Discord.ButtonBuilder()
                     .setCustomId(`${message.id}.forwards`)
                     .setLabel(client.config.emojis.right.toString())
-                    .setStyle("SUCCESS")
+                    .setStyle(Discord.ButtonStyle.Success)
             )
-            let page: Discord.MessageEmbedOptions = {
+            let page: Discord.APIEmbed = {
                 title: `Page ${pageNum + 1}`,
                 image: {
                     url: file
@@ -133,33 +133,35 @@ export default new Command({
                 )
                     pageNum -= 1
                 if (pageNum === 0) {
-                    row = new Discord.MessageActionRow().addComponents(
-                        new Discord.MessageButton()
-                            .setCustomId(`${message.id}.forwards`)
-                            .setLabel(client.config.emojis.right.toString())
-                            .setStyle("SUCCESS")
-                    )
-                } else if (pageNum === results.length - 1) {
-                    row = new Discord.MessageActionRow().addComponents(
-                        new Discord.MessageButton()
-                            .setCustomId(`${message.id}.back`)
-                            .setLabel(client.config.emojis.left.toString())
-                            .setStyle("SUCCESS")
-                    )
-                } else {
-                    row = new Discord.MessageActionRow()
-
-                        .addComponents(
-                            new Discord.MessageButton()
-                                .setCustomId(`${message.id}.back`)
-                                .setLabel(client.config.emojis.left.toString())
-                                .setStyle("SUCCESS")
-                        )
-                        .addComponents(
-                            new Discord.MessageButton()
+                    row =
+                        new Discord.ActionRowBuilder<Discord.ButtonBuilder>().addComponents(
+                            new Discord.ButtonBuilder()
                                 .setCustomId(`${message.id}.forwards`)
                                 .setLabel(client.config.emojis.right.toString())
-                                .setStyle("SUCCESS")
+                                .setStyle(Discord.ButtonStyle.Success)
+                        )
+                } else if (pageNum === results.length - 1) {
+                    row =
+                        new Discord.ActionRowBuilder<Discord.ButtonBuilder>().addComponents(
+                            new Discord.ButtonBuilder()
+                                .setCustomId(`${message.id}.back`)
+                                .setLabel(client.config.emojis.left.toString())
+                                .setStyle(Discord.ButtonStyle.Success)
+                        )
+                } else {
+                    row = new Discord.ActionRowBuilder<Discord.ButtonBuilder>()
+
+                        .addComponents(
+                            new Discord.ButtonBuilder()
+                                .setCustomId(`${message.id}.back`)
+                                .setLabel(client.config.emojis.left.toString())
+                                .setStyle(Discord.ButtonStyle.Success)
+                        )
+                        .addComponents(
+                            new Discord.ButtonBuilder()
+                                .setCustomId(`${message.id}.forwards`)
+                                .setLabel(client.config.emojis.right.toString())
+                                .setStyle(Discord.ButtonStyle.Success)
                         )
                 }
                 if (
@@ -183,7 +185,7 @@ export default new Command({
                             url: file
                         },
                         footer: { text: `Page ${pageNum + 1}/${results.length}` },
-                        color: hexToRGB(client.config.colors.info)
+                        color: hexToNum(client.config.colors.info)
                     }
                 } else {
                     page = {
@@ -194,7 +196,7 @@ export default new Command({
                             )
                         },
                         footer: { text: `Page ${pageNum + 1}/${results.length}` },
-                        color: hexToRGB(client.config.colors.info)
+                        color: hexToNum(client.config.colors.info)
                     }
                 }
                 await (interaction as Discord.ButtonInteraction).update({
@@ -209,10 +211,12 @@ export default new Command({
                 } else interaction.editReply({ embeds: [page] })
             }
 
+            //@ts-ignore aaaah
             client.on("interactionCreate", interactionFunc)
 
             setTimeout(async () => {
                 await sentMessage.edit({ content: "Expired", components: [] })
+                //@ts-ignore aaaah
                 client.off("interactionCreate", interactionFunc)
             }, 600000)
         }

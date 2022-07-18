@@ -107,7 +107,7 @@ export default class TeamPointsLog extends typeorm.BaseEntity {
         if (!returnChannel) {
             return null
         }
-        if (returnChannel.isText()) return returnChannel
+        if (returnChannel.type === Discord.ChannelType.GuildText) return returnChannel
         return null
     }
 
@@ -116,7 +116,7 @@ export default class TeamPointsLog extends typeorm.BaseEntity {
         if (!channel) {
             return
         }
-        const embed = new Discord.MessageEmbed()
+        const embed = new Discord.EmbedBuilder()
         embed.setTitle(`${this.pointChange > 0 ? "Gave" : "Took"} points`)
         embed.setDescription(
             `<@${this.actorId}> ${this.pointChange > 0 ? "gave" : "took"} ${

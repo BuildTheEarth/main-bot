@@ -43,7 +43,7 @@ export default class BannerImage extends typeorm.BaseEntity {
             channel => channel.name === "updates"
         ) as Discord.TextChannel
 
-        const embed: Discord.MessageEmbedOptions = {
+        const embed: Discord.APIEmbed = {
             author: { name: "New banner!" },
             description: `This week's banner was built by **${next.credit}**, and it's located in **${next.location}**.`,
             image: next

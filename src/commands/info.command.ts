@@ -6,6 +6,7 @@ import Discord from "discord.js"
 import {
     currentEnv,
     formatPunishmentTime,
+    hexToNum,
     hexToRGB,
     loadSyncJSON5
 } from "@buildtheearth/bot-utils"
@@ -26,7 +27,7 @@ export default new Command({
             message: string
             html_url: string
         }
-        const embed = <Discord.MessageEmbedOptions>{
+        const embed = <Discord.APIEmbed>{
             title: "Info about main-bot",
             thumbnail: { url: client.user?.displayAvatarURL() },
             fields: [
@@ -41,7 +42,7 @@ export default new Command({
                     value: `**[${commit.committer.name}](https://github.com/${commit.committer.name})** - [\`${commit.message}\`](${commit.html_url})`
                 }
             ],
-            color: hexToRGB(client.config.colors.info),
+            color: hexToNum(client.config.colors.info),
             description:
                 "**[Github repo](https://github.com/BuildtheEarth/main-bot) | [Bug report](https://github.com/BuildTheEarth/main-bot/issues/new?template=bug_report.md)**"
         }

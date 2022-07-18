@@ -58,7 +58,10 @@ export default new Command({
 
             const tokenRegex = new RegExp(client.token, "g")
             const modpackRegex = new RegExp(client.config.modpackAuth, "g")
-            const pwRegex = new RegExp(client.config.database.pass? client.config.database.pass: client.token, "g")
+            const pwRegex = new RegExp(
+                client.config.database.pass ? client.config.database.pass : client.token,
+                "g"
+            )
             const out = stringifyAnything(await eval(wrapped))
                 .replace(tokenRegex, "")
                 .replace(modpackRegex, "")

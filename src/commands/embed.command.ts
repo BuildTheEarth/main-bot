@@ -6,6 +6,7 @@ import Args from "../struct/Args.js"
 import { formatTimestamp, noop } from "@buildtheearth/bot-utils"
 import fetch from "node-fetch"
 import _ from "lodash"
+import Discord from "discord.js"
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function isNil(value: any): value is null | undefined {
@@ -53,10 +54,12 @@ export default new Command({
 
         const perms =
             channel.permissionsFor(message.member) &&
-            channel.permissionsFor(client.user)?.has("VIEW_CHANNEL")
+            channel
+                .permissionsFor(client.user)
+                ?.has(Discord.PermissionFlagsBits.ViewChannel)
         if (!perms) return message.sendErrorMessage("noChannelPerms")
 
-        if (!channel || !channel.isText()) {
+        if (!channel || !(channel.type === Discord.ChannelType.GuildText)) {
             return message.sendErrorMessage("provideMsgUrl")
         }
 
@@ -79,7 +82,7 @@ export default new Command({
                         ),
                         username: embedMessage.author.username,
                         avatar_url: embedMessage.author.displayAvatarURL({
-                            format: "png"
+                            extension: "png"
                         })
                     }
                 }

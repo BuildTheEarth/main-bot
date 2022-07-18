@@ -1,4 +1,4 @@
-import { hexToRGB } from "@buildtheearth/bot-utils"
+import { hexToNum, hexToRGB } from "@buildtheearth/bot-utils"
 import Discord from "discord.js"
 import toggleDutyRole from "../../util/toggleDutyRole.util.js"
 import Client from "../Client.js"
@@ -32,7 +32,7 @@ export default class DutyScheduler {
                             description: `You have been ${
                                 dutyToggle ? "set on" : "removed from"
                             } duty.`,
-                            color: hexToRGB(this.client.config.colors.error)
+                            color: hexToNum(this.client.config.colors.error)
                         }
                     ]
                 })
@@ -54,7 +54,7 @@ export default class DutyScheduler {
                     embeds: [
                         {
                             description: `Your duty schedule has been cancelled by <@${userWhoDid.id}>.`,
-                            color: hexToRGB(this.client.config.colors.error)
+                            color: hexToNum(this.client.config.colors.error)
                         }
                     ]
                 })

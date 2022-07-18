@@ -12,21 +12,25 @@ declare global {
 
 const client = new Client({
     intents: [
-        Discord.Intents.FLAGS.GUILDS,
-        Discord.Intents.FLAGS.GUILD_MEMBERS,
-        Discord.Intents.FLAGS.GUILD_BANS,
-        Discord.Intents.FLAGS.GUILD_EMOJIS_AND_STICKERS,
-        Discord.Intents.FLAGS.GUILD_INTEGRATIONS,
-        Discord.Intents.FLAGS.GUILD_WEBHOOKS,
-        Discord.Intents.FLAGS.GUILD_INVITES,
-        Discord.Intents.FLAGS.GUILD_VOICE_STATES,
-        Discord.Intents.FLAGS.GUILD_PRESENCES,
-        Discord.Intents.FLAGS.GUILD_MESSAGES,
-        Discord.Intents.FLAGS.GUILD_MESSAGE_REACTIONS,
-        Discord.Intents.FLAGS.DIRECT_MESSAGES,
-        Discord.Intents.FLAGS.DIRECT_MESSAGE_REACTIONS
+        Discord.IntentsBitField.Flags.Guilds,
+        Discord.IntentsBitField.Flags.GuildMembers,
+        Discord.IntentsBitField.Flags.GuildBans,
+        Discord.IntentsBitField.Flags.GuildEmojisAndStickers,
+        Discord.IntentsBitField.Flags.GuildIntegrations,
+        Discord.IntentsBitField.Flags.GuildWebhooks,
+        Discord.IntentsBitField.Flags.GuildInvites,
+        Discord.IntentsBitField.Flags.MessageContent,
+        Discord.IntentsBitField.Flags.GuildVoiceStates,
+        Discord.IntentsBitField.Flags.GuildMessages,
+        Discord.IntentsBitField.Flags.GuildMessageReactions,
+        Discord.IntentsBitField.Flags.DirectMessages,
+        Discord.IntentsBitField.Flags.DirectMessageReactions
     ],
-    partials: ["CHANNEL", "MESSAGE", "REACTION"]
+    partials: [
+        Discord.Partials.Channel,
+        Discord.Partials.Message,
+        Discord.Partials.Reaction
+    ]
 })
 global.client = client
 

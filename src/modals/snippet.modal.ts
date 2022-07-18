@@ -22,11 +22,13 @@ export default async function createSnippet(
             snippet.aliases = []
             snippet.type = info.type
         } else if (info.subcommand === "edit") {
-            if (info.existingSnippet?.body === body)
-                return client.response.sendError(
+            if (info.existingSnippet?.body === body) {
+                await client.response.sendError(
                     interaction,
                     client.messages.getMessage("noChange", interaction.locale)
                 )
+                return
+            }
             if (info.existingSnippet) snippet = info.existingSnippet
             if (snippet) snippet.body = body
         }

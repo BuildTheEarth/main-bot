@@ -30,6 +30,8 @@ const ACTION_TYPES = ["warn", "mute", "kick", "ban", "unmute", "unban"]
 
 export class Rewrite1608069541176 implements typeorm.MigrationInterface {
     public async up(queryRunner: typeorm.QueryRunner): Promise<void> {
+        // Its causing more issues than being helpful, we dont need it anyways
+        /*
         const config = await queryRunner.hasTable("Config")
         const server = await queryRunner.hasTable("Server")
         const modpack = await queryRunner.hasTable("modpack_images")
@@ -278,7 +280,9 @@ CREATE TABLE \`suggestions\` (
             const teams = oldSuggestion.team === "none" ? null : oldSuggestion.team
             //@ts-ignore
             const statusUpdater = KNOWN_USERS[statusUpdaterName] || null
-            const statusReason = statusField.match(/Reason : \*\*(.+)\*\*/)?.[1] || null
+            */
+        //const statusReason = statusField.match(/Reason : \*\*(.+)\*\*/)?.[1] || null
+        /*
             const _message = message.id
             const staff = true
             const createdAt = new Date(message.createdTimestamp)
@@ -313,6 +317,7 @@ VALUES
         }
 
         await queryRunner.query("DROP TABLE old_suggestions")
+        */
     }
     public async down(): Promise<void> {
         console.log(

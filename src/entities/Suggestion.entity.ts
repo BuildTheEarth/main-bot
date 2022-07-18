@@ -4,7 +4,7 @@ import Discord from "discord.js"
 import path from "path"
 import url from "url"
 import Client from "../struct/Client.js"
-import { hexToRGB, loadSyncJSON5, replaceAsync } from "@buildtheearth/bot-utils"
+import { hexToNum, hexToRGB, loadSyncJSON5, replaceAsync } from "@buildtheearth/bot-utils"
 import unicode from "./transformers/unicode.transformer.js"
 const suggestionStatusActions = loadSyncJSON5(
     path.join(
@@ -153,22 +153,21 @@ export default class Suggestion extends typeorm.BaseEntity {
         return `https://discord.com/channels/${guild}/${channel}/${message}`
     }
 
-    async displayEmbed(client: Client): Promise<Discord.MessageEmbedOptions> {
+    async displayEmbed(client: Client): Promise<Discord.APIEmbed> {
         const identifier = await this.getIdentifier()
 
         if (this.deletedAt) {
             const deleter =
                 this.deleter === this.author ? "the author" : `<@${this.deleter}>`
             return {
-                color: hexToRGB(client.config.colors.error),
+                color: hexToNum(client.config.colors.error),
                 description: `**#${identifier}**: The suggestion has been deleted by ${deleter}.`
             }
         }
 
-        const embed = <Discord.MessageEmbedOptions>{
-            color: "#999999",
+        const embed = <Discord.APIEmbed>{
+            color: hexToNum("#999999"),
             author: { name: `#${identifier} — ${this.title}` },
-            thumbnail: { url: undefined },
             description: this.body,
             fields: []
         }
@@ -180,8 +179,8 @@ export default class Suggestion extends typeorm.BaseEntity {
                 if (author && embed.thumbnail) {
                     embed.thumbnail.url = author.displayAvatarURL({
                         size: 128,
-                        format: "png",
-                        dynamic: true
+                        extension: "png",
+                        forceStatic: false
                     })
                 }
             }
@@ -189,7 +188,7 @@ export default class Suggestion extends typeorm.BaseEntity {
         if (this.teams) embed.fields?.push({ name: "Team/s", value: this.teams })
 
         if (this.status) {
-            embed.color = hexToRGB(client.config.colors.suggestions[this.status])
+            embed.color = hexToNum(client.config.colors.suggestions[this.status])
             if (embed.thumbnail)
                 embed.thumbnail.url = client.config.assets.suggestions[this.status]
 

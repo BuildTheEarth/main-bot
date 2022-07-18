@@ -4,7 +4,7 @@ import Command from "../struct/Command.js"
 
 import Discord from "discord.js"
 import CommandMessage from "../struct/CommandMessage.js"
-import { hexToRGB } from "@buildtheearth/bot-utils"
+import { hexToNum, hexToRGB } from "@buildtheearth/bot-utils"
 
 export default new Command({
     name: "purge",
@@ -34,7 +34,7 @@ export default new Command({
         await message.continue()
 
         await client.log({
-            color: hexToRGB(client.config.colors.info),
+            color: hexToNum(client.config.colors.info),
             author: { name: "Purge" },
             description: `${purged.size} messages purged by ${message.member} in ${message.channel}.`
         })

@@ -78,7 +78,7 @@ export default abstract class CommandUtils {
         command: Command,
         slashcommand: boolean,
         client: Client
-    ): Discord.MessageEmbedOptions {
+    ): Discord.APIEmbed {
         let text = `**${command.name}**\n${command.description}`
         const commandPrefix = (slashcommand ? "/" : client.config.prefix) + command.name
 

@@ -4,7 +4,7 @@ import Command from "../struct/Command.js"
 import BannerImage from "../entities/BannerImage.entity.js"
 
 import CommandMessage from "../struct/CommandMessage.js"
-import { hexToRGB, quote } from "@buildtheearth/bot-utils"
+import { hexToNum, hexToRGB, quote } from "@buildtheearth/bot-utils"
 
 export default new Command({
     name: "banner",
@@ -91,7 +91,7 @@ export default new Command({
                 embeds: [
                     {
                         author: { name: `Banner #${banner.id}` },
-                        color: hexToRGB(client.config.colors.info),
+                        color: hexToNum(client.config.colors.info),
                         description: banner.description
                             ? quote(banner.description)
                             : undefined,

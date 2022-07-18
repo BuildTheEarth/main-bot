@@ -23,15 +23,15 @@ export default new Command({
     ],
     async run(this: Command, client: Client, message: CommandMessage, args: Args) {
         const channel = (await args.consumeChannel("channel")) || message.channel
-        if (!channel.isText()) return
+        if (!(channel.type === Discord.ChannelType.GuildText)) return
         if (!client.user) return
         const perms =
             (channel as Discord.TextChannel)
                 .permissionsFor(message.member)
-                .has("VIEW_CHANNEL") &&
+                .has(Discord.PermissionFlagsBits.ViewChannel) &&
             (channel as Discord.TextChannel)
                 .permissionsFor(client.user)
-                ?.has("VIEW_CHANNEL")
+                ?.has(Discord.PermissionFlagsBits.ViewChannel)
         if (!perms) return message.sendErrorMessage("noChannelPerms")
 
         await message.continue()
@@ -41,7 +41,7 @@ export default new Command({
         const reason = `Access requested by ${message.member.user.tag} (${message.member.id})`
         /*eslint-enable */
         await (channel as Discord.TextChannel).permissionOverwrites.edit(manager, {
-            MANAGE_ROLES: true
+            ManageRoles: true
         }) // There is no non-hacky reason support here now
 
         message.sendSuccessMessage("gaveChannelPerms", channel)

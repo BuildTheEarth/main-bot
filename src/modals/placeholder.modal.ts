@@ -25,11 +25,14 @@ export default async function createPlaceholder(
             if (placeholderTemp)
                 await client.log(placeholderTemp, "add", interaction.user)
         } else if (info.subcommand === "edit") {
-            if (info.existingPlaceholder?.body === body)
-                return client.response.sendError(
+            if (info.existingPlaceholder?.body === body) {
+                await client.response.sendError(
                     interaction,
                     client.messages.getMessage("noChange", interaction.locale)
                 )
+                return
+            }
+
             await client.placeholder.editPlaceholder(info.name, info.language, body)
             await client.response.sendSuccess(
                 interaction,

@@ -7,7 +7,7 @@ import GuildMember from "../struct/discord/GuildMember.js"
 
 import BlunderTracker from "../entities/BlunderTracker.entity.js"
 import ApiTypes = require("discord-api-types/v10")
-import { GuildTextBasedChannel } from "discord.js"
+import Discord, { GuildTextBasedChannel } from "discord.js"
 import typeorm from "typeorm"
 
 export default new Command({
@@ -133,7 +133,7 @@ export default new Command({
             const role = await args.consumeRole("team")
 
             const channel = await args.consumeChannel("channel")
-            if (!channel || !channel.isText())
+            if (!channel || !(channel.type === Discord.ChannelType.GuildText))
                 return message.sendErrorMessage("noChannel")
             if (
                 (channel as GuildTextBasedChannel).guild?.id !==

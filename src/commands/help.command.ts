@@ -53,12 +53,12 @@ export default new Command({
         }
 
         let allowedCommands
-        if (message.channel.type !== "DM") {
+        if (message.channel.type !== Discord.ChannelType.DM) {
             allowedCommands = client.commands.filter(command =>
                 GuildMember.hasRole(member, command.permission, client)
             )
         }
-        if (message.channel.type === "DM") {
+        if (message.channel.type === Discord.ChannelType.DM) {
             allowedCommands = client.commands.filter(command => command.dms === true)
         }
         const formattedCommands = allowedCommands

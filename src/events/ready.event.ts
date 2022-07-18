@@ -18,7 +18,7 @@ export default async function ready(this: Client): Promise<void> {
     this.logger.info("Loaded commands.")
 
     const activity = `with ${(await this.customGuilds.main()).memberCount} users`
-    this.user.setActivity(activity, { type: "PLAYING" })
+    this.user.setActivity(activity, { type: Discord.ActivityType.Playing })
 
     // schedule punishment undoings, banner queue cycles, the blunder tracker interval, and advanced builder removals!
     BannerImage.schedule(this)

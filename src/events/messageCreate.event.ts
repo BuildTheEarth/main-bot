@@ -57,7 +57,7 @@ export default async function (this: Client, message: Discord.Message): Promise<
 
     const mainGuild = await this.customGuilds.main()
     const main = mainGuild.id === message.guild?.id
-    if (main && message.type === "USER_PREMIUM_GUILD_SUBSCRIPTION_TIER_3") {
+    if (main && message.type === Discord.MessageType.GuildBoostTier3) {
         await Guild.setVanityCode(
             message.guild,
             this.config.vanity,

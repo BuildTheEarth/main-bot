@@ -29,7 +29,7 @@ export default new Command({
         if (!java?.online) {
             return message.sendErrorMessageSeen("networkOffline")
         } else {
-            const embed = <Discord.MessageEmbedOptions>{
+            const embed = <Discord.APIEmbed>{
                 description: message.getMessage("networkOnline"),
                 fields: [{ name: message.getMessage("players") }],
                 footer: { text: "IP: BuildTheEarth.net, bedrock.BuildTheEarth.net" }

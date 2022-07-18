@@ -4,7 +4,7 @@ import Args from "../struct/Args.js"
 import Command from "../struct/Command.js"
 
 import CommandMessage from "../struct/CommandMessage.js"
-import { hexToRGB, humanizeArray } from "@buildtheearth/bot-utils"
+import { hexToNum, hexToRGB, humanizeArray } from "@buildtheearth/bot-utils"
 
 const VALID_IMAGE_SIZES = [16, 32, 64, 128, 256, 512, 1024, 2048, 4096]
 
@@ -38,7 +38,10 @@ export default new Command({
         const user = (await args.consumeUser("user")) || message.member
         const size =
             Number(args.consumeIf(arg => !Number.isNaN(Number(arg)), "size")) || 512
-        const format = args.consumeBoolean("webp") || "png"
+        let format = args.consumeBoolean("webp") || "png"
+        if (format === true) {
+            format = "webp"
+        }
         if (!user)
             return message.sendErrorMessage(user === undefined ? "noUser" : "invalidUser")
         if (!VALID_IMAGE_SIZES.includes(size))
@@ -50,15 +53,15 @@ export default new Command({
         await message.continue()
 
         const url = user.displayAvatarURL({
-            size: size as Discord.AllowedImageSize,
-            format: format as Discord.AllowedImageFormat,
-            dynamic: true
+            size: size as 16 | 32 | 64 | 128 | 256 | 512 | 1024 | 2048 | 4096 | undefined,
+            forceStatic: false,
+            extension: format as "webp" | "png" | "jpg" | "jpeg" | "gif" | undefined
         })
 
         await message.send({
             embeds: [
                 {
-                    color: hexToRGB(client.config.colors.info),
+                    color: hexToNum(client.config.colors.info),
                     description: `${user}'s profile picture:`,
                     image: { url }
                 }

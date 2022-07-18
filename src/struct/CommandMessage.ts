@@ -6,7 +6,7 @@ import _ from "lodash"
 import { noop } from "@buildtheearth/bot-utils"
 
 export default class CommandMessage {
-    message: Discord.CommandInteraction
+    message: Discord.ChatInputCommandInteraction
     channel!: Discord.TextBasedChannel
     member: Discord.GuildMember
     author: Discord.User
@@ -17,7 +17,7 @@ export default class CommandMessage {
     messages: Record<string, string>
     locale: string
 
-    constructor(message: Discord.CommandInteraction, client: Client) {
+    constructor(message: Discord.ChatInputCommandInteraction, client: Client) {
         this.client = client
         this.message = message
         if (message.channel) this.channel = message.channel
@@ -39,7 +39,7 @@ export default class CommandMessage {
     }
 
     public async sendError(
-        embed: string | Discord.MessageEmbedOptions,
+        embed: string | Discord.APIEmbed,
         ephemeral: boolean = false
     ): Promise<CommandMessage> {
         return client.response.sendError(this, embed, ephemeral)
@@ -68,7 +68,7 @@ export default class CommandMessage {
     }
 
     public async sendSuccess(
-        embed: string | Discord.MessageEmbedOptions,
+        embed: string | Discord.APIEmbed,
         ephemeral: boolean = false
     ): Promise<CommandMessage> {
         return client.response.sendSuccess(this, embed, ephemeral)
@@ -157,7 +157,9 @@ export default class CommandMessage {
         modalName: string,
         placeholders?: Record<string, string | undefined>
     ): Promise<string> {
-        const modal = _.cloneDeep(client.modals.getLocaleModal(modalName, interaction.locale))
+        const modal = _.cloneDeep(
+            client.modals.getLocaleModal(modalName, interaction.locale)
+        )
         if (!modal) throw new Error(`Modal ${modalName} not found`)
         modal.customId += "." + interaction.id
         if (placeholders) {
@@ -177,11 +179,10 @@ export default class CommandMessage {
             })
         }
         await interaction.showModal(
-            new Discord.Modal(
+            new Discord.ModalBuilder(
                 modal as {
                     components:
-                        | Discord.MessageActionRow<Discord.ModalActionRowComponent>[]
-                        | Discord.MessageActionRowOptions<Discord.ModalActionRowComponentResolvable>[]
+                        | Discord.ActionRowData<Discord.ModalActionRowComponentData>[]
                     customId: string
                     title: string
                 }
@@ -194,12 +195,17 @@ export default class CommandMessage {
 
 export interface MessageOptions {
     ephemeral?: boolean
-    embeds?: Discord.MessageEmbedOptions[]
+    embeds?: Discord.APIEmbed[]
     components?: Discord.MessageComponent[]
     content?: string
     allowedMentions?: Discord.MessageMentionOptions
     files?:
-        | Discord.FileOptions[]
+        | {
+              attachment: Discord.BufferResolvable
+              name?: string
+              description: string
+          }
         | Discord.BufferResolvable[]
-        | Discord.MessageAttachment[]
+        | Discord.Attachment[]
+        | Discord.AttachmentBuilder[]
 }

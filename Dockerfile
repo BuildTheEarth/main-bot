@@ -1,4 +1,4 @@
-FROM node:16-alpine3.15
+FROM node:18-alpine3.15
 
 WORKDIR /etc/buildtheearth/main-bot
 

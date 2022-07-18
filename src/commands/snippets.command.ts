@@ -7,7 +7,7 @@ import languages from "../struct/client/iso6391.js"
 import GuildMember from "../struct/discord/GuildMember.js"
 import Discord from "discord.js"
 import CommandMessage from "../struct/CommandMessage.js"
-import { hexToRGB } from "@buildtheearth/bot-utils"
+import { hexToNum, hexToRGB } from "@buildtheearth/bot-utils"
 
 const subSnippetTypes = ["team", "rule"]
 
@@ -291,7 +291,7 @@ export default new Command({
 
             const snippetEmbeds = [
                 {
-                    color: hexToRGB("#1EAD2F"),
+                    color: hexToNum("#1EAD2F"),
                     author: { name: "Snippet list" },
                     description: ""
                 }
@@ -315,7 +315,7 @@ export default new Command({
                     ) {
                         currentEmbed += 1
                         snippetEmbeds.push({
-                            color: hexToRGB("#1EAD2F"),
+                            color: hexToNum("#1EAD2F"),
                             author: { name: `Snippet list pt. ${currentEmbed + 1}` },
                             description: ""
                         })
@@ -327,11 +327,11 @@ export default new Command({
                 }
             }
             if (snippetEmbeds.length <= 1) return message.send({ embeds: snippetEmbeds })
-            let row = new Discord.MessageActionRow().addComponents(
-                new Discord.MessageButton()
+            let row = new Discord.ActionRowBuilder<Discord.ButtonBuilder>().addComponents(
+                new Discord.ButtonBuilder()
                     .setCustomId(`${message.id}.forwards`)
                     .setLabel(client.config.emojis.right.toString())
-                    .setStyle("SUCCESS")
+                    .setStyle(Discord.ButtonStyle.Success)
             )
             const sentMessage = await message.send({
                 embeds: [snippetEmbeds[0]],
@@ -367,33 +367,35 @@ export default new Command({
                 )
                     page -= 1
                 if (page === 1) {
-                    row = new Discord.MessageActionRow().addComponents(
-                        new Discord.MessageButton()
-                            .setCustomId(`${message.id}.forwards`)
-                            .setLabel(client.config.emojis.right.toString())
-                            .setStyle("SUCCESS")
-                    )
-                } else if (page === snippetEmbeds.length) {
-                    row = new Discord.MessageActionRow().addComponents(
-                        new Discord.MessageButton()
-                            .setCustomId(`${message.id}.back`)
-                            .setLabel(client.config.emojis.left.toString())
-                            .setStyle("SUCCESS")
-                    )
-                } else {
-                    row = new Discord.MessageActionRow()
-
-                        .addComponents(
-                            new Discord.MessageButton()
-                                .setCustomId(`${message.id}.back`)
-                                .setLabel(client.config.emojis.left.toString())
-                                .setStyle("SUCCESS")
-                        )
-                        .addComponents(
-                            new Discord.MessageButton()
+                    row =
+                        new Discord.ActionRowBuilder<Discord.ButtonBuilder>().addComponents(
+                            new Discord.ButtonBuilder()
                                 .setCustomId(`${message.id}.forwards`)
                                 .setLabel(client.config.emojis.right.toString())
-                                .setStyle("SUCCESS")
+                                .setStyle(Discord.ButtonStyle.Success)
+                        )
+                } else if (page === snippetEmbeds.length) {
+                    row =
+                        new Discord.ActionRowBuilder<Discord.ButtonBuilder>().addComponents(
+                            new Discord.ButtonBuilder()
+                                .setCustomId(`${message.id}.back`)
+                                .setLabel(client.config.emojis.left.toString())
+                                .setStyle(Discord.ButtonStyle.Success)
+                        )
+                } else {
+                    row = new Discord.ActionRowBuilder<Discord.ButtonBuilder>()
+
+                        .addComponents(
+                            new Discord.ButtonBuilder()
+                                .setCustomId(`${message.id}.back`)
+                                .setLabel(client.config.emojis.left.toString())
+                                .setStyle(Discord.ButtonStyle.Success)
+                        )
+                        .addComponents(
+                            new Discord.ButtonBuilder()
+                                .setCustomId(`${message.id}.forwards`)
+                                .setLabel(client.config.emojis.right.toString())
+                                .setStyle(Discord.ButtonStyle.Success)
                         )
                 }
 
@@ -413,10 +415,12 @@ export default new Command({
                 } else interaction.editReply({ embeds: [embed] })
             }
 
+            //@ts-ignore someone is gonna get yeeted
             client.on("interactionCreate", interactionFunc)
 
             setTimeout(async () => {
                 await sentMessage.edit({ content: "Expired", components: [] })
+                //@ts-ignore someone is gonna get yeeted
                 client.off("interactionCreate", interactionFunc)
             }, 600000)
         } else if (subcommandGroup === "aliases") {
@@ -597,7 +601,7 @@ export default new Command({
             await message.send({
                 embeds: [
                     {
-                        color: hexToRGB(client.config.colors.info),
+                        color: hexToNum(client.config.colors.info),
                         description:
                             `The **${existingSnippet.name}** ${currType} responds with ` +
                             `the following text in ${languageName}:` +

@@ -22,7 +22,7 @@ export default async function (
 ): Promise<unknown> {
     if (interaction.user.bot) return
 
-    if (interaction.type === "MESSAGE_COMPONENT") {
+    if (interaction.type === Discord.InteractionType.MessageComponent) {
         if (interaction.isSelectMenu()) {
             if (
                 !GuildMember.hasRole(
@@ -92,11 +92,8 @@ export default async function (
         }
     }
 
-    if (interaction.type === "APPLICATION_COMMAND") {
-        const args = new Args(
-            "",
-            new CommandMessage(interaction as Discord.CommandInteraction, this)
-        )
+    if (interaction.isChatInputCommand()) {
+        const args = new Args("", new CommandMessage(interaction, this))
         const command = this.commands.search(args.command)
         if (command) {
             const hasPermission =
@@ -122,14 +119,10 @@ export default async function (
                     : (interaction.user as Discord.User).tag
 
             try {
-                await command.run(
-                    this,
-                    new CommandMessage(interaction as Discord.CommandInteraction, this),
-                    args
-                )
+                await command.run(this, new CommandMessage(interaction, this), args)
             } catch (error) {
                 this.response.sendError(
-                    new CommandMessage(interaction as Discord.CommandInteraction, this),
+                    new CommandMessage(interaction, this),
                     "An unknown error occurred! Please contact one of the bot developers for help."
                 )
                 if (error instanceof Error) {
@@ -147,7 +140,7 @@ export default async function (
         }
     }
 
-    if (interaction.type === "MODAL_SUBMIT") {
+    if (interaction.type === Discord.InteractionType.ModalSubmit) {
         if (interaction instanceof ModalSubmitInteraction) {
             const type = interaction.customId.split(".")[0]
             if (type === "suggestmodal") {

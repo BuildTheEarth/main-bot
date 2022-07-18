@@ -16,11 +16,13 @@ export default async function createSuggestion(
 
         const staff = interaction.guild?.id === client.config.guilds.staff
         const suggestionsChannel = client.config.suggestions[staff ? "staff" : "main"]
-        if (interaction.channel?.id !== suggestionsChannel)
-            return client.response.sendError(
+        if (interaction.channel?.id !== suggestionsChannel) {
+            await client.response.sendError(
                 interaction,
                 `Please run this command in <#${suggestionsChannel}>!`
             )
+            return
+        }
 
         const identifier = info.subsuggestion
         const extend = identifier ? Suggestion.parseIdentifier(identifier) : null
@@ -90,7 +92,7 @@ export default async function createSuggestion(
                 suggestionMessage.channel as Discord.TextChannel
             ).threads.create({
                 name: `${newIdentifier} - ${truncateString(title, 10)}`,
-                autoArchiveDuration: "MAX",
+                autoArchiveDuration: Discord.ThreadAutoArchiveDuration.OneWeek,
                 startMessage: suggestionMessage
             })
             await thread.setRateLimitPerUser(1)

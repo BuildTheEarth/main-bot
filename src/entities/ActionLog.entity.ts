@@ -12,7 +12,8 @@ import {
     ms,
     noop,
     truncateString,
-    pastTense
+    pastTense,
+    hexToNum
 } from "@buildtheearth/bot-utils"
 import { URL } from "url"
 
@@ -98,13 +99,13 @@ export default class ActionLog extends typeorm.BaseEntity {
         return formatted
     }
 
-    async displayEmbed(client: Client): Promise<Discord.MessageEmbedOptions> {
+    async displayEmbed(client: Client): Promise<Discord.APIEmbed> {
         const length =
             this.length !== null && this.length !== undefined
                 ? formatPunishmentTime(this.length, true)
                 : "\u200B"
-        const embed: Discord.MessageEmbedOptions = {
-            color: hexToRGB(client.config.colors.success),
+        const embed: Discord.APIEmbed = {
+            color: hexToNum(client.config.colors.success),
             author: { name: `Case #${this.id} (${this.action})` },
             thumbnail: { url: client.config.assets.cases[this.action] },
             fields: [
@@ -124,7 +125,7 @@ export default class ActionLog extends typeorm.BaseEntity {
         if (this.deletedAt) {
             const formattedTimestamp = formatTimestamp(this.deletedAt, "d")
             embed.description = "*This case has been deleted.*"
-            embed.color = hexToRGB(client.config.colors.error)
+            embed.color = hexToNum(client.config.colors.error)
             embed.fields?.push(
                 { name: "Deleter", value: `<@${this.deleter}>`, inline: true },
                 {
@@ -143,13 +144,13 @@ export default class ActionLog extends typeorm.BaseEntity {
         return embed
     }
 
-    private displayNotification(client: Client): Discord.MessageEmbedOptions {
+    private displayNotification(client: Client): Discord.APIEmbed {
         const length = this.length ? " " + formatPunishmentTime(this.length) : ""
         const actioned = pastTense(this.action)
         const color = this.action.startsWith("un") ? "success" : "error"
 
-        const embed: Discord.MessageEmbedOptions = {
-            color: hexToRGB(client.config.colors[color]),
+        const embed: Discord.APIEmbed = {
+            color: hexToNum(client.config.colors[color]),
             description: `*<@${this.executor}> has ${actioned} you${length}:*\n\n${this.reason}`,
             image: this.reasonImage ? { url: this.reasonImage } : undefined
         }
@@ -184,7 +185,8 @@ export default class ActionLog extends typeorm.BaseEntity {
         const channel = user.dmChannel
         if (!channel) return
 
-        const notification = await channel.messages.fetch(this.notification, {
+        const notification = await channel.messages.fetch({
+            message: this.notification,
             force: true
         })
         const embed = this.displayNotification(client)

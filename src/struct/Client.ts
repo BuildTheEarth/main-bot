@@ -15,7 +15,7 @@ import DutyScheduler from "./client/DutyScheduler.js"
 import Messages from "./client/Messages.js"
 import PlaceholderHandler from "./client/PlaceholderHandler.js"
 import Placeholder from "../entities/Placeholder.entity.js"
-import { hexToRGB } from "@buildtheearth/bot-utils"
+import { hexToNum, hexToRGB } from "@buildtheearth/bot-utils"
 import path from "path"
 import url from "url"
 import { Cron } from "croner"
@@ -112,7 +112,7 @@ export default class Client extends Discord.Client {
     }
 
     async log(
-        log: ActionLog | Snippet | Placeholder | Discord.MessageEmbedOptions,
+        log: ActionLog | Snippet | Placeholder | Discord.APIEmbed,
         action?: "add" | "edit" | "delete",
         executor?: Discord.User
     ): Promise<void> {
@@ -128,23 +128,24 @@ export default class Client extends Discord.Client {
 
         if (log instanceof ActionLog) {
             const embed = await log.displayEmbed(this)
-            if (embed.author && embed.color === this.config.colors.error) {
+            if (embed.author && embed.color === hexToNum(this.config.colors.error)) {
                 delete embed.description
                 embed.author.name += " deleted"
-            } else if (embed.color === this.config.colors.success) {
-                embed.color = hexToRGB(this.config.colors.info)
+            } else if (embed.color === hexToNum(this.config.colors.success)) {
+                embed.color = hexToNum(this.config.colors.info)
             }
 
             await channel.send({ embeds: [embed] })
         } else if (log instanceof Snippet || log instanceof Placeholder) {
             const embed = log.displayEmbed(this)
-            embed.thumbnail = {
-                url: executor?.displayAvatarURL({
-                    format: "png",
-                    dynamic: true,
-                    size: 64
-                })
-            }
+            if (executor)
+                embed.thumbnail = {
+                    url: executor.displayAvatarURL({
+                        extension: "png",
+                        forceStatic: false,
+                        size: 64
+                    })
+                }
             if (embed.author)
                 switch (action) {
                     case "add":
@@ -152,11 +153,11 @@ export default class Client extends Discord.Client {
                         break
                     case "edit":
                         embed.author.name += " edited"
-                        embed.color = hexToRGB(this.config.colors.info)
+                        embed.color = hexToNum(this.config.colors.info)
                         break
                     case "delete":
                         embed.author.name += " deleted"
-                        embed.color = hexToRGB(this.config.colors.error)
+                        embed.color = hexToNum(this.config.colors.error)
                         break
                 }
             await channel.send({ embeds: [embed] })

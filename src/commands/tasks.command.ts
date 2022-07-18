@@ -9,7 +9,7 @@ import Task, { TaskStatus, TaskStatuses } from "../entities/Task.entity.js"
 import typeorm from "typeorm"
 import CommandMessage from "../struct/CommandMessage.js"
 import ApiTypes = require("discord-api-types/v10")
-import { hexToRGB, humanizeArray } from "@buildtheearth/bot-utils"
+import { hexToNum, hexToRGB, humanizeArray } from "@buildtheearth/bot-utils"
 
 export default new Command({
     name: "tasks",
@@ -122,7 +122,7 @@ export default new Command({
 
             await message.sendSuccessMessage(
                 "savedTask",
-                Discord.Util.escapeMarkdown(task.title),
+                Discord.escapeMarkdown(task.title),
                 task.id
             )
         } else if (subcommand === "status") {
@@ -173,7 +173,7 @@ export default new Command({
             return message.send({
                 embeds: [
                     {
-                        color: hexToRGB(client.config.colors.info),
+                        color: hexToNum(client.config.colors.info),
                         description: `Here are your active tasks!${assignedBy}`,
                         fields: tasks.map(task => ({
                             name: `#${task.id}: ${task.title} (${task.status || "open"})`,
