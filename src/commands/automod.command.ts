@@ -170,9 +170,9 @@ export default new Command({
                             | "KICK"
                             | "DELETE",
                         reason: reason,
-                        duration: isNaN(duration ? duration : NaN)
+                        duration: isNaN(duration !== null ? duration : NaN)
                             ? undefined
-                            : duration
+                            : duration !== null
                             ? duration
                             : undefined,
                         exception: false
