@@ -262,13 +262,13 @@ async function getList(
                     (exception
                         ? `• ${word.word}\n`
                         : `• ||${word.word}|| - ${
-                              word.punishment_type
+                              word.punishment_type !== undefined
                                   ? humanizeConstant(word.punishment_type)
                                   : ""
                           } ${
-                              word.duration ? formatPunishmentTime(word.duration) : ""
+                              word.duration !== undefined ? formatPunishmentTime(word.duration) : ""
                           } for reason ${
-                              word.reason ? truncateString(word.reason, 20) : ""
+                              word.reason !== undefined? truncateString(word.reason, 20) : ""
                           }\n`)
                 )
                     .split("_")
@@ -289,9 +289,9 @@ async function getList(
         wordEmbeds[currentEmbed].description += exception
             ? `• ${word.word}\n`
             : `• ||${word.word}|| - ${
-                  word.punishment_type ? humanizeConstant(word.punishment_type) : ""
-              } ${word.duration ? formatPunishmentTime(word.duration) : ""} for reason ${
-                  word.reason ? truncateString(word.reason, 20) : ""
+                  word.punishment_type !== undefined ? humanizeConstant(word.punishment_type) : ""
+              } ${word.duration !== undefined ? formatPunishmentTime(word.duration) : ""} for reason ${
+                  word.reason !== undefined ? truncateString(word.reason, 20) : ""
               }\n`
     }
     if (wordEmbeds.length <= 1) return message.send({ embeds: wordEmbeds })

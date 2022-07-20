@@ -18,7 +18,7 @@ export default class BannedWordFilter {
 
     findBannedWord(text: string): BannedWordObj[] {
         let profanities: BannedWordObj[] = []
-        for (const word of Object.keys(this.client.filterWordsCached.banned)) {
+        for (const word of this.client.filterWordsCached.banned.keys()) {
             if (word.length > text.length) continue
             if (isSingular(word)) {
                 const plural = pluralize(word)
