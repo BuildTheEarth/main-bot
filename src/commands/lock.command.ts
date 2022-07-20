@@ -26,13 +26,11 @@ export default new Command({
             ((await args.consumeChannel("channel")) as Discord.TextChannel) ||
             (message.channel as Discord.TextChannel)
 
-        /*eslint-disable */
         const reason = `Locked by ${message.member.user.tag} (${message.member.id})`
-        /*eslint-enable */
 
         await channel.permissionOverwrites.edit(message.guild.id, {
             SendMessages: false
-        }) // There is no non-hacky reason support here now
+        }, {reason: reason})
 
         await message.sendSuccessMessage("lockedChannel", channel)
         await client.log({
