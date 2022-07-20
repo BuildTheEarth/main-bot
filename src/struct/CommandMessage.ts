@@ -4,6 +4,7 @@ import Client from "../struct/Client.js"
 import { vsprintf } from "sprintf-js"
 import _ from "lodash"
 import { noop } from "@buildtheearth/bot-utils"
+import replaceTypes from "../util/replaceTypes.util.js"
 
 export default class CommandMessage {
     message: Discord.ChatInputCommandInteraction
@@ -180,12 +181,12 @@ export default class CommandMessage {
         }
         await interaction.showModal(
             new Discord.ModalBuilder(
-                modal as {
+                replaceTypes(modal as {
                     components:
                         | Discord.ActionRowData<Discord.ModalActionRowComponentData>[]
                     customId: string
                     title: string
-                }
+                })
             )
         )
         console.log(modal)
