@@ -122,7 +122,7 @@
     titleTooLong99: ["Dieser Titel ist zu lang (max. 99 Zeichen)."],
     teamTooLong255: ["Dieser Teamname ist zu lang (max. 255 Zeichen)."],
     nameTooLong32: ["Dieser Name ist zu lang (max. 32 Zeichen)."],
-    wordTooLong16: ["Dieses Wort ist zu lang (max. 18 Zeichen)."],
+    wordTooLong18: ["Dieses Wort ist zu lang (max. 18 Zeichen)."],
     contentTooLarge10MB: ["Der Inhalt muss kleiner als 10MB sein."],
     purgeLimit: ["Du kannst nur bis zu 100 Nachrichten auf einmal löschen."],
     wrongUser: ["Hast du dieses Menü aufgerufen? Ich glaube nicht."],

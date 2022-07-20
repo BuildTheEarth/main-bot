@@ -122,7 +122,7 @@
     titleTooLong99: ["那個標題太長了。(最多99字元)。"],
     teamTooLong255: ["那個團隊名稱太長了。(最多255字元)。"],
     nameTooLong32: ["那個名稱太長了。(最多32字元)。"],
-    wordTooLong16: ["那個詞彙太長了。(最多18字元)。"],
+    wordTooLong18: ["那個詞彙太長了。(最多18字元)。"],
     contentTooLarge10MB: ["內容的大小必須小於10MB。"],
     purgeLimit: ["你一次最多只能清除100則訊息。"],
     wrongUser: ["你有召喚那個選單嗎？我想沒有。"],

@@ -124,7 +124,7 @@
 	titleTooLong99: ["Ce titre est trop long. (max. 99 caractères)."],
     teamTooLong255: ["Ce nom d'équipe est trop long. (max. 255 caractères)."],
     nameTooLong32: ["Ce nom est trop long. (max. 32 caractères)."],
-    wordTooLong16: ["Ce mot est trop long. (max. 18 caractères)"],
+    wordTooLong18: ["Ce mot est trop long. (max. 18 caractères)"],
     contentTooLarge10MB: ["La taille du contenu doit être inférieure à 10Mo."],
     purgeLimit: ["Vous ne pouvez purger que 100messages à la fois."],
     wrongUser: ["Avez-vous demandé ce menu?, je ne pense pas."],
