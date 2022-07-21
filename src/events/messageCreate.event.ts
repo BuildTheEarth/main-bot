@@ -152,7 +152,10 @@ export default async function (this: Client, message: Discord.Message): Promise<
 
     if (message.content.toLowerCase() === "donde es server")
         return await message.channel.send("hay un server!")
-    const bannedWords = this.filter.findBannedWord(message.content)
-    if (bannedWords.length >= 1 && message.guild?.id === this.config.guilds.main)
-        return ModerationMenu.createMenu(message, bannedWords, this)
+    if (message.content) {
+        const bannedWords = this.filter.findBannedWord(message.content)
+        if (bannedWords.length >= 1 && message.guild?.id === this.config.guilds.main)
+            return ModerationMenu.createMenu(message, bannedWords, this)
+    }
+
 }

@@ -18,7 +18,10 @@ export default async function (
 
     if (oldMessage?.author?.bot) return
 
-    const bannedWords = this.filter.findBannedWord(newMessage.content)
-    if (bannedWords.length >= 1)
-        return ModerationMenu.createMenu(newMessage, bannedWords, this)
+    if (newMessage.content) {
+        const bannedWords = this.filter.findBannedWord(newMessage.content)
+        if (bannedWords.length >= 1)
+            return ModerationMenu.createMenu(newMessage, bannedWords, this)
+    }
+
 }
