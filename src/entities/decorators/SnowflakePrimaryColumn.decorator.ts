@@ -6,6 +6,6 @@ export default function SnowflakePrimaryColumn(
     return typeorm.PrimaryColumn({
         ...options,
         type: "varchar",
-        length: "18"
+        length: "19"
     } as typeorm.PrimaryColumnOptions)
 }

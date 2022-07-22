@@ -28,7 +28,7 @@ export default new Command({
     ],
     async run(this: Command, client: Client, message: CommandMessage, args: Args) {
         const urlRegex =
-            /(?<=(https:\/\/)(canary\.discord\.com\/channels\/|discord\.com\/channels\/|ptb\.discord\.com\/channels\/))([0-9]{18})(\/)([0-9]{18})(\/)([0-9]{18})/
+            /(?<=(https:\/\/)(canary\.discord\.com\/channels\/|discord\.com\/channels\/|ptb\.discord\.com\/channels\/))([0-9]{17,})(\/)([0-9]{17,})(\/)([0-9]{17,})/
         const messageUrl = args.get("message")
         if (!messageUrl) return message.sendErrorMessage("provideMsgUrl")
         if (!urlRegex.test(messageUrl)) return message.sendErrorMessage("provideMsgUrl")

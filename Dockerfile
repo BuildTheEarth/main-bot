@@ -16,4 +16,5 @@ ENV IN_DOCKER yes
 
 #Please edit this to your images webserver port
 #EXPOSE 8080
-CMD ["node", "dist/index.js"]
+#CMD ["node", "dist/index.js"]
+CMD ["sh", "scripts/dumb.sh"]

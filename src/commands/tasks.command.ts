@@ -94,7 +94,7 @@ export default new Command({
         )
 
         if (subcommand === "add" || !subcommand) {
-            const regex = /\d{18}/g
+            const regex = /\d{17,}/g
             const assignees = (args.consumeIf(regex, "assignees") || "").match(regex)
             const [title, description] = [
                 args.consume("title"),

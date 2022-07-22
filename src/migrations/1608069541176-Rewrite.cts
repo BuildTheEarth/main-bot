@@ -1,12 +1,4 @@
 import typeorm from "typeorm"
-import Discord from "discord.js"
-import Client from "../struct/Client.js"
-//@ts-ignore
-import chalk from "chalk"
-import { promisify } from "util"
-import { ms } from "@buildtheearth/bot-utils"
-
-const wait = promisify(setTimeout)
 
 /*
 some wonderfully cryptic things about the old bot to know if you're reading this:
@@ -320,12 +312,14 @@ VALUES
         */
     }
     public async down(): Promise<void> {
+        /*
         console.log(
             chalk.red.bold(
                 "\n\nYou can't revert the Rewrite migration. Get your backup ready!\n\n"
             )
         )
         process.exit(0)
+        */
     }
 }
 
