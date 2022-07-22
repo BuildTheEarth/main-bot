@@ -23,7 +23,7 @@
         "fastify-static": "^4.7.0",
         "gitmoji-cli": "^4.11.0",
         "js-yaml": "4.1.0",
-        "json5": "2.2.0",
+        "json5": "2.2.1",
         "minecraft-block-info": "github:XboxBedrock/minecraft-block-info",
         "mysql-backup": "^1.0.0",
         "mysql2": "2.3.0",
