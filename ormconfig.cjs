@@ -5,11 +5,11 @@ const content = fs.readFileSync(__dirname + "/config/config.json5", {encoding: "
 const config = JSON5.parse(content)
 
 if (config.database.type == "mysql" || config.database.type == "mariadb") module.exports = {
-    type: "mysql",
-    host: config.database.host,
-    database: config.database.name,
-    username: config.database.user,
-    password: config.database.pass,
+    type: process.env.DB_TYPE || "mysql",
+    host: process.env.DB_HOST || config.database.host,
+    database: process.env.DB_NAME|| config.database.name,
+    username: process.env.DB_USER ||config.database.user,
+    password: process.env.DB_PASS || config.database.pass,
 
     migrations: ["dist/migrations/*.{js,ts}"],
     cli: { 
