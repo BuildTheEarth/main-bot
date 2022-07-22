@@ -1,5 +1,9 @@
 npm run typeorm migration:generate -- -n Snowflake19
 
+npm run typeorm schema:log
+
+npm run typeorm query "SELECT * from advanced_builders"
+
 apk --no-cache add curl
 
 cd src
