@@ -25,7 +25,9 @@
         "js-yaml": "4.1.0",
         "json5": "2.2.0",
         "minecraft-block-info": "github:XboxBedrock/minecraft-block-info",
+        "mysql-backup": "^1.0.0",
         "mysql2": "2.3.0",
+        "mysqldump": "^3.2.0",
         "node-fetch": "^3.2.1",
         "node-gyp": "^9.0.0",
         "nps-utils": "1.7.0",
@@ -77,7 +79,8 @@
         "start": "nps",
         "prepare": "husky install",
         "postinstall": "patch-package",
-        "typeorm": "node --experimental-specifier-resolution=node --loader ts-node/esm ./node_modules/typeorm/cli.js"
+        "typeorm": "node --experimental-specifier-resolution=node --loader ts-node/esm ./node_modules/typeorm/cli.js",
+        "t2sql": "node ./scripts/typeorm2sql.cjs"
     },
     "config": {
         "commitizen": {
