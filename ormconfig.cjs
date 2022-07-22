@@ -12,6 +12,7 @@ if (config.database.type == "mysql" || config.database.type == "mariadb") module
     password: process.env.DB_PASS || config.database.pass,
 
     migrations: ["dist/migrations/*.{js,ts}"],
+    entities: ["src/entities/*.entity.{js,ts}"],
     cli: { 
         migrationsDir: "src/migrations",
         entitiesDir: "src/entities",
