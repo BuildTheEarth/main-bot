@@ -4,6 +4,8 @@ npm run typeorm schema:log
 
 npm run typeorm query "SELECT * from advanced_builders"
 
+npm run typeorm query "DESCRIBE advanced_builders"
+
 apk --no-cache add curl
 
 cd src
