@@ -176,12 +176,12 @@ export default class Suggestion extends typeorm.BaseEntity {
             embed.fields?.push({ name: "Author", value: `<@${this.author}>` })
             if (!this.status) {
                 const author = client.users.cache.get(this.author)
-                if (author && embed.thumbnail) {
-                    embed.thumbnail.url = author.displayAvatarURL({
+                if (author) {
+                    embed.thumbnail = {url: author.displayAvatarURL({
                         size: 128,
                         extension: "png",
                         forceStatic: false
-                    })
+                    })}
                 }
             }
         }
