@@ -4,6 +4,7 @@ import type Client from "../struct/Client.js"
 import { quote } from "@buildtheearth/bot-utils"
 import { Cron } from "croner"
 import unicode from "./transformers/unicode.transformer.js"
+import fetch from "node-fetch"
 
 @typeorm.Entity({ name: "banner_images" })
 export default class BannerImage extends typeorm.BaseEntity {
