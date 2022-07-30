@@ -647,7 +647,7 @@ export default class ModerationMenu extends typeorm.BaseEntity {
     @SnowflakeColumn()
     message!: string
 
-    @typeorm.Column({ length: 2000, type: "nvarchar" })
+    @typeorm.Column({ length: 2000})
     message_text!: string
 
     @typeorm.Column("text", {
