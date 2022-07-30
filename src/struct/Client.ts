@@ -103,6 +103,9 @@ export default class Client extends Discord.Client {
         }
 
         this.db = await typeorm.createConnection(options as typeorm.ConnectionOptions) // non-Partial
+
+        await this.db.query("SET NAMES utf8mb4")
+        
         this.filterWordsCached = await BannedWord.loadWords()
         this.placeholder.cache = await Placeholder.loadPlaceholders()
     }
