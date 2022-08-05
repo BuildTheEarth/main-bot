@@ -7,7 +7,6 @@ import {
     currentEnv,
     formatPunishmentTime,
     hexToNum,
-    hexToRGB,
     loadSyncJSON5
 } from "@buildtheearth/bot-utils"
 const packageJson = loadSyncJSON5("package.json")

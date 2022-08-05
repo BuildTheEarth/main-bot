@@ -5,7 +5,7 @@ import Discord from "discord.js"
 import Args from "../struct/Args.js"
 import mcBlockInfo from "minecraft-block-info"
 import CommandMessage from "../struct/CommandMessage.js"
-import { hexToNum, hexToRGB } from "@buildtheearth/bot-utils"
+import { hexToNum } from "@buildtheearth/bot-utils"
 
 export default new Command({
     name: "block",

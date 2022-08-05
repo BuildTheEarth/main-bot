@@ -4,7 +4,7 @@ import Command from "../struct/Command.js"
 import BannerImage from "../entities/BannerImage.entity.js"
 
 import CommandMessage from "../struct/CommandMessage.js"
-import { hexToNum, hexToRGB, quote } from "@buildtheearth/bot-utils"
+import { hexToNum, quote } from "@buildtheearth/bot-utils"
 
 export default new Command({
     name: "banner",

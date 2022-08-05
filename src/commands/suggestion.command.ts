@@ -11,7 +11,6 @@ import path from "path"
 import url from "url"
 import {
     hexToNum,
-    hexToRGB,
     humanizeArray,
     loadSyncJSON5,
     truncateString

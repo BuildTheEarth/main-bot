@@ -15,17 +15,14 @@ function transformStyle(val: string): Discord.TextInputStyle {
 }
 
 export default function replaceTypes(json: {
-    components:
-        | Discord.ActionRowData<Discord.ModalActionRowComponentData>[]
+    components: Discord.ActionRowData<Discord.ModalActionRowComponentData>[]
     customId: string
     title: string
 }): {
-    components:
-        | Discord.ActionRowData<Discord.ModalActionRowComponentData>[]
+    components: Discord.ActionRowData<Discord.ModalActionRowComponentData>[]
     customId: string
     title: string
 } {
-
     const jNew = _.cloneDeep(json)
 
     for (const component of jNew.components) {

@@ -15,7 +15,7 @@ import DutyScheduler from "./client/DutyScheduler.js"
 import Messages from "./client/Messages.js"
 import PlaceholderHandler from "./client/PlaceholderHandler.js"
 import Placeholder from "../entities/Placeholder.entity.js"
-import { hexToNum, hexToRGB } from "@buildtheearth/bot-utils"
+import { hexToNum } from "@buildtheearth/bot-utils"
 import path from "path"
 import url from "url"
 import { Cron } from "croner"
@@ -105,7 +105,7 @@ export default class Client extends Discord.Client {
         this.db = await typeorm.createConnection(options as typeorm.ConnectionOptions) // non-Partial
 
         await this.db.query("SET NAMES utf8mb4")
-        
+
         this.filterWordsCached = await BannedWord.loadWords()
         this.placeholder.cache = await Placeholder.loadPlaceholders()
     }

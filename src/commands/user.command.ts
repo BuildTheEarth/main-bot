@@ -4,7 +4,6 @@ import Args from "../struct/Args.js"
 import {
     formatTimestamp,
     hexToNum,
-    hexToRGB,
     humanizeConstant,
     loadSyncJSON5
 } from "@buildtheearth/bot-utils"

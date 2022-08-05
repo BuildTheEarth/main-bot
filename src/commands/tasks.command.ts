@@ -9,7 +9,7 @@ import Task, { TaskStatus, TaskStatuses } from "../entities/Task.entity.js"
 import typeorm from "typeorm"
 import CommandMessage from "../struct/CommandMessage.js"
 import ApiTypes = require("discord-api-types/v10")
-import { hexToNum, hexToRGB, humanizeArray } from "@buildtheearth/bot-utils"
+import { hexToNum, humanizeArray } from "@buildtheearth/bot-utils"
 
 export default new Command({
     name: "tasks",

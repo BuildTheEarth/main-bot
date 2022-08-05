@@ -8,7 +8,6 @@ import unicode from "./transformers/unicode.transformer.js"
 import {
     formatPunishmentTime,
     formatTimestamp,
-    hexToRGB,
     ms,
     noop,
     truncateString,

@@ -1,7 +1,7 @@
 import typeorm from "typeorm"
 import Discord, { ButtonBuilder } from "discord.js"
 import Client from "../struct/Client.js"
-import { hexToNum, hexToRGB, noop } from "@buildtheearth/bot-utils"
+import { hexToNum, noop } from "@buildtheearth/bot-utils"
 import SnowflakeColumn from "./decorators/SnowflakeColumn.decorator.js"
 import GuildMember from "../struct/discord/GuildMember.js"
 import CommandMessage from "../struct/CommandMessage.js"

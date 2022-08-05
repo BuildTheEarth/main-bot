@@ -28,15 +28,15 @@ export default class BannedWord extends typeorm.BaseEntity {
     ): Promise<BannedWord> {
         const created = new BannedWord()
         if (options.word !== undefined) created.word = options.word
-        if (options.punishment_type !== undefined) created.punishment_type = options.punishment_type
+        if (options.punishment_type !== undefined)
+            created.punishment_type = options.punishment_type
         if (options.reason !== undefined) created.reason = options.reason
         if (options.duration !== undefined) created.duration = options.duration
         if (options.exception) created.exception = options.exception
         await created.save()
         if (options.word !== undefined) {
             if (options.exception) client.filterWordsCached.except.push(options.word)
-            else
-                client.filterWordsCached.banned.set(options.word, created)
+            else client.filterWordsCached.banned.set(options.word, created)
         }
         return created
     }

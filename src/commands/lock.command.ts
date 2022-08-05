@@ -5,7 +5,7 @@ import Command from "../struct/Command.js"
 import Discord from "discord.js"
 import ApiTypes = require("discord-api-types/v10")
 import CommandMessage from "../struct/CommandMessage.js"
-import { hexToNum, hexToRGB } from "@buildtheearth/bot-utils"
+import { hexToNum } from "@buildtheearth/bot-utils"
 
 export default new Command({
     name: "lock",
@@ -28,9 +28,13 @@ export default new Command({
 
         const reason = `Locked by ${message.member.user.tag} (${message.member.id})`
 
-        await channel.permissionOverwrites.edit(message.guild.id, {
-            SendMessages: false
-        }, {reason: reason})
+        await channel.permissionOverwrites.edit(
+            message.guild.id,
+            {
+                SendMessages: false
+            },
+            { reason: reason }
+        )
 
         await message.sendSuccessMessage("lockedChannel", channel)
         await client.log({

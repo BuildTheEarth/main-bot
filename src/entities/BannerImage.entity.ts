@@ -43,7 +43,9 @@ export default class BannerImage extends typeorm.BaseEntity {
 
         const bannerBuffer = Buffer.from(bannerArrBuffer)
 
-        await client.customGuilds.main().setBanner(bannerBuffer, "Updated banner with first image in queue.")
+        await client.customGuilds
+            .main()
+            .setBanner(bannerBuffer, "Updated banner with first image in queue.")
         const updates = (await client.customGuilds.main()).channels.cache.find(
             channel => channel.name === "updates"
         ) as Discord.TextChannel

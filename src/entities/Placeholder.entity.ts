@@ -2,7 +2,7 @@ import typeorm from "typeorm"
 import Discord from "discord.js"
 import Client from "../struct/Client.js"
 import languages from "../struct/client/iso6391.js"
-import { hexToNum, hexToRGB } from "@buildtheearth/bot-utils"
+import { hexToNum } from "@buildtheearth/bot-utils"
 import unicode from "./transformers/unicode.transformer.js"
 
 @typeorm.Entity({ name: "placeholders" })

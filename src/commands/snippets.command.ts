@@ -7,7 +7,7 @@ import languages from "../struct/client/iso6391.js"
 import GuildMember from "../struct/discord/GuildMember.js"
 import Discord from "discord.js"
 import CommandMessage from "../struct/CommandMessage.js"
-import { hexToNum, hexToRGB } from "@buildtheearth/bot-utils"
+import { hexToNum } from "@buildtheearth/bot-utils"
 
 const subSnippetTypes = ["team", "rule"]
 

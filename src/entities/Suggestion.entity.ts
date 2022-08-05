@@ -4,7 +4,7 @@ import Discord from "discord.js"
 import path from "path"
 import url from "url"
 import Client from "../struct/Client.js"
-import { hexToNum, hexToRGB, loadSyncJSON5, replaceAsync } from "@buildtheearth/bot-utils"
+import { hexToNum, loadSyncJSON5, replaceAsync } from "@buildtheearth/bot-utils"
 import unicode from "./transformers/unicode.transformer.js"
 const suggestionStatusActions = loadSyncJSON5(
     path.join(
@@ -177,11 +177,13 @@ export default class Suggestion extends typeorm.BaseEntity {
             if (!this.status) {
                 const author = client.users.cache.get(this.author)
                 if (author) {
-                    embed.thumbnail = {url: author.displayAvatarURL({
-                        size: 128,
-                        extension: "png",
-                        forceStatic: false
-                    })}
+                    embed.thumbnail = {
+                        url: author.displayAvatarURL({
+                            size: 128,
+                            extension: "png",
+                            forceStatic: false
+                        })
+                    }
                 }
             }
         }

@@ -1,10 +1,9 @@
-import Discord from "discord.js"
 import Client from "../struct/Client.js"
 import Args from "../struct/Args.js"
 import Command from "../struct/Command.js"
 
 import CommandMessage from "../struct/CommandMessage.js"
-import { hexToNum, hexToRGB, humanizeArray } from "@buildtheearth/bot-utils"
+import { hexToNum, humanizeArray } from "@buildtheearth/bot-utils"
 
 const VALID_IMAGE_SIZES = [16, 32, 64, 128, 256, 512, 1024, 2048, 4096]
 

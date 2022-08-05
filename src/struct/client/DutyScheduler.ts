@@ -1,4 +1,4 @@
-import { hexToNum, hexToRGB } from "@buildtheearth/bot-utils"
+import { hexToNum } from "@buildtheearth/bot-utils"
 import Discord from "discord.js"
 import toggleDutyRole from "../../util/toggleDutyRole.util.js"
 import Client from "../Client.js"
@@ -17,7 +17,7 @@ export default class DutyScheduler {
         user: Discord.GuildMember,
         roles: ("SUPPORT" | "MODERATOR" | "HELPER")[]
     ): Promise<void> {
-        if (roles.includes("HELPER") && roles.includes("MODERATOR") == false) {
+        if (roles.includes("HELPER") && !roles.includes("MODERATOR")) {
             roles.pop()
             roles.push("MODERATOR")
         } else if (roles.includes("HELPER") && roles.includes("MODERATOR")) {

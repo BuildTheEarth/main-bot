@@ -8,7 +8,6 @@ import Discord from "discord.js"
 import {
     formatPunishmentTime,
     hexToNum,
-    hexToRGB,
     humanizeArray,
     humanizeConstant,
     truncateString
@@ -266,9 +265,13 @@ async function getList(
                                   ? humanizeConstant(word.punishment_type)
                                   : ""
                           } ${
-                              word.duration !== undefined ? formatPunishmentTime(word.duration) : ""
+                              word.duration !== undefined
+                                  ? formatPunishmentTime(word.duration)
+                                  : ""
                           } for reason ${
-                              word.reason !== undefined? truncateString(word.reason, 20) : ""
+                              word.reason !== undefined
+                                  ? truncateString(word.reason, 20)
+                                  : ""
                           }\n`)
                 )
                     .split("_")
@@ -289,8 +292,12 @@ async function getList(
         wordEmbeds[currentEmbed].description += exception
             ? `• ${word.word}\n`
             : `• ||${word.word}|| - ${
-                  word.punishment_type !== undefined ? humanizeConstant(word.punishment_type) : ""
-              } ${word.duration !== undefined ? formatPunishmentTime(word.duration) : ""} for reason ${
+                  word.punishment_type !== undefined
+                      ? humanizeConstant(word.punishment_type)
+                      : ""
+              } ${
+                  word.duration !== undefined ? formatPunishmentTime(word.duration) : ""
+              } for reason ${
                   word.reason !== undefined ? truncateString(word.reason, 20) : ""
               }\n`
     }

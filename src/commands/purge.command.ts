@@ -4,7 +4,7 @@ import Command from "../struct/Command.js"
 
 import Discord from "discord.js"
 import CommandMessage from "../struct/CommandMessage.js"
-import { hexToNum, hexToRGB } from "@buildtheearth/bot-utils"
+import { hexToNum } from "@buildtheearth/bot-utils"
 
 export default new Command({
     name: "purge",

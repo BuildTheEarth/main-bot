@@ -1,4 +1,4 @@
-import { hexToNum, hexToRGB } from "@buildtheearth/bot-utils"
+import { hexToNum } from "@buildtheearth/bot-utils"
 import Discord from "discord.js"
 import Client from "../Client.js"
 import CommandMessage from "../CommandMessage.js"

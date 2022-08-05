@@ -181,12 +181,14 @@ export default class CommandMessage {
         }
         await interaction.showModal(
             new Discord.ModalBuilder(
-                replaceTypes(modal as {
-                    components:
-                        | Discord.ActionRowData<Discord.ModalActionRowComponentData>[]
-                    customId: string
-                    title: string
-                })
+                replaceTypes(
+                    modal as {
+                        components:
+                            | Discord.ActionRowData<Discord.ModalActionRowComponentData>[]
+                        customId: string
+                        title: string
+                    }
+                )
             )
         )
         console.log(modal)

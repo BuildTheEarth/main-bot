@@ -23,5 +23,4 @@ export default async function (
         if (bannedWords.length >= 1)
             return ModerationMenu.createMenu(newMessage, bannedWords, this)
     }
-
 }

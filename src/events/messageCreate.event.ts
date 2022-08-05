@@ -157,5 +157,4 @@ export default async function (this: Client, message: Discord.Message): Promise<
         if (bannedWords.length >= 1 && message.guild?.id === this.config.guilds.main)
             return ModerationMenu.createMenu(message, bannedWords, this)
     }
-
 }

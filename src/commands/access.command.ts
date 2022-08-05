@@ -44,6 +44,6 @@ export default new Command({
             ManageRoles: true
         }) // There is no non-hacky reason support here now
 
-        message.sendSuccessMessage("gaveChannelPerms", channel)
+        await message.sendSuccessMessage("gaveChannelPerms", channel)
     }
 })
