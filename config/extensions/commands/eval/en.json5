@@ -1,0 +1,16 @@
+{
+    name: 'eval',
+    translated_name: 'eval',
+    description: 'Evaluate JavaScript code.',
+    translated_description: 'Evaluate JavaScript code.',
+    args: [
+        {
+            name: 'code',
+            translated_name: 'code',
+            description: 'Code to run, JavaScript.',
+            translated_description: 'Code to run, JavaScript.',
+        },
+    ],
+    aliases: [],
+    translated_aliases: [],
+}

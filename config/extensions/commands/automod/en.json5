@@ -1,0 +1,116 @@
+{
+    name: 'automod',
+    translated_name: 'automod',
+    description: 'Manage banned words',
+    translated_description: 'Manage banned words',
+    subcommands: [
+        {
+            name: 'block',
+            translated_name: 'block',
+            description: 'Manage blocked words',
+            translated_description: 'Manage blocked words',
+            subcommands: [
+                {
+                    name: 'add',
+                    translated_name: 'add',
+                    description: 'Add a blocked word',
+                    translated_description: 'Add a blocked word',
+                    args: [
+                        {
+                            name: 'word',
+                            translated_name: 'word',
+                            description: 'Word to block.',
+                            translated_description: 'Word to block.',
+                        },
+                        {
+                            name: 'punishment',
+                            translated_name: 'punishment',
+                            description: 'Punishment to give',
+                            translated_description: 'Punishment to give',
+                        },
+                        {
+                            name: 'reason',
+                            translated_name: 'reason',
+                            description: 'Punishment reason.',
+                            translated_description: 'Punishment reason.',
+                        },
+                        {
+                            name: 'duration',
+                            translated_name: 'duration',
+                            description: 'Punishment duration.',
+                            translated_description: 'Punishment duration.',
+                        },
+                    ],
+                },
+                {
+                    name: 'remove',
+                    translated_name: 'remove',
+                    description: 'Remove a blocked word',
+                    translated_description: 'Remove a blocked word',
+                    args: [
+                        {
+                            name: 'word',
+                            translated_name: 'word',
+                            description: 'Word to remove.',
+                            translated_description: 'Word to remove.',
+                        },
+                    ],
+                },
+                {
+                    name: 'list',
+                    translated_name: 'list',
+                    description: 'List all blocked words.',
+                    translated_description: 'List all blocked words.',
+                },
+            ],
+        },
+        {
+            name: 'except',
+            translated_name: 'except',
+            description: 'Manage exceptions',
+            translated_description: 'Manage exceptions',
+            subcommands: [
+                {
+                    name: 'add',
+                    translated_name: 'add',
+                    description: 'Add an exception',
+                    translated_description: 'Add an exception',
+                    args: [
+                        {
+                            name: 'word',
+                            translated_name: 'word',
+                            description: 'Word to except.',
+                            translated_description: 'Word to except.',
+                        },
+                    ],
+                },
+                {
+                    name: 'remove',
+                    translated_name: 'remove',
+                    description: 'Remove a blocked word',
+                    translated_description: 'Remove a blocked word',
+                    args: [
+                        {
+                            name: 'word',
+                            translated_name: 'word',
+                            description: 'Word to remove from exceptions.',
+                            translated_description: 'Word to remove from exceptions.',
+                        },
+                    ],
+                },
+                {
+                    name: 'list',
+                    translated_name: 'list',
+                    description: 'List all exceptions.',
+                    translated_description: 'List all exceptions.',
+                },
+            ],
+        },
+    ],
+    aliases: [
+        'am',
+    ],
+    translated_aliases: [
+        'am',
+    ],
+}

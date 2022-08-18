@@ -1,0 +1,16 @@
+{
+    name: 'help',
+    translated_name: 'help',
+    description: 'Get a list of available commands (or info on one of them).',
+    translated_description: 'Get a list of available commands (or info on one of them).',
+    args: [
+        {
+            name: 'command',
+            translated_name: 'command',
+            description: 'Command to get help of',
+            translated_description: 'Command to get help of',
+        },
+    ],
+    aliases: [],
+    translated_aliases: [],
+}

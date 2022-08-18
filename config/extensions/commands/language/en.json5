@@ -1,0 +1,26 @@
+{
+    name: 'language',
+    translated_name: 'language',
+    description: 'Give a member a language role.',
+    translated_description: 'Give a member a language role.',
+    args: [
+        {
+            name: 'member',
+            translated_name: 'member',
+            description: 'Member to give role.',
+            translated_description: 'Member to give role.',
+        },
+        {
+            name: 'language',
+            translated_name: 'language',
+            description: 'Language to give.',
+            translated_description: 'Language to give.',
+        },
+    ],
+    aliases: [
+        'lang',
+    ],
+    translated_aliases: [
+        'lang',
+    ],
+}

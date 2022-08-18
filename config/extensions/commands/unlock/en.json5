@@ -1,0 +1,16 @@
+{
+    name: 'unlock',
+    translated_name: 'unlock',
+    description: 'Unlock the channel.',
+    translated_description: 'Unlock the channel.',
+    args: [
+        {
+            name: 'channel',
+            translated_name: 'channel',
+            description: 'The channel to unlock',
+            translated_description: 'The channel to unlock',
+        },
+    ],
+    aliases: [],
+    translated_aliases: [],
+}

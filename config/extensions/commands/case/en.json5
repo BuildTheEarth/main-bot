@@ -1,0 +1,64 @@
+{
+    name: 'case',
+    translated_name: 'case',
+    description: 'Check specific info on a case.',
+    translated_description: 'Check specific info on a case.',
+    args: [
+        {
+            name: 'id',
+            translated_name: 'id',
+            description: 'Case ID',
+            translated_description: 'Case ID',
+        },
+    ],
+    subcommands: [
+        {
+            name: 'edit',
+            translated_name: 'edit',
+            description: 'Edit a case.',
+            translated_description: 'Edit a case.',
+            args: [
+                {
+                    name: 'id',
+                    translated_name: 'id',
+                    description: 'Case ID',
+                    translated_description: 'Case ID',
+                },
+                {
+                    name: 'image_url',
+                    translated_name: 'image_url',
+                    description: 'Image URL.',
+                    translated_description: 'Image URL.',
+                },
+                {
+                    name: 'reason',
+                    translated_name: 'reason',
+                    description: 'New case Reason',
+                    translated_description: 'New case Reason',
+                },
+            ],
+        },
+        {
+            name: 'delete',
+            translated_name: 'delete',
+            description: 'Delete a case.',
+            translated_description: 'Delete a case.',
+            args: [
+                {
+                    name: 'id',
+                    translated_name: 'id',
+                    description: 'Case ID',
+                    translated_description: 'Case ID',
+                },
+                {
+                    name: 'reason',
+                    translated_name: 'reason',
+                    description: 'Deletion Reason',
+                    translated_description: 'Deletion Reason',
+                },
+            ],
+        },
+    ],
+    aliases: [],
+    translated_aliases: [],
+}

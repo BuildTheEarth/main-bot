@@ -1,0 +1,22 @@
+{
+    name: 'unmute',
+    translated_name: 'unmute',
+    description: 'Unmute a member.',
+    translated_description: 'Unmute a member.',
+    args: [
+        {
+            name: 'member',
+            translated_name: 'member',
+            description: 'Member to ban.',
+            translated_description: 'Member to ban.',
+        },
+        {
+            name: 'reason',
+            translated_name: 'reason',
+            description: 'Ban reason.',
+            translated_description: 'Ban reason.',
+        },
+    ],
+    aliases: [],
+    translated_aliases: [],
+}

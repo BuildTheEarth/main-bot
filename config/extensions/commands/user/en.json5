@@ -1,0 +1,20 @@
+{
+    name: 'user',
+    translated_name: 'user',
+    description: 'Get info on someone.',
+    translated_description: 'Get info on someone.',
+    args: [
+        {
+            name: 'member',
+            translated_name: 'member',
+            description: 'Member to lookup.',
+            translated_description: 'Member to lookup.',
+        },
+    ],
+    aliases: [
+        'whois',
+    ],
+    translated_aliases: [
+        'whois',
+    ],
+}

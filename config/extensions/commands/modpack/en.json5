@@ -1,0 +1,78 @@
+{
+    name: 'modpack',
+    translated_name: 'modpack',
+    description: "Manage the modpack's background images.",
+    translated_description: "Manage the modpack's background images.",
+    subcommands: [
+        {
+            name: 'list',
+            translated_name: 'list',
+            description: 'List images on the queue and store.',
+            translated_description: 'List images on the queue and store.',
+        },
+        {
+            name: 'set',
+            translated_name: 'set',
+            description: 'Add an image to the queue.',
+            translated_description: 'Add an image to the queue.',
+            args: [
+                {
+                    name: 'key',
+                    translated_name: 'key',
+                    description: 'Image Key.',
+                    translated_description: 'Image Key.',
+                },
+                {
+                    name: 'url',
+                    translated_name: 'url',
+                    description: 'Image Url.',
+                    translated_description: 'Image Url.',
+                },
+                {
+                    name: 'credit',
+                    translated_name: 'credit',
+                    description: 'Image Credit.',
+                    translated_description: 'Image Credit.',
+                },
+            ],
+        },
+        {
+            name: 'delete',
+            translated_name: 'delete',
+            description: 'Delete an image from the queue.',
+            translated_description: 'Delete an image from the queue.',
+            args: [
+                {
+                    name: 'key',
+                    translated_name: 'key',
+                    description: 'Image Key.',
+                    translated_description: 'Image Key.',
+                },
+            ],
+        },
+        {
+            name: 'fetch',
+            translated_name: 'fetch',
+            description: 'Force-fetch the data from the API.',
+            translated_description: 'Force-fetch the data from the API.',
+        },
+        {
+            name: 'push',
+            translated_name: 'push',
+            description: 'Push the queue to the store.',
+            translated_description: 'Push the queue to the store.',
+        },
+        {
+            name: 'url',
+            translated_name: 'url',
+            description: 'Get the URL to the modpack API.',
+            translated_description: 'Get the URL to the modpack API.',
+        },
+    ],
+    aliases: [
+        'mp',
+    ],
+    translated_aliases: [
+        'mp',
+    ],
+}

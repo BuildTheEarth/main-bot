@@ -1,0 +1,34 @@
+{
+    name: 'ban',
+    translated_name: 'ban',
+    description: 'Ban a member.',
+    translated_description: 'Ban a member.',
+    args: [
+        {
+            name: 'member',
+            translated_name: 'member',
+            description: 'Member to ban.',
+            translated_description: 'Member to ban.',
+        },
+        {
+            name: 'length',
+            translated_name: 'length',
+            description: 'Ban length.',
+            translated_description: 'Ban length.',
+        },
+        {
+            name: 'image_url',
+            translated_name: 'image_url',
+            description: 'Ban image URL (required if used as slashcommand).',
+            translated_description: 'Ban image URL (required if used as slashcommand).',
+        },
+        {
+            name: 'reason',
+            translated_name: 'reason',
+            description: 'Ban reason.',
+            translated_description: 'Ban reason.',
+        },
+    ],
+    aliases: [],
+    translated_aliases: [],
+}

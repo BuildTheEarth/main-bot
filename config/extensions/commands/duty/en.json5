@@ -1,0 +1,90 @@
+{
+    name: 'duty',
+    translated_name: 'duty',
+    description: 'Manage your on duty roles.',
+    translated_description: 'Manage your on duty roles.',
+    subcommands: [
+        {
+            name: 'add',
+            translated_name: 'add',
+            description: 'Add someone to duty.',
+            translated_description: 'Add someone to duty.',
+            args: [
+                {
+                    name: 'member',
+                    translated_name: 'member',
+                    description: 'Member to add to duty.',
+                    translated_description: 'Member to add to duty.',
+                },
+                {
+                    name: 'role',
+                    translated_name: 'role',
+                    description: 'Role to add to duty.',
+                    translated_description: 'Role to add to duty.',
+                },
+            ],
+        },
+        {
+            name: 'schedule',
+            translated_name: 'schedule',
+            description: 'Schedule a duty role.',
+            translated_description: 'Schedule a duty role.',
+            args: [
+                {
+                    name: 'time',
+                    translated_name: 'time',
+                    description: 'Time to schedule the duty role for.',
+                    translated_description: 'Time to schedule the duty role for.',
+                },
+                {
+                    name: 'member',
+                    translated_name: 'member',
+                    description: 'Member to add to duty.',
+                    translated_description: 'Member to add to duty.',
+                },
+                {
+                    name: 'role',
+                    translated_name: 'role',
+                    description: 'Role to add to duty.',
+                    translated_description: 'Role to add to duty.',
+                },
+            ],
+        },
+        {
+            name: 'cancel',
+            translated_name: 'cancel',
+            description: 'Cancel a duty schedule.',
+            translated_description: 'Cancel a duty schedule.',
+            args: [
+                {
+                    name: 'member',
+                    translated_name: 'member',
+                    description: 'Member to add to duty.',
+                    translated_description: 'Member to add to duty.',
+                },
+                {
+                    name: 'role',
+                    translated_name: 'role',
+                    description: 'Role to add to duty.',
+                    translated_description: 'Role to add to duty.',
+                },
+            ],
+        },
+        {
+            name: 'check',
+            translated_name: 'check',
+            description: 'Check duty status.',
+            translated_description: 'Check duty status.',
+            args: [
+                {
+                    name: 'member',
+                    translated_name: 'member',
+                    description: 'Member to check duty status.',
+                    translated_description: 'Member to check duty status.',
+                },
+            ],
+        },
+    ],
+    aliases: [],
+    translated_aliases: [],
+}

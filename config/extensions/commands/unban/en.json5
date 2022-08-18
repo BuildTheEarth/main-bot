@@ -1,0 +1,22 @@
+{
+    name: 'unban',
+    translated_name: 'unban',
+    description: 'Unban a member.',
+    translated_description: 'Unban a member.',
+    args: [
+        {
+            name: 'member',
+            translated_name: 'member',
+            description: 'Member to unban.',
+            translated_description: 'Member to unban.',
+        },
+        {
+            name: 'reason',
+            translated_name: 'reason',
+            description: 'Unban reason.',
+            translated_description: 'Unban reason.',
+        },
+    ],
+    aliases: [],
+    translated_aliases: [],
+}

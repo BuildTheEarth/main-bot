@@ -1,0 +1,22 @@
+{
+    name: 'rule',
+    translated_name: 'rule',
+    description: "Get a rule's text.",
+    translated_description: "Get a rule's text.",
+    args: [
+        {
+            name: 'number',
+            translated_name: 'number',
+            description: 'Rule Number.',
+            translated_description: 'Rule Number.',
+        },
+        {
+            name: 'language',
+            translated_name: 'language',
+            description: 'Rule language.',
+            translated_description: 'Rule language.',
+        },
+    ],
+    aliases: [],
+    translated_aliases: [],
+}

@@ -1,0 +1,70 @@
+{
+    name: 'blunder',
+    translated_name: 'blunder',
+    description: 'Count the low amount of days since the staff team last made a blunder',
+    translated_description: 'Count the low amount of days since the staff team last made a blunder',
+    subcommands: [
+        {
+            name: 'commit',
+            translated_name: 'commit',
+            description: 'admit to committing a blunder and reset the tracker. Resets tracker for your highest role if no ID',
+            translated_description: 'admit to committing a blunder and reset the tracker. Resets tracker for your highest role if no ID',
+            args: [
+                {
+                    name: 'id',
+                    translated_name: 'id',
+                    description: 'blunder tracker ID, required if there are multiple trackers for your highest role',
+                    translated_description: 'blunder tracker ID, required if there are multiple trackers for your highest role',
+                },
+            ],
+        },
+        {
+            name: 'new',
+            translated_name: 'new',
+            description: 'add a new blunder tracker',
+            translated_description: 'add a new blunder tracker',
+            args: [
+                {
+                    name: 'team',
+                    translated_name: 'team',
+                    description: 'team of whose blunders to track',
+                    translated_description: 'team of whose blunders to track',
+                },
+                {
+                    name: 'channel',
+                    translated_name: 'channel',
+                    description: 'location of the blunder tracker',
+                    translated_description: 'location of the blunder tracker',
+                },
+                {
+                    name: 'description',
+                    translated_name: 'description',
+                    description: 'what to display after "# days since <team> " or "# of days since "',
+                    translated_description: 'what to display after "# days since <team> " or "# of days since "',
+                },
+            ],
+        },
+        {
+            name: 'delete',
+            translated_name: 'delete',
+            description: 'delete a blunder tracker',
+            translated_description: 'delete a blunder tracker',
+            args: [
+                {
+                    name: 'id',
+                    translated_name: 'id',
+                    description: 'blunder tracker ID',
+                    translated_description: 'blunder tracker ID',
+                },
+            ],
+        },
+        {
+            name: 'list',
+            translated_name: 'list',
+            description: 'list blunder trackers available to you',
+            translated_description: 'list blunder trackers available to you',
+        },
+    ],
+    aliases: [],
+    translated_aliases: [],
+}

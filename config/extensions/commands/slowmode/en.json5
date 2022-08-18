@@ -1,0 +1,22 @@
+{
+    name: 'slowmode',
+    translated_name: 'slowmode',
+    description: 'Set the slowmode.',
+    translated_description: 'Set the slowmode.',
+    args: [
+        {
+            name: 'time',
+            translated_name: 'time',
+            description: 'Slowmode duration in seconds.',
+            translated_description: 'Slowmode duration in seconds.',
+        },
+        {
+            name: 'channel',
+            translated_name: 'channel',
+            description: 'The channel to activate slowmode in',
+            translated_description: 'The channel to activate slowmode in',
+        },
+    ],
+    aliases: [],
+    translated_aliases: [],
+}

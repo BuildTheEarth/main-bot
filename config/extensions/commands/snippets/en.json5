@@ -1,0 +1,204 @@
+{
+    name: 'snippets',
+    translated_name: 'snippets',
+    description: 'List and manage snippets.',
+    translated_description: 'List and manage snippets.',
+    args: [
+        {
+            name: 'subsnippet',
+            translated_name: 'subsnippet',
+            description: 'The subsnippet type.',
+            translated_description: 'The subsnippet type.',
+        },
+    ],
+    subcommands: [
+        {
+            name: 'list',
+            translated_name: 'list',
+            description: 'List all snippets.',
+            translated_description: 'List all snippets.',
+            args: [
+                {
+                    name: 'date',
+                    translated_name: 'date',
+                    description: 'To use the date sorting mode or not',
+                    translated_description: 'To use the date sorting mode or not',
+                },
+            ],
+        },
+        {
+            name: 'add',
+            translated_name: 'add',
+            description: 'Add a snippet.',
+            translated_description: 'Add a snippet.',
+            args: [
+                {
+                    name: 'name',
+                    translated_name: 'name',
+                    description: 'Snippet name.',
+                    translated_description: 'Snippet name.',
+                },
+                {
+                    name: 'language',
+                    translated_name: 'language',
+                    description: 'Snippet language.',
+                    translated_description: 'Snippet language.',
+                },
+                {
+                    name: 'body',
+                    translated_name: 'body',
+                    description: 'Snippet body.',
+                    translated_description: 'Snippet body.',
+                },
+            ],
+        },
+        {
+            name: 'edit',
+            translated_name: 'edit',
+            description: 'Edit a snippet.',
+            translated_description: 'Edit a snippet.',
+            args: [
+                {
+                    name: 'name',
+                    translated_name: 'name',
+                    description: 'Snippet name.',
+                    translated_description: 'Snippet name.',
+                },
+                {
+                    name: 'language',
+                    translated_name: 'language',
+                    description: 'Snippet language.',
+                    translated_description: 'Snippet language.',
+                },
+                {
+                    name: 'body',
+                    translated_name: 'body',
+                    description: 'Snippet body.',
+                    translated_description: 'Snippet body.',
+                },
+            ],
+        },
+        {
+            name: 'delete',
+            translated_name: 'delete',
+            description: 'Delete a snippet.',
+            translated_description: 'Delete a snippet.',
+            args: [
+                {
+                    name: 'name',
+                    translated_name: 'name',
+                    description: 'Snippet name.',
+                    translated_description: 'Snippet name.',
+                },
+                {
+                    name: 'language',
+                    translated_name: 'language',
+                    description: 'Snippet language.',
+                    translated_description: 'Snippet language.',
+                },
+            ],
+        },
+        {
+            name: 'source',
+            translated_name: 'source',
+            description: 'Get the source response of a specific snippet.',
+            translated_description: 'Get the source response of a specific snippet.',
+            args: [
+                {
+                    name: 'name',
+                    translated_name: 'name',
+                    description: 'Snippet name.',
+                    translated_description: 'Snippet name.',
+                },
+                {
+                    name: 'language',
+                    translated_name: 'language',
+                    description: 'Snippet language.',
+                    translated_description: 'Snippet language.',
+                },
+            ],
+        },
+        {
+            name: 'aliases',
+            translated_name: 'aliases',
+            description: ' Add aliases to a snippet',
+            translated_description: ' Add aliases to a snippet',
+            subcommands: [
+                {
+                    name: 'list',
+                    translated_name: 'list',
+                    description: 'List all snippet aliases for a snippet.',
+                    translated_description: 'List all snippet aliases for a snippet.',
+                    args: [
+                        {
+                            name: 'name',
+                            translated_name: 'name',
+                            description: 'Snippet name.',
+                            translated_description: 'Snippet name.',
+                        },
+                        {
+                            name: 'language',
+                            translated_name: 'language',
+                            description: 'Snippet language.',
+                            translated_description: 'Snippet language.',
+                        },
+                    ],
+                },
+                {
+                    name: 'add',
+                    translated_name: 'add',
+                    description: 'Add a snippet alias.',
+                    translated_description: 'Add a snippet alias.',
+                    args: [
+                        {
+                            name: 'name',
+                            translated_name: 'name',
+                            description: 'Snippet name.',
+                            translated_description: 'Snippet name.',
+                        },
+                        {
+                            name: 'language',
+                            translated_name: 'language',
+                            description: 'Snippet language.',
+                            translated_description: 'Snippet language.',
+                        },
+                        {
+                            name: 'alias',
+                            translated_name: 'alias',
+                            description: 'Snippet alias.',
+                            translated_description: 'Snippet alias.',
+                        },
+                    ],
+                },
+                {
+                    name: 'delete',
+                    translated_name: 'delete',
+                    description: 'Deletes a snippet alias.',
+                    translated_description: 'Deletes a snippet alias.',
+                    args: [
+                        {
+                            name: 'name',
+                            translated_name: 'name',
+                            description: 'Snippet name.',
+                            translated_description: 'Snippet name.',
+                        },
+                        {
+                            name: 'language',
+                            translated_name: 'language',
+                            description: 'Snippet language.',
+                            translated_description: 'Snippet language.',
+                        },
+                        {
+                            name: 'alias',
+                            translated_name: 'alias',
+                            description: 'Snippet alias.',
+                            translated_description: 'Snippet alias.',
+                        },
+                    ],
+                },
+            ],
+        },
+    ],
+    aliases: [],
+    translated_aliases: [],
+}

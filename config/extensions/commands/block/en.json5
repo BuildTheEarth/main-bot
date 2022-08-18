@@ -1,0 +1,32 @@
+{
+    name: 'block',
+    translated_name: 'block',
+    description: 'Find a minecraft block! (currently only 1.12.2)',
+    translated_description: 'Find a minecraft block! (currently only 1.12.2)',
+    args: [
+        {
+            name: 'blocks',
+            translated_name: 'blocks',
+            description: 'blocks to search seperated by ,',
+            translated_description: 'blocks to search seperated by ,',
+        },
+    ],
+    subcommands: [
+        {
+            name: 'search',
+            translated_name: 'search',
+            description: 'Search for blocks based on query.',
+            translated_description: 'Search for blocks based on query.',
+            args: [
+                {
+                    name: 'query',
+                    translated_name: 'query',
+                    description: 'Query to search by.',
+                    translated_description: 'Query to search by.',
+                },
+            ],
+        },
+    ],
+    aliases: [],
+    translated_aliases: [],
+}

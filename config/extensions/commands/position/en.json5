@@ -1,0 +1,28 @@
+{
+    name: 'position',
+    translated_name: 'position',
+    description: 'Promote/demote a member from your team.',
+    translated_description: 'Promote/demote a member from your team.',
+    args: [
+        {
+            name: 'member',
+            translated_name: 'member',
+            description: 'Member to promote/demote.',
+            translated_description: 'Member to promote/demote.',
+        },
+        {
+            name: 'position',
+            translated_name: 'position',
+            description: 'Position to promote/demote to.',
+            translated_description: 'Position to promote/demote to.',
+        },
+        {
+            name: 'promote',
+            translated_name: 'promote',
+            description: 'Wheter to promote or demote',
+            translated_description: 'Wheter to promote or demote',
+        },
+    ],
+    aliases: [],
+    translated_aliases: [],
+}

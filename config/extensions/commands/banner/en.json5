@@ -1,0 +1,56 @@
+{
+    name: 'banner',
+    translated_name: 'banner',
+    description: 'Manage the banner queue.',
+    translated_description: 'Manage the banner queue.',
+    subcommands: [
+        {
+            name: 'add',
+            translated_name: 'add',
+            description: 'Add a banner to the queue.',
+            translated_description: 'Add a banner to the queue.',
+        },
+        {
+            name: 'delete',
+            translated_name: 'delete',
+            description: 'Delete a banner from the queue.',
+            translated_description: 'Delete a banner from the queue.',
+            args: [
+                {
+                    name: 'id',
+                    translated_name: 'id',
+                    description: 'Queued banner ID',
+                    translated_description: 'Queued banner ID',
+                },
+            ],
+        },
+        {
+            name: 'queue',
+            translated_name: 'queue',
+            description: 'List the current banner queue.',
+            translated_description: 'List the current banner queue.',
+        },
+        {
+            name: 'show',
+            translated_name: 'show',
+            description: 'Show info on a specific queued banner.',
+            translated_description: 'Show info on a specific queued banner.',
+            args: [
+                {
+                    name: 'id',
+                    translated_name: 'id',
+                    description: 'Queued banner ID',
+                    translated_description: 'Queued banner ID',
+                },
+            ],
+        },
+        {
+            name: 'cycle',
+            translated_name: 'cycle',
+            description: 'Force the banner queue to cycle to the next banner.',
+            translated_description: 'Force the banner queue to cycle to the next banner.',
+        },
+    ],
+    aliases: [],
+    translated_aliases: [],
+}

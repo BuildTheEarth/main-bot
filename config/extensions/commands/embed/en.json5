@@ -1,0 +1,16 @@
+{
+    name: 'embed',
+    translated_name: 'embed',
+    description: 'embed',
+    translated_description: 'embed',
+    args: [
+        {
+            name: 'message',
+            translated_name: 'message',
+            description: 'The message to fetch the embeds from.',
+            translated_description: 'The message to fetch the embeds from.',
+        },
+    ],
+    aliases: [],
+    translated_aliases: [],
+}

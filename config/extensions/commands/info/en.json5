@@ -1,0 +1,8 @@
+{
+    name: 'info',
+    translated_name: 'info',
+    description: 'Get info about the bot!',
+    translated_description: 'Get info about the bot!',
+    aliases: [],
+    translated_aliases: [],
+}

@@ -1,0 +1,12 @@
+{
+    name: 'ping',
+    translated_name: 'ping',
+    description: 'Ping pong!',
+    translated_description: 'Ping pong!',
+    aliases: [
+        'bing',
+    ],
+    translated_aliases: [
+        'bing',
+    ],
+}

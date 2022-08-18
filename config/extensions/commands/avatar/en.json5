@@ -1,0 +1,32 @@
+{
+    name: 'avatar',
+    translated_name: 'avatar',
+    description: "Get someone's profile picture.",
+    translated_description: "Get someone's profile picture.",
+    args: [
+        {
+            name: 'user',
+            translated_name: 'user',
+            description: 'User to get avatar of.',
+            translated_description: 'User to get avatar of.',
+        },
+        {
+            name: 'size',
+            translated_name: 'size',
+            description: 'Optional arg to get image in certain size.',
+            translated_description: 'Optional arg to get image in certain size.',
+        },
+        {
+            name: 'webp',
+            translated_name: 'webp',
+            description: 'Optional arg to get as webp.',
+            translated_description: 'Optional arg to get as webp.',
+        },
+    ],
+    aliases: [
+        'av',
+    ],
+    translated_aliases: [
+        'av',
+    ],
+}

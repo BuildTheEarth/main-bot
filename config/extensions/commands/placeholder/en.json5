@@ -1,0 +1,112 @@
+{
+    name: 'placeholder',
+    translated_name: 'placeholder',
+    description: 'List and manage placeholders.',
+    translated_description: 'List and manage placeholders.',
+    subcommands: [
+        {
+            name: 'list',
+            translated_name: 'list',
+            description: 'List all placeholders.',
+            translated_description: 'List all placeholders.',
+        },
+        {
+            name: 'add',
+            translated_name: 'add',
+            description: 'Add a placeholder.',
+            translated_description: 'Add a placeholder.',
+            args: [
+                {
+                    name: 'name',
+                    translated_name: 'name',
+                    description: 'placeholder name.',
+                    translated_description: 'placeholder name.',
+                },
+                {
+                    name: 'language',
+                    translated_name: 'language',
+                    description: 'placeholder language.',
+                    translated_description: 'placeholder language.',
+                },
+                {
+                    name: 'body',
+                    translated_name: 'body',
+                    description: 'placeholder body.',
+                    translated_description: 'placeholder body.',
+                },
+            ],
+        },
+        {
+            name: 'edit',
+            translated_name: 'edit',
+            description: 'Edit a placeholder.',
+            translated_description: 'Edit a placeholder.',
+            args: [
+                {
+                    name: 'name',
+                    translated_name: 'name',
+                    description: 'placeholder name.',
+                    translated_description: 'placeholder name.',
+                },
+                {
+                    name: 'language',
+                    translated_name: 'language',
+                    description: 'placeholder language.',
+                    translated_description: 'placeholder language.',
+                },
+                {
+                    name: 'body',
+                    translated_name: 'body',
+                    description: 'placeholder body.',
+                    translated_description: 'placeholder body.',
+                },
+            ],
+        },
+        {
+            name: 'delete',
+            translated_name: 'delete',
+            description: 'Delete a placeholder.',
+            translated_description: 'Delete a placeholder.',
+            args: [
+                {
+                    name: 'name',
+                    translated_name: 'name',
+                    description: 'placeholder name.',
+                    translated_description: 'placeholder name.',
+                },
+                {
+                    name: 'language',
+                    translated_name: 'language',
+                    description: 'placeholder language.',
+                    translated_description: 'placeholder language.',
+                },
+            ],
+        },
+        {
+            name: 'info',
+            translated_name: 'info',
+            description: 'Get info about a placeholder.',
+            translated_description: 'Get info about a placeholder.',
+            args: [
+                {
+                    name: 'name',
+                    translated_name: 'name',
+                    description: 'placeholder name.',
+                    translated_description: 'placeholder name.',
+                },
+                {
+                    name: 'language',
+                    translated_name: 'language',
+                    description: 'placeholder language.',
+                    translated_description: 'placeholder language.',
+                },
+            ],
+        },
+    ],
+    aliases: [
+        'placeholders',
+    ],
+    translated_aliases: [
+        'placeholders',
+    ],
+}

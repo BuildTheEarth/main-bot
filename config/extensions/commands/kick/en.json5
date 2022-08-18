@@ -1,0 +1,28 @@
+{
+    name: 'kick',
+    translated_name: 'kick',
+    description: 'Kick a member.',
+    translated_description: 'Kick a member.',
+    args: [
+        {
+            name: 'member',
+            translated_name: 'member',
+            description: 'Member to kick.',
+            translated_description: 'Member to kick.',
+        },
+        {
+            name: 'image_url',
+            translated_name: 'image_url',
+            description: 'Kick image URL.',
+            translated_description: 'Kick image URL.',
+        },
+        {
+            name: 'reason',
+            translated_name: 'reason',
+            description: 'Kick reason.',
+            translated_description: 'Kick reason.',
+        },
+    ],
+    aliases: [],
+    translated_aliases: [],
+}

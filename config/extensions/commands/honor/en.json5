@@ -1,0 +1,32 @@
+{
+    name: 'honor',
+    translated_name: 'honor',
+    description: 'Add or remove a user as an honored builder.',
+    translated_description: 'Add or remove a user as an honored builder.',
+    args: [
+        {
+            name: 'user',
+            translated_name: 'user',
+            description: 'User to advance.',
+            translated_description: 'User to advance.',
+        },
+        {
+            name: 'type',
+            translated_name: 'type',
+            description: 'The type of special builder role!',
+            translated_description: 'The type of special builder role!',
+        },
+        {
+            name: 'demote',
+            translated_name: 'demote',
+            description: 'Optional arg to demote advanced builder',
+            translated_description: 'Optional arg to demote advanced builder',
+        },
+    ],
+    aliases: [
+        'advance',
+    ],
+    translated_aliases: [
+        'advance',
+    ],
+}

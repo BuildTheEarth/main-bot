@@ -1,0 +1,16 @@
+{
+    name: 'query',
+    translated_name: 'query',
+    description: 'Evaluate an SQL query.',
+    translated_description: 'Evaluate an SQL query.',
+    args: [
+        {
+            name: 'query',
+            translated_name: 'query',
+            description: 'SQl query.',
+            translated_description: 'SQl query.',
+        },
+    ],
+    aliases: [],
+    translated_aliases: [],
+}

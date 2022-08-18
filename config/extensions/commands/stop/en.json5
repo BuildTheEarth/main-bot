@@ -1,0 +1,20 @@
+{
+    name: 'stop',
+    translated_name: 'stop',
+    description: 'Stop the bot.',
+    translated_description: 'Stop the bot.',
+    args: [
+        {
+            name: 'bye',
+            translated_name: 'bye',
+            description: 'Goodbye.',
+            translated_description: 'Goodbye.',
+        },
+    ],
+    aliases: [
+        'die',
+    ],
+    translated_aliases: [
+        'die',
+    ],
+}

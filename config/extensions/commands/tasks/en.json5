@@ -1,0 +1,82 @@
+{
+    name: 'tasks',
+    translated_name: 'tasks',
+    description: 'Read and manage tasks.',
+    translated_description: 'Read and manage tasks.',
+    subcommands: [
+        {
+            name: 'add',
+            translated_name: 'add',
+            description: 'Create a task.',
+            translated_description: 'Create a task.',
+            args: [
+                {
+                    name: 'assignees',
+                    translated_name: 'assignees',
+                    description: 'The people to make do work.',
+                    translated_description: 'The people to make do work.',
+                },
+                {
+                    name: 'title',
+                    translated_name: 'title',
+                    description: 'Suggestion title',
+                    translated_description: 'Suggestion title',
+                },
+                {
+                    name: 'description',
+                    translated_name: 'description',
+                    description: 'Suggestion description',
+                    translated_description: 'Suggestion description',
+                },
+                {
+                    name: 'status',
+                    translated_name: 'status',
+                    description: 'Task status.',
+                    translated_description: 'Task status.',
+                },
+            ],
+        },
+        {
+            name: 'status',
+            translated_name: 'status',
+            description: 'Change the status of a task.',
+            translated_description: 'Change the status of a task.',
+            args: [
+                {
+                    name: 'task',
+                    translated_name: 'task',
+                    description: 'Task number.',
+                    translated_description: 'Task number.',
+                },
+                {
+                    name: 'status',
+                    translated_name: 'status',
+                    description: 'Task status.',
+                    translated_description: 'Task status.',
+                },
+            ],
+        },
+        {
+            name: 'list',
+            translated_name: 'list',
+            description: 'List all your active tasks.',
+            translated_description: 'List all your active tasks.',
+        },
+        {
+            name: 'report',
+            translated_name: 'report',
+            description: 'List all done tasks.',
+            translated_description: 'List all done tasks.',
+            args: [
+                {
+                    name: 'channel',
+                    translated_name: 'channel',
+                    description: 'The channel.',
+                    translated_description: 'The channel.',
+                },
+            ],
+        },
+    ],
+    aliases: [],
+    translated_aliases: [],
+}

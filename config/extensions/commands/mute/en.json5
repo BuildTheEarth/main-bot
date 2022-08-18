@@ -1,0 +1,34 @@
+{
+    name: 'mute',
+    translated_name: 'mute',
+    description: 'Mute a member.',
+    translated_description: 'Mute a member.',
+    args: [
+        {
+            name: 'member',
+            translated_name: 'member',
+            description: 'Member to mute.',
+            translated_description: 'Member to mute.',
+        },
+        {
+            name: 'length',
+            translated_name: 'length',
+            description: 'Mute length.',
+            translated_description: 'Mute length.',
+        },
+        {
+            name: 'image_url',
+            translated_name: 'image_url',
+            description: 'Mute image URL.',
+            translated_description: 'Mute image URL.',
+        },
+        {
+            name: 'reason',
+            translated_name: 'reason',
+            description: 'Mute reason.',
+            translated_description: 'Mute reason.',
+        },
+    ],
+    aliases: [],
+    translated_aliases: [],
+}

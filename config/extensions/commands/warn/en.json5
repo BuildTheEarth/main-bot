@@ -1,0 +1,28 @@
+{
+    name: 'warn',
+    translated_name: 'warn',
+    description: 'Warn a member.',
+    translated_description: 'Warn a member.',
+    args: [
+        {
+            name: 'member',
+            translated_name: 'member',
+            description: 'Member to warn.',
+            translated_description: 'Member to warn.',
+        },
+        {
+            name: 'image_url',
+            translated_name: 'image_url',
+            description: 'Warn image URL.',
+            translated_description: 'Warn image URL.',
+        },
+        {
+            name: 'reason',
+            translated_name: 'reason',
+            description: 'Warn reason.',
+            translated_description: 'Warn reason.',
+        },
+    ],
+    aliases: [],
+    translated_aliases: [],
+}

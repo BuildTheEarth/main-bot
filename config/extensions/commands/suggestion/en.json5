@@ -1,0 +1,108 @@
+{
+    name: 'suggestion',
+    translated_name: 'suggestion',
+    description: 'Manage suggestions.',
+    translated_description: 'Manage suggestions.',
+    subcommands: [
+        {
+            name: 'link',
+            translated_name: 'link',
+            description: 'Link to a suggestion.',
+            translated_description: 'Link to a suggestion.',
+            args: [
+                {
+                    name: 'number',
+                    translated_name: 'number',
+                    description: 'Suggestion number',
+                    translated_description: 'Suggestion number',
+                },
+            ],
+        },
+        {
+            name: 'edit',
+            translated_name: 'edit',
+            description: 'Edit a suggestion.',
+            translated_description: 'Edit a suggestion.',
+            args: [
+                {
+                    name: 'number',
+                    translated_name: 'number',
+                    description: 'Suggestion number',
+                    translated_description: 'Suggestion number',
+                },
+            ],
+        },
+        {
+            name: 'delete',
+            translated_name: 'delete',
+            description: 'Delete a suggestion.',
+            translated_description: 'Delete a suggestion.',
+            args: [
+                {
+                    name: 'number',
+                    translated_name: 'number',
+                    description: 'Suggestion number.',
+                    translated_description: 'Suggestion number.',
+                },
+            ],
+        },
+        {
+            name: 'status',
+            translated_name: 'status',
+            description: 'Change the status of a suggestion.',
+            translated_description: 'Change the status of a suggestion.',
+            args: [
+                {
+                    name: 'number',
+                    translated_name: 'number',
+                    description: 'Suggestion number.',
+                    translated_description: 'Suggestion number.',
+                },
+                {
+                    name: 'status',
+                    translated_name: 'status',
+                    description: 'Suggestion status.',
+                    translated_description: 'Suggestion status.',
+                },
+                {
+                    name: 'reason',
+                    translated_name: 'reason',
+                    description: 'Suggestion status reason.',
+                    translated_description: 'Suggestion status reason.',
+                },
+            ],
+        },
+        {
+            name: 'search',
+            translated_name: 'search',
+            description: 'Search for suggestions.',
+            translated_description: 'Search for suggestions.',
+            args: [
+                {
+                    name: 'field',
+                    translated_name: 'field',
+                    description: 'Field to edit.',
+                    translated_description: 'Field to edit.',
+                },
+                {
+                    name: 'query',
+                    translated_name: 'query',
+                    description: 'Search query.',
+                    translated_description: 'Search query.',
+                },
+                {
+                    name: 'status',
+                    translated_name: 'status',
+                    description: 'Suggestion statuses to search for.',
+                    translated_description: 'Suggestion statuses to search for.',
+                },
+            ],
+        },
+    ],
+    aliases: [
+        'suggestions',
+    ],
+    translated_aliases: [
+        'suggestions',
+    ],
+}

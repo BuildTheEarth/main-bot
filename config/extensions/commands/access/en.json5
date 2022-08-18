@@ -1,0 +1,16 @@
+{
+    name: 'access',
+    translated_name: 'access',
+    description: 'Enable the Manage Permissions permission for a channel.',
+    translated_description: 'Enable the Manage Permissions permission for a channel.',
+    args: [
+        {
+            name: 'channel',
+            translated_name: 'channel',
+            description: 'The channel to get permissions for',
+            translated_description: 'The channel to get permissions for',
+        },
+    ],
+    aliases: [],
+    translated_aliases: [],
+}

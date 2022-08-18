@@ -1,0 +1,22 @@
+{
+    name: 'suggest',
+    translated_name: 'suggest',
+    description: 'Make a suggestion.',
+    translated_description: 'Make a suggestion.',
+    args: [
+        {
+            name: 'anon',
+            translated_name: 'anon',
+            description: 'Wheter the suggestion is anonymous or not.',
+            translated_description: 'Wheter the suggestion is anonymous or not.',
+        },
+        {
+            name: 'number',
+            translated_name: 'number',
+            description: 'Suggestion number, only to be used if sub-suggesting.',
+            translated_description: 'Suggestion number, only to be used if sub-suggesting.',
+        },
+    ],
+    aliases: [],
+    translated_aliases: [],
+}

@@ -1,0 +1,42 @@
+{
+    name: 'role',
+    translated_name: 'role',
+    description: 'View information about a role.',
+    translated_description: 'View information about a role.',
+    args: [
+        {
+            name: 'role',
+            translated_name: 'role',
+            description: 'The role to view.',
+            translated_description: 'The role to view.',
+        },
+    ],
+    subcommands: [
+        {
+            name: 'download',
+            translated_name: 'download',
+            description: 'Download a list of all the members in a role.',
+            translated_description: 'Download a list of all the members in a role.',
+            args: [
+                {
+                    name: 'role',
+                    translated_name: 'role',
+                    description: 'The role to download.',
+                    translated_description: 'The role to download.',
+                },
+                {
+                    name: 'extended',
+                    translated_name: 'extended',
+                    description: 'Whether to include extended role information.',
+                    translated_description: 'Whether to include extended role information.',
+                },
+            ],
+        },
+    ],
+    aliases: [
+        'roleinfo',
+    ],
+    translated_aliases: [
+        'roleinfo',
+    ],
+}

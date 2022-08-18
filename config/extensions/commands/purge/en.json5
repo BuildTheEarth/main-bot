@@ -1,0 +1,16 @@
+{
+    name: 'purge',
+    translated_name: 'purge',
+    description: 'Bulk-delete messages in a channel.',
+    translated_description: 'Bulk-delete messages in a channel.',
+    args: [
+        {
+            name: 'amount',
+            translated_name: 'amount',
+            description: 'Amount to purge.',
+            translated_description: 'Amount to purge.',
+        },
+    ],
+    aliases: [],
+    translated_aliases: [],
+}

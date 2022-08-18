@@ -1,0 +1,22 @@
+{
+    name: 'check',
+    translated_name: 'check',
+    description: "Check a user's punishment records.",
+    translated_description: "Check a user's punishment records.",
+    args: [
+        {
+            name: 'user',
+            translated_name: 'user',
+            description: 'User to get records of',
+            translated_description: 'User to get records of',
+        },
+        {
+            name: 'deleted',
+            translated_name: 'deleted',
+            description: 'Optional arg to check for deleted cases',
+            translated_description: 'Optional arg to check for deleted cases',
+        },
+    ],
+    aliases: [],
+    translated_aliases: [],
+}

@@ -1,0 +1,77 @@
+{
+    name: 'remind',
+    translated_name: 'remind',
+    description: 'List and manage reminders.',
+    translated_description: 'List and manage reminders.',
+    subcommands: [
+        {
+            name: 'add',
+            translated_name: 'add',
+            description: 'Add a reminder.',
+            translated_description: 'Add a reminder.',
+            args: [
+                {
+                    name: 'channel',
+                    translated_name: 'channel',
+                    description: 'Channel to remind in',
+                    translated_description: 'Channel to remind in',
+                },
+                {
+                    name: 'interval',
+                    translated_name: 'interval',
+                    description: 'Reminder interval.',
+                    translated_description: 'Reminder interval.',
+                },
+                {
+                    name: 'message',
+                    translated_name: 'message',
+                    description: 'Reminder message.',
+                    translated_description: 'Reminder message.',
+                },
+            ],
+        },
+        {
+            name: 'edit',
+            translated_name: 'edit',
+            description: 'Edit a reminder.',
+            translated_description: 'Edit a reminder.',
+            args: [
+                {
+                    name: 'id',
+                    translated_name: 'id',
+                    description: 'Reminder ID',
+                    translated_description: 'Reminder ID',
+                },
+                {
+                    name: 'message',
+                    translated_name: 'message',
+                    description: 'Reminder message.',
+                    translated_description: 'Reminder message.',
+                },
+            ],
+        },
+        {
+            name: 'delete',
+            translated_name: 'delete',
+            description: 'Delete a reminder.',
+            translated_description: 'Delete a reminder.',
+            args: [
+                {
+                    name: 'id',
+                    translated_name: 'id',
+                    description: 'Reminder ID',
+                    translated_description: 'Reminder ID',
+                },
+            ],
+        },
+        {
+            name: 'list',
+            translated_name: 'list',
+            description: 'List all reminders.',
+            translated_description: 'List all reminders.',
+            args: [],
+        },
+    ],
+    aliases: [],
+    translated_aliases: [],
+}

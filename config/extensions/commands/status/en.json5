@@ -1,0 +1,8 @@
+{
+    name: 'status',
+    translated_name: 'status',
+    description: 'Check the status of the Minecraft network.',
+    translated_description: 'Check the status of the Minecraft network.',
+    aliases: [],
+    translated_aliases: [],
+}

@@ -1,0 +1,78 @@
+{
+    name: 'notes',
+    translated_name: 'notes',
+    description: 'Read and manage moderation notes.',
+    translated_description: 'Read and manage moderation notes.',
+    args: [
+        {
+            name: 'member',
+            translated_name: 'member',
+            description: 'Member to annotate.',
+            translated_description: 'Member to annotate.',
+        },
+        {
+            name: 'body',
+            translated_name: 'body',
+            description: 'Note body.',
+            translated_description: 'Note body.',
+        },
+    ],
+    subcommands: [
+        {
+            name: 'add',
+            translated_name: 'add',
+            description: 'Add (or append to) the notes for a member.',
+            translated_description: 'Add (or append to) the notes for a member.',
+            args: [
+                {
+                    name: 'member',
+                    translated_name: 'member',
+                    description: 'Member to annotate.',
+                    translated_description: 'Member to annotate.',
+                },
+                {
+                    name: 'body',
+                    translated_name: 'body',
+                    description: 'Note body.',
+                    translated_description: 'Note body.',
+                },
+            ],
+        },
+        {
+            name: 'edit',
+            translated_name: 'edit',
+            description: 'Edit the notes for a member (overwriting the existing ones).',
+            translated_description: 'Edit the notes for a member (overwriting the existing ones).',
+            args: [
+                {
+                    name: 'member',
+                    translated_name: 'member',
+                    description: 'Member to annotate.',
+                    translated_description: 'Member to annotate.',
+                },
+                {
+                    name: 'body',
+                    translated_name: 'body',
+                    description: 'Note body.',
+                    translated_description: 'Note body.',
+                },
+            ],
+        },
+        {
+            name: 'clear',
+            translated_name: 'clear',
+            description: 'Delete the notes for a member.',
+            translated_description: 'Delete the notes for a member.',
+            args: [
+                {
+                    name: 'member',
+                    translated_name: 'member',
+                    description: 'Member to annotate.',
+                    translated_description: 'Member to annotate.',
+                },
+            ],
+        },
+    ],
+    aliases: [],
+    translated_aliases: [],
+}

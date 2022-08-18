@@ -1,0 +1,20 @@
+{
+    name: 'team',
+    translated_name: 'team',
+    description: 'Get an invite for a build team.',
+    translated_description: 'Get an invite for a build team.',
+    args: [
+        {
+            name: 'team',
+            translated_name: 'team',
+            description: 'Team to get',
+            translated_description: 'Team to get',
+        },
+    ],
+    aliases: [
+        'bt',
+    ],
+    translated_aliases: [
+        'bt',
+    ],
+}

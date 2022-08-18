@@ -1,0 +1,16 @@
+{
+    name: 'reload',
+    translated_name: 'reload',
+    description: 'Reload a command/an event handler/the config/a module/all modules.',
+    translated_description: 'Reload a command/an event handler/the config/a module/all modules.',
+    args: [
+        {
+            name: 'module',
+            translated_name: 'module',
+            description: "Module to reload (command | event | 'config' | filename | 'all')",
+            translated_description: "Module to reload (command | event | 'config' | filename | 'all')",
+        },
+    ],
+    aliases: [],
+    translated_aliases: [],
+}
