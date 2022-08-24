@@ -104,11 +104,16 @@ export default class Client extends Discord.Client {
 
         this.db = await typeorm.createConnection(options as typeorm.ConnectionOptions) // non-Partial
 
-        await this.db.query("SET NAMES utf8mb4")
-        await this.db.query("SET collation_connection = utf8mb4_general_ci")
-        await this.db.query("SET @@collation_connection = utf8mb4_general_ci")
-        await this.db.query("SET @@collation_database = utf8mb4_general_ci")
-        await this.db.query("SET @@collation_server = utf8mb4_general_ci")
+        if (["mariadb", "mysql"].includes(db.type))
+        {
+            await this.db.query("SET NAMES utf8mb4")
+            await this.db.query("SET collation_connection = utf8mb4_general_ci")
+            await this.db.query("SET @@collation_connection = utf8mb4_general_ci")
+            await this.db.query("SET @@collation_database = utf8mb4_general_ci")
+            await this.db.query("SET @@collation_server = utf8mb4_general_ci")
+        } else if (db.type === "sqlite") {
+            await this.db.query("PRAGMA encoding = 'UTF-8'")
+        }
 
         this.filterWordsCached = await BannedWord.loadWords()
         this.placeholder.cache = await Placeholder.loadPlaceholders()
