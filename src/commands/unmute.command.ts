@@ -56,12 +56,12 @@ export default new Command({
         log.reason = reason
         log.channel = message.channel.id
         log.message = message.id
-        log.length = undefined
+        log.length = null
         await log.save()
 
         await log.notifyMember(client)
         const formattedUser = user.id === message.member.id ? "*you*" : user.toString()
-        await message.sendSuccessMessage("unbannedUser", formattedUser, log.id)
+        await message.sendSuccessMessage("unmutedUser", formattedUser, log.id)
         await client.log(log)
     }
 })

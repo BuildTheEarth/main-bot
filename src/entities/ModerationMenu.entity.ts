@@ -678,7 +678,7 @@ function getMostSevereList(
         punishmentWords.push({
             word: punishment.base,
             punishment_type: word.punishment_type,
-            duration: word.duration ? word.duration : undefined,
+            duration: word.duration ? word.duration : null,
             reason: word.reason ? word.reason : undefined,
             exception: false
         })

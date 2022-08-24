@@ -16,7 +16,7 @@ export interface bannedWordsOptions {
     word?: string
     punishment_type?: "BAN" | "WARN" | "MUTE" | "KICK" | "DELETE"
     reason?: string
-    duration?: number
+    duration: number | null
     exception?: boolean
 }
 
@@ -50,8 +50,8 @@ export default class BannedWord extends typeorm.BaseEntity {
     @typeorm.Column({ length: 1024, nullable: true, transformer: unicode })
     reason?: string
 
-    @typeorm.Column({ nullable: true, transformer: milliseconds })
-    duration?: number
+    @typeorm.Column({ nullable: true, transformer: milliseconds, default: null, type: "int" })
+    duration?: number | null
 
     @typeorm.Column({ default: false })
     exception: boolean = false

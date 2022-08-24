@@ -170,10 +170,10 @@ export default new Command({
                             | "DELETE",
                         reason: reason,
                         duration: isNaN(duration !== null ? duration : NaN)
-                            ? undefined
+                            ? null
                             : duration !== null
                             ? duration
-                            : undefined,
+                            : null,
                         exception: false
                     },
                     client
@@ -214,7 +214,7 @@ export default new Command({
                         word: word,
                         punishment_type: undefined,
                         reason: undefined,
-                        duration: undefined,
+                        duration: null,
                         exception: true
                     },
                     client
@@ -265,7 +265,7 @@ async function getList(
                                   ? humanizeConstant(word.punishment_type)
                                   : ""
                           } ${
-                              word.duration !== undefined
+                            (word.duration !== null && word.duration !== undefined)
                                   ? formatPunishmentTime(word.duration)
                                   : ""
                           } for reason ${
@@ -296,7 +296,7 @@ async function getList(
                       ? humanizeConstant(word.punishment_type)
                       : ""
               } ${
-                  word.duration !== undefined ? formatPunishmentTime(word.duration) : ""
+                  (word.duration !== null && word.duration !== undefined) ? formatPunishmentTime(word.duration) : ""
               } for reason ${
                   word.reason !== undefined ? truncateString(word.reason, 20) : ""
               }\n`
