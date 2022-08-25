@@ -48,7 +48,8 @@ export default class BannerImage extends typeorm.BaseEntity {
 
         await client.customGuilds
             .main()
-            .setBanner(bannerBuffer, "Updated banner with first image in queue.").catch((e) => console.log(e))
+            .setBanner(bannerBuffer, "Updated banner with first image in queue.")
+            .catch(e => console.log(e))
 
         console.log("F")
         const updates = (await client.customGuilds.main()).channels.cache.find(

@@ -265,7 +265,7 @@ async function getList(
                                   ? humanizeConstant(word.punishment_type)
                                   : ""
                           } ${
-                            (word.duration !== null && word.duration !== undefined)
+                              word.duration !== null && word.duration !== undefined
                                   ? formatPunishmentTime(word.duration)
                                   : ""
                           } for reason ${
@@ -296,7 +296,9 @@ async function getList(
                       ? humanizeConstant(word.punishment_type)
                       : ""
               } ${
-                  (word.duration !== null && word.duration !== undefined) ? formatPunishmentTime(word.duration) : ""
+                  word.duration !== null && word.duration !== undefined
+                      ? formatPunishmentTime(word.duration)
+                      : ""
               } for reason ${
                   word.reason !== undefined ? truncateString(word.reason, 20) : ""
               }\n`

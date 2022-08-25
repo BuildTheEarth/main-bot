@@ -50,7 +50,12 @@ export default class BannedWord extends typeorm.BaseEntity {
     @typeorm.Column({ length: 1024, nullable: true, transformer: unicode })
     reason?: string
 
-    @typeorm.Column({ nullable: true, transformer: milliseconds, default: null, type: "int" })
+    @typeorm.Column({
+        nullable: true,
+        transformer: milliseconds,
+        default: null,
+        type: "int"
+    })
     duration?: number | null
 
     @typeorm.Column({ default: false })
