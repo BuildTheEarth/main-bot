@@ -120,11 +120,11 @@ export default new Command({
         const body = args.consumeRest(["body"])
 
         if (!(subcommand === "add" || subcommand === "edit")) await message.continue()
-        const placeholders = await client.placeholder.cache
+        const placeholders = client.placeholder.cache
         if (subcommand === "list" || !subcommand) {
             const tidy: Record<string, { languages: string[] }> = {}
 
-            for (const placeholder of Object.values(placeholders)) {
+            for (const placeholder of placeholders.values()) {
                 if (!tidy[placeholder.name])
                     tidy[placeholder.name] = {
                         languages: []
