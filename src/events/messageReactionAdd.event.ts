@@ -1,7 +1,6 @@
-import Discord from "discord.js"
+import Discord, { MembershipScreeningFieldType } from "discord.js"
 import Client from "../struct/Client.js"
 import GuildMember from "../struct/discord/GuildMember.js"
-
 import { noop, trimSides } from "@buildtheearth/bot-utils"
 
 export default async function messageReactionAdd(
@@ -22,7 +21,18 @@ export default async function messageReactionAdd(
         const member: Discord.GuildMember | null = await guild.members
             .fetch({ user, cache: true })
             .catch(() => null)
-        if (member && role) await member.roles.add(role).catch(noop)
+        if (role.contingent) {
+            const checkRoles = role.checkRoles
+            const hasRoles = member?.roles.cache.map(r => r.id)
+            if (role.type === "none") {
+                if (hasRoles?.some(r => checkRoles.includes(r))) return
+            }
+            if (role.type === "some") {
+                if (!hasRoles?.some(r => checkRoles.includes(r))) return
+            }
+        }
+
+        if (member && role.id) await member.roles.add(role.id).catch(noop)
         const channel = reaction.message.channel as Discord.TextChannel
 
         const channelRaw = reaction.message.channel

@@ -8,7 +8,7 @@
     logging: {
         modLogs: "",
         snippetLogs: "",
-        pointLogs: "",
+        pointLogs: ""
     },
     guilds: {
         main: "",
@@ -16,7 +16,7 @@
     },
     suggestions: {
         main: "",
-        staff: "",
+        staff: ""
     },
     suggestionOffset: {
         main: 0,
@@ -26,7 +26,12 @@
     reactionRoles: {
         "<channel ID>": {
             "<message ID>": {
-                "<guild emoji ID or unicode emoji>": "<role ID>"
+                "<guild emoji ID or unicode emoji>": {
+                    id: "<role ID>",
+                    contingent: false,
+                    type: "<nonne | some>",
+                    checkRoles: ["<role ID>", "<role ID>"]
+                }
             }
         }
     },
@@ -40,8 +45,8 @@
         downvote: "👎",
         left: "🡐",
         right: "🡒",
-        delete: '❌',
-        pin: '📌',
+        delete: "❌",
+        pin: "📌",
         text: {
             online: "🟢",
             idle: "🌙",
