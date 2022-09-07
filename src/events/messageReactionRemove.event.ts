@@ -15,7 +15,7 @@ export default async function messageReactionRemove(
     const guild = reaction.message.guild
     if (guild) {
         const member = await guild.members.fetch({ user, cache: true }).catch(noop)
-        if (member && role.id) await member.roles.remove(role.id).catch(noop)
+        if (member && role?.id) await member.roles.remove(role.id).catch(noop)
 
         const channelRaw = reaction.message.channel
 
