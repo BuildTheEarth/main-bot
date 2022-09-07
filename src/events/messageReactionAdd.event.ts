@@ -32,7 +32,7 @@ export default async function messageReactionAdd(
             }
         }
 
-        if (member && role.id) await member.roles.add(role.id).catch(noop)
+        if (member && role?.id) await member.roles.add(role.id).catch(noop)
         const channel = reaction.message.channel as Discord.TextChannel
 
         const channelRaw = reaction.message.channel
