@@ -21,7 +21,7 @@ export default async function messageReactionAdd(
         const member: Discord.GuildMember | null = await guild.members
             .fetch({ user, cache: true })
             .catch(() => null)
-        if (role.contingent) {
+        if (role?.contingent) {
             const checkRoles = role.checkRoles
             const hasRoles = member?.roles.cache.map(r => r.id)
             if (role.type === "none") {
