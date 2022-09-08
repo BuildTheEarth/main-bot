@@ -64,7 +64,7 @@ export default class Client extends Discord.Client {
                 path.dirname(url.fileURLToPath(import.meta.url)) +
                     "/../entities/*.{js,ts}"
             ],
-            synchronize: process.env.NODE_ENV !== "production",
+            synchronize: true, //process.env.NODE_ENV !== "production",
             //TODO: Fix this after db updates
             logging: "all" //process.env.NODE_ENV !== "production" ? "all" : false
         }
