@@ -23,7 +23,7 @@ export default async function messageReactionAdd(
             .catch(() => null)
         if (role?.contingent) {
             const checkRoles = role.checkRoles
-            const hasRoles = member?.roles.cache.map(r => r.id)
+            const hasRoles = member?.roles.cache.map(r => r?.id)
             if (role.type === "none") {
                 if (hasRoles?.some(r => checkRoles.includes(r))) return
             }
