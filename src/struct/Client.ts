@@ -22,6 +22,7 @@ import { Cron } from "croner"
 import ModalList from "./client/ModalList.js"
 import InteractionInfo from "../typings/InteractionInfo.js"
 import { Database } from "better-sqlite3"
+import ReactionRole from "../entities/ReactionRole.entity.js"
 
 export default class Client extends Discord.Client {
     declare guilds: Discord.GuildManager
@@ -54,6 +55,7 @@ export default class Client extends Discord.Client {
     deletedMessages = new WeakSet<Discord.Message>()
     roles: Record<string, string[]> = {}
     interactionInfo: Map<string, InteractionInfo> = new Map()
+    reactionRoles: Map<string, ReactionRole> = new Map()
 
     async initDatabase(): Promise<void> {
         const db = this.config.database
