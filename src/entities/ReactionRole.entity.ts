@@ -1,3 +1,4 @@
+import { GuildMember } from "discord.js"
 import typeorm from "typeorm"
 import Client from "../struct/Client.js"
 import SnowflakeColumn from "./decorators/SnowflakeColumn.decorator.js"
@@ -99,6 +100,22 @@ export default class ReactionRole extends typeorm.BaseEntity {
         await has.save()
 
         client.reactionRoles.set(has.emoji, has)
+        return true
+    }
+
+    public static async canReact(client: Client, emoji: string, guildMember: GuildMember): Promise<boolean> {
+        const react = await this.findOne({emoji: emoji})
+        const reqRoles = react?.requiredRoles
+        const unreqRoles = react?.blackListedRoles
+        if (!react) return false
+        if (unreqRoles) 
+            return !guildMember.roles.cache.every((e) => unreqRoles.includes(e.id))
+        
+        if (reqRoles) 
+            return guildMember.roles.cache.every((e) => reqRoles.includes(e.id))
+        
+
+
         return true
     }
 
