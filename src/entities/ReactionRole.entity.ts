@@ -108,9 +108,11 @@ export default class ReactionRole extends typeorm.BaseEntity {
         const reqRoles = react?.requiredRoles
         const unreqRoles = react?.blackListedRoles
         if (!react) return false
+
+        if (unreqRoles && reqRoles) 
+            return (!guildMember.roles.cache.every((e) => unreqRoles.includes(e.id))) && (guildMember.roles.cache.every((e) => reqRoles.includes(e.id)))
         if (unreqRoles) 
-            return !guildMember.roles.cache.every((e) => unreqRoles.includes(e.id))
-        
+            return !guildMember.roles.cache.every((e) => unreqRoles.includes(e.id))     
         if (reqRoles) 
             return guildMember.roles.cache.every((e) => reqRoles.includes(e.id))
         
