@@ -1,3 +1,4 @@
+import { noop } from "@buildtheearth/bot-utils"
 import { GuildMember } from "discord.js"
 import typeorm from "typeorm"
 import Client from "../struct/Client.js"
@@ -8,7 +9,7 @@ export default class ReactionRole extends typeorm.BaseEntity {
     @typeorm.PrimaryGeneratedColumn()
     id!: number
 
-    @typeorm.Column({type: "nvarchar", length: "3"})
+    @typeorm.Column({type: "nvarchar", length: "20"})
     emoji!: string
 
     @SnowflakeColumn({name: "channel_id"})
@@ -16,6 +17,9 @@ export default class ReactionRole extends typeorm.BaseEntity {
 
     @SnowflakeColumn({name: "message_id"})
     messageId!: string
+
+    @SnowflakeColumn({name: "role_id"})
+    roleId!: string
 
     @typeorm.Column({name: "required_roles", nullable: true, type: "simple-array"})
     requiredRoles?: string[] | null
@@ -35,21 +39,23 @@ export default class ReactionRole extends typeorm.BaseEntity {
         return (this.requiredRoles || this.blackListedRoles)? true: false
     }
 
-    public static async add(client: Client, emoji: string, channelId: string, messageId: string, requiredRoles?: string[], blackListedRoles?: string[]): Promise<boolean> {
+    public static async add(client: Client, emoji: string, channelId: string, messageId: string, roleId: string, requiredRoles?: string[], blackListedRoles?: string[]): Promise<boolean> {
         const has = await this.findOne({emoji: emoji})
         if (has) return false
         const rRole = new ReactionRole()
         rRole.emoji = emoji
         rRole.channelId = channelId
+        rRole.roleId = roleId
         rRole.messageId = messageId
         if (requiredRoles) rRole.requiredRoles = requiredRoles
         if (blackListedRoles) rRole.blackListedRoles = blackListedRoles
         await rRole.save()
+        client.reactionRoles.set(rRole.emoji, rRole)
         return true
     }
 
-    public static async addBlacklistedRole(client: Client, emoji: string, blacklistRole: string): Promise<boolean> {
-        const has = await this.findOne({emoji: emoji})
+    public static async addBlacklistedRole(client: Client, id: number, blacklistRole: string): Promise<boolean> {
+        const has = await this.findOne(id)
         if (!has) return false
 
         if (!has.blackListedRoles) has.blackListedRoles = [blacklistRole]
@@ -61,8 +67,8 @@ export default class ReactionRole extends typeorm.BaseEntity {
         return true
     }
 
-    public static async addRequiredRole(client: Client, emoji: string, requireRole: string): Promise<boolean> {
-        const has = await this.findOne({emoji: emoji})
+    public static async addRequiredRole(client: Client, id: number, requireRole: string): Promise<boolean> {
+        const has = await this.findOne(id)
         if (!has) return false
 
         if (!has.requiredRoles) has.requiredRoles = [requireRole]
@@ -74,8 +80,8 @@ export default class ReactionRole extends typeorm.BaseEntity {
         return true
     }
 
-    public static async removeBlacklistedRole(client: Client, emoji: string, blacklistRole: string): Promise<boolean> {
-        const has = await this.findOne({emoji: emoji})
+    public static async removeBlacklistedRole(client: Client, id: number, blacklistRole: string): Promise<boolean> {
+        const has = await this.findOne(id)
         if (!has) return false
 
         if (!has.blackListedRoles) return false
@@ -89,8 +95,8 @@ export default class ReactionRole extends typeorm.BaseEntity {
     }
 
     
-    public static async removeRequiredRole(client: Client, emoji: string, requireRole: string): Promise<boolean> {
-        const has = await this.findOne({emoji: emoji})
+    public static async removeRequiredRole(client: Client, id: number, requireRole: string): Promise<boolean> {
+        const has = await this.findOne(id)
         if (!has) return false
 
         if (!has.requiredRoles) return false
@@ -103,8 +109,8 @@ export default class ReactionRole extends typeorm.BaseEntity {
         return true
     }
 
-    public static async canReact(client: Client, emoji: string, guildMember: GuildMember): Promise<boolean> {
-        const react = await this.findOne({emoji: emoji})
+    public static async canReact(client: Client, emoji: string, channelId: string, messageId: string, guildMember: GuildMember): Promise<boolean> {
+        const react = await this.findOne({emoji: emoji, messageId: messageId, channelId: channelId})
         const reqRoles = react?.requiredRoles
         const unreqRoles = react?.blackListedRoles
         if (!react) return false
@@ -117,6 +123,21 @@ export default class ReactionRole extends typeorm.BaseEntity {
             return guildMember.roles.cache.every((e) => reqRoles.includes(e.id))
         
 
+
+        return true
+    }
+
+    public static async react(client: Client, emoji: string, channelId: string, messageId: string, guildMember: GuildMember): Promise<boolean> {
+        const react = await this.findOne({emoji: emoji, messageId: messageId, channelId: channelId})
+        if (!react) return false
+        const role = await guildMember.guild.roles.fetch(react?.roleId)
+        if (!role) return false
+        const canReact = await this.canReact(client, emoji, channelId, messageId, guildMember)
+        if (!canReact) return false
+
+        if (guildMember.roles.cache.has(role.id)) return true
+        
+        await guildMember.roles.add(role).catch(noop)
 
         return true
     }
