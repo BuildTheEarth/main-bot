@@ -11,6 +11,11 @@ export default new Command({
     permission: [globalThis.client.roles.MANAGER, globalThis.client.roles.BOT_DEVELOPER],
     subcommands: [
         {
+            name: "list",
+            description: "List reaction roles",
+            args: []
+        },
+        {
             name: "add",
             description: "Add a reaction role",
             args: []

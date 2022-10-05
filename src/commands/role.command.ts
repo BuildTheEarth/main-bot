@@ -191,8 +191,7 @@ export default new Command({
             if (
                 !GuildMember.hasRole(
                     message.member,
-                    globalThis.client.roles.SUBTEAM_LEAD ||
-                        globalThis.client.roles.MANAGER,
+                    [globalThis.client.roles.SUBTEAM_LEAD, globalThis.client.roles.MANAGER],
                     client
                 )
             )
