@@ -23,7 +23,8 @@ export default new Command({
     description: "Promote/demote a member from your team.",
     permission: [
         globalThis.client.roles.SUBTEAM_LEAD,
-        globalThis.client.roles.REGIONAL_BUILD_TEAM_LEAD
+        globalThis.client.roles.REGIONAL_BUILD_TEAM_LEAD,
+        globalThis.client.roles.TEAM_OWNER_STAFF
     ],
     args: [
         {
@@ -37,7 +38,7 @@ export default new Command({
             description: "Position to promote/demote to.",
             optionType: "STRING",
             required: false,
-            choices: ["bto", "vs", "vcc"]
+            choices: ["bto", "vs", "vcc", "teamstaff"]
         },
         {
             name: "promote",
@@ -52,7 +53,7 @@ export default new Command({
         if (!user)
             return message.sendErrorMessage(user === undefined ? "noUser" : "invalidUser")
 
-        let position = args.consumeIf(["bto", "vcc", "vs"], "position")
+        let position = args.consumeIf(["bto", "vcc", "vs", "teamstaff"], "position")
         if (!position)
             for (const [team, lead] of Object.entries(pseudoteamPositions.leads))
                 if (GuildMember.hasRole(message.member, client.roles[lead], client))
@@ -61,14 +62,16 @@ export default new Command({
 
         const lead = pseudoteamPositions.leads[position]
         const expanded = pseudoteamPositions.expansions[position]
+        const guild = pseudoteamPositions.guild[position] === "main"? client.customGuilds.main(): client.customGuilds.staff()
+
 
         if (!GuildMember.hasRole(message.member, client.roles[lead], client))
             return message.sendErrorMessage("notLead", expanded)
-        const role = Guild.role(await client.customGuilds.main(), client.roles[expanded])
+        const role = Guild.role(guild, client.roles[expanded])
 
-        const member: Discord.GuildMember | null = await (
-            await client.customGuilds.main()
-        ).members
+        const member: Discord.GuildMember | null = await 
+            guild
+        .members
             .fetch({ user, cache: true })
             .catch(noop)
         if (!member) return message.sendErrorMessage("notInGuild")
