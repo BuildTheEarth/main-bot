@@ -42,10 +42,6 @@ async function main() {
     client.roles = loadRoles(client)
     client.logger.info("Loaded config.")
 
-    client.logger.debug("Registering webserver...")
-    await client.webserver.load()
-    client.logger.info("Registered webserver.")
-
     client.logger.debug("Connecting to database...")
     await client.initDatabase()
     client.logger.info("Connected to database.")
@@ -54,6 +50,10 @@ async function main() {
     await client.events.load()
     client.events.register()
     client.logger.info("Registered events.")
+
+    client.logger.debug("Registering webserver...")
+    await client.webserver.load()
+    client.logger.info("Registered webserver.")
 
     client.logger.debug("Registering modals..")
     await client.modals.load()
