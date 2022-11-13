@@ -38,7 +38,9 @@ export default new Command({
     permission: [
         globalThis.client.roles.SUBTEAM_LEAD,
         globalThis.client.roles.REGIONAL_BUILD_TEAM_LEAD,
-        globalThis.client.roles.TEAM_OWNER_STAFF
+        globalThis.client.roles.TEAM_OWNER_STAFF,
+        globalThis.client.roles.MODERATOR,
+        globalThis.client.roles.MANAGER
     ],
     subcommands: [
         {
@@ -104,18 +106,19 @@ export default new Command({
 
         const subcommand = args.consumeSubcommand()
         if (subcommand === "manage") {
-            const roleArgs = await args.consumeRole("role")
-            if (!roleArgs) return message.sendErrorMessage("noRole")
-            const remove = args.consumeBoolean("remove")
-
             if (
                 !GuildMember.hasRole(
                     message.member,
-                    [client.roles.MODERATOR, globalThis.client.roles.MANAGER],
+                    [client.roles.MODERATOR, client.roles.MANAGER],
                     client
                 )
             )
                 return message.sendErrorMessage("noRolePerms")
+
+            const roleArgs = await args.consumeRole("role")
+            if (!roleArgs) return message.sendErrorMessage("noRole")
+            const remove = args.consumeBoolean("remove")
+
             let roleName
             for (const key in roleConfig) {
                 if (roleConfig[key] == roleArgs.id) {
