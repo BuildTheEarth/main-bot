@@ -39,7 +39,7 @@ export default new Command({
                     name: "delete",
                     description: "Delete a blacklisted role",
                     args: []
-                },
+                }
             ]
         },
         {
@@ -56,7 +56,7 @@ export default new Command({
                     name: "delete",
                     description: "Delete a required role",
                     args: []
-                },
+                }
             ]
         }
     ],

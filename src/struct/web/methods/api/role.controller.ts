@@ -43,11 +43,13 @@ export default class RoleController {
             return res.send({ error: "NOT_FOUND", message: "Not found: user" })
         }
 
-        await user.fetch();
+        await user.fetch()
 
         const userInfo = {
             id: user.id,
-            roles: user.roles.cache.map((v) => {return {name: v.name, id: v.id}})
+            roles: user.roles.cache.map(v => {
+                return { name: v.name, id: v.id }
+            })
         }
 
         res.send(userInfo)
@@ -63,9 +65,9 @@ export default class RoleController {
         @Body("add") add: boolean
     ): Promise<unknown> {
         res.type("application/json")
-        return res
-            .status(501)
-            .send({ error: "NOT_IMPLEMENTED", message: "Function not implemented: Role Post" })
-        
+        return res.status(501).send({
+            error: "NOT_IMPLEMENTED",
+            message: "Function not implemented: Role Post"
+        })
     }
 }

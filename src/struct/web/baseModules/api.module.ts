@@ -7,7 +7,13 @@ import RoleController from "../methods/api/role.controller.js"
 
 @Module({
     imports: [],
-    controllers: [BuilderController, PingController, PunishController, ReportsController, RoleController],
+    controllers: [
+        BuilderController,
+        PingController,
+        PunishController,
+        ReportsController,
+        RoleController
+    ],
     providers: []
 })
 export class ApiModule {}

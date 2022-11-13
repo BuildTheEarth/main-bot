@@ -107,7 +107,15 @@ export default new Command({
             const roleArgs = await args.consumeRole("role")
             if (!roleArgs) return message.sendErrorMessage("noRole")
             const remove = args.consumeBoolean("remove")
-            const action = remove ? "remove" : "add"
+
+            if (
+                GuildMember.hasRole(
+                    message.member,
+                    [globalThis.client.roles.MODERATOR, globalThis.client.roles.MANAGER],
+                    client
+                )
+            )
+                return message.sendErrorMessage("noRolePerms")
             let roleName
             for (const key in roleConfig) {
                 if (roleConfig[key] == roleArgs.id) {
@@ -126,6 +134,7 @@ export default new Command({
                 .catch(noop)
             if (!member) return message.sendErrorMessage("notInGuild")
             await message.continue()
+            const action = remove ? "remove" : "add"
             await member.roles[action](roleArgs).catch(err => {
                 return message.sendErrorMessage("roleFailed")
             })
