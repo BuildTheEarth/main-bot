@@ -109,9 +109,9 @@ export default new Command({
             const remove = args.consumeBoolean("remove")
 
             if (
-                GuildMember.hasRole(
+                !GuildMember.hasRole(
                     message.member,
-                    [globalThis.client.roles.MODERATOR, globalThis.client.roles.MANAGER],
+                    [client.roles.MODERATOR, globalThis.client.roles.MANAGER],
                     client
                 )
             )
