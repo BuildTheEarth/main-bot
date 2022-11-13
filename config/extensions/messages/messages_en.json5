@@ -59,6 +59,7 @@
     noRole: ["Please provide a valid role."],
     noChannel: ["You must provide a channel."],
     noPerms: ["You do not have permission to do this."],
+    noRolePerms: ["You do not have permission to give this role."],
     noCaseID: ["You must provide a case ID."],
     noID: ["You must provide an ID."],
     noBanner: ["That banner doesn't exist."],
@@ -236,7 +237,8 @@
         "%1s has been awarded for their cool build! Congratulations and great work!"
     ],
     kickedUser: ["Kicked %1s (**#%2s**)."],
-    roleAdded: ["Role added!"],
+    roleAdded: ["Role added."],
+    roleSuccess: ["Role added/removed succsefuly."],
     lockedChannel: ["Locked %1s."],
     deletedImage: ["Deleted image."],
     updatedJsonData: ["Updated data! Raw JSON response:\n\n%1s"],
@@ -278,5 +280,6 @@
     suggestionLink: ["Here's the link to suggestion **#%1s**: [%2s](%3s)"],
     deletedSuggestion: ["Deleted the suggestion!"],
     updatedSuggestion: ["Updated the suggestion!"],
-    pleaseImage: ["Please provide a raw image!"]
+    pleaseImage: ["Please provide a raw image!"],
+    roleFailed: ["Failed to add/remove users role."]
 }
