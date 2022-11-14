@@ -11,8 +11,7 @@ export default new Command({
     aliases: ["placeholders"],
     description: "List and manage placeholders.",
     permission: [
-        globalThis.client.roles.MODERATOR,
-        globalThis.client.roles.HELPER,
+        globalThis.client.roles.SENIOR_MODERATOR,
         globalThis.client.roles.MANAGER,
         globalThis.client.roles.PR_TRANSLATION_TEAM
     ],

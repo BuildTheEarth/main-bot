@@ -111,9 +111,8 @@ export default new Command({
         }
     ],
     permission: [
-        globalThis.client.roles.MODERATOR,
-        globalThis.client.roles.MANAGER,
-        globalThis.client.roles.ANY
+        globalThis.client.roles.SENIOR_MODERATOR,
+        globalThis.client.roles.MANAGER
     ],
     async run(this: Command, client: Client, message: CommandMessage, args: Args) {
         const subcommandGroup = args.consumeSubcommandGroupIf(["block", "except"])
