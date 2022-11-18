@@ -11,7 +11,10 @@ export default new Command({
     name: "lock",
     aliases: [],
     description: "Lock the channel.",
-    permission: globalThis.client.roles.MANAGER,
+    permission: [
+        globalThis.client.roles.MANAGER,
+        globalThis.client.roles.SENIOR_MODERATOR
+    ],
     args: [
         {
             name: "channel",
