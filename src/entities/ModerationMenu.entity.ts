@@ -187,7 +187,7 @@ export default class ModerationMenu extends typeorm.BaseEntity {
         const modMenu = new ModerationMenu()
         modMenu.member = message.author.id
         modMenu.message_text = message.content
-        modMenu.punishments = truePunishments
+        modMenu.punishments = _.uniqBy(truePunishments, "word")
         modMenu.offenses = 1
         if (modMenu.punishments[0].word)
             modMenu.current_word = modMenu.punishments[0].word
