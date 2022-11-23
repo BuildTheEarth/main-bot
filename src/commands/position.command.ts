@@ -125,8 +125,8 @@ export default new Command({
                     roleName = key
                 }
             }
-            // message.member.roles.highest.position < roleArgs.position ||
             if (
+                message.member.roles.highest.position < roleArgs.position ||
                 forbiddenRoles.includes(roleName) ||
                 message.guild.id !== client.config.guilds.main
             )
