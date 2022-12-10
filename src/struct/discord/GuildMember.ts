@@ -33,10 +33,9 @@ export default class GuildMember {
         user: Discord.GuildMember,
         reason: string
     ): Promise<Discord.GuildMember> {
-        await user.roles.add(
-            Guild.role(user.guild, globalThis.client.roles.MUTED),
-            reason
-        )
+        await user.roles
+            .add(Guild.role(user.guild, globalThis.client.roles.MUTED), reason)
+            .catch(error => console.log(error))
         return user
     }
 
