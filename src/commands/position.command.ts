@@ -74,6 +74,7 @@ export default new Command({
             name: "manage",
             description: "Add or remove any role from a member.",
             permission: [
+                globalThis.client.roles.HELPER,
                 globalThis.client.roles.MODERATOR,
                 globalThis.client.roles.MANAGER
             ],
@@ -109,7 +110,7 @@ export default new Command({
             if (
                 !GuildMember.hasRole(
                     message.member,
-                    [client.roles.MODERATOR, client.roles.MANAGER],
+                    [client.roles.HELPER, client.roles.MODERATOR, client.roles.MANAGER],
                     client
                 )
             )
