@@ -4,6 +4,7 @@ import PingController from "../methods/api/ping.controller.js"
 import PunishController from "../methods/api/punish.controller.js"
 import ReportsController from "../methods/api/report.controller.js"
 import RoleController from "../methods/api/role.controller.js"
+import WebsiteMessage from "../methods/api/websiteMessage.controller.js"
 
 @Module({
     imports: [],
@@ -12,7 +13,8 @@ import RoleController from "../methods/api/role.controller.js"
         PingController,
         PunishController,
         ReportsController,
-        RoleController
+        RoleController,
+        WebsiteMessage
     ],
     providers: []
 })

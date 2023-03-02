@@ -23,6 +23,7 @@ import ModalList from "./client/ModalList.js"
 import InteractionInfo from "../typings/InteractionInfo.js"
 import { Database } from "better-sqlite3"
 import ReactionRole from "../entities/ReactionRole.entity.js"
+import WebEvents from "./client/WebEvents.js"
 
 export default class Client extends Discord.Client {
     declare guilds: Discord.GuildManager
@@ -56,6 +57,7 @@ export default class Client extends Discord.Client {
     roles: Record<string, string[]> = {}
     interactionInfo: Map<string, InteractionInfo> = new Map()
     reactionRoles: Map<string, ReactionRole> = new Map()
+    webEvents = new WebEvents(this)
 
     async initDatabase(): Promise<void> {
         const db = this.config.database

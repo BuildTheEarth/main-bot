@@ -2,6 +2,7 @@ import "reflect-metadata"
 import Discord from "discord.js"
 import Client from "./struct/Client.js"
 import { loadRoles } from "./util/roles.util.js"
+import WebEvents from "./struct/client/WebEvents.js"
 
 declare global {
     // eslint-disable-next-line no-var
@@ -54,6 +55,10 @@ async function main() {
     client.logger.debug("Registering webserver...")
     await client.webserver.load()
     client.logger.info("Registered webserver.")
+
+    client.logger.debug("Registering web events...")
+    await client.webEvents.load()
+    client.logger.info("Registered web events.")
 
     client.logger.debug("Registering modals..")
     await client.modals.load()

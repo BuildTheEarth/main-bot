@@ -2,6 +2,7 @@ import Discord, { MembershipScreeningFieldType } from "discord.js"
 import Client from "../struct/Client.js"
 import GuildMember from "../struct/discord/GuildMember.js"
 import { noop, trimSides } from "@buildtheearth/bot-utils"
+import ReactionRole from "../entities/ReactionRole.entity.js"
 
 export default async function messageReactionAdd(
     this: Client,
@@ -9,30 +10,18 @@ export default async function messageReactionAdd(
     user: Discord.User
 ): Promise<void> {
     if (reaction.partial) await reaction.fetch().catch(noop)
-    const channel = this.config.reactionRoles?.[reaction.message.channel.id]
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    let role: any = null
-
-    if (reaction.emoji.name) role = channel?.[reaction.message.id]?.[reaction.emoji.name]
 
     const guild = reaction.message.guild
     if (guild) {
         const member: Discord.GuildMember | null = await guild.members
             .fetch({ user, cache: true })
             .catch(() => null)
-        if (role?.contingent) {
-            const checkRoles = role.checkRoles
-            const hasRoles = member?.roles.cache.map(r => r?.id)
-            if (role.type === "none") {
-                if (hasRoles?.some(r => checkRoles.includes(r))) return
-            }
-            if (role.type === "some") {
-                if (!hasRoles?.some(r => checkRoles.includes(r))) return
-            }
-        }
 
-        if (member && role?.id) await member.roles.add(role.id).catch(noop)
+        console.log(reaction.emoji.name)
+
+        if (reaction.emoji.name && member) ReactionRole.react(this, reaction.emoji.name, reaction.message.channel.id, reaction.message.id, member)
+
         const channel = reaction.message.channel as Discord.TextChannel
 
         const channelRaw = reaction.message.channel

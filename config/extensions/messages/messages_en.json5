@@ -281,5 +281,6 @@
     deletedSuggestion: ["Deleted the suggestion!"],
     updatedSuggestion: ["Updated the suggestion!"],
     pleaseImage: ["Please provide a raw image!"],
-    roleFailed: ["Failed to add/remove users role."]
+    roleFailed: ["Failed to add/remove users role."],
+    emojiNotFound: ["404: Emoji not found", "We could not find an emoji in this message, here is a smiley to compensate for your losses :)"]
 }
