@@ -1,14 +1,13 @@
-import { Client } from "discord.js";
-import url from 'url'
-import pathModule from 'path'
-import fs from 'fs'
-import { loadSyncJSON5 } from "@buildtheearth/bot-utils";
+import { Client } from "discord.js"
+import url from "url"
+import pathModule from "path"
+import fs from "fs"
+import { loadSyncJSON5 } from "@buildtheearth/bot-utils"
 
 export default class WebEvents {
     client: Client
 
     private objs: Map<string, any>
-
 
     constructor(client: Client) {
         this.client = client
@@ -20,13 +19,13 @@ export default class WebEvents {
             pathModule.dirname(url.fileURLToPath(import.meta.url)) +
                 "/../../../config/extensions/web/replies"
         )
-        const files = await fs.promises.readdir(
-            url.pathToFileURL(dir)
-        )
+        const files = await fs.promises.readdir(url.pathToFileURL(dir))
         for (const file of files) {
-            this.objs.set(file.replace(/.json$/, ""), loadSyncJSON5(pathModule.join(dir, file)))
+            this.objs.set(
+                file.replace(/.json$/, ""),
+                loadSyncJSON5(pathModule.join(dir, file))
+            )
         }
-
     }
 
     public hasMessage(message: string): boolean {
@@ -38,7 +37,7 @@ export default class WebEvents {
         for (const key of Object.keys(args)) {
             toRet = toRet.replace("${" + key + "}", args[key].toString())
         }
-        
+
         return JSON.parse(toRet)
     }
 }

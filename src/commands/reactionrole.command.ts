@@ -3,7 +3,9 @@ import Command from "../struct/Command.js"
 
 import CommandMessage from "../struct/CommandMessage.js"
 import Args from "../struct/Args.js"
-import emojiTree from 'emoji-tree'
+import emojiTree from "emoji-tree"
+import getEmoji from "../util/getEmoji.util.js"
+import { noop } from "@buildtheearth/bot-utils"
 
 export default new Command({
     name: "reactionroles",
@@ -123,6 +125,18 @@ export default new Command({
                     description: "Add a required role",
                     args: [
                         {
+                            name: "emoji",
+                            description: "The emoji for the reaction role",
+                            optionType: "STRING",
+                            required: true
+                        },
+                        {
+                            name: "message_link",
+                            description: "The message link for the reaction role",
+                            optionType: "STRING",
+                            required: true
+                        },
+                        {
                             name: "require_role",
                             description: "The role to require",
                             optionType: "ROLE",
@@ -133,7 +147,7 @@ export default new Command({
                 {
                     name: "delete",
                     description: "Delete a required role",
-                    args: [            
+                    args: [
                         {
                             name: "emoji",
                             description: "The emoji for the reaction role",
@@ -158,29 +172,43 @@ export default new Command({
         }
     ],
     async run(this: Command, client: Client, message: CommandMessage, args: Args) {
-        const subcommandGroup = args.consumeSubcommandGroupIf(['blacklist', 'require'])
+        const subcommandGroup = args.consumeSubcommandGroupIf(["blacklist", "require"])
         if (subcommandGroup == null) {
             const subcommand = args.consumeSubcommand()
             if (subcommand == "list") {
                 return message.sendError("no")
             } else {
                 const emoji = args.consume("emoji")
-                const messageLink = args.consume("message_link")
-                let realEmoji : string | undefined = undefined
-                const emojis = emojiTree(emoji).filter((ele) => ele.type == "emoji").map((ele) => ele.text)
-                console.log(emojis)
-                if (emojis.length >= 1) {
-                    realEmoji = emojis[0]
-                } else {
-                    const matches = emoji.match(/<a?:.+?:\d{16,20}>/gu)
-                    if (matches && matches.length >= 1) {
-                        realEmoji =  matches[0].match(/(\d+)/)?.[0]
-                    }
-                }
+                const realEmoji = getEmoji(emoji)
                 if (!realEmoji) {
                     return message.sendErrorMessage("emojiNotFound")
                 }
                 console.log(realEmoji)
+                
+
+                const urlRegex =
+                /(?<=(https:\/\/)(canary\.discord\.com\/channels\/|discord\.com\/channels\/|ptb\.discord\.com\/channels\/))([0-9]{17,})(\/)([0-9]{17,})(\/)([0-9]{17,})/
+                const messageUrl = args.consume("message_link")
+                if (!messageUrl) return message.sendErrorMessage("provideMsgUrl")
+                if (!urlRegex.test(messageUrl)) return message.sendErrorMessage("provideMsgUrl")
+                const messagePropsTemp = urlRegex.exec(messageUrl)
+                if (!messagePropsTemp) return message.sendErrorMessage("provideMsgUrl")
+                const messageProps = {
+                    guildId: messagePropsTemp[3],
+                    channelId: messagePropsTemp[5],
+                    messageId: messagePropsTemp[7]
+                }
+        
+                const guild = await client.guilds.fetch(messageProps.guildId).catch(noop)
+        
+                if (!guild) {
+                    return message.sendErrorMessage("provideMsgUrl")
+                }
+        
+                const channel = await guild.channels.fetch(messageProps.channelId).catch(noop)
+        
+                if (!channel) return message.sendErrorMessage("provideMsgUrl")
+                
                 return message.sendSuccess(realEmoji)
             }
         }

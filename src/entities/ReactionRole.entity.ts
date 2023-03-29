@@ -4,7 +4,6 @@ import typeorm from "typeorm"
 import Client from "../struct/Client.js"
 import SnowflakeColumn from "./decorators/SnowflakeColumn.decorator.js"
 
-
 @typeorm.Entity({ name: "reaction_roles" })
 export default class ReactionRole extends typeorm.BaseEntity {
     @typeorm.PrimaryGeneratedColumn()
@@ -37,7 +36,7 @@ export default class ReactionRole extends typeorm.BaseEntity {
     }
 
     public static async getChannel(channelId: string): Promise<ReactionRole[]> {
-        return ReactionRole.find({channelId: channelId})
+        return ReactionRole.find({ channelId: channelId })
     }
 
     public contingent(): boolean {

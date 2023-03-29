@@ -11,7 +11,6 @@ export default async function messageReactionAdd(
 ): Promise<void> {
     if (reaction.partial) await reaction.fetch().catch(noop)
 
-
     const guild = reaction.message.guild
     if (guild) {
         const member: Discord.GuildMember | null = await guild.members
@@ -20,7 +19,14 @@ export default async function messageReactionAdd(
 
         console.log(reaction.emoji.name)
 
-        if (reaction.emoji.name && member) ReactionRole.react(this, reaction.emoji.name, reaction.message.channel.id, reaction.message.id, member)
+        if (reaction.emoji.name && member)
+            ReactionRole.react(
+                this,
+                reaction.emoji.name,
+                reaction.message.channel.id,
+                reaction.message.id,
+                member
+            )
 
         const channel = reaction.message.channel as Discord.TextChannel
 

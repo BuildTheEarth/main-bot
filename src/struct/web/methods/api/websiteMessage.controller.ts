@@ -20,7 +20,10 @@ export default class WebsiteMessage {
         if (!message) {
             return res
                 .status(400)
-                .send({ error: "MISSING_PARAMETER", message: "Missing parameter: message" })
+                .send({
+                    error: "MISSING_PARAMETER",
+                    message: "Missing parameter: message"
+                })
         }
 
         if (body === null) {
@@ -32,22 +35,34 @@ export default class WebsiteMessage {
         if (!body?.params) {
             return res
                 .status(400)
-                .send({ error: "MISSING_PARAMETER", message: "Missing parameter: body.params" })
+                .send({
+                    error: "MISSING_PARAMETER",
+                    message: "Missing parameter: body.params"
+                })
         }
 
         if (!body?.ids) {
             return res
                 .status(400)
-                .send({ error: "MISSING_PARAMETER", message: "Missing parameter: body.ids" })
+                .send({
+                    error: "MISSING_PARAMETER",
+                    message: "Missing parameter: body.ids"
+                })
         }
 
         if (!_.isArrayLikeObject(body.ids)) {
             return res
                 .status(400)
-                .send({ error: "WRONG_DATATYPE", message: "Wrong datatype: body.ids must be an array" })
+                .send({
+                    error: "WRONG_DATATYPE",
+                    message: "Wrong datatype: body.ids must be an array"
+                })
         }
 
-        if (!client.webEvents.hasMessage(message)) return res.status(404).send({error: "NOT_FOUND", message: "Not found: requested message"})
+        if (!client.webEvents.hasMessage(message))
+            return res
+                .status(404)
+                .send({ error: "NOT_FOUND", message: "Not found: requested message" })
         console.log(body.params)
 
         const finalMessage = client.webEvents.fill(message, body.params)
@@ -61,11 +76,10 @@ export default class WebsiteMessage {
                     const res = await user.send(finalMessage).catch(noop)
                     if (!res) failure.push(id)
                     else success.push(id)
-                }
-                else failure.push(id)
+                } else failure.push(id)
             } else failure.push(id)
         }
 
-        return res.status(200).send({success, failure, sentMessage: finalMessage})
+        return res.status(200).send({ success, failure, sentMessage: finalMessage })
     }
 }
