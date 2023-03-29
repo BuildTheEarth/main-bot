@@ -82,7 +82,7 @@ export default class SuspiciousUser extends typeorm.BaseEntity {
 
     private async updateSubmitter(
         client: Client,
-        payload: Discord.MessageOptions
+        payload: Discord.MessageCreateOptions
     ): Promise<void> {
         const user = await this.fetchSubmitter(client)
         if (user) {
@@ -122,7 +122,7 @@ export default class SuspiciousUser extends typeorm.BaseEntity {
         }).catch(noop)
     }
 
-    createEmbed(): Discord.MessageOptions {
+    createEmbed(): Discord.MessageCreateOptions {
         const embed = <Discord.APIEmbed>{
             title: "Suspicious User Report",
             fields: [
@@ -161,7 +161,7 @@ export default class SuspiciousUser extends typeorm.BaseEntity {
             })
         }
 
-        const options: Discord.MessageOptions = { embeds: [embed], components: [] }
+        const options: Discord.MessageCreateOptions = { embeds: [embed], components: [] }
 
         if (!(this.approved || this.denied)) {
             const actionRow = new Discord.ActionRowBuilder<ButtonBuilder>()
