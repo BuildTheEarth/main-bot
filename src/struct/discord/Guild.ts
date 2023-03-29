@@ -26,10 +26,6 @@ export default class Guild {
         code: string,
         reason?: string
     ): Promise<void> {
-        // @ts-ignore
-        await guild.client.api
-            // @ts-ignore
-            .guilds(guild.id, "vanity-url")
-            .patch({ data: { code }, reason })
+        await guild.client.rest.patch(`/guilds/${guild.id}/vanity-url`, { body: {code}, reason})
     }
 }
