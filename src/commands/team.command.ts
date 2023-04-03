@@ -6,6 +6,8 @@ import typeorm from "typeorm"
 import Snippet from "../entities/Snippet.entity.js"
 import CommandMessage from "../struct/CommandMessage.js"
 import Discord from "discord.js"
+import interactionCreateEvent from "../events/interactionCreate.event.js"
+import { noop } from "@buildtheearth/bot-utils"
 
 export default new Command({
     name: "team",
@@ -17,7 +19,11 @@ export default new Command({
             name: "team",
             description: "Team to get",
             required: true,
-            optionType: "STRING"
+            optionType: "STRING",
+            autocomplete: {
+                enable: true,
+                handler: handleBtAuto
+            }
         }
     ],
     async run(this: Command, client: Client, message: CommandMessage, args: Args) {
@@ -27,6 +33,18 @@ export default new Command({
         return await runBtCommand(client, message, input)
     }
 })
+
+export async function handleBtAuto(
+    _client: Client, autocomplete: Discord.AutocompleteInteraction
+): Promise<void> {
+    const focusedOption = autocomplete.options.getFocused(true);
+    const val = focusedOption.value
+
+    const possibles = Snippet.teams.filter((v) => v.includes(val)).slice(0, 25).map((v) => {return {name: v, value: v}})
+
+    autocomplete.respond(possibles).catch(noop)
+    
+}
 
 export async function runBtCommand(
     client: Client,

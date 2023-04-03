@@ -1,4 +1,4 @@
-import Discord, { ModalSubmitInteraction } from "discord.js"
+import Discord, { AutocompleteInteraction, ModalSubmitInteraction } from "discord.js"
 import Args from "../struct/Args.js"
 import Client from "../struct/Client.js"
 import CommandMessage from "../struct/CommandMessage.js"
@@ -160,6 +160,24 @@ export default async function (
             }
             if (type === "suspicioususermodal") {
                 return createSuspiciousUser(interaction, this)
+            }
+        }
+    }
+
+    if (interaction.type === Discord.InteractionType.ApplicationCommandAutocomplete) {
+        if (interaction instanceof AutocompleteInteraction) {
+            const cmd = interaction.commandName
+            const command = this.commands.search(cmd)
+            const argName = interaction.options.getFocused(true).name
+            console.log(argName)
+            if (command && command.args) {
+                for (const arg of command.args) {
+                    if (arg.name == argName) {
+                        if (arg.autocomplete?.enable) {
+                            await arg.autocomplete.handler(this, interaction)
+                        }
+                    }
+                }
             }
         }
     }

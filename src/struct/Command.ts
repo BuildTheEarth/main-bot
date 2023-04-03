@@ -2,6 +2,7 @@ import Client from "../struct/Client.js"
 import Args from "./Args.js"
 import ApiTypes = require("discord-api-types/v10")
 import CommandMessage from "./CommandMessage.js"
+import Discord from "discord.js"
 
 export default class Command implements CommandProperties {
     name: string
@@ -100,6 +101,10 @@ export interface CommandArgs {
         | "MENTIONABLE"
         | "ATTACHMENT"
     channelTypes?: ChannelTypes | ChannelTypes[]
+    autocomplete?: {
+        enable: boolean
+        handler: (client: Client, autocomplete: Discord.AutocompleteInteraction) => void | Promise<void>
+    }
 }
 
 export interface CommandArgsTranslation {

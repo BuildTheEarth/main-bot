@@ -4,6 +4,7 @@ import Client from "../struct/Client.js"
 import languages from "../struct/client/iso6391.js"
 import { hexToNum } from "@buildtheearth/bot-utils"
 import unicode from "./transformers/unicode.transformer.js"
+import Cron from "croner"
 
 @typeorm.Entity({ name: "snippets" })
 export default class Snippet extends typeorm.BaseEntity {
@@ -25,6 +26,8 @@ export default class Snippet extends typeorm.BaseEntity {
     @typeorm.Column("simple-array")
     aliases!: string[]
 
+    public static teams: string[] = []
+
     displayEmbed(client: Client): Discord.APIEmbed {
         const language = languages.getName(this.language)
         return {
@@ -32,5 +35,20 @@ export default class Snippet extends typeorm.BaseEntity {
             author: { name: `'${this.name}' snippet in ${language}` },
             description: this.body
         }
+    }
+
+    public static async updaterInit(): Promise<Cron> {
+
+        const tempTeams = await Snippet.find({where: {type: "team"}})
+        const tempArr = tempTeams.map((e) => e.name)
+        tempTeams.forEach((e) => tempArr.push(...e.aliases))
+        Snippet.teams = tempArr
+
+        return new Cron("*/10 * * * *", async () => {
+            const tempTeams = await Snippet.find({where: {type: "team"}})
+            const tempArr = tempTeams.map((e) => e.name)
+            tempTeams.forEach((e) => tempArr.push(...e.aliases))
+            Snippet.teams = tempArr
+        })
     }
 }

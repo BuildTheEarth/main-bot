@@ -208,7 +208,15 @@ export default new Command({
                 const channel = await guild.channels.fetch(messageProps.channelId).catch(noop)
         
                 if (!channel) return message.sendErrorMessage("provideMsgUrl")
+
+                if (!channel.isTextBased()) return message.sendErrorMessage("provideMsgUrl")
+
+                const reactMsg = await channel.messages.fetch(messageProps.messageId).catch(noop)
+
+                if (!reactMsg) return message.sendErrorMessage("provideMsgUrl")
+
                 
+
                 return message.sendSuccess(realEmoji)
             }
         }

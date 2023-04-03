@@ -1,6 +1,6 @@
 import DBuilders = require("@discordjs/builders")
 import Command, { CommandArgs, SubCommandProperties } from "../struct/Command.js"
-import _ from "lodash"
+import _, { truncate } from "lodash"
 import Discord from "discord.js"
 import Client from "../struct/Client.js"
 
@@ -340,6 +340,9 @@ function addOption(
         if (arg.name_translations) tempBuilder.setNameLocalizations(arg.name_translations)
         if (arg.description_translations)
             tempBuilder.setDescriptionLocalizations(arg.description_translations)
+        if (arg.autocomplete?.enable) {
+            tempBuilder.setAutocomplete(true)
+        }
         builder.addStringOption(tempBuilder)
     } else if (arg.optionType === "INTEGER") {
         const tempBuilder = new DBuilders.SlashCommandIntegerOption()

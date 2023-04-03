@@ -58,6 +58,7 @@ export default class Client extends Discord.Client {
     interactionInfo: Map<string, InteractionInfo> = new Map()
     reactionRoles: Map<string, ReactionRole> = new Map()
     webEvents = new WebEvents(this)
+    teamsCron: Cron | null = null
 
     async initDatabase(): Promise<void> {
         const db = this.config.database
@@ -121,6 +122,8 @@ export default class Client extends Discord.Client {
 
         this.filterWordsCached = await BannedWord.loadWords()
         this.placeholder.cache = await Placeholder.loadPlaceholders()
+        this.teamsCron = await Snippet.updaterInit()
+
     }
 
     login(): Promise<string> {
