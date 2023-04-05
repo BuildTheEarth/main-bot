@@ -1,0 +1,73 @@
+{
+    "content": null,
+    "embeds": [
+      {
+        "title": "Asia",
+        "color": 28615,
+        "fields": [
+          {
+            "name": "BTE CIS | СНГ",
+            "value": "[Click to Join](https://discord.gg/3BuMMa4)",
+            "inline": true
+          },
+          {
+            "name": "BTE Turkey",
+            "value": "[Click to Join](https://discord.gg/ErWU4Qh)",
+            "inline": true
+          },
+          {
+            "name": "BTE Israel + West Bank",
+            "value": "[Click to Join](https://discord.gg/pGSxezp)",
+            "inline": true
+          },
+          {
+            "name": "BTE Middle East",
+            "value": "[Click to Join](https://discord.gg/r3hJ2Dx)",
+            "inline": true
+          },
+          {
+            "name": "BTE South Asia",
+            "value": "[Click to Join](https://discord.gg/baEF7fK)",
+            "inline": true
+          },
+          {
+            "name": "Team ASEAN",
+            "value": "[Click to Join](https://discord.gg/nNEmyX7)",
+            "inline": true
+          },
+          {
+            "name": "BTE Mainland China",
+            "value": "[Click to Join](https://discord.gg/EZH6D4ESEK)",
+            "inline": true
+          },
+          {
+            "name": "BTE Taiwan",
+            "value": "[Click to Join](https://discord.gg/Ueqj8yr)",
+            "inline": true
+          },
+          {
+            "name": "BTE HongKong-Macau",
+            "value": "[Click to Join](https://discord.gg/aRQNEpU)",
+            "inline": true
+          },
+          {
+            "name": "BTE Japan",
+            "value": "[Click to Join](https://discord.gg/UeRRTZw)",
+            "inline": true
+          },
+          {
+            "name": "BTE Korea",
+            "value": "[Click to Join](https://discord.gg/HfhDdkhCb8)",
+            "inline": true
+          },
+          {
+            "name": "BTE Singapore",
+            "value": "[Click to Join](https://discord.gg/Q5VeMq9)",
+            "inline": true
+          }
+        ]
+      }
+    ],
+    "ephemeral": true,
+    "attachments": []
+}

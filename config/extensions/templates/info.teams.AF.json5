@@ -1,0 +1,18 @@
+{
+    "content": null,
+    "embeds": [
+      {
+        "title": "Africa",
+        "color": 28615,
+        "fields": [
+          {
+            "name": "Africa Rebuilt",
+            "value": "[Click to Join](https://discord.com/invite/U3ZMK78)",
+            "inline": true
+          }
+        ]
+      }
+    ],
+    "ephemeral": true,
+    "attachments": []
+}

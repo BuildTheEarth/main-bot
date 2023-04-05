@@ -24,6 +24,7 @@ import InteractionInfo from "../typings/InteractionInfo.js"
 import { Database } from "better-sqlite3"
 import ReactionRole from "../entities/ReactionRole.entity.js"
 import WebEvents from "./client/WebEvents.js"
+import AssetList from "./client/AssetList.js"
 
 export default class Client extends Discord.Client {
     declare guilds: Discord.GuildManager
@@ -36,6 +37,7 @@ export default class Client extends Discord.Client {
     config = new ConfigManager(this)
     events = new EventList(this)
     modals = new ModalList(this)
+    assets = new AssetList(this)
     commands = new CommandList(this)
     aliases = new Discord.Collection()
     response = new Response(this)
@@ -123,6 +125,7 @@ export default class Client extends Discord.Client {
         this.filterWordsCached = await BannedWord.loadWords()
         this.placeholder.cache = await Placeholder.loadPlaceholders()
         this.teamsCron = await Snippet.updaterInit()
+        this.reactionRoles = await ReactionRole.load(this)
     }
 
     login(): Promise<string> {

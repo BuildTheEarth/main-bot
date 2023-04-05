@@ -64,6 +64,10 @@ async function main() {
     await client.modals.load()
     client.logger.info("Registered modals.")
 
+    client.logger.debug("Registering assets..")
+    await client.assets.load()
+    client.logger.info("Registered assets.")
+
     client.logger.debug("Logging in to Discord...")
     await client.login()
     client.logger.info("Logged in to Discord.")

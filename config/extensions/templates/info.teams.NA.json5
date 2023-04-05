@@ -1,0 +1,63 @@
+{
+    "content": null,
+    "embeds": [
+      {
+        "title": "North America",
+        "color": 28615,
+        "fields": [
+          {
+            "name": "BTE Carolinas",
+            "value": "[Click to Join](https://discord.gg/V6yBjDu)",
+            "inline": true
+          },
+          {
+            "name": "BTE Southeast",
+            "value": "[Click to Join](https://discord.gg/RYBzn9x)",
+            "inline": true
+          },
+          {
+            "name": "BTE Bermuda",
+            "value": "[Click to Join](https://discord.gg/DR4EeWZbDt)",
+            "inline": true
+          },
+          {
+            "name": "BTE Western US",
+            "value": "[Click to Join](https://discord.gg/FXJmEQY)",
+            "inline": true
+          },
+          {
+            "name": "BTE Midwest",
+            "value": "[Click to Join](https://discord.gg/a3GEGEf)",
+            "inline": true
+          },
+          {
+            "name": "BTE Northeast",
+            "value": "[Click to Join](https://discord.gg/Gx3d28v)",
+            "inline": true
+          },
+          {
+            "name": "BTE Canada",
+            "value": "[Click to Join](https://discord.gg/hSf8PXN)",
+            "inline": true
+          },
+          {
+            "name": "BTE OHPAINKY",
+            "value": "[Click to Join](https://discord.gg/dNNcpYdxeH)",
+            "inline": true
+          },
+          {
+            "name": "1:1 New Jersey",
+            "value": "[Click to Join](https://discord.gg/TQmUQZt)",
+            "inline": true
+          },
+          {
+            "name": "BTE NYC",
+            "value": "[Click to Join](https://discord.gg/nMJMMBR)",
+            "inline": true
+          }
+        ]
+      }
+    ],
+    "ephemeral": true,
+    "attachments": []
+}

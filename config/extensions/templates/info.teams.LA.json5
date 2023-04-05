@@ -1,0 +1,58 @@
+{
+    "content": null,
+    "embeds": [
+      {
+        "title": "Latin America",
+        "color": 28615,
+        "fields": [
+          {
+            "name": "BTE Mexico | Centroamerica",
+            "value": "[Click to Join](https://discord.gg/mseJqbc)",
+            "inline": true
+          },
+          {
+            "name": "BTE NLA (North Latin America)",
+            "value": "[Click to Join](https://discord.gg/9tnDSAd)",
+            "inline": true
+          },
+          {
+            "name": "BTE Brazil",
+            "value": "[Click to Join](https://discord.gg/F6EQM8VbRy)",
+            "inline": true
+          },
+          {
+            "name": "BTE Peru",
+            "value": "[Click to Join](https://discord.gg/sfmXJB9)",
+            "inline": true
+          },
+          {
+            "name": "BTE Bolivia",
+            "value": "[Click to Join](https://discord.gg/dZU3VRejBG)",
+            "inline": true
+          },
+          {
+            "name": "BTE Paraguay + Uruguay",
+            "value": "[Click to Join](https://discord.gg/3gZJmu6)",
+            "inline": true
+          },
+          {
+            "name": "BTE Chile",
+            "value": "[Click to Join](https://discord.gg/JVM7BP3EW2)",
+            "inline": true
+          },
+          {
+            "name": "BTE Argentina",
+            "value": "[Click to Join](https://discord.gg/h36vcVB)",
+            "inline": true
+          },
+          {
+            "name": "BTE France (French Guiana)",
+            "value": "[Click to Join](https://discord.gg/S8RuuqP)",
+            "inline": true
+          }
+        ]
+      }
+    ],
+    "ephemeral": true,
+    "attachments": []
+}

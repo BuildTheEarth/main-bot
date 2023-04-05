@@ -292,6 +292,8 @@
     rrDel: ["The provided reaction role was deleted!"],
     rrAddB: ["Added blacklisted role!"],
     rrRemB: ["Removed blacklisted role!"],
+    rrAddR: ["Added required role!"],
+    rrRemR: ["Removed required role!"],
     rrNoExist: ["The requested role is not in the blacklist/whitelist!"],
     dmBased: ["Error: That channel is in DM based"]
 }

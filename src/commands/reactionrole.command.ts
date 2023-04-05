@@ -354,13 +354,16 @@ export default new Command({
                     const embedStr = [""]
                     let currIdx = 0
                     let roles
+
+                    console.log(client.reactionRoles.keys())
+                    
                     if (subcommandGroup == "blacklist") {
                         roles = client.reactionRoles.get(
-                            `${emoji}.${messageProps.messageId}`
+                            `${realEmoji}.${messageProps.messageId}`
                         )?.blackListedRoles
                     } else {
                         roles = client.reactionRoles.get(
-                            `${emoji}.${messageProps.messageId}`
+                            `${realEmoji}.${messageProps.messageId}`
                         )?.requiredRoles
                     }
                     if (!roles)
@@ -435,20 +438,20 @@ export default new Command({
                         return message.sendErrorMessage("provideMsgUrl")
 
                     if (subcommand == "add") {
-                        const res = await ReactionRole.addBlacklistedRole(
+                        const res = await ReactionRole.addRequiredRole(
                             client,
                             rr.id,
                             requiredRole.id
                         )
-                        if (res) return message.sendSuccessMessage("rrAddB")
+                        if (res) return message.sendSuccessMessage("rrAddR")
                         else return message.sendErrorMessage("rrGone")
                     } else if (subcommand == "remove") {
-                        const res = await ReactionRole.removeBlacklistedRole(
+                        const res = await ReactionRole.removeRequiredRole(
                             client,
                             rr.id,
                             requiredRole.id
                         )
-                        if (res) return message.sendSuccessMessage("rrRemB")
+                        if (res) return message.sendSuccessMessage("rrRemR")
                         else return message.sendErrorMessage("rrNoExist")
                     }
                 }

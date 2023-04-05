@@ -1,0 +1,18 @@
+{
+    "content": null,
+    "embeds": [
+      {
+        "title": "Oceania",
+        "color": 28615,
+        "fields": [
+          {
+            "name": "BTE Oceania",
+            "value": "[Click to Join](https://discord.gg/BAZufVJ)",
+            "inline": true
+          }
+        ]
+      }
+    ],
+    "ephemeral": true,
+    "attachments": []
+}

@@ -24,7 +24,7 @@ export default new Command({
     ],
     subcommands: [
         {
-            name: "add",
+            name: "toggle",
             description: "Add someone to duty.",
             permission: [
                 globalThis.client.roles.HELPER,
@@ -131,7 +131,7 @@ export default new Command({
             "check"
         ])
         await message.continue()
-        if (subcommand === "add" || !subcommand) {
+        if (subcommand === "toggle" || !subcommand) {
             const member = await args.consumeUser("member")
             const role = args.consumeIf(
                 arg => ["support", "moderator", "helper"].includes(arg.toLowerCase()),

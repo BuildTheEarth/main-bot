@@ -16,6 +16,7 @@ import createSuspiciousUser from "../modals/suspicioususer.modal.js"
 import _ from "lodash"
 import SuspiciousUser from "../entities/SuspiciousUser.entity.js"
 import languageDropdown from "../dropdowns/language.dropdown.js"
+import teamMenu from "../menus/team.menu.js"
 
 export default async function (
     this: Client,
@@ -95,6 +96,9 @@ export default async function (
             }
             if (_.startsWith(interaction.customId, "suspicious_user.")) {
                 return await SuspiciousUser.buttonPress(this, interaction)
+            }
+            if (_.startsWith(interaction.customId, "info.teams")) {
+                return await teamMenu(this, interaction)
             }
         }
     }

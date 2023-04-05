@@ -1,0 +1,93 @@
+{
+    "content": null,
+    "embeds": [
+      {
+        "title": "Europe",
+        "color": 28615,
+        "fields": [
+          {
+            "name": "BTE UK",
+            "value": "[Click to Join](https://discord.gg/Rp6BPy8cBG)",
+            "inline": true
+          },
+          {
+            "name": "BTE Ireland",
+            "value": "[Click to Join](https://discord.gg/KtWkj9k)",
+            "inline": true
+          },
+          {
+            "name": "BTE France",
+            "value": "[Click to Join](https://discord.gg/pzaEbCWxA9)",
+            "inline": true
+          },
+          {
+            "name": "BTE Germany",
+            "value": "[Click to Join](https://discord.gg/GkSxGTYaAJ)",
+            "inline": true
+          },
+          {
+            "name": "BTE Iberia",
+            "value": "[Click to Join](https://discord.gg/a8PF9sTfqF)",
+            "inline": true
+          },
+          {
+            "name": "BTE Benelux",
+            "value": "[Click to Join](https://discord.gg/YCSCjrAkHc)",
+            "inline": true
+          },
+          {
+            "name": "Alps BTE",
+            "value": "[Click to Join](https://discord.com/invite/vgkspay)",
+            "inline": true
+          },
+          {
+            "name": "BTE Team Czechoslovakia",
+            "value": "[Click to Join](https://discord.gg/vv8Qaew5wQ)",
+            "inline": true
+          },
+          {
+            "name": "BTE Poland",
+            "value": "[Click to Join](https://discord.gg/w4Qa4J2)",
+            "inline": true
+          },
+          {
+            "name": "BTE Balkans",
+            "value": "[Click to Join](https://discord.gg/YV4emzuRnB)",
+            "inline": true
+          },
+          {
+            "name": "BTE Nordic+Baltic",
+            "value": "[Click to Join](https://discord.gg/PuvAcfP)",
+            "inline": true
+          },
+          {
+            "name": "Team CIS | СНГ",
+            "value": "[Click to Join](https://discord.gg/hwkhefs)",
+            "inline": true
+          },
+          {
+            "name": "BTE Italia",
+            "value": "[Click to Join](https://discord.gg/fuEg2aQTy9)",
+            "inline": true
+          },
+          {
+            "name": "BTE Hungary",
+            "value": "[Click to Join](https://discord.gg/K4fDBjB)",
+            "inline": true
+          },
+          {
+            "name": "BTE Romania + Moldova",
+            "value": "[Click to Join](http://discord.gg/FRdGs646YC)",
+            "inline": true
+          },
+          {
+            "name": "BTE Ukraine",
+            "value": "[Click to Join](https://discord.gg/J6BnZyQjsx)",
+            "inline": true
+          }
+        ]
+      }
+    ],
+    "attachments": [],
+    "ephemeral": true
+}

@@ -1,0 +1,78 @@
+{
+    "content": null,
+    "embeds": [
+      {
+        "title": "Other",
+        "description": "This section contains teams and community servers, the community servers are denoted with a *****",
+        "color": 28615,
+        "fields": [
+          {
+            "name": "BTE Development Hub*",
+            "value": "[Click to Join](https://discord.gg/FkkTEjd)",
+            "inline": true
+          },
+          {
+            "name": "Terramap Mod*",
+            "value": "[Click to Join](https://discord.gg/EpJxefA)",
+            "inline": true
+          },
+          {
+            "name": "BTE Archives*",
+            "value": "[Click to Join](https://discord.gg/cnWF25TV5K)",
+            "inline": true
+          },
+          {
+            "name": "BTE Games*",
+            "value": "[Click to Join](https://discord.gg/JExpNmX5q6)",
+            "inline": true
+          },
+          {
+            "name": "BTE Networking \n& Creator Resources*",
+            "value": "[Click to Join](https://discord.gg/ANMT88m8mC)",
+            "inline": true
+          },
+          {
+            "name": "BTE Progress Map*",
+            "value": "[Click to Join](https://discord.gg/8fM3pWGynN)",
+            "inline": true
+          },
+          {
+            "name": "BTE Theme Parks",
+            "value": "[Click to Join](https://discord.gg/Pf5VkEu)",
+            "inline": true
+          },
+          {
+            "name": "Military Builders",
+            "value": "[Click to Join](https://discord.gg/UtRmY3B)",
+            "inline": true
+          },
+          {
+            "name": "BTE Landscapes",
+            "value": "[Click to Join](https://discord.gg/8PpGXg2C88 )",
+            "inline": true
+          },
+          {
+            "name": "Seaside BTE",
+            "value": "[Click to Join](https://discord.gg/KCknuum)",
+            "inline": true
+          },
+          {
+            "name": "BTE Infrastructure",
+            "value": "[Click to Join](https://discord.gg/YPXxsyJRxK)",
+            "inline": true
+          },
+          {
+            "name": "The Build Earth",
+            "value": "[Click to Join](https://discord.gg/VtdQpNgkPU)",
+            "inline": true
+          },
+          {
+            "name": "BTE Zoos/Animals",
+            "value": "[Click to Join](https://discord.gg/GQ5KcCx2Ws)"
+          }
+        ]
+      }
+    ],
+    "ephemeral": true,
+    "attachments": []
+}
