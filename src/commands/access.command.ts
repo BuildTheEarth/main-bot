@@ -25,13 +25,6 @@ export default new Command({
                 ApiTypes.ChannelType.GuildNews,
                 ApiTypes.ChannelType.GuildStageVoice
             ]
-        },
-        {
-            name: "category",
-            description:
-                "if the provided id is for a category, get all channels in that category.",
-            required: false,
-            optionType: "STRING"
         }
     ],
     async run(this: Command, client: Client, message: CommandMessage, args: Args) {
