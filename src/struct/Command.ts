@@ -103,7 +103,10 @@ export interface CommandArgs {
     channelTypes?: ChannelTypes | ChannelTypes[]
     autocomplete?: {
         enable: boolean
-        handler: (client: Client, autocomplete: Discord.AutocompleteInteraction) => void | Promise<void>
+        handler: (
+            client: Client,
+            autocomplete: Discord.AutocompleteInteraction
+        ) => void | Promise<void>
     }
 }
 

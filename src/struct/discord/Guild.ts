@@ -28,10 +28,15 @@ export default class Guild {
         reason?: string
     ): Promise<void> {
         try {
-            const chan = (await client.customGuilds.staff().channels.fetch("705931289861029949").catch(noop))
+            const chan = await client.customGuilds
+                .staff()
+                .channels.fetch("705931289861029949")
+                .catch(noop)
 
             if (chan?.isTextBased()) {
-                chan.send("<@&705137467719680052> Please reset the server vanity link to `buildtheearth`. Thank you for your time!")
+                chan.send(
+                    "<@&705137467719680052> Please reset the server vanity link to `buildtheearth`. Thank you for your time!"
+                )
             }
         } catch {
             console.log("why")

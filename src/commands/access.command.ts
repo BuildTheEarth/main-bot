@@ -18,13 +18,26 @@ export default new Command({
             description: "The channel to get permissions for",
             required: true,
             optionType: "CHANNEL",
-            channelTypes: [ApiTypes.ChannelType.GuildText]
+            channelTypes: [
+                ApiTypes.ChannelType.GuildText,
+                ApiTypes.ChannelType.GuildCategory,
+                ApiTypes.ChannelType.GuildVoice,
+                ApiTypes.ChannelType.GuildNews,
+                ApiTypes.ChannelType.GuildStageVoice
+            ]
+        },
+        {
+            name: "category",
+            description:
+                "if the provided id is for a category, get all channels in that category.",
+            required: false,
+            optionType: "STRING"
         }
     ],
     async run(this: Command, client: Client, message: CommandMessage, args: Args) {
+        if (!client.user) return
         const channel = (await args.consumeChannel("channel")) || message.channel
         if (!(channel.type === Discord.ChannelType.GuildText)) return
-        if (!client.user) return
         const perms =
             (channel as Discord.TextChannel)
                 .permissionsFor(message.member)

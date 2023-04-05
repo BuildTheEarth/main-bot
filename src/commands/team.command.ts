@@ -35,15 +35,20 @@ export default new Command({
 })
 
 export async function handleBtAuto(
-    _client: Client, autocomplete: Discord.AutocompleteInteraction
+    _client: Client,
+    autocomplete: Discord.AutocompleteInteraction
 ): Promise<void> {
-    const focusedOption = autocomplete.options.getFocused(true);
+    const focusedOption = autocomplete.options.getFocused(true)
     const val = focusedOption.value
 
-    const possibles = Snippet.teams.filter((v) => v.includes(val)).slice(0, 25).map((v) => {return {name: v, value: v}})
+    const possibles = Snippet.teams
+        .filter(v => v.includes(val))
+        .slice(0, 25)
+        .map(v => {
+            return { name: v, value: v }
+        })
 
     autocomplete.respond(possibles).catch(noop)
-    
 }
 
 export async function runBtCommand(

@@ -14,7 +14,6 @@ export default function getEmoji(emoji: string): string | undefined {
             realEmoji = matches[0].match(/(\d+)/)?.[0]
         }
     }
-    
-    return realEmoji
 
+    return realEmoji
 }

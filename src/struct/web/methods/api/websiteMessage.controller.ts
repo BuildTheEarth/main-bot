@@ -18,12 +18,10 @@ export default class WebsiteMessage {
         res.type("application/json")
 
         if (!message) {
-            return res
-                .status(400)
-                .send({
-                    error: "MISSING_PARAMETER",
-                    message: "Missing parameter: message"
-                })
+            return res.status(400).send({
+                error: "MISSING_PARAMETER",
+                message: "Missing parameter: message"
+            })
         }
 
         if (body === null) {
@@ -33,30 +31,24 @@ export default class WebsiteMessage {
         }
 
         if (!body?.params) {
-            return res
-                .status(400)
-                .send({
-                    error: "MISSING_PARAMETER",
-                    message: "Missing parameter: body.params"
-                })
+            return res.status(400).send({
+                error: "MISSING_PARAMETER",
+                message: "Missing parameter: body.params"
+            })
         }
 
         if (!body?.ids) {
-            return res
-                .status(400)
-                .send({
-                    error: "MISSING_PARAMETER",
-                    message: "Missing parameter: body.ids"
-                })
+            return res.status(400).send({
+                error: "MISSING_PARAMETER",
+                message: "Missing parameter: body.ids"
+            })
         }
 
         if (!_.isArrayLikeObject(body.ids)) {
-            return res
-                .status(400)
-                .send({
-                    error: "WRONG_DATATYPE",
-                    message: "Wrong datatype: body.ids must be an array"
-                })
+            return res.status(400).send({
+                error: "WRONG_DATATYPE",
+                message: "Wrong datatype: body.ids must be an array"
+            })
         }
 
         if (!client.webEvents.hasMessage(message))

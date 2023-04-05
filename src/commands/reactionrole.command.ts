@@ -184,13 +184,13 @@ export default new Command({
                     return message.sendErrorMessage("emojiNotFound")
                 }
                 console.log(realEmoji)
-                
 
                 const urlRegex =
-                /(?<=(https:\/\/)(canary\.discord\.com\/channels\/|discord\.com\/channels\/|ptb\.discord\.com\/channels\/))([0-9]{17,})(\/)([0-9]{17,})(\/)([0-9]{17,})/
+                    /(?<=(https:\/\/)(canary\.discord\.com\/channels\/|discord\.com\/channels\/|ptb\.discord\.com\/channels\/))([0-9]{17,})(\/)([0-9]{17,})(\/)([0-9]{17,})/
                 const messageUrl = args.consume("message_link")
                 if (!messageUrl) return message.sendErrorMessage("provideMsgUrl")
-                if (!urlRegex.test(messageUrl)) return message.sendErrorMessage("provideMsgUrl")
+                if (!urlRegex.test(messageUrl))
+                    return message.sendErrorMessage("provideMsgUrl")
                 const messagePropsTemp = urlRegex.exec(messageUrl)
                 if (!messagePropsTemp) return message.sendErrorMessage("provideMsgUrl")
                 const messageProps = {
@@ -198,24 +198,27 @@ export default new Command({
                     channelId: messagePropsTemp[5],
                     messageId: messagePropsTemp[7]
                 }
-        
+
                 const guild = await client.guilds.fetch(messageProps.guildId).catch(noop)
-        
+
                 if (!guild) {
                     return message.sendErrorMessage("provideMsgUrl")
                 }
-        
-                const channel = await guild.channels.fetch(messageProps.channelId).catch(noop)
-        
+
+                const channel = await guild.channels
+                    .fetch(messageProps.channelId)
+                    .catch(noop)
+
                 if (!channel) return message.sendErrorMessage("provideMsgUrl")
 
-                if (!channel.isTextBased()) return message.sendErrorMessage("provideMsgUrl")
+                if (!channel.isTextBased())
+                    return message.sendErrorMessage("provideMsgUrl")
 
-                const reactMsg = await channel.messages.fetch(messageProps.messageId).catch(noop)
+                const reactMsg = await channel.messages
+                    .fetch(messageProps.messageId)
+                    .catch(noop)
 
                 if (!reactMsg) return message.sendErrorMessage("provideMsgUrl")
-
-                
 
                 return message.sendSuccess(realEmoji)
             }

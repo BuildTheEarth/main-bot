@@ -123,7 +123,6 @@ export default class Client extends Discord.Client {
         this.filterWordsCached = await BannedWord.loadWords()
         this.placeholder.cache = await Placeholder.loadPlaceholders()
         this.teamsCron = await Snippet.updaterInit()
-
     }
 
     login(): Promise<string> {

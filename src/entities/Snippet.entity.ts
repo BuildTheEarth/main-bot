@@ -38,16 +38,15 @@ export default class Snippet extends typeorm.BaseEntity {
     }
 
     public static async updaterInit(): Promise<Cron> {
-
-        const tempTeams = await Snippet.find({where: {type: "team"}})
-        const tempArr = tempTeams.map((e) => e.name)
-        tempTeams.forEach((e) => tempArr.push(...e.aliases))
+        const tempTeams = await Snippet.find({ where: { type: "team" } })
+        const tempArr = tempTeams.map(e => e.name)
+        tempTeams.forEach(e => tempArr.push(...e.aliases))
         Snippet.teams = tempArr
 
         return new Cron("*/10 * * * *", async () => {
-            const tempTeams = await Snippet.find({where: {type: "team"}})
-            const tempArr = tempTeams.map((e) => e.name)
-            tempTeams.forEach((e) => tempArr.push(...e.aliases))
+            const tempTeams = await Snippet.find({ where: { type: "team" } })
+            const tempArr = tempTeams.map(e => e.name)
+            tempTeams.forEach(e => tempArr.push(...e.aliases))
             Snippet.teams = tempArr
         })
     }
