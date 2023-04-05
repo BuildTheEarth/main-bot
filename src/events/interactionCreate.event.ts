@@ -15,6 +15,7 @@ import editSuggestion from "../modals/suggestion.modal.js"
 import createSuspiciousUser from "../modals/suspicioususer.modal.js"
 import _ from "lodash"
 import SuspiciousUser from "../entities/SuspiciousUser.entity.js"
+import languageDropdown from "../dropdowns/language.dropdown.js"
 
 export default async function (
     this: Client,
@@ -22,32 +23,38 @@ export default async function (
 ): Promise<unknown> {
     if (interaction.user.bot) return
 
+
     if (interaction.type === Discord.InteractionType.MessageComponent) {
-        if (interaction.isSelectMenu()) {
-            if (
-                !GuildMember.hasRole(
-                    interaction.member as Discord.GuildMember,
-                    [
-                        globalThis.client.roles.MODERATOR,
-                        globalThis.client.roles.HELPER,
-                        globalThis.client.roles.MANAGER
-                    ],
+        if (interaction.isStringSelectMenu()) {
+            if (interaction.customId.split(".")[0] === "info") {
+                if (interaction.customId === "info.languages") return await languageDropdown(this, interaction)
+            } else {
+                if (
+                    !GuildMember.hasRole(
+                        interaction.member as Discord.GuildMember,
+                        [
+                            globalThis.client.roles.MODERATOR,
+                            globalThis.client.roles.HELPER,
+                            globalThis.client.roles.MANAGER
+                        ],
+                        this
+                    )
+                ) {
+                    await interaction.deferUpdate()
+                    await interaction.followUp({
+                        ephemeral: true,
+                        content: client.messages.getMessage("noPermsMod", interaction.locale)
+                    })
+                    return
+                }
+                await interaction.deferUpdate()
+                await ModerationMenu.updateMenu(
+                    interaction.customId.split(".")[1],
+                    interaction,
                     this
                 )
-            ) {
-                await interaction.deferUpdate()
-                await interaction.followUp({
-                    ephemeral: true,
-                    content: client.messages.getMessage("noPermsMod", interaction.locale)
-                })
-                return
             }
-            await interaction.deferUpdate()
-            await ModerationMenu.updateMenu(
-                interaction.customId.split(".")[1],
-                interaction,
-                this
-            )
+
         }
         if (interaction.isButton()) {
             if (_.startsWith(interaction.customId, "modmenu.")) {

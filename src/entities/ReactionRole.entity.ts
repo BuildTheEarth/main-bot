@@ -30,7 +30,7 @@ export default class ReactionRole extends typeorm.BaseEntity {
     public static async load(client: Client): Promise<Map<string, ReactionRole>> {
         const reactionRoles = await this.find()
         for (const role of reactionRoles) {
-            client.reactionRoles.set(role.emoji, role)
+            client.reactionRoles.set(`${role.emoji}.${role.messageId}`, role)
         }
         return client.reactionRoles
     }
@@ -52,7 +52,7 @@ export default class ReactionRole extends typeorm.BaseEntity {
         requiredRoles?: string[],
         blackListedRoles?: string[]
     ): Promise<boolean> {
-        const has = await this.findOne({ emoji: emoji })
+        const has = await this.findOne({ emoji: emoji, messageId: messageId })
         if (has) return false
         const rRole = new ReactionRole()
         rRole.emoji = emoji
@@ -62,8 +62,20 @@ export default class ReactionRole extends typeorm.BaseEntity {
         if (requiredRoles) rRole.requiredRoles = requiredRoles
         if (blackListedRoles) rRole.blackListedRoles = blackListedRoles
         await rRole.save()
-        client.reactionRoles.set(rRole.emoji, rRole)
+        client.reactionRoles.set(`${rRole.emoji}.${rRole.messageId}`, rRole)
         return true
+    }
+
+    public static async removeEmoji(emoji: string, messageId: string): Promise<boolean> {
+        if (!ReactionRole.exists(emoji, messageId)) return false
+        await ReactionRole.delete({emoji: emoji, messageId: messageId}).catch(noop)
+        client.reactionRoles.delete(`${emoji}.${messageId}`)
+        return true
+    }
+
+    public static async exists(emoji: string, messageId: string): Promise<boolean> {
+        const has = await this.findOne({ emoji: emoji, messageId: messageId })
+        return has? true: false
     }
 
     public static async addBlacklistedRole(
@@ -80,7 +92,7 @@ export default class ReactionRole extends typeorm.BaseEntity {
 
         await has.save()
 
-        client.reactionRoles.set(has.emoji, has)
+        client.reactionRoles.set(`${has.emoji}.${has.messageId}`, has)
         return true
     }
 
@@ -98,7 +110,7 @@ export default class ReactionRole extends typeorm.BaseEntity {
 
         await has.save()
 
-        client.reactionRoles.set(has.emoji, has)
+        client.reactionRoles.set(`${has.emoji}.${has.messageId}`, has)
         return true
     }
 
@@ -119,7 +131,7 @@ export default class ReactionRole extends typeorm.BaseEntity {
 
         await has.save()
 
-        client.reactionRoles.set(has.emoji, has)
+        client.reactionRoles.set(`${has.emoji}.${has.messageId}`, has)
         return true
     }
 
@@ -138,7 +150,7 @@ export default class ReactionRole extends typeorm.BaseEntity {
 
         await has.save()
 
-        client.reactionRoles.set(has.emoji, has)
+        client.reactionRoles.set(`${has.emoji}.${has.messageId}`, has)
         return true
     }
 
@@ -149,14 +161,10 @@ export default class ReactionRole extends typeorm.BaseEntity {
         messageId: string,
         guildMember: GuildMember
     ): Promise<boolean> {
-        const react = await this.findOne({
-            emoji: emoji,
-            messageId: messageId,
-            channelId: channelId
-        })
+        const react = client.reactionRoles.get(`${emoji}.${messageId}`)
+        if (!react) return false
         const reqRoles = react?.requiredRoles
         const unreqRoles = react?.blackListedRoles
-        if (!react) return false
 
         if (unreqRoles && reqRoles)
             return (
@@ -177,11 +185,7 @@ export default class ReactionRole extends typeorm.BaseEntity {
         messageId: string,
         guildMember: GuildMember
     ): Promise<boolean> {
-        const react = await this.findOne({
-            emoji: emoji,
-            messageId: messageId,
-            channelId: channelId
-        })
+        const react = client.reactionRoles.get(`${emoji}.${messageId}`)
         if (!react) return false
         const role = await guildMember.guild.roles.fetch(react?.roleId)
         if (!role) return false
