@@ -30,7 +30,7 @@ export default new Command({
     async run(this: Command, client: Client, message: CommandMessage, args: Args) {
         if (!client.user) return
         const channel = (await args.consumeChannel("channel")) || message.channel
-        if (!(channel.type === Discord.ChannelType.GuildText)) return
+        if (channel.isDMBased()) return message.sendErrorMessage("dmBased")
         const perms =
             (channel as Discord.TextChannel)
                 .permissionsFor(message.member)
