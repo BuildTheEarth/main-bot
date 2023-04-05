@@ -24,7 +24,7 @@ async function e () {
 
     await client.login(token)
     
-    const channel = await client.channels.fetch("847662735864102952")
+    const channel = await client.channels.fetch("808389633384906832")
     
     if (!channel || !channel.isTextBased()) process.exit(0)
     const data1 =     new Discord.ActionRowBuilder({
