@@ -282,5 +282,12 @@
     updatedSuggestion: ["Updated the suggestion!"],
     pleaseImage: ["Please provide a raw image!"],
     roleFailed: ["Failed to add/remove users role."],
-    emojiNotFound: ["404: Emoji not found", "We could not find an emoji in this message, here is a smiley to compensate for your losses :)"]
+    emojiNotFound: ["404: Emoji not found", "We could not find an emoji in this message, here is a smiley to compensate for your losses :)"],
+    rrFail: ["Failed to the create/modify the reaction role for unknown reasons!"],
+    rrYes: ["Added reaction role!"],
+    rrGone: ["The reqested reaction role does not exist!"],
+    rrDel: ["The provided reaction role was deleted!"],
+    rrAddB: ["Added blacklisted role!"],
+    rrRemB: ["Removed blacklisted role!"],
+    rrNoExist: ["The requested role is not in the blacklist/whitelist!"]
 }
