@@ -67,7 +67,8 @@ export default new Command({
         const reason = `Access requested by ${message.member.user.tag} (${message.member.id})`
         /*eslint-enable */
         await (channel as Discord.TextChannel).permissionOverwrites.edit(manager, {
-            ManageRoles: true
+            ManageRoles: true,
+            ViewChannel: true
         }) // There is no non-hacky reason support here now
 
         await message.sendSuccessMessage("gaveChannelPerms", channel)
