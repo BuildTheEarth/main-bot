@@ -25,12 +25,19 @@ export default new Command({
                 ApiTypes.ChannelType.GuildNews,
                 ApiTypes.ChannelType.GuildStageVoice
             ]
+        },
+        {
+            name: "bypass",
+            description: "Bypass the channel permission check",
+            required: false,
+            optionType: "BOOLEAN"
         }
     ],
     async run(this: Command, client: Client, message: CommandMessage, args: Args) {
         if (!client.user) return
         const channel = (await args.consumeChannel("channel")) || message.channel
         if (channel.isDMBased()) return message.sendErrorMessage("dmBased")
+        const bypass = args.consumeBoolean("bypass") || false
         const perms =
             (channel as Discord.TextChannel)
                 .permissionsFor(message.member)
@@ -38,7 +45,20 @@ export default new Command({
             (channel as Discord.TextChannel)
                 .permissionsFor(client.user)
                 ?.has(Discord.PermissionFlagsBits.ViewChannel)
-        if (!perms) return message.sendErrorMessage("noChannelPerms")
+
+        if (bypass) {
+            console.log("Bypassing channel permission check")
+            const managerChat = client.customGuilds
+                .staff()
+                .channels.cache.find(ch => ch.name == "management") as Discord.TextChannel
+            if (managerChat)
+                await client.response.sendError(
+                    managerChat,
+                    `**ALERT:** ${message.author} bypassed the channel permission check to give themselves Manage Permissions in ${channel}!`
+                )
+        } else {
+            if (!perms) return message.sendErrorMessage("noChannelPerms")
+        }
 
         await message.continue()
 

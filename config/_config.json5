@@ -8,7 +8,8 @@
     logging: {
         modLogs: "",
         snippetLogs: "",
-        pointLogs: ""
+        pointLogs: "",
+        managerLogs: ""
     },
     guilds: {
         main: "",
