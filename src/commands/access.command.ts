@@ -68,7 +68,8 @@ export default new Command({
         /*eslint-enable */
         await (channel as Discord.TextChannel).permissionOverwrites.edit(manager, {
             ManageRoles: true,
-            ViewChannel: true
+            ViewChannel: true,
+            ManageChannels: true
         }) // There is no non-hacky reason support here now
 
         await message.sendSuccessMessage("gaveChannelPerms", channel)
