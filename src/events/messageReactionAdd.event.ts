@@ -3,6 +3,7 @@ import Client from "../struct/Client.js"
 import GuildMember from "../struct/discord/GuildMember.js"
 import { noop, trimSides } from "@buildtheearth/bot-utils"
 import ReactionRole from "../entities/ReactionRole.entity.js"
+import { getTsBuildInfoEmitOutputFilePath } from "typescript"
 
 export default async function messageReactionAdd(
     this: Client,
@@ -16,8 +17,6 @@ export default async function messageReactionAdd(
         const member: Discord.GuildMember | null = await guild.members
             .fetch({ user, cache: true })
             .catch(() => null)
-
-        console.log(reaction.emoji.name)
 
         if (reaction.emoji.name && member)
             ReactionRole.react(
@@ -158,6 +157,22 @@ export default async function messageReactionAdd(
                     logChannel,
                     `<@${member.id}> pinned message with id ${reaction.message.id} in suggestions thread <#${channelRaw.id}> (https://discord.com/channels/${this.config.guilds.main}/${channelRaw.id}/${reaction.message.id})`
                 )
+            }
+        }
+
+        let trueId = reaction.emoji.id
+
+        if (!trueId) trueId = reaction.emoji.name
+
+        if (!trueId) return
+        if (!member) return
+
+        const rolereactId = `${trueId}.${reaction.message.id}`
+
+        if (this.reactionRoles.has(rolereactId)) {
+            if (await ReactionRole.canReact(this, trueId, channel.id, reaction.message.id, member)) {
+                await ReactionRole.react(this, trueId, channel.id, reaction.message.id, member)
+                return
             }
         }
     }

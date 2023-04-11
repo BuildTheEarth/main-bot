@@ -166,14 +166,14 @@ export default class ReactionRole extends typeorm.BaseEntity {
         const reqRoles = react?.requiredRoles
         const unreqRoles = react?.blackListedRoles
 
-        if (unreqRoles && reqRoles)
+        if ((unreqRoles && reqRoles) && ((unreqRoles.length != 0) && (reqRoles.length != 0)))
             return (
                 !guildMember.roles.cache.every(e => unreqRoles.includes(e.id)) &&
                 guildMember.roles.cache.every(e => reqRoles.includes(e.id))
             )
-        if (unreqRoles)
+        if (unreqRoles && (unreqRoles.length != 0))
             return !guildMember.roles.cache.every(e => unreqRoles.includes(e.id))
-        if (reqRoles) return guildMember.roles.cache.every(e => reqRoles.includes(e.id))
+        if (reqRoles && (reqRoles.length != 0)) return guildMember.roles.cache.every(e => reqRoles.includes(e.id))
 
         return true
     }
@@ -201,6 +201,25 @@ export default class ReactionRole extends typeorm.BaseEntity {
         if (guildMember.roles.cache.has(role.id)) return true
 
         await guildMember.roles.add(role).catch(noop)
+
+        return true
+    }
+
+    public static async unreact(
+        client: Client,
+        emoji: string,
+        channelId: string,
+        messageId: string,
+        guildMember: GuildMember
+    ): Promise<boolean> {
+        const react = client.reactionRoles.get(`${emoji}.${messageId}`)
+        if (!react) return false
+        const role = await guildMember.guild.roles.fetch(react?.roleId)
+        if (!role) return false
+
+        if (!guildMember.roles.cache.has(role.id)) return false
+
+        await guildMember.roles.remove(role).catch(noop)
 
         return true
     }

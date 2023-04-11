@@ -366,11 +366,11 @@ export default new Command({
                             `${realEmoji}.${messageProps.messageId}`
                         )?.requiredRoles
                     }
-                    if (!roles)
+                    if (!roles || roles.length === 0)
                         embedStr[currIdx] =
                             subcommandGroup == "blacklist"
                                 ? "**No Blacklisted Roles**"
-                                : "**No Whitelistd Roles**"
+                                : "**No Whitelisted Roles**"
                     else {
                         for (const e of roles) {
                             if (embedStr[currIdx].length > 4000) {
@@ -390,7 +390,7 @@ export default new Command({
                                 name:
                                     subcommandGroup == "blacklist"
                                         ? "Blacklisted Roles"
-                                        : "Whitelisted RP;es",
+                                        : "Whitelisted Roles",
                                 description: embed,
                                 color: hexToNum(client.config.colors.success)
                             })

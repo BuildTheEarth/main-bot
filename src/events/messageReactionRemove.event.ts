@@ -2,22 +2,20 @@ import Discord from "discord.js"
 import Client from "../struct/Client.js"
 import GuildMember from "../struct/discord/GuildMember.js"
 import { noop } from "@buildtheearth/bot-utils"
+import ReactionRole from "../entities/ReactionRole.entity.js"
 
 export default async function messageReactionRemove(
     this: Client,
     reaction: Discord.MessageReaction,
     user: Discord.User
 ): Promise<void> {
-    const channel = this.config.reactionRoles?.[reaction.message.channel.id]
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    let role: any = null
-    if (reaction.emoji.name) role = channel?.[reaction.message.id]?.[reaction.emoji.name]
     const guild = reaction.message.guild
     if (guild) {
         const member = await guild.members.fetch({ user, cache: true }).catch(noop)
-        if (member && role?.id) await member.roles.remove(role.id).catch(noop)
 
         const channelRaw = reaction.message.channel
+
+        const channel = reaction.message.channel as Discord.TextChannel
 
         const logChannel = (await this.channels.fetch(
             this.config.logging.modLogs
@@ -55,6 +53,22 @@ export default async function messageReactionRemove(
                     `<@${member.id}> unpinned message with id ${reaction.message.id} in suggestions thread <#${channelRaw.id}> (https://discord.com/channels/${this.config.guilds.main}/${channelRaw.id}/${reaction.message.id})`
                 )
             }
+        }
+
+        let trueId = reaction.emoji.id
+
+        if (!trueId) trueId = reaction.emoji.name
+
+        if (!trueId) return
+        if (!member) return
+
+        const rolereactId = `${trueId}.${reaction.message.id}`
+
+        console.log(rolereactId)
+
+        if (this.reactionRoles.has(rolereactId)) {
+            await ReactionRole.unreact(this, trueId, channel.id, reaction.message.id, member)
+            return
         }
     }
 }
