@@ -41,6 +41,18 @@ export default new Command({
                     description: "The role received in the reaction",
                     optionType: "ROLE",
                     required: true
+                },
+                {
+                    name: "requireType",
+                    description: "The require type",
+                    optionType: "BOOLEAN",
+                    required: false
+                },
+                {
+                    name: "blacklistType",
+                    description: "The blacklist type",
+                    optionType: "BOOLEAN",
+                    required: false
                 }
             ]
         },
@@ -303,6 +315,9 @@ export default new Command({
                 if (subcommand == "add") {
                     const role = await args.consumeRole("role")
 
+                    const requireType = args.consumeBoolean("requireType")
+                    const blacklistType = args.consumeBoolean("blacklistType")
+
                     if (role.guild.id != messageProps.guildId)
                         return message.sendErrorMessage("provideMsgUrl")
 
@@ -313,7 +328,9 @@ export default new Command({
                         messageProps.messageId,
                         role.id,
                         [],
-                        []
+                        [],
+                        requireType,
+                        blacklistType
                     )
 
                     if (!res) return message.sendErrorMessage("rrFail")

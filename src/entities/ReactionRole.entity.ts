@@ -24,8 +24,14 @@ export default class ReactionRole extends typeorm.BaseEntity {
     @typeorm.Column({ name: "required_roles", nullable: true, type: "simple-array" })
     requiredRoles?: string[] | null
 
+    @typeorm.Column({ default: true})
+    requireType!: boolean
+
     @typeorm.Column({ name: "blacklisted_roles", nullable: true, type: "simple-array" })
     blackListedRoles?: string[] | null
+
+    @typeorm.Column({ default: true})
+    blacklistType!: boolean
 
     public static async load(client: Client): Promise<Map<string, ReactionRole>> {
         const reactionRoles = await this.find()
@@ -50,15 +56,19 @@ export default class ReactionRole extends typeorm.BaseEntity {
         messageId: string,
         roleId: string,
         requiredRoles?: string[],
-        blackListedRoles?: string[]
+        blackListedRoles?: string[],
+        requireType: boolean = true,
+        blacklistType: boolean = true
     ): Promise<boolean> {
-        const has = await this.findOne({ emoji: emoji, messageId: messageId })
+        const has = await this.findOne({where: { emoji: emoji, messageId: messageId }})
         if (has) return false
         const rRole = new ReactionRole()
         rRole.emoji = emoji
         rRole.channelId = channelId
         rRole.roleId = roleId
         rRole.messageId = messageId
+        rRole.requireType = requireType
+        rRole.blacklistType = blacklistType
         if (requiredRoles) rRole.requiredRoles = requiredRoles
         if (blackListedRoles) rRole.blackListedRoles = blackListedRoles
         await rRole.save()
@@ -165,15 +175,24 @@ export default class ReactionRole extends typeorm.BaseEntity {
         if (!react) return false
         const reqRoles = react?.requiredRoles
         const unreqRoles = react?.blackListedRoles
+        
+        let wFn: "every" | "some" = "every"
+
+        let bFn: "every" | "some" = "every"
+
+        if (!react.requireType) wFn = "some"
+        if (!react.blacklistType) bFn = "some"
+
+        
 
         if ((unreqRoles && reqRoles) && ((unreqRoles.length != 0) && (reqRoles.length != 0)))
             return (
-                !guildMember.roles.cache.every(e => unreqRoles.includes(e.id)) &&
-                guildMember.roles.cache.every(e => reqRoles.includes(e.id))
+                unreqRoles[bFn](e => !guildMember.roles.cache.has(e)) &&
+                reqRoles[wFn](e => guildMember.roles.cache.has(e))
             )
         if (unreqRoles && (unreqRoles.length != 0))
-            return !guildMember.roles.cache.every(e => unreqRoles.includes(e.id))
-        if (reqRoles && (reqRoles.length != 0)) return guildMember.roles.cache.every(e => reqRoles.includes(e.id))
+            return unreqRoles[bFn](e => !guildMember.roles.cache.has(e))
+        if (reqRoles && (reqRoles.length != 0)) return reqRoles[wFn](e => guildMember.roles.cache.has(e))
 
         return true
     }
