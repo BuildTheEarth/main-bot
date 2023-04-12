@@ -61,7 +61,7 @@ export default class ReactionRole extends typeorm.BaseEntity {
         blacklistType: boolean = true
     ): Promise<boolean> {
         const has = await this.findOne({where: { emoji: emoji, messageId: messageId }})
-        if (has) return false
+        if (has?.emoji === emoji && has?.messageId === messageId) return false
         const rRole = new ReactionRole()
         rRole.emoji = emoji
         rRole.channelId = channelId
