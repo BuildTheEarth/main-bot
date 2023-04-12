@@ -176,12 +176,12 @@ export default class ReactionRole extends typeorm.BaseEntity {
         const reqRoles = react?.requiredRoles
         const unreqRoles = react?.blackListedRoles
         
-        let wFn: "every" | "some" = "every"
+        let wFn: "every" | "some" = "some"
 
-        let bFn: "every" | "some" = "every"
+        let bFn: "every" | "some" = "some"
 
-        if (!react.requireType) wFn = "some"
-        if (!react.blacklistType) bFn = "some"
+        if (!react.requireType) wFn = "every"
+        if (!react.blacklistType) bFn = "every"
 
         
 
