@@ -17,6 +17,7 @@ import _ from "lodash"
 import SuspiciousUser from "../entities/SuspiciousUser.entity.js"
 import languageDropdown from "../dropdowns/language.dropdown.js"
 import teamMenu from "../menus/team.menu.js"
+import CommandAction from "../entities/CommandAction.entity.js"
 
 export default async function (
     this: Client,
@@ -147,7 +148,19 @@ export default async function (
                 }
             }
 
-            return this.logger.info(`${label} ${tag} ran '${command.name}' command.`)
+            this.logger.info(`${label} ${tag} ran '${command.name}' command.`)
+
+            const cInfo = new CommandAction()
+            cInfo.channel = interaction.channel?.id ?? "00000000000000000"
+            cInfo.command = command.name
+            const subcmd = interaction.options.getSubcommand(false)
+            if (subcmd) cInfo.subcommand = subcmd
+            const subcmdgr = interaction.options.getSubcommandGroup(false)
+            if (subcmdgr) cInfo.subcommandGroup = subcmdgr
+            cInfo.guild = interaction.guildId ?? "00000000000000000"
+            cInfo.executor = interaction.user.id
+            await cInfo.save()
+            return
         }
     }
 

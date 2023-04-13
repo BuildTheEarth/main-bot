@@ -8,6 +8,7 @@ import CommandMessage from "../struct/CommandMessage.js"
 import Discord from "discord.js"
 import interactionCreateEvent from "../events/interactionCreate.event.js"
 import { noop } from "@buildtheearth/bot-utils"
+import CommandAction from "../entities/CommandAction.entity.js"
 
 export default new Command({
     name: "team",
@@ -85,12 +86,23 @@ export async function runBtCommand(
         )
     } else {
         if (message instanceof CommandMessage)
-            return message
+            message
                 .send({ content: snippet.body, allowedMentions: { parse: [] } })
                 .catch(() => null)
         else
-            return message
+            message
                 .reply({ content: snippet.body, allowedMentions: { parse: [] } })
                 .catch(() => null)
+        
+        const cInfo = new CommandAction()
+        cInfo.channel = message.channel.id
+        cInfo.command = "executed_team"
+        cInfo.subcommand = snippet.language
+        cInfo.subcommandGroup = snippet.name
+        cInfo.guild = message.guild?.id ?? "00000000000000000"
+        cInfo.executor = message.author.id
+        await cInfo.save()
     }
+
+
 }
