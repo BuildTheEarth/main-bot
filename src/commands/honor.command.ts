@@ -103,13 +103,13 @@ export default new Command({
                     let progressChannel = client.customGuilds
                         .main()
                         .channels.cache.find(
-                            ch => ch.name == "progress"
+                            ch => ch.name == "builder-chat"
                         ) as Discord.TextChannel
                     if (!progressChannel) {
                         progressChannel = client.customGuilds
                             .main()
                             .channels.cache.find(
-                                ch => ch.name == "pogress"
+                                ch => ch.name == "builders-chat"
                             ) as Discord.TextChannel
                     }
                     if (progressChannel) {
