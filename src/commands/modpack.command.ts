@@ -13,7 +13,7 @@ export default new Command({
     name: "modpack",
     aliases: ["mp"],
     description: "Manage the modpack's background images.",
-    permission: [globalThis.client.roles.MANAGER, globalThis.client.roles.BUILDER_COUNCIL]
+    permission: [globalThis.client.roles.MANAGER, globalThis.client.roles.BUILDER_COUNCIL],
     subcommands: [
         {
             name: "list",
