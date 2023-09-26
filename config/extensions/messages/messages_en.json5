@@ -203,7 +203,7 @@
     invalidStatus: ["That's not a valid status! (%1s)"],
     provideMsgUrl: ["Please provide a valud message URL, that is in this server."],
     httpError: ["There was an error fetching some data, please contact the bot devs."],
-    discohookUrl: ["Here is the embed url: [`%1$s`](%1$s) and it expires %2$s."],
+    discohookUrl: ["Here is the embed url: [`%1$s`](%2$s) and it expires %3$s."],
     justice: ["Justice has been handed out!"],
     deniedReport: ["Denied the report!"],
     approvedReport: ["Approved the report!"],

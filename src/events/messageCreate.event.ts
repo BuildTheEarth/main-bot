@@ -126,6 +126,7 @@ export default async function (this: Client, message: Discord.Message): Promise<
             cInfo.subcommandGroup = snippet.name
             cInfo.guild = message.guildId ?? "00000000000000000"
             cInfo.executor = message.author.id
+            await cInfo.save()
             return
         }
 

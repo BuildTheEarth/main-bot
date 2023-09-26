@@ -90,12 +90,12 @@ export default new Command({
         }
 
         const buffer = Buffer.from(JSON.stringify(webhookJson))
-        const discohookUrl = `https://discohook.org/?data=${encodeURIComponent(
+        const discohookUrl = `https://embed.buildtheearth.net/?data=${encodeURIComponent(
             buffer.toString("base64")
         )}`
 
         //@ts-ignore
-        const fetchedData = await fetch("https://share.discohook.app/create", {
+        const fetchedData = await fetch("https://short.buildtheearth.net/create", {
             method: "POST",
             body: JSON.stringify({ url: discohookUrl }),
             headers: { "Content-Type": "application/json" }
@@ -114,6 +114,7 @@ export default new Command({
 
         return message.sendSuccessMessage(
             "discohookUrl",
+            data.url.replace("https://", ""),
             data.url,
             formatTimestamp(new Date(data.expires), "R")
         )
