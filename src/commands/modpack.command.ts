@@ -7,7 +7,7 @@ import CommandMessage from "../struct/CommandMessage.js"
 import JSON5 from "json5"
 import fetch from "node-fetch"
 import sizeOf from "buffer-image-size"
-import { isURL } from "@buildtheearth/bot-utils"
+import { hexToNum, isURL } from "@buildtheearth/bot-utils"
 
 export default new Command({
     name: "modpack",
@@ -89,11 +89,16 @@ export default new Command({
             const queue = format("queue")
             const store = format("store")
 
-            message.sendSuccess({
-                author: { name: "Image list" },
-                fields: [
-                    { name: "Queue", value: queue },
-                    { name: "Store", value: store }
+            message.send({ embeds: [
+                    {
+                        author: { name: "Image list" },
+                        description: "### Queue\n" + queue,
+                        color: hexToNum(client.config.colors.success)
+                    },
+                    {
+                        description: "### Store\n" + store,
+                        color: hexToNum(client.config.colors.success)
+                    },
                 ]
             })
         } else if (subcommand === "set") {
