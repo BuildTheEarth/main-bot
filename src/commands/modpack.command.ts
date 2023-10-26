@@ -128,6 +128,10 @@ export default new Command({
                 return message.sendErrorMessage("requestIncomplete")
             }
 
+            const isImage = response.headers.get("content-type")?.startsWith("image/")
+
+            if (!isImage) return message.sendErrorMessage("pleaseImage")
+
             const dimensions = sizeOf(buff)
             if (dimensions.width / dimensions.height !== 16 / 9)
                 return message.sendErrorMessage("not16To9")
