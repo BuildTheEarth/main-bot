@@ -15,10 +15,8 @@ function getFiles(source: fs.PathLike): string[] {
 // eslint-disable-next-line @typescript-eslint/ban-types
 export default class AssetList {
     client: Client
-    collection: Discord.Collection<
-        string,
-        { [key: string]: any }
-    > = new Discord.Collection()
+    collection: Discord.Collection<string, { [key: string]: any }> =
+        new Discord.Collection()
     constructor(client: Client) {
         this.client = client
     }
@@ -28,22 +26,16 @@ export default class AssetList {
             pathModule.dirname(url.fileURLToPath(import.meta.url)) +
                 "/../../../config/extensions/templates/"
         )
-        const files = await fs.promises.readdir(
-            url.pathToFileURL(dir)
-        )
+        const files = await fs.promises.readdir(url.pathToFileURL(dir))
         for (const file of files) {
-            const data = loadSyncJSON5(
-                pathModule.join(dir, file)
-            )
+            const data = loadSyncJSON5(pathModule.join(dir, file))
             const trueName = file.replace(/.json5$/, "")
 
             this.collection.set(trueName, data)
         }
     }
 
-    getAsset(
-        name: string
-    ): any | undefined {
+    getAsset(name: string): any | undefined {
         return this.collection.get(name)
     }
 }

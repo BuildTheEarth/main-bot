@@ -67,7 +67,13 @@ export default async function messageReactionRemove(
         console.log(rolereactId)
 
         if (this.reactionRoles.has(rolereactId)) {
-            await ReactionRole.unreact(this, trueId, channel.id, reaction.message.id, member)
+            await ReactionRole.unreact(
+                this,
+                trueId,
+                channel.id,
+                reaction.message.id,
+                member
+            )
             return
         }
     }

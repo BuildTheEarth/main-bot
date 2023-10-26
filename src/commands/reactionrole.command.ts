@@ -373,7 +373,7 @@ export default new Command({
                     let roles
 
                     console.log(client.reactionRoles.keys())
-                    
+
                     if (subcommandGroup == "blacklist") {
                         roles = client.reactionRoles.get(
                             `${realEmoji}.${messageProps.messageId}`

@@ -93,7 +93,7 @@ export async function runBtCommand(
             message
                 .reply({ content: snippet.body, allowedMentions: { parse: [] } })
                 .catch(() => null)
-        
+
         const cInfo = new CommandAction()
         cInfo.channel = message.channel.id
         cInfo.command = "executed_team"
@@ -103,6 +103,4 @@ export async function runBtCommand(
         cInfo.executor = message.author.id
         await cInfo.save()
     }
-
-
 }

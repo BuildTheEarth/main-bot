@@ -24,13 +24,13 @@ export default class ReactionRole extends typeorm.BaseEntity {
     @typeorm.Column({ name: "required_roles", nullable: true, type: "simple-array" })
     requiredRoles?: string[] | null
 
-    @typeorm.Column({ default: true})
+    @typeorm.Column({ default: true })
     requireType!: boolean
 
     @typeorm.Column({ name: "blacklisted_roles", nullable: true, type: "simple-array" })
     blackListedRoles?: string[] | null
 
-    @typeorm.Column({ default: true})
+    @typeorm.Column({ default: true })
     blacklistType!: boolean
 
     public static async load(client: Client): Promise<Map<string, ReactionRole>> {
@@ -60,7 +60,7 @@ export default class ReactionRole extends typeorm.BaseEntity {
         requireType: boolean = true,
         blacklistType: boolean = true
     ): Promise<boolean> {
-        const has = await this.findOne({where: { emoji: emoji, messageId: messageId }})
+        const has = await this.findOne({ where: { emoji: emoji, messageId: messageId } })
         if (has?.emoji === emoji && has?.messageId === messageId) return false
         const rRole = new ReactionRole()
         rRole.emoji = emoji
@@ -78,14 +78,14 @@ export default class ReactionRole extends typeorm.BaseEntity {
 
     public static async removeEmoji(emoji: string, messageId: string): Promise<boolean> {
         if (!ReactionRole.exists(emoji, messageId)) return false
-        await ReactionRole.delete({emoji: emoji, messageId: messageId}).catch(noop)
+        await ReactionRole.delete({ emoji: emoji, messageId: messageId }).catch(noop)
         client.reactionRoles.delete(`${emoji}.${messageId}`)
         return true
     }
 
     public static async exists(emoji: string, messageId: string): Promise<boolean> {
         const has = await this.findOne({ emoji: emoji, messageId: messageId })
-        return has? true: false
+        return has ? true : false
     }
 
     public static async addBlacklistedRole(
@@ -175,7 +175,7 @@ export default class ReactionRole extends typeorm.BaseEntity {
         if (!react) return false
         const reqRoles = react?.requiredRoles
         const unreqRoles = react?.blackListedRoles
-        
+
         let wFn: "every" | "some" = "some"
 
         let bFn: "every" | "some" = "some"
@@ -183,16 +183,15 @@ export default class ReactionRole extends typeorm.BaseEntity {
         if (!react.requireType) wFn = "every"
         if (!react.blacklistType) bFn = "every"
 
-        
-
-        if ((unreqRoles && reqRoles) && ((unreqRoles.length != 0) && (reqRoles.length != 0)))
+        if (unreqRoles && reqRoles && unreqRoles.length != 0 && reqRoles.length != 0)
             return (
                 unreqRoles[bFn](e => !guildMember.roles.cache.has(e)) &&
                 reqRoles[wFn](e => guildMember.roles.cache.has(e))
             )
-        if (unreqRoles && (unreqRoles.length != 0))
+        if (unreqRoles && unreqRoles.length != 0)
             return unreqRoles[bFn](e => !guildMember.roles.cache.has(e))
-        if (reqRoles && (reqRoles.length != 0)) return reqRoles[wFn](e => guildMember.roles.cache.has(e))
+        if (reqRoles && reqRoles.length != 0)
+            return reqRoles[wFn](e => guildMember.roles.cache.has(e))
 
         return true
     }

@@ -170,8 +170,22 @@ export default async function messageReactionAdd(
         const rolereactId = `${trueId}.${reaction.message.id}`
 
         if (this.reactionRoles.has(rolereactId)) {
-            if (await ReactionRole.canReact(this, trueId, channel.id, reaction.message.id, member)) {
-                await ReactionRole.react(this, trueId, channel.id, reaction.message.id, member)
+            if (
+                await ReactionRole.canReact(
+                    this,
+                    trueId,
+                    channel.id,
+                    reaction.message.id,
+                    member
+                )
+            ) {
+                await ReactionRole.react(
+                    this,
+                    trueId,
+                    channel.id,
+                    reaction.message.id,
+                    member
+                )
                 return
             }
         }

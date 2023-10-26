@@ -4,29 +4,27 @@ import unicode from "./transformers/unicode.transformer.js"
 
 @typeorm.Entity({ name: "command_action" })
 export default class CommandAction extends typeorm.BaseEntity {
-
     @typeorm.PrimaryGeneratedColumn()
     id!: number
 
-    @typeorm.Column({nullable: false})
+    @typeorm.Column({ nullable: false })
     command!: string
 
-    @typeorm.Column({nullable: true})
+    @typeorm.Column({ nullable: true })
     subcommandGroup?: string
 
-    @typeorm.Column({nullable: true})
+    @typeorm.Column({ nullable: true })
     subcommand?: string
 
-    @SnowflakeColumn({nullable: false})
+    @SnowflakeColumn({ nullable: false })
     executor!: string
 
-    @SnowflakeColumn({nullable: false})
+    @SnowflakeColumn({ nullable: false })
     guild!: string
 
-    @SnowflakeColumn({nullable: false})
+    @SnowflakeColumn({ nullable: false })
     channel!: string
 
-    @typeorm.CreateDateColumn({nullable: false})
+    @typeorm.CreateDateColumn({ nullable: false })
     created!: Date
-
 }

@@ -25,11 +25,11 @@ export default async function (
 ): Promise<unknown> {
     if (interaction.user.bot) return
 
-
     if (interaction.type === Discord.InteractionType.MessageComponent) {
         if (interaction.isStringSelectMenu()) {
             if (interaction.customId.split(".")[0] === "info") {
-                if (interaction.customId === "info.languages") return await languageDropdown(this, interaction)
+                if (interaction.customId === "info.languages")
+                    return await languageDropdown(this, interaction)
             } else {
                 if (
                     !GuildMember.hasRole(
@@ -45,7 +45,10 @@ export default async function (
                     await interaction.deferUpdate()
                     await interaction.followUp({
                         ephemeral: true,
-                        content: client.messages.getMessage("noPermsMod", interaction.locale)
+                        content: client.messages.getMessage(
+                            "noPermsMod",
+                            interaction.locale
+                        )
                     })
                     return
                 }
@@ -56,7 +59,6 @@ export default async function (
                     this
                 )
             }
-
         }
         if (interaction.isButton()) {
             if (_.startsWith(interaction.customId, "modmenu.")) {

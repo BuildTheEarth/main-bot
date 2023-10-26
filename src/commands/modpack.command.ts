@@ -13,7 +13,10 @@ export default new Command({
     name: "modpack",
     aliases: ["mp"],
     description: "Manage the modpack's background images.",
-    permission: [globalThis.client.roles.MANAGER, globalThis.client.roles.BUILDER_COUNCIL],
+    permission: [
+        globalThis.client.roles.MANAGER,
+        globalThis.client.roles.BUILDER_COUNCIL
+    ],
     subcommands: [
         {
             name: "list",
@@ -89,7 +92,8 @@ export default new Command({
             const queue = format("queue")
             const store = format("store")
 
-            message.send({ embeds: [
+            message.send({
+                embeds: [
                     {
                         author: { name: "Image list" },
                         description: "### Queue\n" + queue,
@@ -98,7 +102,7 @@ export default new Command({
                     {
                         description: "### Store\n" + store,
                         color: hexToNum(client.config.colors.success)
-                    },
+                    }
                 ]
             })
         } else if (subcommand === "set") {
