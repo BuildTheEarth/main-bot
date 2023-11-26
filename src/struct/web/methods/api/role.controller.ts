@@ -14,7 +14,7 @@ export default class RoleController {
     ): Promise<unknown> {
         res.type("application/json")
         if (!id) {
-            return res.send({
+            return res.status(404).send({
                 error: "MISSING_PARAMETER",
                 message: "Missing parameter: id"
             })
@@ -23,7 +23,7 @@ export default class RoleController {
         const userList = typeof id === "string" ? id : null // we need to add proper multi-user support later
 
         if (!userList) {
-            return res.send({
+            return res.status(400).send({
                 error: "INVALID_PARAMETER",
                 message: "Invalid parameter: id"
             })
@@ -36,11 +36,11 @@ export default class RoleController {
                 .main()
                 .members.fetch({ user: userList })
         } catch {
-            return res.send({ error: "NOT_FOUND", message: "Not found: user" })
+            return res.status(404).send({ error: "NOT_FOUND", message: "Not found: user" })
         }
 
         if (!user) {
-            return res.send({ error: "NOT_FOUND", message: "Not found: user" })
+            return res.status(404).send({ error: "NOT_FOUND", message: "Not found: user" })
         }
 
         await user.fetch()
@@ -52,7 +52,7 @@ export default class RoleController {
             })
         }
 
-        res.send(userInfo)
+        res.status(200).send(userInfo)
 
         return
     }
