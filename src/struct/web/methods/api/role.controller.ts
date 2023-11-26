@@ -14,7 +14,7 @@ export default class RoleController {
     ): Promise<unknown> {
         res.type("application/json")
         if (!id) {
-            return res.status(404).send({
+            return res.status(400).send({
                 error: "MISSING_PARAMETER",
                 message: "Missing parameter: id"
             })
