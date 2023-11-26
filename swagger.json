@@ -1,0 +1,674 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Main Bot API",
+    "version": "1.0.0",
+    "description": "The main bot api allows you to interact with the BuildTheEarth Discord in a secure and limited fashion.\n\nNote that this is a very restricted API and you need your IP to be whitelisted in order for your requests to work.\n\n### Check out its awesome features:\n\n* Fetch roles\n* Update builder roles\n* Send templated messages to users\n* Create a report against an user\n"
+  },
+  "servers": [
+    {
+      "url": "https://{ip}:{port}",
+      "variables": {
+        "ip": {
+          "default": "demo",
+          "description": "Get the IP"
+        },
+        "port": {
+          "default": "8080"
+        }
+      }
+    }
+  ],
+  "tags": [
+    {
+      "name": "website",
+      "description": "Everything needed for the website"
+    },
+    {
+      "name": "btbot",
+      "description": "Everything needed for build team bot"
+    }
+  ],
+  "paths": {
+    "/api/v1/ping": {
+      "get": {
+        "tags": [
+          "website",
+          "btbot"
+        ],
+        "summary": "Ping",
+        "description": "Pong",
+        "operationId": "ping",
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "content": {
+                      "type": "string",
+                      "description": "Literally just pong",
+                      "example": "PONG"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorised",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/authError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/builder": {
+      "get": {
+        "tags": [
+          "website"
+        ],
+        "summary": "Finds if a user has builder",
+        "description": "Returns the builder status of a user",
+        "operationId": "builderStatus",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "description": "The Discord Snowflake User ID of target",
+            "required": true,
+            "explode": true,
+            "schema": {
+              "type": "string",
+              "example": "635411595253776385"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Builder found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "description": "User ID",
+                      "example": "635411595253776385"
+                    },
+                    "hasBuilder": {
+                      "type": "boolean",
+                      "description": "If user has builder or not",
+                      "example": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Input Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/paramError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "User not foud",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/notFoundError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "website"
+        ],
+        "summary": "Finds if a user has builder",
+        "description": "Returns the builder status of a user, add is false to remove",
+        "operationId": "builderAdd",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "description": "The Discord Snowflake User ID of target",
+            "required": true,
+            "explode": true,
+            "schema": {
+              "type": "string",
+              "example": "635411595253776385"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Request Body",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "add": {
+                    "type": "boolean",
+                    "description": "To add or to remove, true means add, false means remove",
+                    "example": false
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Builder found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "description": "User ID",
+                      "example": "635411595253776385"
+                    },
+                    "hasBuilder": {
+                      "type": "boolean",
+                      "description": "If user has builder or not",
+                      "example": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Input Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/paramError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "User not foud",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/notFoundError"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Some obscure server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/serverError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/punish": {
+      "get": {
+        "tags": [
+          "btbot"
+        ],
+        "summary": "Finds all the punishments of an user",
+        "description": "Returns the punishments a user has",
+        "operationId": "punishStatus",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "description": "The Discord Snowflake User ID of target",
+            "required": true,
+            "explode": true,
+            "schema": {
+              "type": "string",
+              "example": "635411595253776385"
+            }
+          },
+          {
+            "name": "showDeleted",
+            "in": "query",
+            "description": "Whether to show deleted punishments or not",
+            "required": true,
+            "explode": true,
+            "schema": {
+              "type": "boolean",
+              "example": false
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Punishments found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "warn": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/actionLog"
+                      }
+                    },
+                    "mute": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/actionLog"
+                      }
+                    },
+                    "kick": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/actionLog"
+                      }
+                    },
+                    "ban": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/actionLog"
+                      }
+                    },
+                    "unmute": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/actionLog"
+                      }
+                    },
+                    "unban": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/actionLog"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Input Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/paramError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "User not foud",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/notFoundError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/role": {
+      "get": {
+        "tags": [
+          "website",
+          "btbot"
+        ],
+        "summary": "Gives the Discord roles of an user",
+        "description": "Returns the Discord roles of an user",
+        "operationId": "roleStatus",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "description": "The Discord Snowflake User ID of target",
+            "required": true,
+            "explode": true,
+            "schema": {
+              "type": "string",
+              "example": "635411595253776385"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Roles found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "description": "User ID",
+                      "example": "635411595253776385"
+                    },
+                    "roles": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "name": {
+                            "type": "string",
+                            "description": "Role name",
+                            "example": "Admin"
+                          },
+                          "id": {
+                            "type": "string",
+                            "description": "Role ID",
+                            "example": "692504956036710440"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Input Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/paramError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "User not foud",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/notFoundError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/website/message": {
+      "post": {
+        "tags": [
+          "website"
+        ],
+        "summary": "Send a templated message",
+        "description": "Returns the builder status of a user, add is false to remove, uses templates from [here](https://github.com/BuildTheEarth/main-bot/tree/main/config/extensions/web/replies)",
+        "operationId": "messageSend",
+        "parameters": [
+          {
+            "name": "message",
+            "in": "query",
+            "description": "The message name, a name of a json file from [here](https://github.com/BuildTheEarth/main-bot/tree/main/config/extensions/web/replies)",
+            "required": true,
+            "explode": true,
+            "schema": {
+              "type": "string",
+              "example": "team.criticalchanges"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Request Body",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/messageSend"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Message sent",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "failure": {
+                      "type": "array",
+                      "description": "User IDs of failed messages",
+                      "items": {
+                        "type": "string",
+                        "example": "User IDs of failed recipients"
+                      }
+                    },
+                    "success": {
+                      "type": "array",
+                      "description": "User IDs of succeeded messages",
+                      "items": {
+                        "type": "string",
+                        "example": "User IDs of succeeded recipients"
+                      }
+                    },
+                    "sentMessage": {
+                      "type": "object",
+                      "properties": {
+                        "iamlazy": {
+                          "type": "string",
+                          "example": "This would actually be a DJS message object with all the placeholders filled in, I am just too lazy to describe all of the fields there"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Input Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/paramError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "User not foud",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/notFoundError"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "authError": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "string",
+            "enum": [
+              "NO_AUTH"
+            ],
+            "example": "NO_AUTH"
+          },
+          "message": {
+            "type": "string",
+            "example": "No authorization",
+            "enum": [
+              "No authorization"
+            ]
+          }
+        }
+      },
+      "paramError": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "string",
+            "example": "MISSING_PARAMETER",
+            "description": "Usually missing or invalid param, perhaps WRONG_DATATYPE"
+          },
+          "message": {
+            "type": "string",
+            "example": "Missing parameter: id"
+          }
+        }
+      },
+      "notFoundError": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "string",
+            "example": "NOT_FOUND"
+          },
+          "message": {
+            "type": "string",
+            "example": "Not found: user"
+          }
+        }
+      },
+      "serverError": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "string",
+            "example": "SERVER_ERROR"
+          },
+          "message": {
+            "type": "string",
+            "example": "An issue has occured assigning: role"
+          }
+        }
+      },
+      "actionLog": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "action": {
+            "type": "string",
+            "enum": [
+              "warn",
+              "mute",
+              "kick",
+              "ban",
+              "unmute",
+              "unban"
+            ]
+          },
+          "member": {
+            "type": "string",
+            "example": "Member ID"
+          },
+          "executor": {
+            "type": "string",
+            "example": "ID of Person who punished"
+          },
+          "reason": {
+            "type": "string"
+          },
+          "reasonImage": {
+            "type": "string",
+            "example": "Field can be null"
+          },
+          "length": {
+            "type": "integer",
+            "format": "int64",
+            "example": null,
+            "description": "Can be null, or len in epoch milliseconds"
+          },
+          "channel": {
+            "type": "string",
+            "example": "Execution channel ID"
+          },
+          "message": {
+            "type": "string",
+            "example": "Execution message ID"
+          },
+          "notification": {
+            "type": "string",
+            "example": "DM Message ID"
+          },
+          "createdAt": {
+            "type": "string",
+            "example": "Date of creation in Database DateTime"
+          },
+          "deletedAt": {
+            "type": "string",
+            "example": "Date of deletion if deleted"
+          },
+          "deleter": {
+            "type": "string",
+            "example": "User ID of deleter"
+          },
+          "deleteReason": {
+            "type": "string",
+            "example": "Delete reason"
+          },
+          "punishment": {
+            "type": "string",
+            "example": "This is a TimedPunishment object of the main bot, not a string"
+          }
+        }
+      },
+      "messageSend": {
+        "type": "object",
+        "properties": {
+          "key": {
+            "type": "string",
+            "example": "Any value goes here, it will substitute for the placeholder of name ${key}"
+          },
+          "changes": {
+            "type": "string",
+            "example": "This will replace all instances of ${changes}"
+          },
+          "ids": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "example": "Discord user IDs of people to DM"
+            }
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer"
+      }
+    }
+  }
+}
