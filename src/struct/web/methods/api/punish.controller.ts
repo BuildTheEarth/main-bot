@@ -2,15 +2,15 @@ import Discord from "discord.js"
 import typeorm from "typeorm"
 import { Controller, Get, Param, Req, Res } from "@nestjs/common"
 import ActionLog, { Action } from "../../../../entities/ActionLog.entity.js"
-import { FastifyReply, FastifyRequest } from "fastify"
+import { Response, Request } from "express"
 import { ServerResponse } from "http"
 
 @Controller("/api/v1/punish")
 export default class PunishController {
     @Get(":id")
     async getPunishment(
-        @Req() req: FastifyRequest,
-        @Res() res: FastifyReply<ServerResponse>,
+        @Req() req: Request,
+        @Res() res: Response,
         @Param("id") id: string
     ): Promise<unknown> {
         res.type("application/json")

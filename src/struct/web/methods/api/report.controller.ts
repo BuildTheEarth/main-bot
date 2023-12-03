@@ -1,15 +1,15 @@
 import { Controller, Get, Post, Param, Req, Res, Body } from "@nestjs/common"
 import SuspiciousUser from "../../../../entities/SuspiciousUser.entity.js"
 import { noop } from "@buildtheearth/bot-utils"
-import { FastifyReply, FastifyRequest } from "fastify"
+import { Response, Request } from "express"
 import { ServerResponse } from "http"
 
 @Controller("/api/v1/report")
 export default class ReportsController {
     @Get(":id")
     async reportGet(
-        @Req() req: FastifyRequest,
-        @Res() res: FastifyReply<ServerResponse>,
+        @Req() req: Request,
+        @Res() res: Response,
         @Param("id") id: string
     ): Promise<unknown> {
         res.type("application/json")
@@ -76,8 +76,8 @@ export default class ReportsController {
 
     @Post(":id")
     async builderPost(
-        @Req() req: FastifyRequest,
-        @Res() res: FastifyReply<ServerResponse>,
+        @Req() req: Request,
+        @Res() res: Response,
         @Param("id") user: string | null,
         @Body("submitter") submitter: string | null,
         @Body("evidence") evidence: string | null

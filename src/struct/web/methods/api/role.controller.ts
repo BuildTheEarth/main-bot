@@ -1,15 +1,15 @@
 import { Controller, Get, Post, Param, Req, Res, Body } from "@nestjs/common"
 import GuildMember from "../../../discord/GuildMember.js"
 import Discord from "discord.js"
-import { FastifyReply, FastifyRequest } from "fastify"
+import { Response, Request } from "express"
 import { ServerResponse } from "http"
 
 @Controller("/api/v1/role")
 export default class RoleController {
     @Get(":id")
     async roleGet(
-        @Req() req: FastifyRequest,
-        @Res() res: FastifyReply<ServerResponse>,
+        @Req() req: Request,
+        @Res() res: Response,
         @Param("id") id: string
     ): Promise<unknown> {
         res.type("application/json")
@@ -59,8 +59,8 @@ export default class RoleController {
 
     @Post(":id")
     async builderPost(
-        @Req() req: FastifyRequest,
-        @Res() res: FastifyReply<ServerResponse>,
+        @Req() req: Request,
+        @Res() res: Response,
         @Param("id") id: string,
         @Body("add") add: boolean
     ): Promise<unknown> {

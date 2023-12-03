@@ -3,7 +3,7 @@ import path from "path"
 import fs from "fs"
 import util from "util"
 import { NestFactory } from "@nestjs/core"
-import { FastifyAdapter, NestFastifyApplication } from "@nestjs/platform-fastify"
+import { ExpressAdapter, NestExpressApplication } from "@nestjs/platform-express"
 import WebMain from "../web/WebMain.module.js"
 import url from "url"
 
@@ -22,9 +22,9 @@ export default class WebserverHandler {
     }
 
     async load(): Promise<void> {
-        const server = await NestFactory.create<NestFastifyApplication>(
+        const server = await NestFactory.create<NestExpressApplication>(
             WebMain,
-            new FastifyAdapter()
+            new ExpressAdapter()
         )
 
         server.listen(this.client.config.images.bindPort, "0.0.0.0")

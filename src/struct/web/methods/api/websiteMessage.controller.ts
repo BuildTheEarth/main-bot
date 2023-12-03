@@ -1,7 +1,7 @@
 import { Controller, Get, Post, Param, Req, Res, Body } from "@nestjs/common"
 import GuildMember from "../../../discord/GuildMember.js"
 import Discord from "discord.js"
-import { FastifyReply, FastifyRequest } from "fastify"
+import { Response, Request } from "express"
 import { ServerResponse } from "http"
 import _ from "lodash"
 import { noop } from "@buildtheearth/bot-utils"
@@ -10,8 +10,8 @@ import { noop } from "@buildtheearth/bot-utils"
 export default class WebsiteMessage {
     @Post(":message")
     async builderPost(
-        @Req() req: FastifyRequest,
-        @Res() res: FastifyReply<ServerResponse>,
+        @Req() req: Request,
+        @Res() res: Response,
         @Param("message") message: string,
         @Body() body: Record<string, any>
     ): Promise<unknown> {
