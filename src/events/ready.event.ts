@@ -41,8 +41,11 @@ export default async function ready(this: Client): Promise<void> {
     }
 
     if (this.customGuilds.main().features.includes("VANITY_URL")) {
-        const current = await (await this.customGuilds.main()).fetchVanityData()
+        const current = await this.customGuilds.main().fetchVanityData()
+
         const outdated = current?.code !== this.config.vanity
+
+        console.log(current?.code)
         if (outdated) {
             const reason = "Reached level 3 boosting"
             await Guild.setVanityCode(
