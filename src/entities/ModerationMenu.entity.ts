@@ -671,17 +671,28 @@ function getMostSevereList(
 ): bannedWordsOptions[] {
     const punishmentWords: bannedWordsOptions[] = []
     for (const punishment of punishments) {
-        if (!punishment.base) return []
-        const word = client.filterWordsCached.banned.get(punishment.base)
-        if (!word) return []
+        if (punishment.link) {
+            punishmentWords.push({
+                word: punishment.raw,
+                punishment_type: "DELETE",
+                duration: null,
+                reason: "Masked links",
+                exception: false
+            })
+        } else {
+            if (!punishment.base) return []
+            const word = client.filterWordsCached.banned.get(punishment.base)
+            if (!word) return []
+    
+            punishmentWords.push({
+                word: punishment.base,
+                punishment_type: word.punishment_type,
+                duration: word.duration ? word.duration : null,
+                reason: word.reason ? word.reason : undefined,
+                exception: false
+            })
+        }
 
-        punishmentWords.push({
-            word: punishment.base,
-            punishment_type: word.punishment_type,
-            duration: word.duration ? word.duration : null,
-            reason: word.reason ? word.reason : undefined,
-            exception: false
-        })
     }
     return punishmentWords
         .filter(word => word !== undefined)

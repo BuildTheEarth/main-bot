@@ -5,7 +5,7 @@ import { loadSyncJSON5, isSingular, pluralize } from "@buildtheearth/bot-utils"
 const duplicateChars = loadSyncJSON5(
     path.join(
         path.dirname(url.fileURLToPath(import.meta.url)) +
-            "../../../../config/extensions/duplicateChars.json5"
+        "../../../../config/extensions/duplicateChars.json5"
     )
 )
 import Client from "../Client.js"
@@ -14,6 +14,20 @@ export default class BannedWordFilter {
 
     constructor(client: Client) {
         this.client = client
+    }
+
+    linkFilter(text: string): BannedWordObj[] {
+        let profanities: BannedWordObj[] = []
+
+        const suspects = [...text.matchAll(/\[([^\]]+)\]\(([^)]+)\)/g)]
+
+        for (const suspect of suspects) {
+            if (suspect[1] !== suspect[2]) {
+                profanities = profanities.concat([{ raw: `\`[${suspect[1]}](${suspect[2]})\``, link: true }])
+            }
+        }
+
+        return profanities
     }
 
     findBannedWord(text: string): BannedWordObj[] {
@@ -43,6 +57,8 @@ export default class BannedWordFilter {
             }
             return passes
         })
+
+        profanities = profanities.concat(this.linkFilter(text))
 
         return profanities
     }
@@ -122,10 +138,12 @@ export default class BannedWordFilter {
  * @property {string} word The word found. For example, `"lols"`.
  * @property {string} base The "base" word, unmodified, from the word list. For example, `"lol"`.
  * @property {string} raw The actual input as found inside the string. For example, `"l.ol`.
+ * @property {boolean} link Is this a link based automod?
  */
 export type BannedWordObj = {
     index?: number
     word?: string
     base?: string
     raw?: string
+    link?: boolean
 }
