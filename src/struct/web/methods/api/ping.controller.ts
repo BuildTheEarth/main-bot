@@ -1,6 +1,5 @@
 import { Controller, Get, Req, Res } from "@nestjs/common"
 import { Response, Request } from "express"
-import { ServerResponse } from "http"
 
 @Controller("/api/v1/ping")
 export default class PingController {

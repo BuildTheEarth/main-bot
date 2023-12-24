@@ -3,11 +3,9 @@ import Command from "../struct/Command.js"
 
 import CommandMessage from "../struct/CommandMessage.js"
 import Args from "../struct/Args.js"
-import emojiTree from "emoji-tree"
 import getEmoji from "../util/getEmoji.util.js"
 import { hexToNum, noop } from "@buildtheearth/bot-utils"
 import ReactionRole from "../entities/ReactionRole.entity.js"
-import { cli } from "winston/lib/winston/config/index.js"
 
 export default new Command({
     name: "reactionroles",

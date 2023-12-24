@@ -1,6 +1,5 @@
 import typeorm from "typeorm"
 import SnowflakeColumn from "./decorators/SnowflakeColumn.decorator.js"
-import unicode from "./transformers/unicode.transformer.js"
 
 @typeorm.Entity({ name: "command_action" })
 export default class CommandAction extends typeorm.BaseEntity {

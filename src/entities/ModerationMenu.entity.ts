@@ -683,7 +683,7 @@ function getMostSevereList(
             if (!punishment.base) return []
             const word = client.filterWordsCached.banned.get(punishment.base)
             if (!word) return []
-    
+
             punishmentWords.push({
                 word: punishment.base,
                 punishment_type: word.punishment_type,
@@ -692,7 +692,6 @@ function getMostSevereList(
                 exception: false
             })
         }
-
     }
     return punishmentWords
         .filter(word => word !== undefined)

@@ -29,7 +29,6 @@ const roleConfig = loadSyncJSON5(
 import { noop } from "@buildtheearth/bot-utils"
 import Discord from "discord.js"
 import CommandMessage from "../struct/CommandMessage.js"
-import { config } from "process"
 
 export default new Command({
     name: "position",
@@ -139,7 +138,7 @@ export default new Command({
             if (!member) return message.sendErrorMessage("notInGuild")
             await message.continue()
             const action = remove ? "remove" : "add"
-            await member.roles[action](roleArgs).catch(err => {
+            await member.roles[action](roleArgs).catch(_ => {
                 return message.sendErrorMessage("roleFailed")
             })
 

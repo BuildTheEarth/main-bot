@@ -2,7 +2,6 @@ import { Controller, Get, Post, Param, Req, Res, Body } from "@nestjs/common"
 import SuspiciousUser from "../../../../entities/SuspiciousUser.entity.js"
 import { noop } from "@buildtheearth/bot-utils"
 import { Response, Request } from "express"
-import { ServerResponse } from "http"
 
 @Controller("/api/v1/report")
 export default class ReportsController {

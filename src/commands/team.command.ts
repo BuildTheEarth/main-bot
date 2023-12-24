@@ -6,7 +6,6 @@ import typeorm from "typeorm"
 import Snippet from "../entities/Snippet.entity.js"
 import CommandMessage from "../struct/CommandMessage.js"
 import Discord from "discord.js"
-import interactionCreateEvent from "../events/interactionCreate.event.js"
 import { noop } from "@buildtheearth/bot-utils"
 import CommandAction from "../entities/CommandAction.entity.js"
 

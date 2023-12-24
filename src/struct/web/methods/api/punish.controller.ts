@@ -3,7 +3,6 @@ import typeorm from "typeorm"
 import { Controller, Get, Param, Req, Res } from "@nestjs/common"
 import ActionLog, { Action } from "../../../../entities/ActionLog.entity.js"
 import { Response, Request } from "express"
-import { ServerResponse } from "http"
 
 @Controller("/api/v1/punish")
 export default class PunishController {
@@ -40,11 +39,15 @@ export default class PunishController {
                 .main()
                 .members.fetch({ user: userList })
         } catch {
-            return res.status(404).send({ error: "NOT_FOUND", message: "Not found: user" })
+            return res
+                .status(404)
+                .send({ error: "NOT_FOUND", message: "Not found: user" })
         }
 
         if (!user) {
-            return res.status(404).send({ error: "NOT_FOUND", message: "Not found: user" })
+            return res
+                .status(404)
+                .send({ error: "NOT_FOUND", message: "Not found: user" })
         }
 
         let criteria: typeorm.FindManyOptions<ActionLog> = { where: { member: user.id } }

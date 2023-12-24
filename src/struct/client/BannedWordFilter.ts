@@ -5,7 +5,7 @@ import { loadSyncJSON5, isSingular, pluralize } from "@buildtheearth/bot-utils"
 const duplicateChars = loadSyncJSON5(
     path.join(
         path.dirname(url.fileURLToPath(import.meta.url)) +
-        "../../../../config/extensions/duplicateChars.json5"
+            "../../../../config/extensions/duplicateChars.json5"
     )
 )
 import Client from "../Client.js"
@@ -23,7 +23,9 @@ export default class BannedWordFilter {
 
         for (const suspect of suspects) {
             if (suspect[1] !== suspect[2]) {
-                profanities = profanities.concat([{ raw: `\`[${suspect[1]}](${suspect[2]})\``, link: true }])
+                profanities = profanities.concat([
+                    { raw: `\`[${suspect[1]}](${suspect[2]})\``, link: true }
+                ])
             }
         }
 

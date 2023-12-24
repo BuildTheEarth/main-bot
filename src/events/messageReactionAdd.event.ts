@@ -1,10 +1,8 @@
-import Discord, { MembershipScreeningFieldType } from "discord.js"
+import Discord from "discord.js"
 import Client from "../struct/Client.js"
 import GuildMember from "../struct/discord/GuildMember.js"
 import { noop, trimSides } from "@buildtheearth/bot-utils"
 import ReactionRole from "../entities/ReactionRole.entity.js"
-import { getTsBuildInfoEmitOutputFilePath } from "typescript"
-
 export default async function messageReactionAdd(
     this: Client,
     reaction: Discord.MessageReaction,

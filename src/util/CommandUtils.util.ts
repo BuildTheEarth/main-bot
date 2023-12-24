@@ -1,6 +1,6 @@
 import DBuilders = require("@discordjs/builders")
 import Command, { CommandArgs, SubCommandProperties } from "../struct/Command.js"
-import _, { truncate } from "lodash"
+import _ from "lodash"
 import Discord from "discord.js"
 import Client from "../struct/Client.js"
 

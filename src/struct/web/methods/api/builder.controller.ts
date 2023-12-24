@@ -2,7 +2,6 @@ import { Controller, Get, Post, Param, Req, Res, Body } from "@nestjs/common"
 import GuildMember from "../../../discord/GuildMember.js"
 import Discord from "discord.js"
 import { Response, Request } from "express"
-import { ServerResponse } from "http"
 
 @Controller("/api/v1/builder")
 export default class BuilderController {
@@ -36,11 +35,15 @@ export default class BuilderController {
                 .main()
                 .members.fetch({ user: userList })
         } catch {
-            return res.status(404).send({ error: "NOT_FOUND", message: "Not found: user" })
+            return res
+                .status(404)
+                .send({ error: "NOT_FOUND", message: "Not found: user" })
         }
 
         if (!user) {
-            return res.status(404).send({ error: "NOT_FOUND", message: "Not found: user" })
+            return res
+                .status(404)
+                .send({ error: "NOT_FOUND", message: "Not found: user" })
         }
 
         const userInfo = {
@@ -101,11 +104,15 @@ export default class BuilderController {
                 .main()
                 .members.fetch({ user: userList })
         } catch {
-            return res.status(404).send({ error: "NOT_FOUND", message: "Not found: user" })
+            return res
+                .status(404)
+                .send({ error: "NOT_FOUND", message: "Not found: user" })
         }
 
         if (!user) {
-            return res.status(404).send({ error: "NOT_FOUND", message: "Not found: user" })
+            return res
+                .status(404)
+                .send({ error: "NOT_FOUND", message: "Not found: user" })
         }
 
         try {

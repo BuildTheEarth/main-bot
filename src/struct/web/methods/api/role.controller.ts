@@ -1,8 +1,6 @@
 import { Controller, Get, Post, Param, Req, Res, Body } from "@nestjs/common"
-import GuildMember from "../../../discord/GuildMember.js"
 import Discord from "discord.js"
 import { Response, Request } from "express"
-import { ServerResponse } from "http"
 
 @Controller("/api/v1/role")
 export default class RoleController {
@@ -36,11 +34,15 @@ export default class RoleController {
                 .main()
                 .members.fetch({ user: userList })
         } catch {
-            return res.status(404).send({ error: "NOT_FOUND", message: "Not found: user" })
+            return res
+                .status(404)
+                .send({ error: "NOT_FOUND", message: "Not found: user" })
         }
 
         if (!user) {
-            return res.status(404).send({ error: "NOT_FOUND", message: "Not found: user" })
+            return res
+                .status(404)
+                .send({ error: "NOT_FOUND", message: "Not found: user" })
         }
 
         await user.fetch()

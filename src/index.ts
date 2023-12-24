@@ -2,7 +2,6 @@ import "reflect-metadata"
 import Discord from "discord.js"
 import Client from "./struct/Client.js"
 import { loadRoles } from "./util/roles.util.js"
-import WebEvents from "./struct/client/WebEvents.js"
 
 declare global {
     // eslint-disable-next-line no-var
