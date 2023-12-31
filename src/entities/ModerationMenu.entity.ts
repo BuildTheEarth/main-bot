@@ -674,9 +674,9 @@ function getMostSevereList(
         if (punishment.link) {
             punishmentWords.push({
                 word: punishment.raw,
-                punishment_type: "DELETE",
-                duration: null,
-                reason: "Masked links",
+                punishment_type: "BAN",
+                duration: 0,
+                reason: client.placeholder.replacePlaceholders("{{phishing}}"),
                 exception: false
             })
         } else {
