@@ -12,24 +12,23 @@ _The main discord bot for the BuildTheEarth Discord server._
 [![chat](https://img.shields.io/discord/706317564904472627.svg?color=768AD4&label=discord&logo=https%3A%2F%2Fdiscordapp.com%2Fassets%2F8c9701b98ad4372b58f13fd9f65f966e.svg)](https://discord.gg/buildtheearth)
 [![donate](https://img.shields.io/endpoint.svg?url=https%3A%2F%2Fshieldsio-patreon.vercel.app%2Fapi%3Fusername%3Dbuildtheearth%26type%3Dpatrons&style=flat)](https://patreon.com/buildtheearth)
 [![TypeScript](https://img.shields.io/badge/%3C%2F%3E-TypeScript-%230074c1.svg)](http://www.typescriptlang.org/)
-[![lines](https://img.shields.io/tokei/lines/github/buildtheearth/main-bot)](https://tenor.com/view/programming-crazy-hard-typing-mad-gif-7866344)
+[![lines](https://tokei.rs/b1/github/buildtheearth/main-bot)](https://tenor.com/view/programming-crazy-hard-typing-mad-gif-7866344)
 [![license: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![nps friendly](https://img.shields.io/badge/nps-friendly-blue.svg?style=flat)](https://www.npmjs.com/package/nps) 
-
+[![nps friendly](https://img.shields.io/badge/nps-friendly-blue.svg?style=flat)](https://www.npmjs.com/package/nps)
 
 </div>
 <!-- markdownlint-restore -->
 
-- [BuildTheEarth](#BuildTheEarth)
-- [Bot](#Bot)
-- [Rewrite](#Rewrite)
-- [Development](#Development)
-  - [Contributors](#Contributors)
-  - [Contributing](#Contributing)
-    - [Setup](#Setup)
-    - [Standards](#Standards)
-- [Changelog](#Changelog)
-- [License](#License)
+-   [BuildTheEarth](#BuildTheEarth)
+-   [Bot](#Bot)
+-   [Rewrite](#Rewrite)
+-   [Development](#Development)
+    -   [Contributors](#Contributors)
+    -   [Contributing](#Contributing)
+        -   [Setup](#Setup)
+        -   [Standards](#Standards)
+-   [Changelog](#Changelog)
+-   [License](#License)
 
 ## BuildTheEarth
 
@@ -48,12 +47,12 @@ This project originated as a complete rewrite of our servers old bot, an extensi
 
 ## Development
 
-- The bot is written in **[TypeScript][]**, a statically-typed superset of JavaScript;
-- It uses **[discord.js][]** for interacting with Discord's API;
-- **[TypeORM][]** for object–relational mapping;
-- And it follows object-oriented and modularization principles.
-- For version control, it follows a superset of the **[Conventional Commits][]** specification.
-- **[Docker][]** is used for containerization and deployment.
+-   The bot is written in **[TypeScript][]**, a statically-typed superset of JavaScript;
+-   It uses **[discord.js][]** for interacting with Discord's API;
+-   **[TypeORM][]** for object–relational mapping;
+-   And it follows object-oriented and modularization principles.
+-   For version control, it follows a superset of the **[Conventional Commits][]** specification.
+-   **[Docker][]** is used for containerization and deployment.
 
 ### Contributors
 
@@ -122,7 +121,7 @@ This bot is licensed under the [MIT License](license).
 [discord.js v13]: https://github.com/discordjs/discord.js/releases?q=13
 [typeorm]: https://typeorm.io/
 [docker]: https://www.docker.com/
-[Conventional Commits]: https://www.conventionalcommits.org/en/v1.0.0/
+[conventional commits]: https://www.conventionalcommits.org/en/v1.0.0/
 [pm2]: https://pm2.io/
 [docker]: https://docker.com/
 [prettier]: https://prettier.io/
