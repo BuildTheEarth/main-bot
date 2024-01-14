@@ -146,11 +146,10 @@ export default new Command({
                 title: "Moderation Info",
                 thumbnail: { url: guild.iconURL() },
                 fields: [
-                    { name: "Total Cases", value: `${banCount+muteCount+kickCount+warnCount-unmuteCount-unbanCount}`, inline: true },
+                    { name: "Total", value: `${banCount+muteCount+kickCount+warnCount-unmuteCount-unbanCount}`, inline: true },
                     { name: "Bans", value: `${banCount-unbanCount}`, inline: true },
                     { name: "Kicks", value: `${kickCount}`, inline: true },
                     { name: "Warns", value: `${warnCount}`, inline: true },
-                    { name: "Mutes", value: `${muteCount-unmuteCount}`, inline: true },
                     { name: "Mutes", value: `${muteCount-unmuteCount}`, inline: true },
                     { name: "Member With Most Cases", value: `<@${val[0].member}>`, inline: true },
                 ],
