@@ -28,18 +28,6 @@ export default async function ready(this: Client): Promise<void> {
     new Cron("0 0 * * *", () => BlunderTracker.inc(this))
     TeamPointsUser.registerDailyReset()
 
-    // cache reaction role messages
-    for (const channelID of Object.keys(this.config.reactionRoles)) {
-        const channelTemp = await this.channels.fetch(channelID).catch(() => null)
-        let channel: Discord.TextChannel | null = null
-        if (channelTemp instanceof Discord.TextChannel) channel = channelTemp
-        if (channel) {
-            for (const messageID of Object.keys(this.config.reactionRoles[channelID])) {
-                await channel.messages.fetch(messageID).catch(() => null)
-            }
-        }
-    }
-
     if (this.customGuilds.main().features.includes("VANITY_URL")) {
         const current = await this.customGuilds.main().fetchVanityData()
 

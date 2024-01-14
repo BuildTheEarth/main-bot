@@ -12,6 +12,8 @@ import {
     formatTimestamp,
     loadSyncJSON5
 } from "@buildtheearth/bot-utils"
+import ActionLog from "../entities/ActionLog.entity.js"
+import { warn } from "console"
 
 const packageJson = loadSyncJSON5("package.json")
 export default new Command({
@@ -27,10 +29,14 @@ export default new Command({
         {
             name: "server",
             description: "Get info about the server!"
+        },
+        {
+            name: "moderation",
+            description: "Get info about moderation!"
         }
     ],
     async run(this: Command, client: Client, message: CommandMessage, args: Args) {
-        const subcommand = args.consumeSubcommandIf(["bot", "server"])
+        const subcommand = args.consumeSubcommandIf(["bot", "server", "moderation"])
 
         if (subcommand === "bot" || !subcommand) {
             const response = (await (
@@ -123,6 +129,32 @@ export default new Command({
                 ],
                 color: hexToNum(client.config.colors.info),
                 footer: { text: `${guild.id}` }
+            }
+            await message.send({ embeds: [embed] })
+        }
+        if (subcommand === "moderation") {
+            const guild = message.guild
+
+            const banCount = await ActionLog.count({ where: {action: "ban"} })
+            const muteCount = await ActionLog.count({ where: {action: "mute"} })
+            const kickCount = await ActionLog.count({ where: {action: "kick"} })
+            const warnCount = await ActionLog.count({ where: {action: "warn"} })
+            const unmuteCount = await ActionLog.count({ where: {action: "unmute"} })
+            const unbanCount = await ActionLog.count({ where: {action: "unban"} })
+            const val = await ActionLog.query("SELECT member FROM (SELECT member, rank() over (order by cnt desc) rnk FROM (SELECT member, count(*) cnt FROM action_logs GROUP BY member)) WHERE rnk = 1")
+            const embed = <Discord.APIEmbed>{
+                title: "Moderation Info",
+                thumbnail: { url: guild.iconURL() },
+                fields: [
+                    { name: "Total Cases", value: `${banCount+muteCount+kickCount+warnCount-unmuteCount-unbanCount}`, inline: true },
+                    { name: "Bans", value: `${banCount-unbanCount}`, inline: true },
+                    { name: "Kicks", value: `${kickCount}`, inline: true },
+                    { name: "Warns", value: `${warnCount}`, inline: true },
+                    { name: "Mutes", value: `${muteCount-unmuteCount}`, inline: true },
+                    { name: "Mutes", value: `${muteCount-unmuteCount}`, inline: true },
+                    { name: "Member With Most Cases", value: `<@${val[0].member}>`, inline: true },
+                ],
+                color: hexToNum(client.config.colors.info),
             }
             await message.send({ embeds: [embed] })
         }
