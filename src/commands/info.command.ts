@@ -141,7 +141,7 @@ export default new Command({
             const warnCount = await ActionLog.count({ where: {action: "warn"} })
             const unmuteCount = await ActionLog.count({ where: {action: "unmute"} })
             const unbanCount = await ActionLog.count({ where: {action: "unban"} })
-            const val = await ActionLog.query("SELECT member, occurs FROM (SELECT member,count(*) as occurs FROM action_logs GROUP BY `member` LIMIT 1) T1")
+            const val = await ActionLog.query("SELECT member, occurs FROM (SELECT member,count(*) as occurs FROM action_logs GROUP BY member ORDER BY occurs DESC LIMIT 1) T1")
             const embed = <Discord.APIEmbed>{
                 title: "Moderation Info",
                 thumbnail: { url: guild.iconURL() },
