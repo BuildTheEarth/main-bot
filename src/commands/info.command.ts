@@ -124,22 +124,6 @@ export default new Command({
                 color: hexToNum(client.config.colors.info),
                 footer: { text: `${guild.id}` }
             }
-
-            if (!embed.fields) return // again never gonna happen (make ts happy)
-
-            if (
-                GuildMember.hasRole(
-                    message.member,
-                    [globalThis.client.roles.STAFF],
-                    client
-                )
-            ) {
-                const banned = await guild.bans.fetch()
-                embed.fields.push({
-                    name: "Moderation Cases",
-                    value: `Total Cases: (WIP Maybe) \nCurrently Banned: ${banned.size}`
-                })
-            }
             await message.send({ embeds: [embed] })
         }
     }
