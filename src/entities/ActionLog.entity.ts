@@ -98,6 +98,14 @@ export default class ActionLog extends typeorm.BaseEntity {
         return formatted
     }
 
+    formatShort(): string {
+        let formatted = "..."
+        if (this.length) formatted = `(**${ms(this.length)}**) ` + formatted
+        formatted = `\` ${this.id}. \` ${formatted}`
+        if (this.old) formatted = `\\📜 ${formatted}`
+        return formatted
+    }
+
     async displayEmbed(client: Client): Promise<Discord.APIEmbed> {
         const length =
             this.length !== null && this.length !== undefined

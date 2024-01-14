@@ -108,8 +108,13 @@ export default new Command({
 
             for (const [action, logs] of Object.entries(categorizedLogs)) {
                 const actionTitle = action[0].toUpperCase() + action.slice(1) + "s"
-                const name = `${actionTitle} (${logs.length})`
-                const value = logs.map(log => log.format()).join("\n") || "\u200B"
+                let name = `${actionTitle} (${logs.length})`
+                let value = logs.map(log => log.format()).join("\n") || "\u200B"
+                if (value.length > 1024) {
+                    name += " ⚠"
+                    value = logs.map(log => log.formatShort()).join("\n") || "\u200B"
+                    embed.footer = {text: "⚠ indicates that the field has been truncated due to being over the limit"}
+                }
                 embed.fields?.push({ name, value, inline: true })
             }
         }
