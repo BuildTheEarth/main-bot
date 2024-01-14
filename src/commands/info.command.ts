@@ -71,11 +71,9 @@ export default new Command({
 
         if (subcommand === "server") {
             const guild = message.guild
-            const website = client.config.appeal.split("@")
 
             const embed = <Discord.APIEmbed>{
                 title: "Server Info",
-                url: `https://${website[website.length - 1]}`,
                 thumbnail: { url: guild.iconURL() },
                 fields: [
                     { name: "Members", value: `${guild.memberCount}`, inline: true },
