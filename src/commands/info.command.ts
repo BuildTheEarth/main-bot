@@ -137,19 +137,7 @@ export default new Command({
         if (subcommand === "moderation") {
             const guild = message.guild
 
-            const embedMessage = await message
-                .send({
-                    embeds: [
-                        {
-                            title: "Moderation Info",
-                            //@ts-ignore
-                            thumbnail: { url: guild.iconURL() },
-                            description: "Fetching Data",
-                            color: hexToNum(client.config.colors.info)
-                        }
-                    ]
-                })
-                .catch(noop)
+            await message.continue()
 
             const banCount = await ActionLog.count({ where: { action: "ban" } })
             const muteCount = await ActionLog.count({ where: { action: "mute" } })
@@ -165,8 +153,7 @@ export default new Command({
                 "SELECT executor, occurs FROM (SELECT executor,count(*) as occurs FROM action_logs GROUP BY executor ORDER BY occurs DESC LIMIT 1) T1"
             )
 
-            if (!embedMessage) return //idk how this would happen but ts wants it
-            await embedMessage.edit({
+            await message.edit({
                 embeds: [
                     {
                         title: "Moderation Info",
