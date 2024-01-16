@@ -172,7 +172,7 @@ export default new Command({
                         title: "Moderation Info",
                         //@ts-ignore
                         thumbnail: { url: guild.iconURL() },
-                        description: "Fetching Data",
+                        description: "",
                         fields: [
                             {
                                 name: "Total",
