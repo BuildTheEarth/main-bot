@@ -10,7 +10,8 @@ import {
     formatPunishmentTime,
     hexToNum,
     formatTimestamp,
-    loadSyncJSON5
+    loadSyncJSON5,
+    noop
 } from "@buildtheearth/bot-utils"
 import ActionLog from "../entities/ActionLog.entity.js"
 import { warn } from "console"
@@ -132,30 +133,83 @@ export default new Command({
             }
             await message.send({ embeds: [embed] })
         }
+
         if (subcommand === "moderation") {
             const guild = message.guild
 
-            const banCount = await ActionLog.count({ where: {action: "ban"} })
-            const muteCount = await ActionLog.count({ where: {action: "mute"} })
-            const kickCount = await ActionLog.count({ where: {action: "kick"} })
-            const warnCount = await ActionLog.count({ where: {action: "warn"} })
-            const unmuteCount = await ActionLog.count({ where: {action: "unmute"} })
-            const unbanCount = await ActionLog.count({ where: {action: "unban"} })
-            const val = await ActionLog.query("SELECT member, occurs FROM (SELECT member,count(*) as occurs FROM action_logs GROUP BY member ORDER BY occurs DESC LIMIT 1) T1")
-            const embed = <Discord.APIEmbed>{
-                title: "Moderation Info",
-                thumbnail: { url: guild.iconURL() },
-                fields: [
-                    { name: "Total", value: `${banCount+muteCount+kickCount+warnCount-unmuteCount-unbanCount}`, inline: true },
-                    { name: "Bans", value: `${banCount-unbanCount}`, inline: true },
-                    { name: "Kicks", value: `${kickCount}`, inline: true },
-                    { name: "Warns", value: `${warnCount}`, inline: true },
-                    { name: "Mutes", value: `${muteCount-unmuteCount}`, inline: true },
-                    { name: "Member With Most Cases", value: `<@${val[0].member}>`, inline: true },
-                ],
-                color: hexToNum(client.config.colors.info),
-            }
-            await message.send({ embeds: [embed] })
+            const embedMessage = await message
+                .send({
+                    embeds: [
+                        {
+                            title: "Moderation Info",
+                            //@ts-ignore
+                            thumbnail: { url: guild.iconURL() },
+                            description: "Fetching Data",
+                            color: hexToNum(client.config.colors.info)
+                        }
+                    ]
+                })
+                .catch(noop)
+
+            const banCount = await ActionLog.count({ where: { action: "ban" } })
+            const muteCount = await ActionLog.count({ where: { action: "mute" } })
+            const kickCount = await ActionLog.count({ where: { action: "kick" } })
+            const warnCount = await ActionLog.count({ where: { action: "warn" } })
+            const unmuteCount = await ActionLog.count({ where: { action: "unmute" } })
+            const unbanCount = await ActionLog.count({ where: { action: "unban" } })
+
+            const mostModded = await ActionLog.query(
+                "SELECT member, occurs FROM (SELECT member,count(*) as occurs FROM action_logs GROUP BY member ORDER BY occurs DESC LIMIT 1) T1"
+            )
+            const mostModerator = await ActionLog.query(
+                "SELECT executor, occurs FROM (SELECT executor,count(*) as occurs FROM action_logs GROUP BY executor ORDER BY occurs DESC LIMIT 1) T1"
+            )
+
+            if (!embedMessage) return //idk how this would happen but ts wants it
+            await embedMessage.edit({
+                embeds: [
+                    {
+                        title: "Moderation Info",
+                        //@ts-ignore
+                        thumbnail: { url: guild.iconURL() },
+                        description: "Fetching Data",
+                        fields: [
+                            {
+                                name: "Total",
+                                value: `${
+                                    banCount +
+                                    muteCount +
+                                    kickCount +
+                                    warnCount -
+                                    unmuteCount -
+                                    unbanCount
+                                }`
+                            },
+                            {
+                                name: "Bans",
+                                value: `${banCount - unbanCount}`,
+                                inline: true
+                            },
+                            { name: "Kicks", value: `${kickCount}`, inline: true },
+                            { name: "Warns", value: `${warnCount}`, inline: true },
+                            {
+                                name: "Mutes",
+                                value: `${muteCount - unmuteCount}`,
+                                inline: true
+                            },
+                            {
+                                name: "Member With Most Cases",
+                                value: `<@${mostModded[0].member}>`
+                            },
+                            {
+                                name: "Moderator With Most Cases",
+                                value: `<@${mostModerator[0].executor}>`
+                            }
+                        ],
+                        color: hexToNum(client.config.colors.info)
+                    }
+                ]
+            })
         }
     }
 })
