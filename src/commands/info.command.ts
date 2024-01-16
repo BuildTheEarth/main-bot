@@ -183,7 +183,8 @@ export default new Command({
                                     warnCount -
                                     unmuteCount -
                                     unbanCount
-                                }`
+                                }`,
+                                inline: true
                             },
                             {
                                 name: "Bans",
