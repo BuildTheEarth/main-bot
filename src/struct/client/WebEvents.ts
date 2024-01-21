@@ -14,6 +14,10 @@ export default class WebEvents {
         this.objs = new Map()
     }
 
+    public static escape(message: string): string {
+        return message.toString().replaceAll("\n", "\\n").replaceAll('"', '\"')
+    }
+
     public async load(): Promise<void> {
         const dir = pathModule.join(
             pathModule.dirname(url.fileURLToPath(import.meta.url)) +
@@ -37,7 +41,7 @@ export default class WebEvents {
         for (const key of Object.keys(args)) {
             toRet = toRet.replace(
                 "${" + key + "}",
-                args[key].toString().replaceAll("\n", "\\n")
+                WebEvents.escape(args[key])
             )
         }
 
