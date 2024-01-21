@@ -15,7 +15,7 @@ export default class WebEvents {
     }
 
     public static escape(message: string): string {
-        return message.toString().replaceAll("\n", "\\n").replaceAll('"', '\"')
+        return message.toString().replaceAll("\n", "\\n").replaceAll('"', '\\"')
     }
 
     public async load(): Promise<void> {
