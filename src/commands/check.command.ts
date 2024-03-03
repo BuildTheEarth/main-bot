@@ -113,7 +113,9 @@ export default new Command({
                 if (value.length > 1024) {
                     name += " ⚠"
                     value = logs.map(log => log.formatShort()).join("\n") || "\u200B"
-                    embed.footer = {text: "⚠ indicates that the field has been truncated due to being over the limit"}
+                    embed.footer = {
+                        text: "⚠ indicates that the field has been truncated due to being over the limit"
+                    }
                 }
                 embed.fields?.push({ name, value, inline: true })
             }

@@ -5,6 +5,7 @@ import PunishController from "../methods/api/punish.controller.js"
 import ReportsController from "../methods/api/report.controller.js"
 import RoleController from "../methods/api/role.controller.js"
 import WebsiteMessage from "../methods/api/websiteMessage.controller.js"
+import MetricsController from "../methods/api/metrics.controller.js"
 
 @Module({
     imports: [],
@@ -14,7 +15,8 @@ import WebsiteMessage from "../methods/api/websiteMessage.controller.js"
         PunishController,
         ReportsController,
         RoleController,
-        WebsiteMessage
+        WebsiteMessage,
+        MetricsController
     ],
     providers: []
 })

@@ -33,6 +33,7 @@
         "node-gyp": "^9.0.0",
         "nps-utils": "1.7.0",
         "patch-package": "^6.4.7",
+        "prom-client": "^15.1.0",
         "reflect-metadata": "0.1.13",
         "run-my-sql-file": "^1.0.0",
         "sentiment": "^5.0.2",
