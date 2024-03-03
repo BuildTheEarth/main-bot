@@ -21,12 +21,13 @@ export default class MetricsController {
     // Function to update members count gauge
     private async updateMembersCount(client: Client) {
         try {
-            const guild = await client.guilds.fetch("730642056564834346")
-            const memberCount = guild.memberCount
-            this.discordMembersGauge.labels(guild.id, guild.name).set(memberCount)
-            console.log(
-                `Updated member count for server ${guild.name} (${guild.id}): ${memberCount}`
-            )
+            for (const guild of [
+                globalThis.client.customGuilds.main(),
+                globalThis.client.customGuilds.staff()
+            ]) {
+                const memberCount = guild.memberCount
+                this.discordMembersGauge.labels(guild.id, guild.name).set(memberCount)
+            }
         } catch (error) {
             console.error("Error fetching guild information:", error)
         }
