@@ -2,6 +2,7 @@ import "reflect-metadata"
 import Discord from "discord.js"
 import Client from "./struct/Client.js"
 import { loadRoles } from "./util/roles.util.js"
+import { startUpdatingMembersCount } from "./metrics/prometheus.js"
 
 declare global {
     // eslint-disable-next-line no-var
@@ -79,6 +80,9 @@ globalThis.fileExtension = "js"
 global.fileExtension = "js"
 
 main()
+
+// Start updating members count for Prometheus metrics
+startUpdatingMembersCount(client)
 
 process.on("uncaughtException", (error: Error) => {
     client.logger.error(error.stack)

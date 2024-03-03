@@ -39,10 +39,7 @@ export default class WebEvents {
     public fill(message: string, args: Record<string, any>): any {
         let toRet = JSON.stringify(this.objs.get(message))
         for (const key of Object.keys(args)) {
-            toRet = toRet.replace(
-                "${" + key + "}",
-                WebEvents.escape(args[key])
-            )
+            toRet = toRet.replace("${" + key + "}", WebEvents.escape(args[key]))
         }
 
         return JSON.parse(toRet)
