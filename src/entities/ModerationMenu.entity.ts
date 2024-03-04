@@ -80,7 +80,10 @@ export default class ModerationMenu extends typeorm.BaseEntity {
             const channel = (await client.channels.fetch(
                 client.config.logging.modLogs
             )) as Discord.TextChannel
-            await channel.send({ embeds: [embed] })
+            await channel.send({
+                content: `<@&${globalThis.client.roles.MODERATOR_ON_DUTY[0]}>`,
+                embeds: [embed]
+            })
             return
         }
 
@@ -255,7 +258,13 @@ export default class ModerationMenu extends typeorm.BaseEntity {
             client.config.logging.modLogs
         )) as Discord.TextChannel
 
-        modMenu.message = (await channel.send({ embeds: [embed], components: row })).id
+        modMenu.message = (
+            await channel.send({
+                content: `<@&${globalThis.client.roles.MODERATOR_ON_DUTY[0]}>`,
+                embeds: [embed],
+                components: row
+            })
+        ).id
 
         modMenu.save()
 
@@ -505,6 +514,7 @@ export default class ModerationMenu extends typeorm.BaseEntity {
             .setColor(hexToRGB(client.config.colors.success))
 
         await (interaction.message as Discord.Message).edit({
+            content: `<@&${globalThis.client.roles.MODERATOR_ON_DUTY[0]}>`,
             embeds: [embed],
             components: []
         })
