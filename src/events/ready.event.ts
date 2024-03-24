@@ -36,11 +36,7 @@ export default async function ready(this: Client): Promise<void> {
         console.log(current?.code)
         if (outdated) {
             const reason = "Reached level 3 boosting"
-            await Guild.setVanityCode(
-                await this.customGuilds.main(),
-                this.config.vanity,
-                reason
-            )
+            await Guild.setVanityCode()
 
             const pink = chalk.hex("#FF73FA")
             this.logger.info(`Set vanity code to ${pink(this.config.vanity)}.`)

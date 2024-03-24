@@ -59,11 +59,7 @@ export default async function (this: Client, message: Discord.Message): Promise<
     const mainGuild = await this.customGuilds.main()
     const main = mainGuild.id === message.guild?.id
     if (main && message.type === Discord.MessageType.GuildBoostTier3) {
-        await Guild.setVanityCode(
-            message.guild,
-            this.config.vanity,
-            "Reached level 3 boosting"
-        )
+        await Guild.setVanityCode()
         this.logger.info(`Set vanity code to ${chalk.hex("#FF73FA")(this.config.vanity)}`)
         return
     }

@@ -41,7 +41,7 @@ export default class CommandMessage {
 
     public async sendError(
         embed: string | Discord.APIEmbed,
-        ephemeral: boolean = false
+        ephemeral: boolean = true
     ): Promise<CommandMessage> {
         return client.response.sendError(this, embed, ephemeral)
     }

@@ -41,8 +41,7 @@
     slowmodeTooLow: [
         "How would that even work? Time travel?",
         "Dont go breaking the space time continuum.",
-        "Time travel is not possible. Try a larger number.",
-        "At this point, you know what you are doing wrong."
+        "Time travel is not possible. Try a larger number."
     ],
     slowmodeTooHigh: [
         "That is a lot of seconds.",
@@ -231,8 +230,8 @@
          (this also applies to quoted arguments)."
     ],
     removedUser: ["Removed %1s."],
-    honoredUserExisting: ["Honored %1s for 3 months (it was going to end in %2s)."],
-    honoredUserNew: ["Honored %1s for 3 months."],
+    honoredUserExisting: ["Honored %1s for %2s months (it was going to end in %3s)."],
+    honoredUserNew: ["Honored %1s for %2s months."],
     honoredProgressMessage: [
         "%1s has been awarded for their cool build! Congratulations and great work!"
     ],
@@ -295,5 +294,8 @@
     rrAddR: ["Added required role!"],
     rrRemR: ["Removed required role!"],
     rrNoExist: ["The requested role is not in the blacklist/whitelist!"],
-    dmBased: ["Error: That channel is in DM based"]
+    dmBased: ["Error: That channel is in DM based"],
+    zeroDuration: ["You're achieving nothing, bozo"],
+    honorDNE: ["This builder has not been honored!"],
+    validUntilHonor: ["The honor is now valid until %1s"]
 }

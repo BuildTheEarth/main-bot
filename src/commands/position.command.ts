@@ -138,7 +138,7 @@ export default new Command({
             if (!member) return message.sendErrorMessage("notInGuild")
             await message.continue()
             const action = remove ? "remove" : "add"
-            await member.roles[action](roleArgs).catch(_ => {
+            await member.roles[action](roleArgs).catch( () => {
                 return message.sendErrorMessage("roleFailed")
             })
 

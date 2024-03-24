@@ -1,8 +1,5 @@
-import { Controller, Get, Post, Param, Req, Res, Body } from "@nestjs/common"
-import GuildMember from "../../../discord/GuildMember.js"
-import Discord from "discord.js"
+import { Controller, Post, Param, Req, Res, Body } from "@nestjs/common"
 import { Response, Request } from "express"
-import { ServerResponse } from "http"
 import _ from "lodash"
 import { noop } from "@buildtheearth/bot-utils"
 

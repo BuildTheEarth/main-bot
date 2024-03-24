@@ -23,9 +23,6 @@ export default class Guild {
     }
 
     static async setVanityCode(
-        guild: Discord.Guild,
-        code: string,
-        reason?: string
     ): Promise<void> {
         try {
             const chan = await client.customGuilds

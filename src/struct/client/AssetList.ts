@@ -5,13 +5,6 @@ import url from "url"
 import fs from "fs"
 import { loadSyncJSON5 } from "@buildtheearth/bot-utils"
 
-function getFiles(source: fs.PathLike): string[] {
-    return fs
-        .readdirSync(source, { withFileTypes: true })
-        .filter(dirent => dirent.isDirectory())
-        .map(dirent => dirent.name)
-}
-
 // eslint-disable-next-line @typescript-eslint/ban-types
 export default class AssetList {
     client: Client
