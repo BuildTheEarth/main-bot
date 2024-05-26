@@ -1,6 +1,5 @@
 import Client from "../struct/Client.js"
 import Command from "../struct/Command.js"
-import GuildMember from "../struct/discord/GuildMember.js"
 import Args from "../struct/Args.js"
 import fetch from "node-fetch"
 import CommandMessage from "../struct/CommandMessage.js"
@@ -10,11 +9,9 @@ import {
     formatPunishmentTime,
     hexToNum,
     formatTimestamp,
-    loadSyncJSON5,
-    noop
+    loadSyncJSON5
 } from "@buildtheearth/bot-utils"
 import ActionLog from "../entities/ActionLog.entity.js"
-import { warn } from "console"
 
 const packageJson = loadSyncJSON5("package.json")
 export default new Command({

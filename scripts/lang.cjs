@@ -5,6 +5,7 @@ async function e () {
     const fs = require("fs")
     
     const token = fs.readFileSync("config/token.txt", {encoding: "utf-8"})
+    const chanID = "1226554340215488683"
     
     const client = new Discord.Client({intents: [
         Discord.IntentsBitField.Flags.Guilds,
@@ -24,7 +25,7 @@ async function e () {
 
     await client.login(token)
     
-    const channel = await client.channels.fetch("715369975035985970")
+    const channel = await client.channels.fetch(chanID)
     
     if (!channel || !channel.isTextBased()) process.exit(0)
     const data =     new Discord.ActionRowBuilder({
@@ -42,7 +43,10 @@ async function e () {
             ])
         ]
     })
+
+    
     await channel.send({components:[
+        //@ts-ignore
         data
     ]})
 }

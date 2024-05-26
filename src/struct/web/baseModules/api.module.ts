@@ -6,6 +6,7 @@ import ReportsController from "../methods/api/report.controller.js"
 import RoleController from "../methods/api/role.controller.js"
 import WebsiteMessage from "../methods/api/websiteMessage.controller.js"
 import MetricsController from "../methods/api/metrics.controller.js"
+import LookupController from "../methods/api/lookup.controller.js"
 
 @Module({
     imports: [],
@@ -16,7 +17,8 @@ import MetricsController from "../methods/api/metrics.controller.js"
         ReportsController,
         RoleController,
         WebsiteMessage,
-        MetricsController
+        MetricsController,
+        LookupController
     ],
     providers: []
 })

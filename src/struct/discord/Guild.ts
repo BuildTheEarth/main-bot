@@ -22,8 +22,7 @@ export default class Guild {
         )
     }
 
-    static async setVanityCode(
-    ): Promise<void> {
+    static async setVanityCode(): Promise<void> {
         try {
             const chan = await client.customGuilds
                 .staff()

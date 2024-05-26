@@ -1,8 +1,16 @@
-import { loadSyncJSON5 } from "@buildtheearth/bot-utils"
+import { loadSyncJSON5, noop } from "@buildtheearth/bot-utils"
 import url from "url"
 import path from "path"
 import fs from "fs"
 import Client from "../struct/Client.js"
+import { Role } from "discord.js"
+
+interface RoleData {
+    tag: string
+    id: string
+    roles?: {name: string, id: string}[]
+    joinDate?: number
+}
 
 export function loadRoles(client: Client): Record<string, string[]> {
     const roles: Record<string, string[]> = {}
@@ -44,4 +52,57 @@ export function loadRoles(client: Client): Record<string, string[]> {
                 roles[key] || ["000000000000000000"]
         }
     ) as Record<string, string[]>
+}
+
+export async function fetchPeopleByRoles(
+    client: Client,
+    roles: string[],
+    extended: boolean
+): Promise<Map<string, RoleData[]>> {
+    const roleData = new Map<string, RoleData[]>()
+    for (const role of roles) {
+        const roleString = role.toString()
+
+        let roleObj: Role | null
+
+        roleObj = await client.customGuilds.main().roles.fetch(roleString).catch(noop)
+
+        if (!roleObj)
+            roleObj = await client.customGuilds
+                .staff()
+                .roles.fetch(roleString)
+                .catch(noop)
+
+        if (!roleObj) roleData.set(role, [])
+        else {
+            await roleObj.guild.members.fetch()
+            let members: RoleData[]
+
+            if (extended) {
+                members = roleObj.members.map(e => {
+                    return {
+                        tag: e.user.tag,
+                        id: e.id,
+                        joinDate: e.joinedTimestamp || 0,
+                        roles: e.roles.cache
+                            .sort((a, b) => b.position - a.position)
+                            .map(role => {return {name: role.name, id: role.id}})
+                            .filter(role => role.name !== "@everyone")
+                    }
+                })
+            } else {
+                members = roleObj.members.map(e => {
+                    return {
+                        tag: e.user.tag,
+                        id: e.id
+                    }
+                })
+            }
+
+            roleData.set(role, members)
+        }
+    }
+
+
+    return roleData
 }
