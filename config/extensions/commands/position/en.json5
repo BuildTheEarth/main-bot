@@ -3,24 +3,58 @@
     translated_name: 'position',
     description: 'Promote/demote a member from your team.',
     translated_description: 'Promote/demote a member from your team.',
-    args: [
+    subcommands: [
         {
-            name: 'member',
-            translated_name: 'member',
-            description: 'Member to promote/demote.',
-            translated_description: 'Member to promote/demote.',
+            name: 'adjust',
+            translated_name: 'adjust',
+            description: 'Promote/demote a member from your team.',
+            translated_description: 'Promote/demote a member from your team.',
+            args: [
+                {
+                    name: 'member',
+                    translated_name: 'member',
+                    description: 'Member to promote/demote.',
+                    translated_description: 'Member to promote/demote.',
+                },
+                {
+                    name: 'position',
+                    translated_name: 'position',
+                    description: 'Position to promote/demote to.',
+                    translated_description: 'Position to promote/demote to.',
+                },
+                {
+                    name: 'promote',
+                    translated_name: 'promote',
+                    description: 'Wheter to promote or demote',
+                    translated_description: 'Wheter to promote or demote',
+                },
+            ],
         },
         {
-            name: 'position',
-            translated_name: 'position',
-            description: 'Position to promote/demote to.',
-            translated_description: 'Position to promote/demote to.',
-        },
-        {
-            name: 'promote',
-            translated_name: 'promote',
-            description: 'Wheter to promote or demote',
-            translated_description: 'Wheter to promote or demote',
+            name: 'manage',
+            translated_name: 'manage',
+            description: 'Add or remove any role from a member.',
+            translated_description: 'Add or remove any role from a member.',
+            args: [
+                {
+                    name: 'member',
+                    translated_name: 'member',
+                    description: 'Member to give the role.',
+                    translated_description: 'Member to give the role.',
+                },
+                {
+                    name: 'role',
+                    translated_name: 'role',
+                    description: 'Role to give to the member.',
+                    translated_description: 'Role to give to the member.',
+                },
+                {
+                    name: 'remove',
+                    translated_name: 'remove',
+                    description: 'If true the role will be removed.',
+                    translated_description: 'If true the role will be removed.',
+                },
+            ],
         },
     ],
     aliases: [],

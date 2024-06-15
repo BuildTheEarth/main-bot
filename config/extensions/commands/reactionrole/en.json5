@@ -1,0 +1,239 @@
+{
+    name: 'reactionroles',
+    translated_name: 'reactionroles',
+    description: 'Manage reaction roles',
+    translated_description: 'Manage reaction roles',
+    subcommands: [
+        {
+            name: 'list',
+            translated_name: 'list',
+            description: 'List reaction roles',
+            translated_description: 'List reaction roles',
+            args: [],
+        },
+        {
+            name: 'add',
+            translated_name: 'add',
+            description: 'Add a reaction role',
+            translated_description: 'Add a reaction role',
+            args: [
+                {
+                    name: 'emoji',
+                    translated_name: 'emoji',
+                    description: 'The emoji for the reaction role',
+                    translated_description: 'The emoji for the reaction role',
+                },
+                {
+                    name: 'message_link',
+                    translated_name: 'message_link',
+                    description: 'The message link for the reaction role',
+                    translated_description: 'The message link for the reaction role',
+                },
+                {
+                    name: 'role',
+                    translated_name: 'role',
+                    description: 'The role received in the reaction',
+                    translated_description: 'The role received in the reaction',
+                },
+                {
+                    name: 'require_type',
+                    translated_name: 'require_type',
+                    description: 'The require type',
+                    translated_description: 'The require type',
+                },
+                {
+                    name: 'blacklist_type',
+                    translated_name: 'blacklist_type',
+                    description: 'The blacklist type',
+                    translated_description: 'The blacklist type',
+                },
+            ],
+        },
+        {
+            name: 'delete',
+            translated_name: 'delete',
+            description: 'Delete a reaction role',
+            translated_description: 'Delete a reaction role',
+            args: [
+                {
+                    name: 'emoji',
+                    translated_name: 'emoji',
+                    description: 'The emoji for the reaction role',
+                    translated_description: 'The emoji for the reaction role',
+                },
+                {
+                    name: 'message_link',
+                    translated_name: 'message_link',
+                    description: 'The message link for the reaction role',
+                    translated_description: 'The message link for the reaction role',
+                },
+            ],
+        },
+        {
+            name: 'blacklist',
+            translated_name: 'blacklist',
+            description: 'Blacklist roles from a reaction roles',
+            translated_description: 'Blacklist roles from a reaction roles',
+            subcommands: [
+                {
+                    name: 'add',
+                    translated_name: 'add',
+                    description: 'Add a blacklisted role',
+                    translated_description: 'Add a blacklisted role',
+                    args: [
+                        {
+                            name: 'emoji',
+                            translated_name: 'emoji',
+                            description: 'The emoji for the reaction role',
+                            translated_description: 'The emoji for the reaction role',
+                        },
+                        {
+                            name: 'message_link',
+                            translated_name: 'message_link',
+                            description: 'The message link for the reaction role',
+                            translated_description: 'The message link for the reaction role',
+                        },
+                        {
+                            name: 'blacklist_role',
+                            translated_name: 'blacklist_role',
+                            description: 'The role to blacklist',
+                            translated_description: 'The role to blacklist',
+                        },
+                    ],
+                },
+                {
+                    name: 'delete',
+                    translated_name: 'delete',
+                    description: 'Delete a blacklisted role',
+                    translated_description: 'Delete a blacklisted role',
+                    args: [
+                        {
+                            name: 'emoji',
+                            translated_name: 'emoji',
+                            description: 'The emoji for the reaction role',
+                            translated_description: 'The emoji for the reaction role',
+                        },
+                        {
+                            name: 'message_link',
+                            translated_name: 'message_link',
+                            description: 'The message link for the reaction role',
+                            translated_description: 'The message link for the reaction role',
+                        },
+                        {
+                            name: 'blacklist_role',
+                            translated_name: 'blacklist_role',
+                            description: 'The role to remove from blacklist',
+                            translated_description: 'The role to remove from blacklist',
+                        },
+                    ],
+                },
+                {
+                    name: 'list',
+                    translated_name: 'list',
+                    description: 'Lists blacklisted roles',
+                    translated_description: 'Lists blacklisted roles',
+                    args: [
+                        {
+                            name: 'emoji',
+                            translated_name: 'emoji',
+                            description: 'The emoji for the reaction role',
+                            translated_description: 'The emoji for the reaction role',
+                        },
+                        {
+                            name: 'message_link',
+                            translated_name: 'message_link',
+                            description: 'The message link for the reaction role',
+                            translated_description: 'The message link for the reaction role',
+                        },
+                    ],
+                },
+            ],
+        },
+        {
+            name: 'require',
+            translated_name: 'require',
+            description: 'Require roles for a reaction roles',
+            translated_description: 'Require roles for a reaction roles',
+            subcommands: [
+                {
+                    name: 'add',
+                    translated_name: 'add',
+                    description: 'Add a required role',
+                    translated_description: 'Add a required role',
+                    args: [
+                        {
+                            name: 'emoji',
+                            translated_name: 'emoji',
+                            description: 'The emoji for the reaction role',
+                            translated_description: 'The emoji for the reaction role',
+                        },
+                        {
+                            name: 'message_link',
+                            translated_name: 'message_link',
+                            description: 'The message link for the reaction role',
+                            translated_description: 'The message link for the reaction role',
+                        },
+                        {
+                            name: 'require_role',
+                            translated_name: 'require_role',
+                            description: 'The role to require',
+                            translated_description: 'The role to require',
+                        },
+                    ],
+                },
+                {
+                    name: 'delete',
+                    translated_name: 'delete',
+                    description: 'Delete a required role',
+                    translated_description: 'Delete a required role',
+                    args: [
+                        {
+                            name: 'emoji',
+                            translated_name: 'emoji',
+                            description: 'The emoji for the reaction role',
+                            translated_description: 'The emoji for the reaction role',
+                        },
+                        {
+                            name: 'message_link',
+                            translated_name: 'message_link',
+                            description: 'The message link for the reaction role',
+                            translated_description: 'The message link for the reaction role',
+                        },
+                        {
+                            name: 'require_role',
+                            translated_name: 'require_role',
+                            description: 'The role to remove',
+                            translated_description: 'The role to remove',
+                        },
+                    ],
+                },
+                {
+                    name: 'list',
+                    translated_name: 'list',
+                    description: 'Lists required roles',
+                    translated_description: 'Lists required roles',
+                    args: [
+                        {
+                            name: 'emoji',
+                            translated_name: 'emoji',
+                            description: 'The emoji for the reaction role',
+                            translated_description: 'The emoji for the reaction role',
+                        },
+                        {
+                            name: 'message_link',
+                            translated_name: 'message_link',
+                            description: 'The message link for the reaction role',
+                            translated_description: 'The message link for the reaction role',
+                        },
+                    ],
+                },
+            ],
+        },
+    ],
+    aliases: [
+        'rr',
+    ],
+    translated_aliases: [
+        'rr',
+    ],
+}

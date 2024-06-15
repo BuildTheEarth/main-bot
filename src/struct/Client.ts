@@ -25,6 +25,7 @@ import { Database } from "better-sqlite3"
 import ReactionRole from "../entities/ReactionRole.entity.js"
 import WebEvents from "./client/WebEvents.js"
 import AssetList from "./client/AssetList.js"
+import ComponentHandlersList from "./client/ComponentHandlersList.js"
 
 export default class Client extends Discord.Client {
     declare guilds: Discord.GuildManager
@@ -39,6 +40,7 @@ export default class Client extends Discord.Client {
     modals = new ModalList(this)
     assets = new AssetList(this)
     commands = new CommandList(this)
+    componentHandlers = new ComponentHandlersList(this)
     aliases = new Discord.Collection()
     response = new Response(this)
     webserver = new WebserverHandler(this)

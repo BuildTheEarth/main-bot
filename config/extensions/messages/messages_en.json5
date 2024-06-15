@@ -297,5 +297,8 @@
     dmBased: ["Error: That channel is in DM based"],
     zeroDuration: ["You're achieving nothing, bozo"],
     honorDNE: ["This builder has not been honored!"],
-    validUntilHonor: ["The honor is now valid until %1s"]
+    validUntilHonor: ["The honor is now valid until %1s"],
+    howDidThisHappen: ["I have no clue how this happend, please talk to the Bot Developers immediately"],
+    provideValidHexCode: ["Please provide a valid hex color code!"],
+    invalidImage: ["Please provide a valid image of type png, jpeg, jfif, or heic"]
 }

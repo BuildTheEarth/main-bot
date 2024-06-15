@@ -1,8 +1,28 @@
 {
     name: 'info',
     translated_name: 'info',
-    description: 'Get info about the bot!',
-    translated_description: 'Get info about the bot!',
+    description: 'Get info about the server or bot!',
+    translated_description: 'Get info about the server or bot!',
+    subcommands: [
+        {
+            name: 'bot',
+            translated_name: 'bot',
+            description: 'Get info about the bot!',
+            translated_description: 'Get info about the bot!',
+        },
+        {
+            name: 'server',
+            translated_name: 'server',
+            description: 'Get info about the server!',
+            translated_description: 'Get info about the server!',
+        },
+        {
+            name: 'moderation',
+            translated_name: 'moderation',
+            description: 'Get info about moderation!',
+            translated_description: 'Get info about moderation!',
+        },
+    ],
     aliases: [],
     translated_aliases: [],
 }

@@ -17,6 +17,10 @@ export default async function ready(this: Client): Promise<void> {
     await this.commands.load()
     this.logger.info("Loaded commands.")
 
+    this.logger.debug("Loading interaction handlers...")
+    await this.componentHandlers.load()
+    this.logger.info("Loaded interaction handlers.")
+
     const activity = `with ${(await this.customGuilds.main()).memberCount} users`
     this.user.setActivity(activity, { type: Discord.ActivityType.Playing })
 

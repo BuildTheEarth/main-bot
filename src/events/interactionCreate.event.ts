@@ -17,13 +17,18 @@ import _ from "lodash"
 import SuspiciousUser from "../entities/SuspiciousUser.entity.js"
 import languageDropdown from "../dropdowns/language.dropdown.js"
 import teamMenu from "../menus/team.menu.js"
-import CommandAction from "../entities/CommandAction.entity.js"
 
 export default async function (
     this: Client,
     interaction: Discord.Interaction
 ): Promise<unknown> {
     if (interaction.user.bot) return
+
+
+    if (interaction.type != Discord.InteractionType.ApplicationCommand && interaction.type != Discord.InteractionType.ApplicationCommandAutocomplete) {
+        const runInteraction = this.componentHandlers.findFromIdAndInteractionType(interaction.customId, interaction.type)
+        if (runInteraction) await runInteraction.run(this, interaction)
+    }
 
     if (interaction.type === Discord.InteractionType.MessageComponent) {
         if (interaction.isStringSelectMenu()) {
@@ -151,17 +156,6 @@ export default async function (
             }
 
             this.logger.info(`${label} ${tag} ran '${command.name}' command.`)
-
-            const cInfo = new CommandAction()
-            cInfo.channel = interaction.channel?.id ?? "00000000000000000"
-            cInfo.command = command.name
-            const subcmd = interaction.options.getSubcommand(false)
-            if (subcmd) cInfo.subcommand = subcmd
-            const subcmdgr = interaction.options.getSubcommandGroup(false)
-            if (subcmdgr) cInfo.subcommandGroup = subcmdgr
-            cInfo.guild = interaction.guildId ?? "00000000000000000"
-            cInfo.executor = interaction.user.id
-            await cInfo.save()
             return
         }
     }

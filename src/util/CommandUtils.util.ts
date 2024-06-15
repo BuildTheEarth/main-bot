@@ -343,6 +343,12 @@ function addOption(
         if (arg.autocomplete?.enable) {
             tempBuilder.setAutocomplete(true)
         }
+        if (arg.maxLenOrValue) {
+            tempBuilder.setMaxLength(arg.maxLenOrValue)
+        }
+        if (arg.minLenOrValue) {
+            tempBuilder.setMinLength(arg.minLenOrValue)
+        }
         builder.addStringOption(tempBuilder)
     } else if (arg.optionType === "INTEGER") {
         const tempBuilder = new DBuilders.SlashCommandIntegerOption()
@@ -353,6 +359,12 @@ function addOption(
         if (arg.name_translations) tempBuilder.setNameLocalizations(arg.name_translations)
         if (arg.description_translations)
             tempBuilder.setDescriptionLocalizations(arg.description_translations)
+        if (arg.maxLenOrValue) {
+            tempBuilder.setMaxValue(arg.maxLenOrValue)
+        }
+        if (arg.minLenOrValue) {
+            tempBuilder.setMinValue(arg.minLenOrValue)
+        }
         builder.addIntegerOption(tempBuilder)
     } else if (arg.optionType === "NUMBER") {
         const tempBuilder = new DBuilders.SlashCommandNumberOption()
@@ -363,6 +375,12 @@ function addOption(
         if (arg.name_translations) tempBuilder.setNameLocalizations(arg.name_translations)
         if (arg.description_translations)
             tempBuilder.setDescriptionLocalizations(arg.description_translations)
+        if (arg.maxLenOrValue) {
+            tempBuilder.setMaxValue(arg.maxLenOrValue)
+        }
+        if (arg.minLenOrValue) {
+            tempBuilder.setMinValue(arg.minLenOrValue)
+        }
         builder.addNumberOption(tempBuilder)
     } else if (arg.optionType === "BOOLEAN") {
         const tempBuilder = new DBuilders.SlashCommandBooleanOption()

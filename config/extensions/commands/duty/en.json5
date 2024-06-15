@@ -5,8 +5,8 @@
     translated_description: 'Manage your on duty roles.',
     subcommands: [
         {
-            name: 'add',
-            translated_name: 'add',
+            name: 'toggle',
+            translated_name: 'toggle',
             description: 'Add someone to duty.',
             translated_description: 'Add someone to duty.',
             args: [

@@ -7,20 +7,84 @@
         {
             name: 'user',
             translated_name: 'user',
-            description: 'User to advance.',
-            translated_description: 'User to advance.',
+            description: 'User to honor.',
+            translated_description: 'User to honor.',
         },
+    ],
+    subcommands: [
         {
-            name: 'type',
-            translated_name: 'type',
-            description: 'The type of special builder role!',
-            translated_description: 'The type of special builder role!',
+            name: 'add',
+            translated_name: 'add',
+            description: 'Honor a new builder',
+            translated_description: 'Honor a new builder',
+            args: [
+                {
+                    name: 'duration',
+                    translated_name: 'duration',
+                    description: 'The duration of honor (in months)',
+                    translated_description: 'The duration of honor (in months)',
+                },
+                {
+                    name: 'type',
+                    translated_name: 'type',
+                    description: 'The type of special builder role!',
+                    translated_description: 'The type of special builder role!',
+                },
+            ],
         },
         {
             name: 'demote',
             translated_name: 'demote',
-            description: 'Optional arg to demote advanced builder',
-            translated_description: 'Optional arg to demote advanced builder',
+            description: 'Demote a honored builder',
+            translated_description: 'Demote a honored builder',
+            args: [],
+        },
+        {
+            name: 'extend',
+            translated_name: 'extend',
+            description: 'Extend the duration for an honored builder',
+            translated_description: 'Extend the duration for an honored builder',
+            args: [
+                {
+                    name: 'duration',
+                    translated_name: 'duration',
+                    description: 'The duration to extend by (in months)',
+                    translated_description: 'The duration to extend by (in months)',
+                },
+                {
+                    name: 'type',
+                    translated_name: 'type',
+                    description: 'The type of special builder role!',
+                    translated_description: 'The type of special builder role!',
+                },
+            ],
+        },
+        {
+            name: 'lower',
+            translated_name: 'lower',
+            description: 'Lower the duration for an honored builder',
+            translated_description: 'Lower the duration for an honored builder',
+            args: [
+                {
+                    name: 'duration',
+                    translated_name: 'duration',
+                    description: 'The duration to lower by (in months)',
+                    translated_description: 'The duration to lower by (in months)',
+                },
+                {
+                    name: 'type',
+                    translated_name: 'type',
+                    description: 'The type of special builder role!',
+                    translated_description: 'The type of special builder role!',
+                },
+            ],
+        },
+        {
+            name: 'info',
+            translated_name: 'info',
+            description: 'Give info about a honored builder',
+            translated_description: 'Give info about a honored builder',
+            args: [],
         },
     ],
     aliases: [

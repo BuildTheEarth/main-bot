@@ -108,6 +108,8 @@ export interface CommandArgs {
             autocomplete: Discord.AutocompleteInteraction
         ) => void | Promise<void>
     }
+    maxLenOrValue?: number,
+    minLenOrValue?: number
 }
 
 export interface CommandArgsTranslation {

@@ -36,6 +36,7 @@ export type LoggingConfig = {
 export type ImagesConfig = {
     bindPort: number
     bindAddress: string
+    apiUrl: string
 }
 
 export default class ConfigManager {

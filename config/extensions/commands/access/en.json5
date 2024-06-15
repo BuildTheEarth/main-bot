@@ -10,6 +10,12 @@
             description: 'The channel to get permissions for',
             translated_description: 'The channel to get permissions for',
         },
+        {
+            name: 'bypass',
+            translated_name: 'bypass',
+            description: 'Bypass the channel permission check',
+            translated_description: 'Bypass the channel permission check',
+        },
     ],
     aliases: [],
     translated_aliases: [],

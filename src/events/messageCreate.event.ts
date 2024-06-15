@@ -10,7 +10,6 @@ import Discord from "discord.js"
 import typeorm from "typeorm"
 import ModerationMenu from "../entities/ModerationMenu.entity.js"
 import { runBtCommand } from "../commands/team.command.js"
-import CommandAction from "../entities/CommandAction.entity.js"
 
 function consumeCommand(client: Client, message: Discord.Message): string {
     const content = message.content
@@ -115,14 +114,6 @@ export default async function (this: Client, message: Discord.Message): Promise<
 
             await message.channel.send(snippet.body).catch(() => null)
 
-            const cInfo = new CommandAction()
-            cInfo.channel = message.channel.id
-            cInfo.command = "executed_snippet"
-            cInfo.subcommand = snippet.language
-            cInfo.subcommandGroup = snippet.name
-            cInfo.guild = message.guildId ?? "00000000000000000"
-            cInfo.executor = message.author.id
-            await cInfo.save()
             return
         }
 

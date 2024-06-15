@@ -1,28 +1,54 @@
 {
     name: 'block',
     translated_name: 'block',
-    description: 'Find a minecraft block! (currently only 1.12.2)',
-    translated_description: 'Find a minecraft block! (currently only 1.12.2)',
+    description: 'Find a minecraft block closest to a given color!',
+    translated_description: 'Find a minecraft block closest to a given color!',
     args: [
         {
-            name: 'blocks',
-            translated_name: 'blocks',
-            description: 'blocks to search seperated by ,',
-            translated_description: 'blocks to search seperated by ,',
+            name: 'version',
+            translated_name: 'version',
+            description: 'Minecraft version to search blocks for',
+            translated_description: 'Minecraft version to search blocks for',
+        },
+        {
+            name: 'count',
+            translated_name: 'count',
+            description: 'Number of blocks to show per page',
+            translated_description: 'Number of blocks to show per page',
+        },
+        {
+            name: 'notext',
+            translated_name: 'notext',
+            description: 'Select this option if you want no text on your image',
+            translated_description: 'Select this option if you want no text on your image',
         },
     ],
     subcommands: [
         {
-            name: 'search',
-            translated_name: 'search',
-            description: 'Search for blocks based on query.',
-            translated_description: 'Search for blocks based on query.',
+            name: 'image',
+            translated_name: 'image',
+            description: 'Search for blocks based on an image',
+            translated_description: 'Search for blocks based on an image',
             args: [
                 {
-                    name: 'query',
-                    translated_name: 'query',
-                    description: 'Query to search by.',
-                    translated_description: 'Query to search by.',
+                    name: 'image',
+                    translated_name: 'image',
+                    description: 'The image to match blocks to',
+                    translated_description: 'The image to match blocks to',
+                },
+            ],
+        },
+        {
+            name: 'color',
+            translated_name: 'color',
+            description: 'Search for blocks based on a color',
+            translated_description: 'Search for blocks based on a color',
+            args: [
+                {
+                    name: 'hexcode',
+                    translated_name: 'hexcode',
+                    description: 'The hex code of the color you want to input',
+                    translated_description: 'The hex code of the color you want to input',
                 },
             ],
         },

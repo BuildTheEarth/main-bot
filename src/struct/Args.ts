@@ -152,6 +152,27 @@ export default class Args {
         return null
     }
 
+    consumeInteger(argName: string): number | null {
+        if (this.message.isNormalCommand()) {
+            try {
+                const parsed = Number(this.consume(argName))
+                return Number.isNaN(parsed) ? null : parsed
+            } catch {
+                return null
+            }
+        }
+        if (this.message.isSlashCommand()) {
+            try {
+                const gettedNumber = this.message.message.options.getInteger(argName)
+
+                return gettedNumber
+            } catch {
+                return null
+            }
+        }
+        return null
+    }
+
     async consumeChannel(argName: string): Promise<Discord.Channel> {
         return this.message.message.options.getChannel(argName) as Discord.Channel
     }

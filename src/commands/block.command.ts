@@ -1,224 +1,163 @@
 import Client from "../struct/Client.js"
 import Command from "../struct/Command.js"
 
-import Discord from "discord.js"
+import Discord, { EmbedData } from "discord.js"
 import Args from "../struct/Args.js"
-import mcBlockInfo from "minecraft-block-info"
 import CommandMessage from "../struct/CommandMessage.js"
-import { hexToNum } from "@buildtheearth/bot-utils"
+import { hexToNum, hexToRGB } from "@buildtheearth/bot-utils"
+import { createCommonJS } from 'mlly'
+const { __dirname, __filename, require } = createCommonJS(import.meta.url)
+//@ts-ignore I'm sorry but sharp imports are just broken for typings :sob:
+import sharp from 'sharp'
+import fetch from "node-fetch";
+import BlockPage from "../struct/client/BlockPage.js"
 
 export default new Command({
     name: "block",
     aliases: [],
-    description: "Find a minecraft block! (currently only 1.12.2)",
+    description: "Find a minecraft block closest to a given color!",
     permission: globalThis.client.roles.ANY,
-    basesubcommand: "block",
+    inheritGlobalArgs: true,
     args: [
         {
-            name: "blocks",
-            description: "blocks to search seperated by ,",
-            required: true,
-            optionType: "STRING"
+            name: "version",
+            description: "Minecraft version to search blocks for",
+            required: false,
+            optionType: "STRING",
+            choices: ["1.12", "1.20"]
+        },
+        {
+            name: "count",
+            description: "Number of blocks to show per page",
+            required: false,
+            optionType: "INTEGER",
+            maxLenOrValue: 9,
+            minLenOrValue: 1
+        },
+        {
+            name: "notext",
+            description: "Select this option if you want no text on your image",
+            required: false,
+            optionType: "BOOLEAN"
         }
     ],
     subcommands: [
         {
-            name: "search",
-            description: "Search for blocks based on query.",
+            name: "image",
+            description: "Search for blocks based on an image",
             args: [
                 {
-                    name: "query",
-                    description: "Query to search by.",
+                    name: "image",
+                    description: "The image to match blocks to",
                     required: true,
-                    optionType: "STRING"
+                    optionType: "ATTACHMENT"
+                }
+            ]
+        },
+        {
+            name: "color",
+            description: "Search for blocks based on a color",
+            args: [
+                {
+                    name: "hexcode",
+                    description: "The hex code of the color you want to input",
+                    required: true,
+                    optionType: "STRING",
+                    maxLenOrValue: 7,
+                    minLenOrValue: 6
                 }
             ]
         }
     ],
     async run(this: Command, client: Client, message: CommandMessage, args: Args) {
-        const subcommand = args.consumeSubcommandIf(["block", "search"])
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        let results: any[] = [] //TODO: Fix this huge mess
-        if (subcommand === "search") {
-            const query = args.consumeRest(["query"])
-            if (!query) return message.sendErrorMessage("noQuery")
+        const subcommand = args.consumeSubcommandIf(["image", "color"])
 
-            await message.continue()
+        if (!subcommand) return message.sendErrorMessage("howDidThisHappen")
 
-            results = await mcBlockInfo.search(query)
+        let version = args.consume("version")
+
+        if (!version) {
+            version = "1.20"
         }
-        if (subcommand === "absolute" || !subcommand) {
-            const blocks = args.consumeRest(["blocks"])
-            if (!blocks) return message.sendErrorMessage("noBlocksFound")
-            const blocksInput = blocks.trim().split(",")
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            const newBlocks: any[] = []
-            blocksInput.forEach(element => newBlocks.push(element.trim()))
 
-            await message.continue()
+        let count = args.consumeInteger("count")
 
-            results = await mcBlockInfo.searchAbsolute(
-                await mcBlockInfo.filterInvalid(newBlocks)
-            )
+        if (!count) count = 3
+
+        count = Math.round(count)
+
+        if (count < 1 || count > 9) {
+            return message.sendErrorMessage("howDidThisHappen")
         }
-        if (results.length === 0 || !results.length) {
-            return message.sendErrorMessage("googleRipOff")
-        }
-        results = results.reduce((all, one, i) => {
-            const ch = Math.floor(i / 5)
-            all[ch] = [].concat(all[ch] || [], one)
-            return all
-        }, [])
-        let buffIMG = Buffer.from(
-            (await mcBlockInfo.getBlockImageObject(results[0])).split(",")[1],
-            "base64"
-        )
-        let file = await client.webserver.addImage(buffIMG, `${message.id}/image0.png`)
-        if (results.length === 0) message.sendErrorMessage("noResultsFound")
-        else if (results.length === 1)
-            message.send({
-                embeds: [
-                    {
-                        title: "Results",
-                        image: {
-                            url: file
-                        },
-                        color: hexToNum(client.config.colors.info)
-                    }
-                ]
-            })
-        else {
-            let pageNum = 0
-            let row = new Discord.ActionRowBuilder<Discord.ButtonBuilder>().addComponents(
-                new Discord.ButtonBuilder()
-                    .setCustomId(`${message.id}.forwards`)
-                    .setLabel(client.config.emojis.right.toString())
-                    .setStyle(Discord.ButtonStyle.Success)
-            )
-            let page: Discord.APIEmbed = {
-                title: `Page ${pageNum + 1}`,
-                image: {
-                    url: file
-                },
-                footer: { text: `Page ${pageNum + 1}/${results.length}` }
-            }
-            const sentMessage = await message.send({
-                embeds: [page],
-                components: [row]
-            })
 
-            const interactionFunc = async (interaction: Discord.Interaction) => {
-                if (
-                    !(
-                        interaction.isButton() &&
-                        [`${message.id}.back`, `${message.id}.forwards`].includes(
-                            interaction.customId
-                        )
-                    )
-                )
-                    return
-                if (interaction.user.id !== message.member.id)
-                    return interaction.reply({
-                        content: `Did you summon that menu?, I think not!`,
-                        ephemeral: true
-                    })
-                if (
-                    (interaction as Discord.ButtonInteraction).customId ===
-                    `${message.id}.forwards`
-                )
-                    pageNum += 1
-                if (
-                    (interaction as Discord.ButtonInteraction).customId ===
-                    `${message.id}.back`
-                )
-                    pageNum -= 1
-                if (pageNum === 0) {
-                    row =
-                        new Discord.ActionRowBuilder<Discord.ButtonBuilder>().addComponents(
-                            new Discord.ButtonBuilder()
-                                .setCustomId(`${message.id}.forwards`)
-                                .setLabel(client.config.emojis.right.toString())
-                                .setStyle(Discord.ButtonStyle.Success)
-                        )
-                } else if (pageNum === results.length - 1) {
-                    row =
-                        new Discord.ActionRowBuilder<Discord.ButtonBuilder>().addComponents(
-                            new Discord.ButtonBuilder()
-                                .setCustomId(`${message.id}.back`)
-                                .setLabel(client.config.emojis.left.toString())
-                                .setStyle(Discord.ButtonStyle.Success)
-                        )
-                } else {
-                    row = new Discord.ActionRowBuilder<Discord.ButtonBuilder>()
+        const noText = args.consumeBoolean("notext")
 
-                        .addComponents(
-                            new Discord.ButtonBuilder()
-                                .setCustomId(`${message.id}.back`)
-                                .setLabel(client.config.emojis.left.toString())
-                                .setStyle(Discord.ButtonStyle.Success)
-                        )
-                        .addComponents(
-                            new Discord.ButtonBuilder()
-                                .setCustomId(`${message.id}.forwards`)
-                                .setLabel(client.config.emojis.right.toString())
-                                .setStyle(Discord.ButtonStyle.Success)
-                        )
-                }
-                if (
-                    !(await client.webserver.imageExists(
-                        `${message.id}/image${pageNum}.png`
-                    ))
-                ) {
-                    buffIMG = Buffer.from(
-                        (await mcBlockInfo.getBlockImageObject(results[pageNum])).split(
-                            ","
-                        )[1],
-                        "base64"
-                    )
-                    file = await client.webserver.addImage(
-                        buffIMG,
-                        `${message.id}/image${pageNum}.png`
-                    )
-                    page = {
-                        title: `Page ${pageNum + 1}`,
-                        image: {
-                            url: file
-                        },
-                        footer: { text: `Page ${pageNum + 1}/${results.length}` },
-                        color: hexToNum(client.config.colors.info)
-                    }
-                } else {
-                    page = {
-                        title: `Page ${pageNum + 1}`,
-                        image: {
-                            url: client.webserver.getURLfromPath(
-                                `${message.id}/image${pageNum}.png`
-                            )
-                        },
-                        footer: { text: `Page ${pageNum + 1}/${results.length}` },
-                        color: hexToNum(client.config.colors.info)
-                    }
-                }
-                await (interaction as Discord.ButtonInteraction).update({
-                    components: [row]
-                })
-                if (interaction.message instanceof Discord.Message) {
-                    try {
-                        await interaction.message.edit({ embeds: [page] })
-                    } catch {
-                        interaction.editReply({ embeds: [page] })
-                    }
-                } else interaction.editReply({ embeds: [page] })
+
+        let color: [number, number, number] | null = null
+
+        if (subcommand == "color") {
+            let hexCode = args.consume("hexCode")
+
+            if (!hexCode) {
+                return message.sendErrorMessage("provideValidHexCode")
             }
 
-            //@ts-ignore aaaah
-            client.on("interactionCreate", interactionFunc)
+            hexCode = hexCode.replaceAll("#", "")
 
-            setTimeout(async () => {
-                await sentMessage.edit({ content: "Expired", components: [] })
-                //@ts-ignore aaaah
-                client.off("interactionCreate", interactionFunc)
-            }, 600000)
+            if (hexCode.length != 6) {
+                return message.sendErrorMessage("provideValidHexCode")
+            }
+
+            let hexNumber;
+
+            try {
+                hexNumber = Number.parseInt(hexCode, 16)
+            } catch {
+                return message.sendErrorMessage("provideValidHexCode")
+            }
+            
+
+            const r = hexNumber >> 16
+            const g = (hexNumber >> 8) & 0xFF
+            const b = hexNumber & 0xFF
+
+            color = [r, g, b]
+
+        } else if (subcommand == "image") {
+            const attachment = args.consumeAttachment("image")
+
+            if (!attachment) return message.sendErrorMessage("howDidThisHappen")
+
+            if (attachment.size > 10*1024*1024) return message.sendErrorMessage("contentTooLarge10MB")
+            
+            const imageFetch = await fetch(attachment.proxyURL)
+
+            if (!imageFetch.ok) return message.sendErrorMessage("invalidImage")
+
+            const imageData = await imageFetch.arrayBuffer()
+
+            try {
+
+                const sharpImage = await sharp(Buffer.from(imageData));
+                const { channels, dominant } = await sharpImage.stats()
+
+                const { r, g, b } = dominant;
+
+                color = [r, g, b]
+            
+            } catch {
+                return message.sendErrorMessage("invalidImage")
+            }
         }
+
+        if (!color) {
+            return message.sendErrorMessage("howDidThisHappen")
+
+        }
+
+        const blockPage = new BlockPage(client, color, count, version, noText, message.author.id)
+
+        return message.send(blockPage.getEmbedWithButtons(message.author.tag))
+        
     }
 })
