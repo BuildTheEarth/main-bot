@@ -96,7 +96,7 @@ export default new Command({
         let color: [number, number, number] | null = null
 
         if (subcommand == "color") {
-            let hexCode = args.consume("hexCode")
+            let hexCode = args.consume("hexcode")
 
             if (!hexCode) {
                 return message.sendErrorMessage("provideValidHexCode")
