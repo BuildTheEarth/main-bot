@@ -91,6 +91,5 @@ export async function runBtCommand(
             message
                 .reply({ content: snippet.body, allowedMentions: { parse: [] } })
                 .catch(() => null)
-
     }
 }

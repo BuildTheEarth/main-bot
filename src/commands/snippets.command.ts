@@ -538,7 +538,7 @@ export default new Command({
             let snippet: Snippet | null = null
 
             if (subcommand === "add") {
-                if (client.commands.search(name))
+                if (client.customCommands.search(name))
                     return message.sendErrorMessage("alreadyInUse")
                 if (existingSnippet) return message.sendErrorMessage("alreadyExists")
                 if (rules) {

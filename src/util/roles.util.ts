@@ -8,7 +8,7 @@ import { Role } from "discord.js"
 interface RoleData {
     tag: string
     id: string
-    roles?: {name: string, id: string}[]
+    roles?: { name: string; id: string }[]
     joinDate?: number
 }
 
@@ -86,7 +86,9 @@ export async function fetchPeopleByRoles(
                         joinDate: e.joinedTimestamp || 0,
                         roles: e.roles.cache
                             .sort((a, b) => b.position - a.position)
-                            .map(role => {return {name: role.name, id: role.id}})
+                            .map(role => {
+                                return { name: role.name, id: role.id }
+                            })
                             .filter(role => role.name !== "@everyone")
                     }
                 })
@@ -102,7 +104,6 @@ export async function fetchPeopleByRoles(
             roleData.set(role, members)
         }
     }
-
 
     return roleData
 }

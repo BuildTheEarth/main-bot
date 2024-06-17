@@ -21,7 +21,7 @@ export default new Command({
     ],
     async run(this: Command, client: Client, message: CommandMessage, args: Args) {
         const name = args.consume("module")
-        const command = client.commands.search(name)
+        const command = client.customCommands.search(name)
         const handler = client.events.get(name)
         const config = name.toLowerCase() === "config"
         let file: string | null
@@ -42,8 +42,8 @@ export default new Command({
         let fullname: string | null = null
         if (command) {
             fullname = `\`${command.name}\` command`
-            await client.commands.unloadOne(command.name)
-            await client.commands.loadOne(command.name)
+            await client.customCommands.unloadOne(command.name)
+            await client.customCommands.loadOne(command.name)
         } else if (handler) {
             fullname = `\`${name}\` event handler`
             client.events.unregisterOne(name)

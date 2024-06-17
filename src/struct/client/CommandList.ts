@@ -33,6 +33,7 @@ export default class CommandList extends Discord.Collection<string, Command> {
         const registerPermsMain: PermsObj = {}
         const registerPermsStaff: PermsObj = {}
         const registerCommands = []
+        const registerCommandGlobal = []
 
         for await (const command of commands.values()) {
             ///if (command.name in oldCommands ) continue
@@ -74,27 +75,41 @@ export default class CommandList extends Discord.Collection<string, Command> {
                 pushCmd.setDefaultPermission(true)
                 //if (permsTemp[0] == globalThis.client.roles.ANY)
                 //    pushCmd.setDefaultPermission(true)
-                registerCommands.push(pushCmd.toJSON())
-                if (
-                    (await this.client.customGuilds.staff()) &&
-                    permsTemp[0] != globalThis.client.roles.ANY
-                )
-                    registerPermsStaff[cmd.name] = {
-                        id: "",
-                        permissions: permsStaff,
-                        guildId: this.client.customGuilds.staff().id,
-                        applicationId: client.application?.id || ""
+
+                if (command.globalRegister) {
+                    const cmdJSON = pushCmd.toJSON()
+                    if (command.userInstallContext) {
+                        //https://discord.com/developers/docs/tutorials/developing-a-user-installable-app#step-2-setting-up-commands
+                        //@ts-ignore Hope and pray that this exists in the discord api
+                        cmdJSON["integration_types"] = [0, 1]
+                        //@ts-ignore Hope and pray that this exists in the discord api
+                        cmdJSON["contexts"] = [0, 1, 2]
                     }
-                if (
-                    (await this.client.customGuilds.main()) &&
-                    permsTemp[0] != globalThis.client.roles.ANY
-                )
-                    registerPermsMain[cmd.name] = {
-                        id: "",
-                        permissions: permsMain,
-                        guildId: this.client.customGuilds.main().id,
-                        applicationId: client.application?.id || ""
-                    }
+
+                    registerCommandGlobal.push(cmdJSON)
+                } else {
+                    registerCommands.push(pushCmd.toJSON())
+                    if (
+                        this.client.customGuilds.staff() &&
+                        permsTemp[0] != globalThis.client.roles.ANY
+                    )
+                        registerPermsStaff[cmd.name] = {
+                            id: "",
+                            permissions: permsStaff,
+                            guildId: this.client.customGuilds.staff().id,
+                            applicationId: client.application?.id || ""
+                        }
+                    if (
+                        this.client.customGuilds.main() &&
+                        permsTemp[0] != globalThis.client.roles.ANY
+                    )
+                        registerPermsMain[cmd.name] = {
+                            id: "",
+                            permissions: permsMain,
+                            guildId: this.client.customGuilds.main().id,
+                            applicationId: client.application?.id || ""
+                        }
+                }
             }
         }
         if (this.client.customGuilds.main()) {
@@ -120,6 +135,8 @@ export default class CommandList extends Discord.Collection<string, Command> {
             //})
             //NOTE: Discord disabled the endpoint with 0 notice
         }
+
+        await this.client.application?.commands.set(registerCommandGlobal)
     }
 
     search(name: string): Command | undefined {

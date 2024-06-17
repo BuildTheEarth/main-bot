@@ -24,9 +24,14 @@ export default async function (
 ): Promise<unknown> {
     if (interaction.user.bot) return
 
-
-    if (interaction.type != Discord.InteractionType.ApplicationCommand && interaction.type != Discord.InteractionType.ApplicationCommandAutocomplete) {
-        const runInteraction = this.componentHandlers.findFromIdAndInteractionType(interaction.customId, interaction.type)
+    if (
+        interaction.type != Discord.InteractionType.ApplicationCommand &&
+        interaction.type != Discord.InteractionType.ApplicationCommandAutocomplete
+    ) {
+        const runInteraction = this.componentHandlers.findFromIdAndInteractionType(
+            interaction.customId,
+            interaction.type
+        )
         if (runInteraction) await runInteraction.run(this, interaction)
     }
 
@@ -113,7 +118,7 @@ export default async function (
 
     if (interaction.isChatInputCommand()) {
         const args = new Args("", new CommandMessage(interaction, this))
-        const command = this.commands.search(args.command)
+        const command = this.customCommands.search(args.command)
         if (command) {
             const hasPermission =
                 interaction.member &&
@@ -187,9 +192,9 @@ export default async function (
     if (interaction.type === Discord.InteractionType.ApplicationCommandAutocomplete) {
         if (interaction instanceof AutocompleteInteraction) {
             const cmd = interaction.commandName
-            const command = this.commands.search(cmd)
+            const command = this.customCommands.search(cmd)
             const argName = interaction.options.getFocused(true).name
-            console.log(argName)
+
             if (command && command.args) {
                 for (const arg of command.args) {
                     if (arg.name == argName) {

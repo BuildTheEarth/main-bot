@@ -24,9 +24,8 @@ export default class LookupController {
         @Res() res: Response,
         @Query("roles", new ParseArrayPipe({ items: String, separator: "," }))
         roles: string[],
-        @Query("extended", new ParseBoolPipe({optional: true})) extended: boolean
+        @Query("extended", new ParseBoolPipe({ optional: true })) extended: boolean
     ): Promise<unknown> {
-
         if (!roles || roles.length == 0) {
             return res
                 .status(400)
@@ -47,5 +46,4 @@ export default class LookupController {
 
         res.send(Object.fromEntries(roleData))
     }
-
 }

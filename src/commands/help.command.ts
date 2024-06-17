@@ -34,7 +34,7 @@ export default new Command({
         const commandName = args.consume("command")
 
         if (commandName) {
-            const command = client.commands.search(commandName)
+            const command = client.customCommands.search(commandName)
             if (!command)
                 return message.sendErrorMessage(
                     "unknownCommand",
@@ -54,12 +54,14 @@ export default new Command({
 
         let allowedCommands
         if (message.channel.type !== Discord.ChannelType.DM) {
-            allowedCommands = client.commands.filter(command =>
+            allowedCommands = client.customCommands.filter(command =>
                 GuildMember.hasRole(member, command.permission, client)
             )
         }
         if (message.channel.type === Discord.ChannelType.DM) {
-            allowedCommands = client.commands.filter(command => command.dms === true)
+            allowedCommands = client.customCommands.filter(
+                command => command.dms === true
+            )
         }
         const formattedCommands = allowedCommands
             ?.map(command => `• **${command.name}:** ${command.description}`)

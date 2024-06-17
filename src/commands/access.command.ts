@@ -47,7 +47,6 @@ export default new Command({
                 ?.has(Discord.PermissionFlagsBits.ViewChannel)
 
         if (bypass) {
-            console.log("Bypassing channel permission check")
             const managerChat = client.customGuilds
                 .staff()
                 .channels.cache.find(ch => ch.name == "management") as Discord.TextChannel

@@ -5,11 +5,11 @@ import Discord, { EmbedData } from "discord.js"
 import Args from "../struct/Args.js"
 import CommandMessage from "../struct/CommandMessage.js"
 import { hexToNum, hexToRGB } from "@buildtheearth/bot-utils"
-import { createCommonJS } from 'mlly'
+import { createCommonJS } from "mlly"
 const { __dirname, __filename, require } = createCommonJS(import.meta.url)
 //@ts-ignore I'm sorry but sharp imports are just broken for typings :sob:
-import sharp from 'sharp'
-import fetch from "node-fetch";
+import sharp from "sharp"
+import fetch from "node-fetch"
 import BlockPage from "../struct/client/BlockPage.js"
 
 export default new Command({
@@ -18,6 +18,8 @@ export default new Command({
     description: "Find a minecraft block closest to a given color!",
     permission: globalThis.client.roles.ANY,
     inheritGlobalArgs: true,
+    globalRegister: true,
+    userInstallContext: true,
     args: [
         {
             name: "version",
@@ -92,7 +94,6 @@ export default new Command({
 
         const noText = args.consumeBoolean("notext")
 
-
         let color: [number, number, number] | null = null
 
         if (subcommand == "color") {
@@ -108,28 +109,27 @@ export default new Command({
                 return message.sendErrorMessage("provideValidHexCode")
             }
 
-            let hexNumber;
+            let hexNumber
 
             try {
                 hexNumber = Number.parseInt(hexCode, 16)
             } catch {
                 return message.sendErrorMessage("provideValidHexCode")
             }
-            
 
             const r = hexNumber >> 16
-            const g = (hexNumber >> 8) & 0xFF
-            const b = hexNumber & 0xFF
+            const g = (hexNumber >> 8) & 0xff
+            const b = hexNumber & 0xff
 
             color = [r, g, b]
-
         } else if (subcommand == "image") {
             const attachment = args.consumeAttachment("image")
 
             if (!attachment) return message.sendErrorMessage("howDidThisHappen")
 
-            if (attachment.size > 10*1024*1024) return message.sendErrorMessage("contentTooLarge10MB")
-            
+            if (attachment.size > 10 * 1024 * 1024)
+                return message.sendErrorMessage("contentTooLarge10MB")
+
             const imageFetch = await fetch(attachment.proxyURL)
 
             if (!imageFetch.ok) return message.sendErrorMessage("invalidImage")
@@ -137,14 +137,12 @@ export default new Command({
             const imageData = await imageFetch.arrayBuffer()
 
             try {
-
-                const sharpImage = await sharp(Buffer.from(imageData));
+                const sharpImage = await sharp(Buffer.from(imageData))
                 const { channels, dominant } = await sharpImage.stats()
 
-                const { r, g, b } = dominant;
+                const { r, g, b } = dominant
 
                 color = [r, g, b]
-            
             } catch {
                 return message.sendErrorMessage("invalidImage")
             }
@@ -152,12 +150,17 @@ export default new Command({
 
         if (!color) {
             return message.sendErrorMessage("howDidThisHappen")
-
         }
 
-        const blockPage = new BlockPage(client, color, count, version, noText, message.author.id)
+        const blockPage = new BlockPage(
+            client,
+            color,
+            count,
+            version,
+            noText,
+            message.author.id
+        )
 
         return message.send(blockPage.getEmbedWithButtons(message.author.tag))
-        
     }
 })

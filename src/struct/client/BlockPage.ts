@@ -5,7 +5,7 @@ import { ActionRowBuilder, ButtonBuilder } from "@discordjs/builders"
 
 type PendingBlockPageAction = "NEXT" | "PREVIOUS" | "STAY"
 
-export default class BlockPage { 
+export default class BlockPage {
     client: Client
     rgbColor: [number, number, number]
     count: number
@@ -15,14 +15,23 @@ export default class BlockPage {
     userID: string
     private page: number
 
-    constructor(client: Client, rgbColor: [number, number, number], count: number, version: string, noText: boolean, userID: string, startPage?: number, pendingAction?: PendingBlockPageAction) {
+    constructor(
+        client: Client,
+        rgbColor: [number, number, number],
+        count: number,
+        version: string,
+        noText: boolean,
+        userID: string,
+        startPage?: number,
+        pendingAction?: PendingBlockPageAction
+    ) {
         this.client = client
         this.rgbColor = rgbColor
         this.count = count
         this.version = version
         this.noText = noText
-        this.page = startPage? startPage: 1
-        this.pendingAction = pendingAction? pendingAction:  "STAY"
+        this.page = startPage ? startPage : 1
+        this.pendingAction = pendingAction ? pendingAction : "STAY"
         this.userID = userID
     }
 
@@ -39,33 +48,41 @@ export default class BlockPage {
         return true
     }
 
-    
-
-
     getUrl() {
-        return `${this.client.config.images.apiUrl}?version=${this.version}&rgb=${this.rgbColor.join(",")}&count=${this.count}&height=512&page=${this.page}` + (this.noText? "&noText=true": "") 
+        return (
+            `${this.client.config.images.apiUrl}?version=${
+                this.version
+            }&rgb=${this.rgbColor.join(",")}&count=${this.count}&height=512&page=${
+                this.page
+            }` + (this.noText ? "&noText=true" : "")
+        )
     }
 
     nextCustomId() {
-        return `blockPage|${this.rgbColor.join(",")}|${this.count}|${this.version}|${this.noText}|${this.page}|${this.userID}|NEXT`
+        return `blockPage|${this.rgbColor.join(",")}|${this.count}|${this.version}|${
+            this.noText
+        }|${this.page}|${this.userID}|NEXT`
     }
 
     previousCustomId() {
-        return `blockPage|${this.rgbColor.join(",")}|${this.count}|${this.version}|${this.noText}|${this.page}|${this.userID}|PREVIOUS`
+        return `blockPage|${this.rgbColor.join(",")}|${this.count}|${this.version}|${
+            this.noText
+        }|${this.page}|${this.userID}|PREVIOUS`
     }
 
     getEmbeds(authorName: string): Discord.APIEmbed[] {
-        return [{
-            title: `Blocks Closest Matching | ${this.version} | Page ${this.page}`,
-            image: {
-                url: this.getUrl()
-            },
-            color: hexToNum(client.config.colors.info),
-            footer: {
-                text: `Summoned by ${authorName}`
+        return [
+            {
+                title: `Blocks Closest Matching | ${this.version} | Page ${this.page}`,
+                image: {
+                    url: this.getUrl()
+                },
+                color: hexToNum(client.config.colors.info),
+                footer: {
+                    text: `Summoned by ${authorName}`
+                }
             }
-        } ]
-        
+        ]
     }
 
     getButtons() {
@@ -73,7 +90,7 @@ export default class BlockPage {
         nextButton.setCustomId(this.nextCustomId())
         nextButton.setStyle(Discord.ButtonStyle.Primary)
         nextButton.setLabel(client.config.emojis.right as string)
-        
+
         const previousButton = new ButtonBuilder()
         previousButton.setCustomId(this.previousCustomId())
         previousButton.setStyle(Discord.ButtonStyle.Primary)
@@ -85,13 +102,10 @@ export default class BlockPage {
         return [interactionRow]
     }
 
-
     getEmbedWithButtons(authorName: string) {
-
         return {
             embeds: this.getEmbeds(authorName),
             components: this.getButtons()
-
         }
     }
 
@@ -100,10 +114,19 @@ export default class BlockPage {
 
         let pendingAction = arr[7] as PendingBlockPageAction
 
-        return new BlockPage(client, arr[1].split(",").map((val) => Number.parseInt(val)) as [number, number, number], Number.parseInt(arr[2]), arr[3], arr[4].toLowerCase() == "true", arr[6], Number.parseInt(arr[5]), pendingAction)
-
+        return new BlockPage(
+            client,
+            arr[1].split(",").map(val => Number.parseInt(val)) as [
+                number,
+                number,
+                number
+            ],
+            Number.parseInt(arr[2]),
+            arr[3],
+            arr[4].toLowerCase() == "true",
+            arr[6],
+            Number.parseInt(arr[5]),
+            pendingAction
+        )
     }
-
-
-
 }

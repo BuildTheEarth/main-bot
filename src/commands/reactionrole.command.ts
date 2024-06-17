@@ -275,7 +275,6 @@ export default new Command({
             if (!realEmoji) {
                 return message.sendErrorMessage("emojiNotFound")
             }
-            console.log(realEmoji)
 
             const urlRegex =
                 /(?<=(https:\/\/)(canary\.discord\.com\/channels\/|discord\.com\/channels\/|ptb\.discord\.com\/channels\/))([0-9]{17,})(\/)([0-9]{17,})(\/)([0-9]{17,})/
@@ -369,8 +368,6 @@ export default new Command({
                     const embedStr = [""]
                     let currIdx = 0
                     let roles
-
-                    console.log(client.reactionRoles.keys())
 
                     if (subcommandGroup == "blacklist") {
                         roles = client.reactionRoles.get(

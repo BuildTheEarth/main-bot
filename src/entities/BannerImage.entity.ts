@@ -33,15 +33,11 @@ export default class BannerImage extends typeorm.BaseEntity {
     static async cycle(client: Client): Promise<void> {
         if (!client.customGuilds.main().features.includes("BANNER")) return
         const next = await this.findOne({ order: { id: "ASC" } })
-        console.log("E")
 
         if (!next) {
             client.logger.warn("[BannerImage] Queue is empty; cannot update banner.")
             return
         }
-
-        console.log(next)
-
         const bannerArrBuffer = await (await fetch(next.url)).arrayBuffer()
 
         const bannerBuffer = Buffer.from(bannerArrBuffer)
@@ -51,7 +47,6 @@ export default class BannerImage extends typeorm.BaseEntity {
             .setBanner(bannerBuffer, "Updated banner with first image in queue.")
             .catch(e => console.log(e))
 
-        console.log("F")
         const updates = (await client.customGuilds.main()).channels.cache.find(
             channel => channel.name === "updates"
         ) as Discord.TextChannel

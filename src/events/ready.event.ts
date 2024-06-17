@@ -9,17 +9,35 @@ import Reminder from "../entities/Reminder.entity.js"
 import BlunderTracker from "../entities/BlunderTracker.entity.js"
 import { Cron } from "croner"
 import TeamPointsUser from "../entities/TeamPointsUser.entity.js"
+import { noop } from "@buildtheearth/bot-utils"
 
 export default async function ready(this: Client): Promise<void> {
     if (!this.user) return //never gonna happen, its on ready, discord.js needs some better type assertion
 
     this.logger.debug("Loading commands...")
-    await this.commands.load()
+    await this.customCommands.load()
     this.logger.info("Loaded commands.")
 
     this.logger.debug("Loading interaction handlers...")
     await this.componentHandlers.load()
     this.logger.info("Loaded interaction handlers.")
+
+    const guildList = await this.guilds.fetch()
+
+    for (const guild of guildList) {
+        if (
+            !(
+                guild[1].id == this.config.guilds.main ||
+                guild[1].id == this.config.guilds.staff
+            )
+        ) {
+            const foundGuild = await this.guilds.fetch(guild[1].id).catch(noop)
+
+            if (foundGuild) {
+                foundGuild.leave()
+            }
+        }
+    }
 
     const activity = `with ${(await this.customGuilds.main()).memberCount} users`
     this.user.setActivity(activity, { type: Discord.ActivityType.Playing })
@@ -37,7 +55,6 @@ export default async function ready(this: Client): Promise<void> {
 
         const outdated = current?.code !== this.config.vanity
 
-        console.log(current?.code)
         if (outdated) {
             const reason = "Reached level 3 boosting"
             await Guild.setVanityCode()

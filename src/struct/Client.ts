@@ -39,7 +39,7 @@ export default class Client extends Discord.Client {
     events = new EventList(this)
     modals = new ModalList(this)
     assets = new AssetList(this)
-    commands = new CommandList(this)
+    customCommands = new CommandList(this)
     componentHandlers = new ComponentHandlersList(this)
     aliases = new Discord.Collection()
     response = new Response(this)

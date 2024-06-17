@@ -20,6 +20,8 @@ export default class Command implements CommandProperties {
     seperator?: string
     subcommands: SubCommandProperties[] | null
     devOnly?: boolean
+    globalRegister?: boolean
+    userInstallContext?: boolean
     run: (client: Client, message: CommandMessage, args: Args) => void | Promise<void>
 
     constructor(properties: CommandProperties) {
@@ -33,6 +35,8 @@ export default class Command implements CommandProperties {
         this.description = properties.description
         this.permission = properties.permission
         this.dms = properties.dms || false
+        this.globalRegister = properties.globalRegister
+        this.userInstallContext = properties.userInstallContext
         this.subcommands = (properties.subcommands || []).map(sub => {
             if (!sub.permission) sub.permission = properties.permission
             return sub
@@ -50,6 +54,8 @@ export interface CommandProperties extends SubCommandProperties {
     basesubcommand?: string
     dms?: boolean
     seperator?: string
+    globalRegister?: boolean
+    userInstallContext?: boolean
     run: (client: Client, message: CommandMessage, args: Args) => void
 }
 
@@ -108,7 +114,7 @@ export interface CommandArgs {
             autocomplete: Discord.AutocompleteInteraction
         ) => void | Promise<void>
     }
-    maxLenOrValue?: number,
+    maxLenOrValue?: number
     minLenOrValue?: number
 }
 

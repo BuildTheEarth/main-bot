@@ -90,8 +90,6 @@ export default abstract class TranslateUtils {
                         }
                     }
                 }
-                //if (lang === "hi") console.log(command.subcommands?.[5].subcommands)
-                //if (lang === "hi") console.log(command.subcommands?.[5].subcommands?.[0].name_translations)
             }
             return command
         } catch (e) {

@@ -64,7 +64,7 @@ export default async function (this: Client, message: Discord.Message): Promise<
     }
 
     if (message.content.startsWith(this.config.prefix)) {
-        const command = this.commands.search(consumeCommand(this, message))
+        const command = this.customCommands.search(consumeCommand(this, message))
         if (!command) {
             const firstArg = consumeLang(this, message).toLowerCase() //before someone kills me, this is guaranteed to be of a normal message as it is in messageCreate, so we strictly dont need an arg name but i am NOT making that an optional arg
             const languageName = languages.getName(firstArg) || "English"
