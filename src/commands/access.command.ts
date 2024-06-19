@@ -7,6 +7,7 @@ import ApiTypes = require("discord-api-types/v10")
 import Discord from "discord.js"
 import CommandMessage from "../struct/CommandMessage.js"
 
+//This command was made to allow managers to gain access to a channel
 export default new Command({
     name: "access",
     aliases: [],
@@ -34,7 +35,9 @@ export default new Command({
         }
     ],
     async run(this: Command, client: Client, message: CommandMessage, args: Args) {
+        //Return if the bot user does not exist yet, this is mainly for type safety
         if (!client.user) return
+        //Consume the channel argument, if cannot be found, just use the current channel
         const channel = (await args.consumeChannel("channel")) || message.channel
         if (channel.isDMBased()) return message.sendErrorMessage("dmBased")
         const bypass = args.consumeBoolean("bypass") || false

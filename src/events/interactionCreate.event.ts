@@ -35,7 +35,7 @@ export default async function (
         if (runInteraction) await runInteraction.run(this, interaction)
     }
 
-    if (interaction.type === Discord.InteractionType.MessageComponent) {
+    if (interaction.isMessageComponent()) {
         if (interaction.isStringSelectMenu()) {
             if (interaction.customId.split(".")[0] === "info") {
                 if (interaction.customId === "info.languages")
