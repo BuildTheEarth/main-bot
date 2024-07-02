@@ -21,17 +21,16 @@ export default class BannedWordFilter {
     }
 
     keepStarPluralize(word: string): string {
-
         let startStar = false
         let endStar = false
 
         if (word.startsWith("*")) {
             word = word.replace("*", "")
-            startStar=true
+            startStar = true
         }
 
         if (word.endsWith("*")) {
-            word = word.slice(0, word.length-1)
+            word = word.slice(0, word.length - 1)
             endStar = true
         }
 
@@ -43,7 +42,6 @@ export default class BannedWordFilter {
         return word
     }
 
-
     ignoreStarIsSingular(bannedWord: BannedWord): boolean {
         if (bannedWord.regex) return false
 
@@ -51,21 +49,16 @@ export default class BannedWordFilter {
 
         if (word.startsWith("*")) word = word.replace("*", "")
 
-        if (word.endsWith("*")) word = word.slice(0, word.length-1)
+        if (word.endsWith("*")) word = word.slice(0, word.length - 1)
 
         return isSingular(word)
-
     }
 
-
     findBannedWord(text: string): BannedWordObj[] {
+        const zeroWRegex = new RegExp(this.createChooseRegex(duplicateChars.ZERO_W), "g")
+        text = text.replaceAll(zeroWRegex, "")
 
-        
-        const zeroWRegex = new RegExp(this.createChooseRegex(duplicateChars.ZERO_W) ,"g")
-        text = text.replaceAll(zeroWRegex , "")
-        
         for (const letter of ALPHABET) {
-
             const characters = duplicateChars[letter.toLowerCase()] || [letter]
             const regexLetter = new RegExp(this.createChooseRegex(characters), "g")
             text = text.replaceAll(regexLetter, letter)
@@ -101,8 +94,6 @@ export default class BannedWordFilter {
             }
             return passes
         })
-
-
 
         return profanities
     }
@@ -180,18 +171,17 @@ export default class BannedWordFilter {
         return this.createWordRegex(word.word)
     }
 
-
     createWordRegex(word: string, max: number = Infinity): string {
         let startStar = false
         let endStar = false
 
         if (word.startsWith("*")) {
             word = word.replace("*", "")
-            startStar=true
+            startStar = true
         }
 
         if (word.endsWith("*")) {
-            word = word.slice(0, word.length-1)
+            word = word.slice(0, word.length - 1)
             endStar = true
         }
 
@@ -213,7 +203,14 @@ export default class BannedWordFilter {
     }
 
     createChooseRegex(strings: string[]): string {
-        return "(" + strings.map(this.escapeRegex).filter((letter) => letter !== "").join("|") + ")"
+        return (
+            "(" +
+            strings
+                .map(this.escapeRegex)
+                .filter(letter => letter !== "")
+                .join("|") +
+            ")"
+        )
     }
 
     escapeRegex(string: string): string {

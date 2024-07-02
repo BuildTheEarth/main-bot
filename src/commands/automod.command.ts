@@ -163,7 +163,7 @@ export default new Command({
                 const isAlreadyThere = client.filterWordsCached.banned.get(word)
                 if (isAlreadyThere)
                     return await message.sendErrorMessage("wordAlreadyBanned")
-                
+
                 const regex = args.consumeBoolean("regex")
 
                 if (regex) {

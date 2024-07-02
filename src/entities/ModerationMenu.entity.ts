@@ -56,7 +56,9 @@ export default class ModerationMenu extends typeorm.BaseEntity {
 
         await message.delete().catch(noop)
 
-        const tempMessage = await message.channel.send(`<@${message.author.id}>, your message contained blocked words!`).catch(noop)
+        const tempMessage = await message.channel
+            .send(`<@${message.author.id}>, your message contained blocked words!`)
+            .catch(noop)
 
         setTimeout(async () => await tempMessage?.delete()?.catch(noop), 1500)
 
@@ -67,7 +69,9 @@ export default class ModerationMenu extends typeorm.BaseEntity {
         if (existingMenu) {
             existingMenu.offenses += 1
             let truePunishments = getMostSevereList(filterResponse, client)
-            truePunishments = truePunishments.filter((word) => word.punishment_type !== "DELETE")
+            truePunishments = truePunishments.filter(
+                word => word.punishment_type !== "DELETE"
+            )
             existingMenu.punishments.push(...truePunishments)
             existingMenu.punishments = _.uniqBy(existingMenu.punishments, "word")
             if (existingMenu.punishments[0].word)
@@ -102,7 +106,13 @@ export default class ModerationMenu extends typeorm.BaseEntity {
                         )
                     },
                     { name: "Reason", value: existingMenu.punishments[0].reason },
-                    { name: "Trigger", value: Discord.escapeMarkdown(existingMenu.punishments[0].word ?? "", {maskedLink: true}) }
+                    {
+                        name: "Trigger",
+                        value: Discord.escapeMarkdown(
+                            existingMenu.punishments[0].word ?? "",
+                            { maskedLink: true }
+                        )
+                    }
                 ])
                 .setColor(hexToRGB(client.config.colors.error))
 
@@ -164,39 +174,43 @@ export default class ModerationMenu extends typeorm.BaseEntity {
         }
 
         if (truePunishments[0].punishment_type === "DELETE") {
-                    const embed = new Discord.EmbedBuilder()
-                    .addFields(<Discord.EmbedField[]>[
-                        {
-                            name: "User",
-                            value: `<@${message.author.id}> (${message.author.id})`
-                        },
-                        {
-                            name: "Message",
-                            value: truncateString(
-                                message.content,
-                                1024,
-                                " (Check logs for the remaining content)"
-                            )
-                        },
-                        { name: "Trigger", value: Discord.escapeMarkdown(truePunishments[0].word ?? "", {maskedLink: true})}
-                    ])
-                    .setColor(hexToRGB(client.config.colors.error))
-                
+            const embed = new Discord.EmbedBuilder()
+                .addFields(<Discord.EmbedField[]>[
+                    {
+                        name: "User",
+                        value: `<@${message.author.id}> (${message.author.id})`
+                    },
+                    {
+                        name: "Message",
+                        value: truncateString(
+                            message.content,
+                            1024,
+                            " (Check logs for the remaining content)"
+                        )
+                    },
+                    {
+                        name: "Trigger",
+                        value: Discord.escapeMarkdown(truePunishments[0].word ?? "", {
+                            maskedLink: true
+                        })
+                    }
+                ])
+                .setColor(hexToRGB(client.config.colors.error))
 
-                const channel = (await client.channels.fetch(
-                    client.config.logging.modLogs
-                )) as Discord.TextChannel
-                await channel.send({
-                    content: `<@&${globalThis.client.roles.MODERATOR_ON_DUTY[0]}>`,
-                    embeds: [embed]
-                })
-                
-            
+            const channel = (await client.channels.fetch(
+                client.config.logging.modLogs
+            )) as Discord.TextChannel
+            await channel.send({
+                content: `<@&${globalThis.client.roles.MODERATOR_ON_DUTY[0]}>`,
+                embeds: [embed]
+            })
+
             return
         }
 
-        truePunishments = truePunishments.filter((word) => word.punishment_type !== "DELETE")
-
+        truePunishments = truePunishments.filter(
+            word => word.punishment_type !== "DELETE"
+        )
 
         const modMenu = new ModerationMenu()
         modMenu.member = message.author.id
@@ -228,7 +242,12 @@ export default class ModerationMenu extends typeorm.BaseEntity {
                     )
                 },
                 { name: "Reason", value: modMenu.punishments[0].reason },
-                { name: "Trigger", value: Discord.escapeMarkdown(modMenu.punishments[0].word ?? "", {maskedLink: true}) }
+                {
+                    name: "Trigger",
+                    value: Discord.escapeMarkdown(modMenu.punishments[0].word ?? "", {
+                        maskedLink: true
+                    })
+                }
             ])
             .setColor(hexToRGB(client.config.colors.error))
 
@@ -315,7 +334,12 @@ export default class ModerationMenu extends typeorm.BaseEntity {
                     value: getDuration(punishment.duration ? punishment.duration : 0)
                 },
                 { name: "Reason", value: punishment.reason },
-                { name: "Trigger", value: Discord.escapeMarkdown(punishment.word ?? "", {maskedLink: true}) }
+                {
+                    name: "Trigger",
+                    value: Discord.escapeMarkdown(punishment.word ?? "", {
+                        maskedLink: true
+                    })
+                }
             ])
             .setColor(hexToRGB(client.config.colors.error))
 
@@ -692,18 +716,17 @@ function getMostSevereList(
 ): bannedWordsOptions[] {
     const punishmentWords: bannedWordsOptions[] = []
     for (const punishment of punishments) {
-            if (!punishment.base) return []
-            const word = client.filterWordsCached.banned.get(punishment.base)
-            if (!word) return []
+        if (!punishment.base) return []
+        const word = client.filterWordsCached.banned.get(punishment.base)
+        if (!word) return []
 
-            punishmentWords.push({
-                word: punishment.regex? punishment.raw: punishment.base,
-                punishment_type: word.punishment_type,
-                duration: word.duration ? word.duration : null,
-                reason: word.reason ? word.reason : undefined,
-                exception: false
-            })
-        
+        punishmentWords.push({
+            word: punishment.regex ? punishment.raw : punishment.base,
+            punishment_type: word.punishment_type,
+            duration: word.duration ? word.duration : null,
+            reason: word.reason ? word.reason : undefined,
+            exception: false
+        })
     }
     return punishmentWords
         .filter(word => word !== undefined)

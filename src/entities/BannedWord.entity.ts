@@ -44,7 +44,7 @@ export default class BannedWord extends typeorm.BaseEntity {
         return created
     }
 
-    @typeorm.PrimaryColumn({type: "varchar", length: 100})
+    @typeorm.PrimaryColumn({ type: "varchar", length: 100 })
     word!: string
 
     @typeorm.Column({ nullable: true })
@@ -64,7 +64,7 @@ export default class BannedWord extends typeorm.BaseEntity {
     @typeorm.Column({ default: false })
     exception: boolean = false
 
-    @typeorm.Column({default: false})
+    @typeorm.Column({ default: false })
     regex: boolean = false
 
     static async loadWords(): Promise<{ banned: bannedTypes; except: Array<string> }> {
