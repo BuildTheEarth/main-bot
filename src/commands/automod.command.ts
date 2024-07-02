@@ -53,6 +53,12 @@ export default new Command({
                             description: "Punishment duration.",
                             required: false,
                             optionType: "STRING"
+                        },
+                        {
+                            name: "regex",
+                            description: "Whether the provided string is a regex or not.",
+                            required: false,
+                            optionType: "BOOLEAN"
                         }
                     ]
                 },
@@ -133,8 +139,8 @@ export default new Command({
 
                 await message.continue()
                 const punishment = args.consume("punishment").toUpperCase()
-                if (word.length > 18) {
-                    return await message.sendErrorMessage("wordTooLong18")
+                if (word.length > 99) {
+                    return await message.sendErrorMessage("wordTooLong99")
                 }
                 if (!punishmentTypes.includes(punishment))
                     return message.sendErrorMessage(
@@ -157,6 +163,19 @@ export default new Command({
                 const isAlreadyThere = client.filterWordsCached.banned.get(word)
                 if (isAlreadyThere)
                     return await message.sendErrorMessage("wordAlreadyBanned")
+                
+                const regex = args.consumeBoolean("regex")
+
+                if (regex) {
+                    let validRegex = true
+                    try {
+                        new RegExp(word)
+                    } catch (_) {
+                        validRegex = false
+                    }
+
+                    if (!validRegex) return await message.sendErrorMessage("invalidRegex")
+                }
 
                 await BannedWord.createBannedWord(
                     {
@@ -173,7 +192,8 @@ export default new Command({
                             : duration !== null
                             ? duration
                             : null,
-                        exception: false
+                        exception: false,
+                        regex: regex
                     },
                     client
                 )
@@ -200,8 +220,8 @@ export default new Command({
                 const word = args.consumeRest(["word"])
 
                 if (!word) return await message.sendErrorMessage("invalidWord")
-                if (word.length > 18) {
-                    return message.sendErrorMessage("wordTooLong18")
+                if (word.length > 99) {
+                    return message.sendErrorMessage("wordTooLong99")
                 }
                 await message.continue()
                 const isAlreadyThere = client.filterWordsCached.except.includes(word)

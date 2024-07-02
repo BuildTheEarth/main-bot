@@ -18,6 +18,7 @@ export interface bannedWordsOptions {
     reason?: string
     duration: number | null
     exception?: boolean
+    regex?: boolean
 }
 
 @typeorm.Entity({ name: "banned_words" })
@@ -33,6 +34,8 @@ export default class BannedWord extends typeorm.BaseEntity {
         if (options.reason !== undefined) created.reason = options.reason
         if (options.duration !== undefined) created.duration = options.duration
         if (options.exception) created.exception = options.exception
+        if (options.regex) created.regex = options.regex
+
         await created.save()
         if (options.word !== undefined) {
             if (options.exception) client.filterWordsCached.except.push(options.word)
@@ -41,7 +44,7 @@ export default class BannedWord extends typeorm.BaseEntity {
         return created
     }
 
-    @SnowflakePrimaryColumn()
+    @typeorm.PrimaryColumn({type: "varchar", length: 100})
     word!: string
 
     @typeorm.Column({ nullable: true })
@@ -60,6 +63,9 @@ export default class BannedWord extends typeorm.BaseEntity {
 
     @typeorm.Column({ default: false })
     exception: boolean = false
+
+    @typeorm.Column({default: false})
+    regex: boolean = false
 
     static async loadWords(): Promise<{ banned: bannedTypes; except: Array<string> }> {
         const values = await this.find()

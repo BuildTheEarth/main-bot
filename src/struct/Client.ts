@@ -1,4 +1,4 @@
-import typeorm from "typeorm"
+import typeorm, { Migration } from "typeorm"
 import Discord from "discord.js"
 import EventList from "./client/EventList.js"
 import CommandList from "./client/CommandList.js"
@@ -75,7 +75,7 @@ export default class Client extends Discord.Client {
             ],
             synchronize: true, //process.env.NODE_ENV !== "production",
             //TODO: Fix this after db updates
-            logging: "all", //process.env.NODE_ENV !== "production" ? "all" : false
+            logging: ["error", "migration", "info"], //process.env.NODE_ENV !== "production" ? "all" : false
             charset: "utf8mb4"
         }
 

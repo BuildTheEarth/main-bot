@@ -128,8 +128,9 @@ export default async function (
                     this
                 )
             //if (interaction.channel.type === "DM" && !command.dms) return
-            if (command.permission !== globalThis.client.roles.ANY && !hasPermission)
-                return
+            if (command.permission !== globalThis.client.roles.ANY && !hasPermission) {
+                return new CommandMessage(interaction, this).sendErrorMessage("noPerms")
+            }
 
             const label = interaction.member
                 ? Role.format(

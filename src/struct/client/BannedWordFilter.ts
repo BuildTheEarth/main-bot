@@ -9,6 +9,10 @@ const duplicateChars = loadSyncJSON5(
     )
 )
 import Client from "../Client.js"
+import BannedWord from "../../entities/BannedWord.entity.js"
+
+const ALPHABET = "abcdefghijklmnopqrstuvwxyz"
+
 export default class BannedWordFilter {
     client: Client
 
@@ -16,32 +20,70 @@ export default class BannedWordFilter {
         this.client = client
     }
 
-    linkFilter(text: string): BannedWordObj[] {
-        let profanities: BannedWordObj[] = []
+    keepStarPluralize(word: string): string {
 
-        const suspects = [...text.matchAll(/\[([^\]]+)\]\(([^)]+)\)/g)]
+        let startStar = false
+        let endStar = false
 
-        for (const suspect of suspects) {
-            if (suspect[1] !== suspect[2]) {
-                profanities = profanities.concat([
-                    { raw: `\`[${suspect[1]}](${suspect[2]})\``, link: true }
-                ])
-            }
+        if (word.startsWith("*")) {
+            word = word.replace("*", "")
+            startStar=true
         }
 
-        return profanities
+        if (word.endsWith("*")) {
+            word = word.slice(0, word.length-1)
+            endStar = true
+        }
+
+        word = pluralize(word)
+
+        if (startStar) word = "*" + word
+        if (endStar) word += "*"
+
+        return word
     }
 
+
+    ignoreStarIsSingular(bannedWord: BannedWord): boolean {
+        if (bannedWord.regex) return false
+
+        let word = bannedWord.word
+
+        if (word.startsWith("*")) word = word.replace("*", "")
+
+        if (word.endsWith("*")) word = word.slice(0, word.length-1)
+
+        return isSingular(word)
+
+    }
+
+
     findBannedWord(text: string): BannedWordObj[] {
+
+        
+        const zeroWRegex = new RegExp(this.createChooseRegex(duplicateChars.ZERO_W) ,"g")
+        text = text.replaceAll(zeroWRegex , "")
+        
+        for (const letter of ALPHABET) {
+
+            const characters = duplicateChars[letter.toLowerCase()] || [letter]
+            const regexLetter = new RegExp(this.createChooseRegex(characters), "g")
+            text = text.replaceAll(regexLetter, letter)
+        }
+
+        text = text.toLowerCase()
+
         let profanities: BannedWordObj[] = []
         for (const word of this.client.filterWordsCached.banned.keys()) {
+            const realWord = this.client.filterWordsCached.banned.get(word)
+            if (!realWord) continue
             if (word.length > text.length) continue
-            if (isSingular(word)) {
-                const plural = pluralize(word)
-                const pluralMatches = this.findWord.bind(this)(text, plural, word)
+            if (this.ignoreStarIsSingular(realWord)) {
+                const plural = this.keepStarPluralize(word)
+                const pluralMatches = this.findWordString.bind(this)(text, plural, word)
                 profanities = profanities.concat(pluralMatches)
             }
-            const matches = this.findWord.bind(this)(text, word)
+            const matches = this.findWord.bind(this)(text, realWord)
             profanities = profanities.concat(matches)
         }
         const indices: number[] = []
@@ -60,25 +102,46 @@ export default class BannedWordFilter {
             return passes
         })
 
-        profanities = profanities.concat(this.linkFilter(text))
+
 
         return profanities
     }
 
-    findWord(text: string, word: string, base?: string): BannedWordObj[] {
+    findWord(text: string, bannedWord: BannedWord, base?: string): BannedWordObj[] {
         const profanities = []
-        const regexBody = this.createWordRegex(word, 25)
+        const regexBody = this.createWordRegexObj(bannedWord, Infinity)
         const regex = new RegExp(regexBody, "g")
         let match: RegExpExecArray | null
 
         while ((match = regex.exec(text)) != null) {
             profanities.push({
                 index: match.index,
-                word: word,
-                base: base || word,
-                raw: match[0]
+                word: match[0] || bannedWord.word,
+                base: base || bannedWord.word,
+                raw: match[0],
+                regex: bannedWord.regex
             })
         }
+
+        return profanities
+    }
+
+    findWordString(text: string, word: string, base?: string): BannedWordObj[] {
+        const profanities = []
+        const regexBody = this.createWordRegex(word, Infinity)
+        const regex = new RegExp(regexBody, "g")
+        let match: RegExpExecArray | null
+
+        while ((match = regex.exec(text)) != null) {
+            profanities.push({
+                index: match.index,
+                word: match[0] || word,
+                base: base || word,
+                raw: match[0],
+                regex: false
+            })
+        }
+
         return profanities
     }
 
@@ -111,22 +174,46 @@ export default class BannedWordFilter {
         return isException
     }
 
+    createWordRegexObj(word: BannedWord, max: number = Infinity): string {
+        if (word.regex) return word.word
+
+        return this.createWordRegex(word.word)
+    }
+
+
     createWordRegex(word: string, max: number = Infinity): string {
+        let startStar = false
+        let endStar = false
+
+        if (word.startsWith("*")) {
+            word = word.replace("*", "")
+            startStar=true
+        }
+
+        if (word.endsWith("*")) {
+            word = word.slice(0, word.length-1)
+            endStar = true
+        }
+
         const separator =
             this.createChooseRegex(duplicateChars.IRRELEVANT) +
             (max === Infinity ? "*" : `{0,${max}}`)
-        const regexBody = word
+        let regexBody = word
             .split("")
             .map(letter => {
-                const characters = duplicateChars[letter.toLowerCase()] || [letter]
+                const characters = [letter.toLowerCase()]
                 return this.createChooseRegex(characters)
             })
             .join(separator)
-        return "(?<=\\s|^)" + regexBody + "(?=\\s|$)"
+
+        if (!startStar) regexBody = "(?<=\\s|^)" + regexBody
+        if (!endStar) regexBody += "(?=\\s|$)"
+
+        return regexBody
     }
 
     createChooseRegex(strings: string[]): string {
-        return "(" + strings.map(this.escapeRegex).join("|") + ")"
+        return "(" + strings.map(this.escapeRegex).filter((letter) => letter !== "").join("|") + ")"
     }
 
     escapeRegex(string: string): string {
@@ -148,4 +235,5 @@ export type BannedWordObj = {
     base?: string
     raw?: string
     link?: boolean
+    regex?: boolean
 }

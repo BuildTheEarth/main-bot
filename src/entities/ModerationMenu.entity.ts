@@ -56,42 +56,18 @@ export default class ModerationMenu extends typeorm.BaseEntity {
 
         await message.delete().catch(noop)
 
-        const truePunishments = getMostSevereList(filterResponse, client)
+        const tempMessage = await message.channel.send(`<@${message.author.id}>, your message contained blocked words!`).catch(noop)
 
-        if (truePunishments[0].punishment_type === "DELETE") {
-            const embed = new Discord.EmbedBuilder()
-                .addFields(<Discord.EmbedField[]>[
-                    {
-                        name: "User",
-                        value: `<@${message.author.id}> (${message.author.id})`
-                    },
-                    {
-                        name: "Message",
-                        value: truncateString(
-                            message.content,
-                            1024,
-                            " (Check logs for the remaining content)"
-                        )
-                    },
-                    { name: "Trigger", value: truePunishments[0].word }
-                ])
-                .setColor(hexToRGB(client.config.colors.error))
+        setTimeout(async () => await tempMessage?.delete()?.catch(noop), 1500)
 
-            const channel = (await client.channels.fetch(
-                client.config.logging.modLogs
-            )) as Discord.TextChannel
-            await channel.send({
-                content: `<@&${globalThis.client.roles.MODERATOR_ON_DUTY[0]}>`,
-                embeds: [embed]
-            })
-            return
-        }
+        let truePunishments = getMostSevereList(filterResponse, client)
 
         const existingMenu = await ModerationMenu.findOne({ member: message.author.id })
 
         if (existingMenu) {
             existingMenu.offenses += 1
-            const truePunishments = getMostSevereList(filterResponse, client)
+            let truePunishments = getMostSevereList(filterResponse, client)
+            truePunishments = truePunishments.filter((word) => word.punishment_type !== "DELETE")
             existingMenu.punishments.push(...truePunishments)
             existingMenu.punishments = _.uniqBy(existingMenu.punishments, "word")
             if (existingMenu.punishments[0].word)
@@ -126,7 +102,7 @@ export default class ModerationMenu extends typeorm.BaseEntity {
                         )
                     },
                     { name: "Reason", value: existingMenu.punishments[0].reason },
-                    { name: "Trigger", value: existingMenu.punishments[0].word }
+                    { name: "Trigger", value: Discord.escapeMarkdown(existingMenu.punishments[0].word ?? "", {maskedLink: true}) }
                 ])
                 .setColor(hexToRGB(client.config.colors.error))
 
@@ -152,8 +128,8 @@ export default class ModerationMenu extends typeorm.BaseEntity {
             })
 
             const row = [
-                new Discord.ActionRowBuilder<Discord.SelectMenuBuilder>().addComponents(
-                    new Discord.SelectMenuBuilder()
+                new Discord.ActionRowBuilder<Discord.StringSelectMenuBuilder>().addComponents(
+                    new Discord.StringSelectMenuBuilder()
                         .setCustomId(`modmenu.${existingMenu.member}.menu`)
                         .setMinValues(1)
                         .setMaxValues(1)
@@ -163,11 +139,11 @@ export default class ModerationMenu extends typeorm.BaseEntity {
                 new Discord.ActionRowBuilder<Discord.ButtonBuilder>().addComponents(
                     new Discord.ButtonBuilder()
                         .setCustomId(`modmenu.${existingMenu.member}.punish`)
-                        .setStyle(Discord.ButtonStyle.Primary)
+                        .setStyle(Discord.ButtonStyle.Danger)
                         .setLabel("Punish"),
                     new Discord.ButtonBuilder()
                         .setCustomId(`modmenu.${existingMenu.member}.pardon`)
-                        .setStyle(Discord.ButtonStyle.Danger)
+                        .setStyle(Discord.ButtonStyle.Success)
                         .setLabel("Pardon")
                 )
             ]
@@ -186,6 +162,41 @@ export default class ModerationMenu extends typeorm.BaseEntity {
 
             return existingMenu
         }
+
+        if (truePunishments[0].punishment_type === "DELETE") {
+                    const embed = new Discord.EmbedBuilder()
+                    .addFields(<Discord.EmbedField[]>[
+                        {
+                            name: "User",
+                            value: `<@${message.author.id}> (${message.author.id})`
+                        },
+                        {
+                            name: "Message",
+                            value: truncateString(
+                                message.content,
+                                1024,
+                                " (Check logs for the remaining content)"
+                            )
+                        },
+                        { name: "Trigger", value: Discord.escapeMarkdown(truePunishments[0].word ?? "", {maskedLink: true})}
+                    ])
+                    .setColor(hexToRGB(client.config.colors.error))
+                
+
+                const channel = (await client.channels.fetch(
+                    client.config.logging.modLogs
+                )) as Discord.TextChannel
+                await channel.send({
+                    content: `<@&${globalThis.client.roles.MODERATOR_ON_DUTY[0]}>`,
+                    embeds: [embed]
+                })
+                
+            
+            return
+        }
+
+        truePunishments = truePunishments.filter((word) => word.punishment_type !== "DELETE")
+
 
         const modMenu = new ModerationMenu()
         modMenu.member = message.author.id
@@ -217,7 +228,7 @@ export default class ModerationMenu extends typeorm.BaseEntity {
                     )
                 },
                 { name: "Reason", value: modMenu.punishments[0].reason },
-                { name: "Trigger", value: modMenu.punishments[0].word }
+                { name: "Trigger", value: Discord.escapeMarkdown(modMenu.punishments[0].word ?? "", {maskedLink: true}) }
             ])
             .setColor(hexToRGB(client.config.colors.error))
 
@@ -234,8 +245,8 @@ export default class ModerationMenu extends typeorm.BaseEntity {
         })
 
         const row = [
-            new Discord.ActionRowBuilder<Discord.SelectMenuBuilder>().addComponents(
-                new Discord.SelectMenuBuilder()
+            new Discord.ActionRowBuilder<Discord.StringSelectMenuBuilder>().addComponents(
+                new Discord.StringSelectMenuBuilder()
                     .setCustomId(`modmenu.${modMenu.member}.menu`)
                     .setMinValues(1)
                     .setMaxValues(1)
@@ -304,7 +315,7 @@ export default class ModerationMenu extends typeorm.BaseEntity {
                     value: getDuration(punishment.duration ? punishment.duration : 0)
                 },
                 { name: "Reason", value: punishment.reason },
-                { name: "Trigger", value: punishment.word }
+                { name: "Trigger", value: Discord.escapeMarkdown(punishment.word ?? "", {maskedLink: true}) }
             ])
             .setColor(hexToRGB(client.config.colors.error))
 
@@ -681,27 +692,18 @@ function getMostSevereList(
 ): bannedWordsOptions[] {
     const punishmentWords: bannedWordsOptions[] = []
     for (const punishment of punishments) {
-        if (punishment.link) {
-            punishmentWords.push({
-                word: punishment.raw,
-                punishment_type: "BAN",
-                duration: 0,
-                reason: client.placeholder.replacePlaceholders("{{phishing}}"),
-                exception: false
-            })
-        } else {
             if (!punishment.base) return []
             const word = client.filterWordsCached.banned.get(punishment.base)
             if (!word) return []
 
             punishmentWords.push({
-                word: punishment.base,
+                word: punishment.regex? punishment.raw: punishment.base,
                 punishment_type: word.punishment_type,
                 duration: word.duration ? word.duration : null,
                 reason: word.reason ? word.reason : undefined,
                 exception: false
             })
-        }
+        
     }
     return punishmentWords
         .filter(word => word !== undefined)

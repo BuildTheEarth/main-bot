@@ -40,6 +40,12 @@
                             description: 'Punishment duration.',
                             translated_description: 'Punishment duration.',
                         },
+                        {
+                            name: 'regex',
+                            translated_name: 'regex',
+                            description: 'Whether the provided string is a regex or not.',
+                            translated_description: 'Whether the provided string is a regex or not.',
+                        },
                     ],
                 },
                 {
