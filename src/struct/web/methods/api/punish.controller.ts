@@ -26,7 +26,7 @@ export default class PunishController {
         const params = req.query
         const showDeleted = params["showDeleted"] ? true : false
         const count = params["count"] ? true : false
-        const group = params["noGroup"] ? true : false
+        const group = params["noGroup"] ? false: true
         const timed = params["timedPunishment"] ? true: false
 
 
@@ -114,6 +114,7 @@ export default class PunishController {
             res.send(actionLogs)
             return
         }
+
 
 
         let categorizedLogs: Discord.Collection<Action, (ActionLog | TimedPunishment)[] | number> = new Discord.Collection([
