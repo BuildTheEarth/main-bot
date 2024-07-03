@@ -27,6 +27,9 @@ export default new Command({
         }
     ],
     async run(this: Command, client: Client, message: CommandMessage, args: Args) {
+
+        await message.continue()
+
         const urlRegex =
             /(?<=(https:\/\/)(canary\.discord\.com\/channels\/|discord\.com\/channels\/|ptb\.discord\.com\/channels\/))([0-9]{17,})(\/)([0-9]{17,})(\/)([0-9]{17,})/
         const messageUrl = args.get("message")
@@ -39,6 +42,7 @@ export default new Command({
             channelId: messagePropsTemp[5],
             messageId: messagePropsTemp[7]
         }
+
 
         const guild = await client.guilds.fetch(messageProps.guildId).catch(noop)
 
@@ -70,6 +74,7 @@ export default new Command({
         if (!embedMessage) {
             return message.sendErrorMessage("provideMsgUrl")
         }
+
 
         const webhookJson = {
             messages: [
@@ -109,6 +114,7 @@ export default new Command({
         }
 
         if (!data?.url) {
+            console.log(data)
             return message.sendErrorMessage("httpError")
         }
 
@@ -118,5 +124,7 @@ export default new Command({
             data.url,
             formatTimestamp(new Date(data.expires), "R")
         )
+
+        
     }
 })

@@ -7,6 +7,8 @@ import RoleController from "../methods/api/role.controller.js"
 import WebsiteMessage from "../methods/api/websiteMessage.controller.js"
 import MetricsController from "../methods/api/metrics.controller.js"
 import LookupController from "../methods/api/lookup.controller.js"
+import BannedWordsController from "../methods/api/bannedwords.controller.js"
+import PlaceholderController from "../methods/api/placeholders.controller.js"
 
 @Module({
     imports: [],
@@ -18,7 +20,9 @@ import LookupController from "../methods/api/lookup.controller.js"
         RoleController,
         WebsiteMessage,
         MetricsController,
-        LookupController
+        LookupController,
+        BannedWordsController,
+        PlaceholderController
     ],
     providers: []
 })

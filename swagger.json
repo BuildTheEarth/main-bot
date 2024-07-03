@@ -3,7 +3,8 @@
   "info": {
     "title": "Main Bot API",
     "version": "1.0.0",
-    "description": "The main bot api allows you to interact with the BuildTheEarth Discord in a secure and limited fashion.\n\nNote that this is a very restricted API and you need your IP to be whitelisted in order for your requests to work.\n\n### Check out its awesome features:\n\n* Fetch roles\n* Update builder roles\n* Send templated messages to users\n* Create a report against an user\n"
+    "description": "The main bot api allows you to interact with the BuildTheEarth Discord in a secure and limited fashion.\n\nNote that this is a very restricted API and you need your IP to be whitelisted in order for your requests to work.\n\n### Check out its awesome features:\n\n* Fetch roles\n* Update builder roles\n* Send templated messages to users\n* Create a report against an user\n",
+    "contact": {}
   },
   "servers": [
     {
@@ -67,7 +68,8 @@
               }
             }
           }
-        }
+        },
+        "parameters": []
       }
     },
     "/api/v1/builder": {
@@ -507,7 +509,128 @@
           }
         }
       }
-    }
+    },
+    "/api/v1/bannedwords": {
+      "summary": "Get all the banned words",
+      "description": "Sorted by exceptions and banned words",
+      "get": {
+        "summary": "Get all the banned words",
+        "description": "Sorted by exceptions and banned words",
+        "parameters": [],
+        "operationId": "getBannedWords",
+        "responses": {
+          "200": {
+            "description": "List of words",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "banned": {
+                      "type": "array",
+                      "description": "Array of banned words",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "word": {
+                            "type": "string",
+                            "description": "the word"
+                          },
+                          "punishment_type": {
+                            "type": "string",
+                            "description": "The type of punishment"
+                          },
+                          "reason": {
+                            "type": "string",
+                            "description": "The reason"
+                          },
+                          "duration": {
+                            "type": "string",
+                            "description": "Duration of moderation action"
+                          },
+                          "exception": {
+                            "type": "boolean",
+                            "description": "always false in this section"
+                          },
+                          "regex": {
+                            "type": "boolean",
+                            "description": "Is it a regex?"
+                          }
+                        }
+                      }
+                    },
+                    "exceptions": {
+                      "type": "array",
+                      "description": "Array of exceptions",
+                      "items": {
+                        "type": "string",
+                        "description": "An exceptions"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "website"
+        ]
+      }
+    },
+    "/api/v1/placeholders": {
+      "summary": "Get all the placeholders",
+      "description": "Grouped by name, has all them of one language within",
+      "get": {
+        "summary": "Get all the placeholders",
+        "description": "Grouped by name, has all them of one language within",
+        "parameters": [],
+        "operationId": "getPlaceholder",
+        "responses": {
+          "200": {
+            "description": "List of placeholders",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "name_1": {
+                      "type": "array",
+                      "description": "User IDs of failed messages",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "integer",
+                            "description": "the id"
+                          },
+                          "name": {
+                            "type": "string",
+                            "description": "name of placeholder"
+                          },
+                          "language": {
+                            "type": "string",
+                            "description": "language of placeholder"
+                          },
+                          "body": {
+                            "type": "string",
+                            "description": "placeholder content"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "website"
+        ]
+      }
+    },
+    "/newPath": {}
   },
   "components": {
     "schemas": {
@@ -669,6 +792,9 @@
         "type": "http",
         "scheme": "bearer"
       }
-    }
-  }
+    },
+    "links": {},
+    "callbacks": {}
+  },
+  "security": []
 }

@@ -28,9 +28,9 @@ export default class Placeholder extends typeorm.BaseEntity {
         }
     }
 
-    static async loadPlaceholders(): Promise<Map<string, Placeholder>> {
+    static async loadPlaceholders(): Promise<Discord.Collection<string, Placeholder>> {
         const values = await this.find()
-        const placeholders = new Map<string, Placeholder>()
+        const placeholders = new Discord.Collection<string, Placeholder>()
         values.forEach(word => {
             placeholders.set(word.name + " " + word.language, word)
         })

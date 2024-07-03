@@ -45,7 +45,7 @@ export default class Client extends Discord.Client {
     response = new Response(this)
     webserver = new WebserverHandler(this)
     filterWordsCached: { banned: bannedTypes; except: Array<string> } = {
-        banned: new Map<string, BannedWord>(),
+        banned: new Discord.Collection<string, BannedWord>(),
         except: new Array<string>()
     }
 

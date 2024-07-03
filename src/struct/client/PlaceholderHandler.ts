@@ -2,6 +2,7 @@ import { trimSides } from "@buildtheearth/bot-utils"
 import Placeholder from "../../entities/Placeholder.entity.js"
 import Client from "../Client.js"
 import iso6391 from "./iso6391.js"
+import { Collection } from "discord.js"
 
 export default class PlaceholderHandler {
     client: Client
@@ -10,7 +11,7 @@ export default class PlaceholderHandler {
         this.client = client
     }
 
-    cache = new Map<string, Placeholder>()
+    cache = new Collection<string, Placeholder>()
 
     async addPlaceholder(name: string, language: string, body: string): Promise<void> {
         if (this.cache.has(name + " " + language)) return

@@ -3,8 +3,9 @@ import type Client from "../struct/Client.js"
 import SnowflakePrimaryColumn from "./decorators/SnowflakePrimaryColumn.decorator.js"
 import milliseconds from "./transformers/milliseconds.transformer.js"
 import unicode from "./transformers/unicode.transformer.js"
+import Discord from "discord.js"
 
-export type bannedTypes = Map<string, BannedWord>
+export type bannedTypes = Discord.Collection<string, BannedWord>
 
 export interface bannedInfo {
     punishment_type: "BAN" | "WARN" | "MUTE" | "KICK" | "DELETE"
@@ -69,7 +70,7 @@ export default class BannedWord extends typeorm.BaseEntity {
 
     static async loadWords(): Promise<{ banned: bannedTypes; except: Array<string> }> {
         const values = await this.find()
-        const banned: bannedTypes = new Map<string, BannedWord>()
+        const banned: bannedTypes = new Discord.Collection<string, BannedWord>()
         const except: Array<string> = []
         values.forEach(word => {
             if (word.exception) except.push(word.word)
