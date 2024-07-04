@@ -8,7 +8,7 @@ import MinecraftServerStatus from "../typings/MinecraftServerStatus.js"
 import CommandMessage from "../struct/CommandMessage.js"
 
 const API_URL = "https://api.mcsrvstat.us/2/"
-const JAVA_URL = `${API_URL}network.buildtheearth.net`
+const JAVA_URL = `${API_URL}buildtheearth.net`
 const BEDROCK_URL = `${API_URL}bedrock.buildtheearth.net`
 
 export default new Command({

@@ -5,6 +5,9 @@ import { Response, Request } from "express"
 export default class AuthProxy implements NestMiddleware {
     use(@Req() req: Request, @Res() res: Response, @Next() next: () => unknown): void {
         const ip = req.headers["x-forwarded-for"]?.toString() || req.socket.remoteAddress
+        console.log(req.headers.authorization)
+
+        console.log(`Bearer ${globalThis.client.config.interKey}`)
         if (req.headers.authorization == `Bearer ${globalThis.client.config.interKey}`) {
             globalThis.client.logger.info(
                 `API ${req.method} request to ${req.url} from ${ip}`
