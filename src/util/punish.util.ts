@@ -23,7 +23,6 @@ async function log(
     log.member = user.id
     if (message.member) log.executor = message.member.user.id
     log.reason = reason
-    console.log(length)
     if (image) log.reasonImage = image
     log.length = length
     if (message instanceof ButtonInteraction) log.channel = message.channelId
@@ -101,7 +100,6 @@ export default async function punish(
     let punishment: TimedPunishment | null
     if (type === "ban" || type === "mute") {
         punishment = await timedPunishment(client, member, type, length)
-        console.log(punishment)
     } else punishment = null
 
     const actionLog = await log(

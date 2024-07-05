@@ -181,7 +181,6 @@ export default new Command({
 
             const durationReal = args.consumeNumber("duration")
 
-            console.log(durationReal)
             let duration = durationReal
 
             if (!duration || duration < 0) duration = 3

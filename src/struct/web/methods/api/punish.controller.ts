@@ -28,6 +28,7 @@ export default class PunishController {
         const count = params["count"] ? true : false
         const group = params["noGroup"] ? false: true
         const timed = params["timedPunishment"] ? true: false
+        const noZero = (params["noZero"] ? true : false) && timed
 
 
         let since = 0
@@ -102,8 +103,13 @@ export default class PunishController {
         if (!actionLogs) return
 
         
-        actionLogs = actionLogs.filter((value) => 
-            since <= value.createdAt.getTime()
+        actionLogs = actionLogs.filter((value) => {
+            if (since <= value.createdAt.getTime()) {
+                if (noZero) return (value as TimedPunishment).length > 0
+                else return true;
+            } else return false;
+        }
+            
         ).sort((a, b) => {
             if (a.createdAt == b.createdAt) return 0
             if (a.createdAt > b.createdAt) return order ? -1: 1

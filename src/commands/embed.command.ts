@@ -114,7 +114,6 @@ export default new Command({
         }
 
         if (!data?.url) {
-            console.log(data)
             return message.sendErrorMessage("httpError")
         }
 
