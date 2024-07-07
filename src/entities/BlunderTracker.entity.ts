@@ -92,7 +92,7 @@ export default class BlunderTracker extends typeorm.BaseEntity {
     }
 
     async roleToTeam(client: Client): Promise<string> {
-        if (!this.role) return "the team"
+        if (!this.role) return ""
         const role = (await client.customGuilds.staff()).roles.cache.get(this.role)
         if (!role) return ""
         if (NO_PLURAL.includes(role.name.toLowerCase())) return role.name
