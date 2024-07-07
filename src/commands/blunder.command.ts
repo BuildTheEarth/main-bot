@@ -105,9 +105,9 @@ export default new Command({
 
             if (id) {
                 blunder = await BlunderTracker.findOne(id)
-                if (!blunder || !blunder.role)
+                if (!blunder)
                     return message.sendErrorMessage("invalidBlunderID")
-                if (!staffMember.roles.cache.has(blunder.role) && !canManage)
+                if (blunder.role && !staffMember.roles.cache.has(blunder.role) && !canManage)
                     return message.sendErrorMessage("noPerms")
             } else {
                 const rolesDescending = staffMember.roles.cache.sort(

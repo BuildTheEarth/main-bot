@@ -42,6 +42,11 @@ export default class AdvancedBuilder extends typeorm.BaseEntity {
         time = new Date(time.getTime())
         time.setMonth(time.getMonth() + this.duration)
 
+        if (time.getMilliseconds() < Date.now()) {
+            this.removeBuilder(client)
+            return
+        }
+
         client.honorBuilderTimeouts.set(
             this.builder,
             new Cron(time, () => this.removeBuilder(client))

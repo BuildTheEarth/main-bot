@@ -20,7 +20,7 @@ export default async function (
 
     if (newMessage.content) {
         const bannedWords = this.filter.findBannedWord(newMessage.content)
-        if (bannedWords.length >= 1)
+        if (bannedWords.length >= 1 &&  newMessage.guild?.id === this.config.guilds.main)
             return ModerationMenu.createMenu(newMessage, bannedWords, this)
     }
 }
