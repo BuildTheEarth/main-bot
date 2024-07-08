@@ -1,4 +1,6 @@
 * text=auto eol=lf
 *.js linguist-language=TypeScript
+*.cjs linguist-language=TypeScript
+*.mjs linguist-language=TypeScript
 * -text
 # cheat in full ts
