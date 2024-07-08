@@ -4,7 +4,6 @@ import Command from "../struct/Command.js"
 import ModpackImage, { ModpackImageKey } from "../entities/ModpackImage.entity.js"
 
 import CommandMessage from "../struct/CommandMessage.js"
-import JSON5 from "json5"
 import fetch from "node-fetch"
 import sizeOf from "buffer-image-size"
 import { hexToNum, isURL } from "@buildtheearth/bot-utils"
@@ -161,7 +160,7 @@ export default new Command({
             await message.continue()
 
             const { body } = await ModpackImage.fetch()
-            const code = `\`\`\`${JSON5.stringify(body, null, 2)}\`\`\``
+            const code = `\`\`\`${JSON.stringify(body, null, 2)}\`\`\``
             await message.sendSuccessMessage("updatedJsonData", code)
         } else if (subcommand === "push") {
             await message.continue()

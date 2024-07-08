@@ -9,7 +9,7 @@ export type ModpackImageSet = Partial<Record<ModpackImageKey, ModpackImageData>>
 
 @typeorm.Entity({ name: "modpack_images" })
 export default class ModpackImage extends typeorm.BaseEntity {
-    static readonly API_URL = "https://buildtheearth.net/api/modpack/images"
+    static readonly API_URL = "https://api.buildtheearth.net/api/v1/jsonstore/modpack"
 
     @typeorm.PrimaryGeneratedColumn()
     id!: number
@@ -75,6 +75,8 @@ export default class ModpackImage extends typeorm.BaseEntity {
                 credit: image.credit ? image.credit : null
             }
         }
+
+        console.log(JSON.stringify(object))
 
         const response: Response = await fetch(this.API_URL, {
             method: "POST",
