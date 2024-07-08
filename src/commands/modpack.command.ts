@@ -177,7 +177,7 @@ export default new Command({
                 await image.save()
             }
 
-            await ModpackImage.post(client.config.modpackAuth)
+            await ModpackImage.post(client.config.websiteToken)
             await message.sendSuccessMessage("pushedChanges")
         } else if (subcommand === "url") {
             await message.sendSuccess(ModpackImage.API_URL)
