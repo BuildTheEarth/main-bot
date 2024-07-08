@@ -1,0 +1,16 @@
+{
+    name: 'upload',
+    translated_name: 'upload',
+    description: 'Upload images to the s3 bucket.',
+    translated_description: 'Upload images to the s3 bucket.',
+    args: [
+        {
+            name: 'image',
+            translated_name: 'image',
+            description: 'Image to upload',
+            translated_description: 'Image to upload',
+        },
+    ],
+    aliases: [],
+    translated_aliases: [],
+}

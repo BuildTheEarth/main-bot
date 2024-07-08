@@ -64,6 +64,7 @@ export default class ConfigManager {
     submodules: Submodules
     envBindings: Record<string, string>
     suspiciousUsers!: string
+    websiteToken!: string
 
     constructor(client: Client) {
         this.client = client
