@@ -134,9 +134,7 @@
     editOthers: ["Başka insanların önerilerini düzenleyemezsin."],
     deleteOthers: ["Başka insanların önerilerini silemezsin."],
     multipleBlunders: [
-        "En yüksek rolünüz için birden fazla blunder tracker bulundu, lütfen
-
- birini bir ID ile belirtin."
+        "En yüksek rolünüz için birden fazla blunder tracker bulundu, lütfen birini bir ID ile belirtin."
     ],
     blunderCommitted: [
         "Ölümlü insan kusurlarınız kaydedildi 😔",
