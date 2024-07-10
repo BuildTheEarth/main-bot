@@ -112,7 +112,7 @@ export default async function (this: Client, message: Discord.Message): Promise<
                 return
             }
 
-            await message.channel.send(snippet.body).catch(() => null)
+            await message.channel.send({content: snippet.body, allowedMentions: {parse: []}}).catch(() => null)
 
             return
         }
