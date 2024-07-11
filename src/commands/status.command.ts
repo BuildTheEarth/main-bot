@@ -11,9 +11,11 @@ import _ from "lodash"
 
 export default new Command({
     name: "status",
-    aliases: [],
+    aliases: ["online", "network"],
     description: "Check the status of the Minecraft network.",
     permission: globalThis.client.roles.ANY,
+    globalRegister: true,
+    userInstallContext: true,
     async run(this: Command, client: Client, message: CommandMessage) {
         await message.continue()
 
