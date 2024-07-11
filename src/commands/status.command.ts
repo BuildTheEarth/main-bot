@@ -70,7 +70,7 @@ export default new Command({
             let numbersOnly = false;
 
             let embedFields: {name: string, value: string}[] = Array.from(playersPerServer.entries()).map((entry: [string, string[]]) => {
-                if (!entry[1]) {
+                if (!entry || !entry[1] || !entry[0]) {
                     return {name: entry[0], value: "**Nobody online**"}
                 }
 
@@ -84,7 +84,7 @@ export default new Command({
 
             if (charCount > 5800 || numbersOnly) {
                 embedFields = Array.from(playersPerServer.entries()).map((entry: [string, string[]]) => {
-                    if (!entry[1]) {
+                    if (!entry || !entry[1] || !entry[0]) {
                         return {name: entry[0], value: "**Nobody online**"}
                     }
     
