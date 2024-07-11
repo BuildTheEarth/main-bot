@@ -65,6 +65,7 @@ export default class ConfigManager {
     envBindings: Record<string, string>
     suspiciousUsers!: string
     websiteToken!: string
+    wmSocket!: string
 
     constructor(client: Client) {
         this.client = client

@@ -1,15 +1,13 @@
 import Discord from "discord.js"
 import Client from "../struct/Client.js"
 import Command from "../struct/Command.js"
-
-import { noop } from "@buildtheearth/bot-utils"
+import { hexToNum, hexToRGB, noop } from "@buildtheearth/bot-utils"
 import fetch from "node-fetch"
 import MinecraftServerStatus from "../typings/MinecraftServerStatus.js"
 import CommandMessage from "../struct/CommandMessage.js"
+import WebSocket from "ws"
+import _ from "lodash"
 
-const API_URL = "https://api.mcsrvstat.us/2/"
-const JAVA_URL = `${API_URL}buildtheearth.net`
-const BEDROCK_URL = `${API_URL}bedrock.buildtheearth.net`
 
 export default new Command({
     name: "status",
@@ -19,48 +17,92 @@ export default new Command({
     async run(this: Command, client: Client, message: CommandMessage) {
         await message.continue()
 
-        const status = (url: string) =>
-            fetch(url)
-                .then(res => res.json())
-                .catch(noop) as Promise<MinecraftServerStatus>
-        const java = await status(JAVA_URL)
-        const bedrock = await status(BEDROCK_URL)
+        const ws = new WebSocket(client.config.wmSocket);
 
-        if (!java?.online) {
-            return message.sendErrorMessageSeen("networkOffline")
-        } else {
-            const embed = <Discord.APIEmbed>{
-                description: message.getMessage("networkOnline"),
-                fields: [{ name: message.getMessage("players") }],
-                footer: { text: "IP: BuildTheEarth.net, bedrock.BuildTheEarth.net" }
+        ws.on('error', async () => {
+            return await message.sendErrorMessageSeen("networkOffline")
+        });
+
+        ws.on('open', function open() {
+            const request = {
+                "salt": "ABCDE",
+                "id": "BOT",
+                "type": "all_players",
+                "data": {
+
+                }
             }
 
-            if (java.players.online) {
-                let players = message.getMessage(
-                    "playersOnline",
-                    java.players.online,
-                    java.players.max
-                )
-                if (java?.info?.clean)
-                    players += java.info.clean
-                        .filter(line => line.startsWith("["))
-                        .join("\n")
-                        .replace(/\[(\d+)]/g, "**$1**")
+            ws.send(JSON.stringify(request))
+        });
 
-                if (embed.fields) embed.fields[0].value = players
-            } else {
-                if (embed.fields)
-                    embed.fields[0].value = "There are no players online right now."
+        ws.on('message', async (data: string) => {
+    
+            const jsonParsed = JSON.parse(data)
+
+            const trueData: any[] = jsonParsed["data"]["response_data"]
+
+            if (!trueData) return await message.sendErrorMessageSeen("networkOffline")
+
+            if (trueData.length == 0) {
+                const embed = <Discord.APIEmbed>{
+                    title: "No players are online",
+                    description: message.getMessage("networkOnline"),
+                    footer: { text: "IP: BuildTheEarth.net, bedrock.BuildTheEarth.net" },
+                    color: hexToNum(client.config.colors.success)
+                }
+
+                return await message.send({embeds: [embed]})
             }
 
-            embed.fields?.push({
-                name: "Bedrock",
-                value: bedrock?.online
-                    ? "The Bedrock proxy is online!"
-                    : "The Bedrock proxy is offline right now."
+            const playersPerServer = new Map<string, string[]>()
+
+            trueData.forEach((player: {Attributes: {LAST_SERVER: string}, Name: string, DiscordID?: string}) => {
+                if (playersPerServer.has(player.Attributes.LAST_SERVER)) {
+                    playersPerServer.get(player.Attributes.LAST_SERVER)?.push(player.Name + (player["DiscordID"] ? ` (<@${player.DiscordID}>)` : "") )
+                } else {
+                    playersPerServer.set(player.Attributes.LAST_SERVER, [player.Name + (player["DiscordID"] ? ` (<@${player.DiscordID}>)` : "")])
+                }
             })
 
-            await message.sendSuccess(embed)
-        }
+            let charCount = 0;
+
+            let numbersOnly = false;
+
+            let embedFields: {name: string, value: string}[] = Array.from(playersPerServer.entries()).map((entry: [string, string[]]) => {
+                if (!entry[1]) {
+                    return {name: entry[0], value: "**Nobody online**"}
+                }
+
+                let localCharCount =  _.sum(entry[1].map((e) => " - " + Discord.escapeMarkdown(e).length + "\n"))
+                charCount += entry[0].length + 3 + localCharCount
+                if (localCharCount > 1024) numbersOnly = true
+
+                return {name: entry[0], value: entry[1].map((e) => "- " + Discord.escapeMarkdown(e)).join("\n")}
+
+            })
+
+            if (charCount > 5800 || numbersOnly) {
+                embedFields = Array.from(playersPerServer.entries()).map((entry: [string, string[]]) => {
+                    if (!entry[1]) {
+                        return {name: entry[0], value: "**Nobody online**"}
+                    }
+    
+                    return {name: entry[0], value: entry[1].length + " members"}
+                })
+            }
+
+
+
+            const embed = <Discord.APIEmbed>{
+                description: message.getMessage("networkOnline"),
+                fields: embedFields,
+                footer: { text: `BuildTheEarth.net Total Players: ${trueData.length}` },
+                color: hexToNum(client.config.colors.success)
+            }
+
+            return await message.send({embeds: [embed]})
+        });
+        
     }
 })
