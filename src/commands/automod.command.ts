@@ -161,7 +161,7 @@ export default new Command({
                 )
                     return await message.sendErrorMessage("specifyDuration")
                 const isAlreadyThere = client.filterWordsCached.banned.get(word)
-                if (isAlreadyThere)
+                if (isAlreadyThere != undefined)
                     return await message.sendErrorMessage("wordAlreadyBanned")
 
                 const regex = args.consumeBoolean("regex")

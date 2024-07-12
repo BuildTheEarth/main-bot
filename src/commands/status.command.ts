@@ -73,7 +73,7 @@ export default new Command({
 
             let embedFields: {name: string, value: string}[] = Array.from(playersPerServer.entries()).map((entry: [string, string[]]) => {
                 if (!entry || !entry[1] || !entry[0]) {
-                    return {name: entry[0], value: "**Nobody online**"}
+                    return {name: entry[0] || "No Server", value: "**Nobody online**"}
                 }
 
                 let localCharCount =  _.sum(entry[1].map((e) => " - " + Discord.escapeMarkdown(e).length + "\n"))
@@ -87,7 +87,7 @@ export default new Command({
             if (charCount > 5800 || numbersOnly) {
                 embedFields = Array.from(playersPerServer.entries()).map((entry: [string, string[]]) => {
                     if (!entry || !entry[1] || !entry[0]) {
-                        return {name: entry[0], value: "**Nobody online**"}
+                        return {name: entry[0] || "No Server", value: "**Nobody online**"}
                     }
     
                     return {name: entry[0], value: entry[1].length + " members"}
