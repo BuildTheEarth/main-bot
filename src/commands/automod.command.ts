@@ -134,8 +134,10 @@ export default new Command({
                 await getList(false, message, client)
             }
             if (subcommand === "add") {
-                const word = args.consume("word")
+                let word = args.consume("word")
                 if (!word) return await message.sendErrorMessage("invalidWord")
+
+                word = word.toLowerCase()
 
                 await message.continue()
                 const punishment = args.consume("punishment").toUpperCase()
@@ -161,8 +163,6 @@ export default new Command({
                 )
                     return await message.sendErrorMessage("specifyDuration")
                 const isAlreadyThere = client.filterWordsCached.banned.get(word)
-                console.log(client.filterWordsCached.banned)
-                console.log(client.filterWordsCached.banned.get(word))
                 if (isAlreadyThere != undefined)
                     return await message.sendErrorMessage("wordAlreadyBanned")
 

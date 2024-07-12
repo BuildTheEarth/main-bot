@@ -29,7 +29,7 @@ export default class BannedWord extends typeorm.BaseEntity {
         client: Client
     ): Promise<BannedWord> {
         const created = new BannedWord()
-        if (options.word !== undefined) created.word = options.word
+        if (options.word !== undefined) created.word = options.word.toLowerCase()
         if (options.punishment_type !== undefined)
             created.punishment_type = options.punishment_type
         if (options.reason !== undefined) created.reason = options.reason
@@ -73,8 +73,8 @@ export default class BannedWord extends typeorm.BaseEntity {
         const banned: bannedTypes = new Discord.Collection<string, BannedWord>()
         const except: Array<string> = []
         values.forEach(word => {
-            if (word.exception) except.push(word.word)
-            else banned.set(word.word, word)
+            if (word.exception) except.push(word.word.toLowerCase())
+            else banned.set(word.word.toLowerCase(), word)
         })
         return { banned: banned, except: except }
     }
@@ -84,7 +84,7 @@ export default class BannedWord extends typeorm.BaseEntity {
             client.filterWordsCached.except = client.filterWordsCached.except.filter(
                 value => value !== this.word
             )
-        else client.filterWordsCached.banned.delete(this.word)
+        else client.filterWordsCached.banned.delete(this.word.toLowerCase())
         await this.remove()
         return
     }
