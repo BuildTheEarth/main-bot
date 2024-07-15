@@ -16,5 +16,5 @@ ENV IN_DOCKER yes
 
 #Please edit this to your images webserver port
 #EXPOSE 8080
-CMD ["node", "--max-old-space-size=4096", "dist/index.js"]
+CMD ["node", "--max-old-space-size=4096", "--inspect=0.0.0.0:9229", "dist/index.js"]
 #CMD ["sh", "scripts/dumb.sh"]
