@@ -14,7 +14,7 @@ export default new Command({
     name: "blunder",
     aliases: [],
     description: "Count the low amount of days since the staff team last made a blunder",
-    permission: globalThis.client.roles.STAFF,
+    permission: [globalThis.client.roles.STAFF, globalThis.client.roles.BUILD_TEAM_STAFF, globalThis.client.roles.TEAM_OWNER_STAFF],
     subcommands: [
         {
             name: "commit",
@@ -88,11 +88,11 @@ export default new Command({
         const canManage = message.member
             ? GuildMember.hasRole(
                   staffMember,
+                  //Broadly widening permissions for blunder command
                   [
-                      globalThis.client.roles.MANAGER,
-                      globalThis.client.roles.LEAD_DEVELOPER,
-                      globalThis.client.roles.PR_SUBTEAM_LEAD,
-                      globalThis.client.roles.COMMUNITY_SUBTEAM_LEAD
+                      globalThis.client.roles.STAFF,
+                      globalThis.client.roles.BUILD_TEAM_STAFF, 
+                      globalThis.client.roles.TEAM_OWNER_STAFF
                   ],
                   client
               )
