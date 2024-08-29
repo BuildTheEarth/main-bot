@@ -118,10 +118,14 @@ export default class Response {
         else if (message instanceof Discord.Message)
             return message.reply({
                 embeds: [embed],
-                allowedMentions: { repliedUser: false }
+                allowedMentions: { repliedUser: false, parse: ['users'] }
             })
         else if (message instanceof Discord.ModalSubmitInteraction)
-            return message.reply({ embeds: [embed], ephemeral: ephemeral })
+            return message.reply({
+                embeds: [embed],
+                ephemeral: ephemeral,
+                allowedMentions: { repliedUser: false, parse: ['users'] }
+            })
         else if (message instanceof Discord.ButtonInteraction)
             return message.reply({ embeds: [embed], ephemeral: ephemeral })
         else return message.send({ embeds: [embed] })

@@ -198,7 +198,10 @@ export default new Command({
             if (!tasks.length) return message.sendErrorMessage("noTasks")
 
             const report = tasks.map(task => `•   ${task.title}`).join("\n")
-            await channel.send(`Task report from <@${message.member.id}>:\n\n${report}`)
+            await channel.send({
+                content: `Task report from <@${message.member.id}>:\n\n${report}`,
+                allowedMentions: { parse: [] }
+            })
 
             for (const task of tasks) {
                 task.status = "reported"

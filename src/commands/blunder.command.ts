@@ -87,15 +87,15 @@ export default new Command({
 
         const canManage = message.member
             ? GuildMember.hasRole(
-                  staffMember,
-                  //Broadly widening permissions for blunder command
-                  [
-                      globalThis.client.roles.STAFF,
-                      globalThis.client.roles.BUILD_TEAM_STAFF, 
-                      globalThis.client.roles.TEAM_OWNER_STAFF
-                  ],
-                  client
-              )
+                staffMember,
+                //Broadly widening permissions for blunder command
+                [
+                    globalThis.client.roles.STAFF,
+                    globalThis.client.roles.BUILD_TEAM_STAFF,
+                    globalThis.client.roles.TEAM_OWNER_STAFF
+                ],
+                client
+            )
             : false
 
         if (subcommand == "commit") {
@@ -153,9 +153,10 @@ export default new Command({
             blunder.description = description
 
             const msg = await channel.send(
-                `\`unknown\` days since ${
-                    blunder.role ? (await blunder.roleToTeam(client)) + " " : ""
-                }${blunder.description}`
+                {
+                    content: `\`unknown\` days since ${blunder.role ? (await blunder.roleToTeam(client)) + " " : ""
+                        }${blunder.description}`, allowedMentions: { parse: [] }
+                }
             )
             blunder.message = msg.id
             await blunder.save()
@@ -198,10 +199,8 @@ export default new Command({
                     blunders
                         .map(
                             blunder =>
-                                `[**${blunder.id}:**](https://discord.com/channels/${
-                                    staffMember.guild.id
-                                }/${blunder.channel}/${blunder.message}) days since ${
-                                    blunder.role ? `<@&${blunder.role}> ` : ""
+                                `[**${blunder.id}:**](https://discord.com/channels/${staffMember.guild.id
+                                }/${blunder.channel}/${blunder.message}) days since ${blunder.role ? `<@&${blunder.role}> ` : ""
                                 }${blunder.description}`
                         )
                         .join("\n") || "None :(",
