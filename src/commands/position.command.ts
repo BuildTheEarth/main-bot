@@ -58,7 +58,7 @@ export default new Command({
                     description: "Position to promote/demote to.",
                     optionType: "STRING",
                     required: false,
-                    choices: ["bto", "vs", "vcc", "teamstaff"]
+                    choices: ["bto", "vs", "vcc", "teamstaff", "builder"]
                 },
                 {
                     name: "promote",
@@ -145,7 +145,7 @@ export default new Command({
             return message.sendSuccessMessage("roleSuccess")
         }
 
-        let position = args.consumeIf(["bto", "vcc", "vs", "teamstaff"], "position")
+        let position = args.consumeIf(["bto", "vcc", "vs", "teamstaff", "builder"], "position")
         if (!position)
             for (const [team, lead] of Object.entries(pseudoteamPositions.leads))
                 if (GuildMember.hasRole(message.member, client.roles[lead], client))
