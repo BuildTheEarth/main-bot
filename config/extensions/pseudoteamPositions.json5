@@ -3,20 +3,23 @@
         bto: "TEAM_OWNER",
         vcc: "VERIFIED_CONTENT_CREATOR",
         vs: "VERIFIED_STREAMER",
-        teamstaff: "BUILD_TEAM_STAFF"
+        teamstaff: "BUILD_TEAM_STAFF",
+        builder: "BUILDER"
     },
 
     leads: {
         bto: "RBTL",
         vcc: "PR_SUBTEAM_LEAD",
         vs: "PR_SUBTEAM_LEAD",
-        teamstaff: "TEAM_OWNER_STAFF"
+        teamstaff: "TEAM_OWNER_STAFF",
+        builder: "STAFF"
     },
 
     guild: {
         bto: "main",
         vcc: "main",
         vs: "main",
+        builder: "main",
         teamstaff: "staff"
     }
 }
