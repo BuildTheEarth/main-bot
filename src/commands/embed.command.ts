@@ -88,7 +88,8 @@ export default new Command({
                         username: embedMessage.author.username,
                         avatar_url: embedMessage.author.displayAvatarURL({
                             extension: "png"
-                        })
+                        }),
+                        attachments: [...embedMessage.attachments.values().map((e) => e.toJson())]
                     }
                 }
             ]
