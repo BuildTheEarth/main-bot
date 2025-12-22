@@ -77,9 +77,21 @@ export default new Command({
 
         const messageAttachments = [...embedMessage.attachments.values()].map((e) => e.toJSON()).map((e) => {
             //@ts-ignore
-            e.content_type = e.contentType;
+            e.filename = e.name
             //@ts-ignore
-            e.contentType = undefined;
+            e.name = undefined
+            //@ts-ignore
+            e.attachment = undefined
+            //@ts-ignore
+            e.content_type = e.contentType
+            //@ts-ignore
+            e.contentType = undefined
+            //@ts-ignore
+            e.proxy_url = e.proxyURL
+            //@ts-ignore
+            e.proxyURL = undefined
+            //@ts-ignore
+            e.description = e.description ?? undefined
 
             console.log(e)
             return e
