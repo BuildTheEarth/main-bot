@@ -76,7 +76,9 @@ export default new Command({
         }
 
         const messageAttachments = [...embedMessage.attachments.values()].map((e) => e.toJSON()).map((e) => {
+            //@ts-ignore
             e.content_type = e.contentType;
+            //@ts-ignore
             e.contentType = undefined;
             
         })
