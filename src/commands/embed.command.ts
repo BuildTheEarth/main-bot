@@ -123,7 +123,7 @@ export default new Command({
 
         const buffer = Buffer.from(JSON.stringify(webhookJson))
         const reqData = buffer.toString("base64")
-        const discohookUrl = `https://embed.buildtheearth.net/?data=${encodeURIComponent(
+        const discohookUrl = `https://discohook.app/?data=${encodeURIComponent(
             reqData
         )}`
 
