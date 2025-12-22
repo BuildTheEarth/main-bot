@@ -75,8 +75,13 @@ export default new Command({
             return message.sendErrorMessage("provideMsgUrl")
         }
 
-        const messageAttachments = [...embedMessage.attachments.values()].map((e) => e.toJSON())
+        const messageAttachments = [...embedMessage.attachments.values()].map((e) => e.toJSON()).map((e) => {
+            e.content_type = e.contentType;
+            e.contentType = undefined;
+            
+        })
 
+        console.log("attachments")
         console.log(messageAttachments)
 
 
@@ -93,13 +98,14 @@ export default new Command({
                         avatar_url: embedMessage.author.displayAvatarURL({
                             extension: "png"
                         }),
-                        attachments: messageAttachments
+                        attachments: messageAttachments? [] : messageAttachments
                     }
                 }
             ]
         }
 
         const buffer = Buffer.from(JSON.stringify(webhookJson))
+        console.log(buffer)
         const discohookUrl = `https://embed.buildtheearth.net/?data=${encodeURIComponent(
             buffer.toString("base64")
         )}`
@@ -111,6 +117,7 @@ export default new Command({
             headers: { "Content-Type": "application/json" }
         }).catch(noop)
         if (!fetchedData) {
+            console.log("the oops")
             return message.sendErrorMessage("httpError")
         }
         const data = (await fetchedData.json().catch(noop)) as {
