@@ -89,7 +89,7 @@ export default new Command({
                         avatar_url: embedMessage.author.displayAvatarURL({
                             extension: "png"
                         }),
-                        attachments: [...embedMessage.attachments.values()].map((e) => e.toJson())
+                        attachments: [...embedMessage.attachments.values()].map((e) => e.toJSON())
                     }
                 }
             ]
