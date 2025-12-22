@@ -107,9 +107,9 @@ export default new Command({
         }
 
         const buffer = Buffer.from(JSON.stringify(webhookJson))
-        console.log(buffer)
+        const reqData = buffer.toString("base64")
         const discohookUrl = `https://embed.buildtheearth.net/?data=${encodeURIComponent(
-            buffer.toString("base64")
+            reqData
         )}`
 
         //@ts-ignore
@@ -126,6 +126,8 @@ export default new Command({
             url: string
             expires: string
         }
+
+        console.log(data)
 
         if (!data?.url) {
             return message.sendErrorMessage("httpError")
