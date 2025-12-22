@@ -112,6 +112,8 @@ export default new Command({
             reqData
         )}`
 
+        console.log(reqData)
+
         //@ts-ignore
         const fetchedData = await fetch("https://short.buildtheearth.net/create", {
             method: "POST",
