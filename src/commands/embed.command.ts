@@ -80,6 +80,9 @@ export default new Command({
             e.content_type = e.contentType;
             //@ts-ignore
             e.contentType = undefined;
+
+            console.log(e)
+            return e
             
         })
 
