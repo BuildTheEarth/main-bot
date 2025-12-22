@@ -103,7 +103,7 @@ export default new Command({
                         avatar_url: embedMessage.author.displayAvatarURL({
                             extension: "png"
                         }),
-                        attachments: messageAttachments? [] : messageAttachments
+                        attachments: messageAttachments ?? []
                     }
                 }
             ]
