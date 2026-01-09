@@ -57,10 +57,11 @@ export default abstract class CommandUtils {
 
         for (let aliasNum = 0; aliasNum < command.aliases.length; aliasNum++) {
             const alias = command.aliases[aliasNum]
-            // Create a new builder from the JSON representation of the original
+            // Create a deep copy using native JSON serialization
+            const builderCopy = JSON.parse(JSON.stringify(builder))
             const aliasBuilder = Object.assign(
                 Object.create(Object.getPrototypeOf(builder)),
-                JSON.parse(JSON.stringify(builder))
+                builderCopy
             )
             const nameTranslations: Record<string, string> = Object.fromEntries(
                 Object.entries(command.aliases_translations).map(([key, value]) => {
