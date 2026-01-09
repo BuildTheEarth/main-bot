@@ -1,6 +1,5 @@
 import DBuilders = require("@discordjs/builders")
 import Command, { CommandArgs, SubCommandProperties } from "../struct/Command.js"
-import _ from "lodash"
 import Discord from "discord.js"
 import Client from "../struct/Client.js"
 
@@ -32,13 +31,11 @@ export default abstract class CommandUtils {
         }
 
         if (command.basesubcommand) {
-            const baseSubCom = _.cloneDeep(command)
-            baseSubCom.name = baseSubCom.basesubcommand
-                ? baseSubCom.basesubcommand
-                : command.name
-            baseSubCom.name_translations = baseSubCom.basesubcommand_translations
-                ? baseSubCom.basesubcommand_translations
-                : command.name_translations
+            const baseSubCom = {
+                ...command,
+                name: command.basesubcommand || command.name,
+                name_translations: command.basesubcommand_translations || command.name_translations
+            }
             builder.addSubcommand(addSubcommand(baseSubCom))
         }
 
@@ -48,7 +45,7 @@ export default abstract class CommandUtils {
             !command.basesubcommand
         )
             if (command.args)
-                _.cloneDeep(command.args)
+                [...command.args]
                     .sort((x, y) => {
                         return Number(y.required) - Number(x.required)
                     })
@@ -56,11 +53,16 @@ export default abstract class CommandUtils {
                         builder = addOption(builder, arg)
                     })
 
-        commands.push(_.cloneDeep(builder))
+        commands.push(builder)
 
         for (let aliasNum = 0; aliasNum < command.aliases.length; aliasNum++) {
             const alias = command.aliases[aliasNum]
-            const aliasBuilder = _.cloneDeep(builder)
+            // Create a deep copy using native JSON serialization
+            const builderCopy = JSON.parse(JSON.stringify(builder))
+            const aliasBuilder = Object.assign(
+                Object.create(Object.getPrototypeOf(builder)),
+                builderCopy
+            )
             const nameTranslations: Record<string, string> = Object.fromEntries(
                 Object.entries(command.aliases_translations).map(([key, value]) => {
                     return [key, value[aliasNum]]
@@ -104,9 +106,9 @@ function argsToStrCommand(command: Command, slashcommand: boolean): string {
     let trueSeperator = " "
     if (!slashcommand && command.seperator) trueSeperator = command.seperator
     let args = ""
-    let argList = _.cloneDeep(command.args)
-    if (slashcommand)
-        argList = argList?.sort((x, y) => {
+    let argList = command.args ? [...command.args] : undefined
+    if (slashcommand && argList)
+        argList = argList.sort((x, y) => {
             return Number(y.required) - Number(x.required)
         })
     argList?.forEach(arg => {
@@ -132,13 +134,15 @@ function argsToStrSubCommand(
     client: Client
 ): string {
     let args = "\n\n**Subcommands**\n"
-    const subcommands: Array<SubCommandProperties> | null = _.cloneDeep(
-        command.subcommands
-    )
+    const subcommands: Array<SubCommandProperties> | null = command.subcommands
+        ? [...command.subcommands]
+        : null
     if (slashcommand && command.basesubcommand) {
-        const pushCmd = _.cloneDeep(command)
-        pushCmd.name = command.basesubcommand
-        pushCmd.subcommands = null
+        const pushCmd = {
+            ...command,
+            name: command.basesubcommand,
+            subcommands: null
+        }
         subcommands?.push(pushCmd)
     }
     subcommands?.forEach(subcommand => {
@@ -270,7 +274,7 @@ function addSubcommandGroup(
                 subSubcommand.description_translations
             )
         let argList: CommandArgs[] = []
-        if (subSubcommand.args) argList = _.cloneDeep(subSubcommand.args)
+        if (subSubcommand.args) argList = [...subSubcommand.args]
         if (globalArgs) argList.push(...globalArgs)
         argList
             .sort((x, y) => {
@@ -298,7 +302,7 @@ function addSubcommand(
             subcommand.description_translations
         )
     let argList: CommandArgs[] = []
-    if (subcommand.args) argList = _.cloneDeep(subcommand.args)
+    if (subcommand.args) argList = [...subcommand.args]
     if (globalArgs) argList.push(...globalArgs)
     argList
         .sort((x, y) => {

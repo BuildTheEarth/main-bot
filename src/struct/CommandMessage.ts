@@ -2,7 +2,6 @@
 import Discord from "discord.js"
 import Client from "../struct/Client.js"
 import { vsprintf } from "sprintf-js"
-import _ from "lodash"
 import { noop } from "@buildtheearth/bot-utils"
 import replaceTypes from "../util/replaceTypes.util.js"
 
@@ -158,27 +157,30 @@ export default class CommandMessage {
         modalName: string,
         placeholders?: Record<string, string | undefined>
     ): Promise<string> {
-        const modal = _.cloneDeep(
-            client.modals.getLocaleModal(modalName, interaction.locale)
-        )
-        if (!modal) throw new Error(`Modal ${modalName} not found`)
-        modal.customId += "." + interaction.id
-        if (placeholders) {
-            modal.components.forEach(componentPar => {
+        const modalTemplate = client.modals.getLocaleModal(modalName, interaction.locale)
+        if (!modalTemplate) throw new Error(`Modal ${modalName} not found`)
+        
+        const modal = {
+            ...modalTemplate,
+            customId: modalTemplate.customId + "." + interaction.id,
+            components: modalTemplate.components.map(componentPar => {
                 const componentParPartialTyped = componentPar as {
                     components: {
-                        value: string
+                        value?: string
                         customId: string
                     }[]
                 }
-                componentParPartialTyped.components.forEach(component => {
-                    if (placeholders[component.customId] !== undefined) {
-                        // @ts-ignore @eslint-disable-next-line @typescript-eslint/no-explicit-any
-                        component.value = placeholders[component.customId]
+                const newComponentPar = { ...(componentParPartialTyped as any) }
+                newComponentPar.components = componentParPartialTyped.components.map(component => {
+                    if (placeholders && placeholders[component.customId] !== undefined) {
+                        return { ...component, value: placeholders[component.customId] }
                     }
+                    return component
                 })
+                return newComponentPar
             })
         }
+        
         await interaction.showModal(
             new Discord.ModalBuilder(
                 replaceTypes(

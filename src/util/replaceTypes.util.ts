@@ -1,5 +1,4 @@
 import Discord from "discord.js"
-import _ from "lodash"
 
 function transform(val: string): Discord.ComponentType {
     if (val === "ACTION_ROW") return Discord.ComponentType.ActionRow
@@ -23,7 +22,13 @@ export default function replaceTypes(json: {
     customId: string
     title: string
 } {
-    const jNew = _.cloneDeep(json)
+    const jNew = {
+        ...json,
+        components: json.components.map(component => ({
+            ...component,
+            components: component.components ? [...component.components] : component.components
+        }))
+    }
 
     for (const component of jNew.components) {
         //@ts-ignore

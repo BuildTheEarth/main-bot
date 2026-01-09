@@ -108,7 +108,7 @@ export default new Command({
                     data: {
                         content:
                             embedMessage.content === "" ? null : embedMessage.content,
-                        embeds: _.cloneDeep(embedMessage.embeds).map(embed =>
+                        embeds: embedMessage.embeds.map(embed =>
                             _.omitBy(_.omit(embed.toJSON(), "type"), isNil)
                         ),
                         username: embedMessage.author.username,
