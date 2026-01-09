@@ -415,6 +415,171 @@
             }
           }
         }
+      },
+      "post": {
+        "tags": [
+          "website"
+        ],
+        "summary": "Add or remove roles from a user",
+        "description": "Adds or removes roles from a Discord user. Only roles in the whitelist can be modified.",
+        "operationId": "roleModify",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The Discord Snowflake User ID of target",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "635411595253776385"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Request Body",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["add", "roles"],
+                "properties": {
+                  "add": {
+                    "type": "boolean",
+                    "description": "True to add roles, false to remove roles",
+                    "example": true
+                  },
+                  "roles": {
+                    "type": "array",
+                    "description": "Array of role IDs to add or remove (must be in whitelist)",
+                    "items": {
+                      "type": "string",
+                      "example": "692504956036710440"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Roles modified successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "userId": {
+                      "type": "string",
+                      "description": "User ID",
+                      "example": "635411595253776385"
+                    },
+                    "operation": {
+                      "type": "string",
+                      "description": "Operation performed",
+                      "example": "add"
+                    },
+                    "results": {
+                      "type": "object",
+                      "properties": {
+                        "success": {
+                          "type": "array",
+                          "description": "Role IDs successfully modified",
+                          "items": {
+                            "type": "string",
+                            "example": "692504956036710440"
+                          }
+                        },
+                        "failure": {
+                          "type": "array",
+                          "description": "Roles that failed to modify",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "roleId": {
+                                "type": "string"
+                              },
+                              "error": {
+                                "type": "string"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Input Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/paramError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden - Role not in whitelist",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "example": "FORBIDDEN"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "One or more roles are not allowed to be modified"
+                    },
+                    "invalidRoles": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "User not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/notFoundError"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Service Unavailable - Whitelist not configured",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "example": "SERVICE_UNAVAILABLE"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Role whitelist is not configured or empty"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
       }
     },
     "/api/v1/website/message": {
