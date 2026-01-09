@@ -1,0 +1,7 @@
+// Whitelist of role IDs that can be added/removed via the API
+// These roles can be synced from the website to Discord
+[
+    // Example: Add role IDs here that should be manageable via API
+    // "123456789012345678",
+    // "987654321098765432"
+]
