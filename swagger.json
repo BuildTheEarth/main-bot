@@ -421,7 +421,7 @@
           "website"
         ],
         "summary": "Add or remove roles from a user",
-        "description": "Adds or removes roles from a Discord user. Only roles in the whitelist can be modified.",
+        "description": "Adds or removes roles from a Discord user in both main and staff servers. Uses role keys that map to role IDs in the whitelist.",
         "operationId": "roleModify",
         "parameters": [
           {
@@ -451,10 +451,10 @@
                   },
                   "roles": {
                     "type": "array",
-                    "description": "Array of role IDs to add or remove (must be in whitelist)",
+                    "description": "Array of role keys to add or remove (keys must be in whitelist and map to role IDs for main/staff servers)",
                     "items": {
                       "type": "string",
-                      "example": "692504956036710440"
+                      "example": "buildteam_owner"
                     }
                   }
                 }
@@ -483,25 +483,60 @@
                     "results": {
                       "type": "object",
                       "properties": {
-                        "success": {
-                          "type": "array",
-                          "description": "Role IDs successfully modified",
-                          "items": {
-                            "type": "string",
-                            "example": "692504956036710440"
+                        "main": {
+                          "type": "object",
+                          "description": "Results for main Discord server",
+                          "properties": {
+                            "success": {
+                              "type": "array",
+                              "description": "Role keys successfully modified",
+                              "items": {
+                                "type": "string",
+                                "example": "buildteam_owner"
+                              }
+                            },
+                            "failure": {
+                              "type": "array",
+                              "description": "Roles that failed to modify",
+                              "items": {
+                                "type": "object",
+                                "properties": {
+                                  "roleKey": {
+                                    "type": "string"
+                                  },
+                                  "error": {
+                                    "type": "string"
+                                  }
+                                }
+                              }
+                            }
                           }
                         },
-                        "failure": {
-                          "type": "array",
-                          "description": "Roles that failed to modify",
-                          "items": {
-                            "type": "object",
-                            "properties": {
-                              "roleId": {
-                                "type": "string"
-                              },
-                              "error": {
-                                "type": "string"
+                        "staff": {
+                          "type": "object",
+                          "description": "Results for staff Discord server",
+                          "properties": {
+                            "success": {
+                              "type": "array",
+                              "description": "Role keys successfully modified",
+                              "items": {
+                                "type": "string",
+                                "example": "buildteam_owner"
+                              }
+                            },
+                            "failure": {
+                              "type": "array",
+                              "description": "Roles that failed to modify",
+                              "items": {
+                                "type": "object",
+                                "properties": {
+                                  "roleKey": {
+                                    "type": "string"
+                                  },
+                                  "error": {
+                                    "type": "string"
+                                  }
+                                }
                               }
                             }
                           }
@@ -524,7 +559,7 @@
             }
           },
           "403": {
-            "description": "Forbidden - Role not in whitelist",
+            "description": "Forbidden - Role key not in whitelist",
             "content": {
               "application/json": {
                 "schema": {
@@ -536,12 +571,13 @@
                     },
                     "message": {
                       "type": "string",
-                      "example": "One or more roles are not allowed to be modified"
+                      "example": "One or more role keys are not allowed to be modified"
                     },
                     "invalidRoles": {
                       "type": "array",
                       "items": {
-                        "type": "string"
+                        "type": "string",
+                        "example": "unknown_role_key"
                       }
                     }
                   }
@@ -550,7 +586,7 @@
             }
           },
           "404": {
-            "description": "User not found",
+            "description": "User not found in any guild",
             "content": {
               "application/json": {
                 "schema": {

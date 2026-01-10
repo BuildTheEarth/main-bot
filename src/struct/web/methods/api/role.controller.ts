@@ -1,31 +1,40 @@
 import { Controller, Get, Post, Param, Req, Res, Body } from "@nestjs/common"
 import Discord from "discord.js"
 import { Response, Request } from "express"
-import { loadSyncJSON5 } from "@buildtheearth/bot-utils"
+import { loadSyncJSON5, noop } from "@buildtheearth/bot-utils"
 import path from "path"
 import url from "url"
 import fs from "fs"
 
+interface RoleMapping {
+    main?: string
+    staff?: string
+}
+
+type RoleWhitelist = Record<string, RoleMapping>
+
 @Controller("/api/v1/role")
 export default class RoleController {
-    private getAllowedRoles(): string[] {
+    private getRoleWhitelist(): RoleWhitelist {
         const configPath = path.join(
             path.dirname(url.fileURLToPath(import.meta.url)),
             "../../../../../config/extensions/allowedRolesToAdd.json5"
         )
         
         if (!fs.existsSync(configPath)) {
-            return []
+            return {}
         }
         
         try {
-            const allowedRoles = loadSyncJSON5(configPath)
-            return Array.isArray(allowedRoles) ? allowedRoles : []
+            const whitelist = loadSyncJSON5(configPath)
+            return typeof whitelist === "object" && whitelist !== null && !Array.isArray(whitelist) 
+                ? whitelist 
+                : {}
         } catch (error) {
             globalThis.client.logger.error(
                 `Failed to load allowedRolesToAdd.json5: ${error}`
             )
-            return []
+            return {}
         }
     }
 
@@ -112,77 +121,108 @@ export default class RoleController {
         if (!roles || !Array.isArray(roles) || roles.length === 0) {
             return res.status(400).send({
                 error: "MISSING_PARAMETER",
-                message: "Missing parameter: roles (array of role IDs)"
+                message: "Missing parameter: roles (array of role keys)"
             })
         }
 
-        // Get allowed roles from whitelist
-        const allowedRoles = this.getAllowedRoles()
+        // Get role whitelist
+        const whitelist = this.getRoleWhitelist()
         
-        if (allowedRoles.length === 0) {
+        if (Object.keys(whitelist).length === 0) {
             return res.status(503).send({
                 error: "SERVICE_UNAVAILABLE",
                 message: "Role whitelist is not configured or empty"
             })
         }
 
-        // Validate that all requested roles are in the whitelist
-        const invalidRoles = roles.filter(roleId => !allowedRoles.includes(roleId))
+        // Validate that all requested role keys are in the whitelist
+        const invalidRoles = roles.filter(roleKey => !whitelist[roleKey])
         if (invalidRoles.length > 0) {
             return res.status(403).send({
                 error: "FORBIDDEN",
-                message: "One or more roles are not allowed to be modified",
+                message: "One or more role keys are not allowed to be modified",
                 invalidRoles
             })
         }
 
-        // Fetch the user from the main guild
-        let user: Discord.GuildMember
+        // Fetch the user from both guilds
+        const mainGuild = globalThis.client.customGuilds.main()
+        const staffGuild = globalThis.client.customGuilds.staff()
+        
+        let mainUser: Discord.GuildMember | null = null
+        let staffUser: Discord.GuildMember | null = null
+        
         try {
-            user = await globalThis.client.customGuilds
-                .main()
-                .members.fetch({ user: id })
+            mainUser = await mainGuild.members.fetch({ user: id }).catch(noop)
         } catch {
+            // User not in main guild
+        }
+        
+        try {
+            staffUser = await staffGuild.members.fetch({ user: id }).catch(noop)
+        } catch {
+            // User not in staff guild
+        }
+
+        if (!mainUser && !staffUser) {
             return res.status(404).send({
                 error: "NOT_FOUND",
-                message: "Not found: user"
+                message: "User not found in any guild"
             })
         }
 
-        if (!user) {
-            return res.status(404).send({
-                error: "NOT_FOUND",
-                message: "Not found: user"
-            })
-        }
-
-        // Process role changes
+        // Process role changes for each guild
         const results = {
-            success: [] as string[],
-            failure: [] as Array<{ roleId: string; error: string }>
+            main: {
+                success: [] as string[],
+                failure: [] as Array<{ roleKey: string; error: string }>
+            },
+            staff: {
+                success: [] as string[],
+                failure: [] as Array<{ roleKey: string; error: string }>
+            }
         }
 
-        for (const roleId of roles) {
-            try {
-                if (add) {
-                    // Add role
-                    await user.roles.add(roleId)
-                    results.success.push(roleId)
-                } else {
-                    // Remove role
-                    await user.roles.remove(roleId)
-                    results.success.push(roleId)
+        for (const roleKey of roles) {
+            const mapping = whitelist[roleKey]
+            
+            // Process main guild role
+            if (mapping.main && mainUser) {
+                try {
+                    if (add) {
+                        await mainUser.roles.add(mapping.main)
+                    } else {
+                        await mainUser.roles.remove(mapping.main)
+                    }
+                    results.main.success.push(roleKey)
+                } catch (error) {
+                    results.main.failure.push({
+                        roleKey,
+                        error: error instanceof Error ? error.message : "Unknown error"
+                    })
                 }
-            } catch (error) {
-                results.failure.push({
-                    roleId,
-                    error: error instanceof Error ? error.message : "Unknown error"
-                })
+            }
+            
+            // Process staff guild role
+            if (mapping.staff && staffUser) {
+                try {
+                    if (add) {
+                        await staffUser.roles.add(mapping.staff)
+                    } else {
+                        await staffUser.roles.remove(mapping.staff)
+                    }
+                    results.staff.success.push(roleKey)
+                } catch (error) {
+                    results.staff.failure.push({
+                        roleKey,
+                        error: error instanceof Error ? error.message : "Unknown error"
+                    })
+                }
             }
         }
 
         return res.status(200).send({
-            userId: user.id,
+            userId: id,
             operation: add ? "add" : "remove",
             results
         })
