@@ -73,10 +73,12 @@ export default class BannedWordFilter {
             if (word.length > text.length) continue
             if (this.ignoreStarIsSingular(realWord)) {
                 const plural = this.keepStarPluralize(word)
-                const pluralMatches = this.findWordString.bind(this)(text, plural, word)
-                profanities = profanities.concat(pluralMatches)
+                if (plural.length != 0) {
+                    const pluralMatches = this.findWord(text, plural, word)
+                    profanities = profanities.concat(pluralMatches)
+                }
             }
-            const matches = this.findWord.bind(this)(text, realWord)
+            const matches = this.findWord(text, realWord)
             profanities = profanities.concat(matches)
         }
         const indices: number[] = []
@@ -98,43 +100,37 @@ export default class BannedWordFilter {
         return profanities
     }
 
-    findWord(text: string, bannedWord: BannedWord, base?: string): BannedWordObj[] {
-        const profanities = []
-        const regexBody = this.createWordRegexObj(bannedWord, Infinity)
-        const regex = new RegExp(regexBody, "g")
-        let match: RegExpExecArray | null
-
-        while ((match = regex.exec(text)) != null) {
-            profanities.push({
-                index: match.index,
-                word: match[0] || bannedWord.word,
-                base: base || bannedWord.word,
-                raw: match[0],
-                regex: bannedWord.regex
-            })
-        }
-
-        return profanities
-    }
-
-    findWordString(text: string, word: string, base?: string): BannedWordObj[] {
+    findWord(text: string, word: BannedWord | string, base?: string): BannedWordObj[] {
         const profanities = []
         const regexBody = this.createWordRegex(word, Infinity)
         const regex = new RegExp(regexBody, "g")
-        let match: RegExpExecArray | null
+        const matches = text.matchAll(regex);
 
-        while ((match = regex.exec(text)) != null) {
-            profanities.push({
-                index: match.index,
-                word: match[0] || word,
-                base: base || word,
-                raw: match[0],
-                regex: false
-            })
+        for (const match of matches) {
+
+            if (match[0] == "") continue
+
+            if (word instanceof BannedWord)
+                profanities.push({
+                    index: match.index,
+                    word: match[0] || word.word,
+                    base: base || word.word,
+                    raw: match[0],
+                    regex: word.regex
+                })
+            else
+                profanities.push({
+                    index: match.index,
+                    word: match[0] || word,
+                    base: base || word,
+                    raw: match[0],
+                    regex: false
+                })
         }
 
         return profanities
     }
+
 
     findException(match: BannedWordObj, input: string, exceptions: string[]): boolean {
         if (match.index === undefined) return false
@@ -165,13 +161,11 @@ export default class BannedWordFilter {
         return isException
     }
 
-    createWordRegexObj(word: BannedWord, max: number = Infinity): string {
-        if (word.regex) return word.word
+    createWordRegex(word: string | BannedWord, max: number = Infinity): string {
 
-        return this.createWordRegex(word.word)
-    }
+        if (word instanceof BannedWord)
+            word = word.word
 
-    createWordRegex(word: string, max: number = Infinity): string {
         let startStar = false
         let endStar = false
 
