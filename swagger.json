@@ -421,7 +421,7 @@
           "website"
         ],
         "summary": "Add or remove roles from a user",
-        "description": "Adds or removes roles from a Discord user in both main and staff servers. Uses role keys that map to role IDs in the whitelist.",
+        "description": "Adds or removes roles from a Discord user in both main and staff servers. Uses role keys from the existing role mapping system that are validated against a whitelist.",
         "operationId": "roleModify",
         "parameters": [
           {
@@ -451,10 +451,10 @@
                   },
                   "roles": {
                     "type": "array",
-                    "description": "Array of role keys to add or remove (keys must be in whitelist and map to role IDs for main/staff servers)",
+                    "description": "Array of role keys to add or remove (keys must be in the whitelist and exist in role mapping files for main/staff servers)",
                     "items": {
                       "type": "string",
-                      "example": "buildteam_owner"
+                      "example": "TEAM_OWNER"
                     }
                   }
                 }
@@ -571,13 +571,13 @@
                     },
                     "message": {
                       "type": "string",
-                      "example": "One or more role keys are not allowed to be modified"
+                      "example": "One or more role keys are not allowed to be synced"
                     },
                     "invalidRoles": {
                       "type": "array",
                       "items": {
                         "type": "string",
-                        "example": "unknown_role_key"
+                        "example": "UNKNOWN_ROLE"
                       }
                     }
                   }
@@ -608,7 +608,7 @@
                     },
                     "message": {
                       "type": "string",
-                      "example": "Role whitelist is not configured or empty"
+                      "example": "Role sync whitelist is not configured or empty"
                     }
                   }
                 }

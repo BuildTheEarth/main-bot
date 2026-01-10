@@ -1,0 +1,10 @@
+// Whitelist of role keys that can be synced via the API
+// These keys must exist in the role mapping files for main and/or staff servers
+// Role mappings are defined in config/extensions/roles/{guildId}.json5
+[
+    // Example role keys that could be synced:
+    // "TEAM_OWNER",
+    // "BUILDER",
+    // "STAFF",
+    // "BUILD_TEAM_STAFF"
+]

@@ -2,37 +2,42 @@
 
 ## Overview
 
-The Role Sync API allows the BuildTheEarth website to automatically synchronize Discord roles with website roles. This API endpoint enables adding or removing Discord roles from users in both main and staff servers based on a key-based whitelist configuration.
+The Role Sync API allows the BuildTheEarth website to automatically synchronize Discord roles with website roles. This API endpoint enables adding or removing Discord roles from users in both main and staff servers using the existing role mapping system.
 
 ## Configuration
 
-### Whitelist Setup
+### Role Mappings
 
-Before using the API, configure the allowed roles in the whitelist file:
+This API uses the existing role mapping system in the bot. Role mappings are defined in:
+- **Main Server**: `config/extensions/roles/690908396404080650.json5`
+- **Staff Server**: `config/extensions/roles/704929831246233681.json5`
 
-**File Location:** `config/extensions/allowedRolesToAdd.json5`
-
-**Format:**
+Each file contains role name keys mapped to Discord role IDs. For example:
 ```json5
 {
-    "buildteam_owner": {
-        "main": "711265706494132234",    // Role ID in main Discord
-        "staff": "730642056564834346"    // Role ID in staff Discord
-    },
-    "buildteam_staff": {
-        "main": "691343715117039666",
-        "staff": undefined                // No role in staff Discord
-    },
-    "bte_staff": {
-        "main": "722561286352928888",
-        "staff": "722561286352928888"
-    }
+    "TEAM_OWNER": "711265706494132234",
+    "BUILDER": "691343715117039666",
+    "STAFF": "722561286352928888"
 }
 ```
 
-Each key represents a role type that can be synced from the website. The value is an object mapping to role IDs in the main and staff Discord servers. Either `main` or `staff` can be `undefined` if the role doesn't exist in that server.
+### Whitelist Setup
 
-Only role keys included in this whitelist can be modified via the API. This ensures security and prevents unauthorized role modifications.
+Before using the API, configure which role keys can be synced in the whitelist file:
+
+**File Location:** `config/extensions/allowedRolesToSync.json5`
+
+**Format:**
+```json5
+[
+    "TEAM_OWNER",
+    "BUILDER",
+    "STAFF",
+    "BUILD_TEAM_STAFF"
+]
+```
+
+Only role keys included in this whitelist can be modified via the API. The role keys must exist in at least one of the role mapping files (main or staff server). This ensures security and prevents unauthorized role modifications.
 
 ## API Endpoint
 
@@ -61,8 +66,8 @@ The `INTER_KEY` must match the key configured in the bot's environment variables
 {
   "add": true,
   "roles": [
-    "buildteam_owner",
-    "bte_staff"
+    "TEAM_OWNER",
+    "BUILDER"
   ]
 }
 ```
@@ -72,7 +77,7 @@ The `INTER_KEY` must match the key configured in the bot's environment variables
   - `false` to remove roles from the user
 - `roles` (array of strings, required): Array of role keys to add or remove
   - All role keys must be present in the whitelist configuration
-  - The bot will apply the corresponding role IDs to both main and staff servers where defined
+  - The bot will look up the corresponding role IDs from the role mapping files and apply them to both main and staff servers where the role exists
 
 #### Response
 
@@ -83,11 +88,11 @@ The `INTER_KEY` must match the key configured in the bot's environment variables
   "operation": "add",
   "results": {
     "main": {
-      "success": ["buildteam_owner", "bte_staff"],
+      "success": ["TEAM_OWNER", "BUILDER"],
       "failure": []
     },
     "staff": {
-      "success": ["buildteam_owner", "bte_staff"],
+      "success": ["TEAM_OWNER"],
       "failure": []
     }
   }
@@ -101,16 +106,16 @@ The `INTER_KEY` must match the key configured in the bot's environment variables
   "operation": "add",
   "results": {
     "main": {
-      "success": ["buildteam_owner"],
+      "success": ["TEAM_OWNER"],
       "failure": [
         {
-          "roleKey": "bte_staff",
+          "roleKey": "BUILDER",
           "error": "Missing Permissions"
         }
       ]
     },
     "staff": {
-      "success": ["buildteam_owner", "bte_staff"],
+      "success": ["TEAM_OWNER"],
       "failure": []
     }
   }
@@ -131,8 +136,8 @@ The `INTER_KEY` must match the key configured in the bot's environment variables
 ```json
 {
   "error": "FORBIDDEN",
-  "message": "One or more role keys are not allowed to be modified",
-  "invalidRoles": ["unknown_role_key"]
+  "message": "One or more role keys are not allowed to be synced",
+  "invalidRoles": ["UNKNOWN_ROLE"]
 }
 ```
 
@@ -148,7 +153,7 @@ The `INTER_KEY` must match the key configured in the bot's environment variables
 ```json
 {
   "error": "SERVICE_UNAVAILABLE",
-  "message": "Role whitelist is not configured or empty"
+  "message": "Role sync whitelist is not configured or empty"
 }
 ```
 
@@ -158,11 +163,11 @@ The `INTER_KEY` must match the key configured in the bot's environment variables
 
 ```bash
 curl -X POST https://bot.buildtheearth.net/api/v1/role/635411595253776385 \
-  -H "Authorization: Bearer YOUR_INTER_KEY" \
+  -H "Authorization: ******" \
   -H "Content-Type: application/json" \
   -d '{
     "add": true,
-    "roles": ["buildteam_owner", "bte_staff"]
+    "roles": ["TEAM_OWNER", "BUILDER"]
   }'
 ```
 
@@ -170,11 +175,11 @@ curl -X POST https://bot.buildtheearth.net/api/v1/role/635411595253776385 \
 
 ```bash
 curl -X POST https://bot.buildtheearth.net/api/v1/role/635411595253776385 \
-  -H "Authorization: Bearer YOUR_INTER_KEY" \
+  -H "Authorization: ******" \
   -H "Content-Type: application/json" \
   -d '{
     "add": false,
-    "roles": ["buildteam_staff"]
+    "roles": ["BUILDER"]
   }'
 ```
 
@@ -185,7 +190,7 @@ async function syncUserRoles(userId: string, roleKeys: string[], add: boolean) {
   const response = await fetch(`https://bot.buildtheearth.net/api/v1/role/${userId}`, {
     method: 'POST',
     headers: {
-      'Authorization': `Bearer ${process.env.INTER_KEY}`,
+      'Authorization': `******,
       'Content-Type': 'application/json'
     },
     body: JSON.stringify({
@@ -206,7 +211,7 @@ async function syncUserRoles(userId: string, roleKeys: string[], add: boolean) {
 try {
   const result = await syncUserRoles(
     '635411595253776385',
-    ['buildteam_owner', 'bte_staff'],
+    ['TEAM_OWNER', 'BUILDER'],
     true
   );
   console.log('Main guild - Success:', result.results.main.success);
@@ -224,12 +229,13 @@ try {
 
 ## Security Considerations
 
-1. **Whitelist Configuration**: Only role keys explicitly added to `allowedRolesToAdd.json5` can be modified
-2. **Key-Based Mapping**: Role IDs are never exposed to the API caller, only role keys are used
-3. **Authentication**: All requests must include a valid Bearer token
-4. **IP Whitelisting**: The API respects the configured IP whitelist for additional security
-5. **Audit Trail**: All role modifications are logged for audit purposes
-6. **Multi-Server Support**: Automatically applies roles to both main and staff servers where configured
+1. **Whitelist Configuration**: Only role keys explicitly added to `allowedRolesToSync.json5` can be synced
+2. **Existing Role System**: Uses the bot's existing role mapping system in `config/extensions/roles/`
+3. **Key-Based Mapping**: Role IDs are never exposed to the API caller, only role keys are used
+4. **Authentication**: All requests must include a valid ******
+5. **IP Whitelisting**: The API respects the configured IP whitelist for additional security
+6. **Audit Trail**: All role modifications are logged for audit purposes
+7. **Multi-Server Support**: Automatically applies roles to both main and staff servers where the role exists
 
 ## Integration with BuildTheEarth Website
 
@@ -244,8 +250,8 @@ This creates a "push" synchronization system where the website drives the role u
 
 ### Role Modification Fails
 
-1. **Check Whitelist**: Ensure the role key is in `config/extensions/allowedRolesToAdd.json5`
-2. **Check Role Mapping**: Verify the role key has valid role IDs for the appropriate servers
+1. **Check Whitelist**: Ensure the role key is in `config/extensions/allowedRolesToSync.json5`
+2. **Check Role Mapping**: Verify the role key exists in the role mapping files (`config/extensions/roles/{guildId}.json5`)
 3. **Bot Permissions**: Verify the bot has permission to manage the role in both servers
 4. **Role Hierarchy**: The bot's role must be higher than the role being modified in each server
 5. **User in Server**: The user must be a member of at least one of the servers (main or staff)
