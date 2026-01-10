@@ -1,15 +1,16 @@
 import { Client } from "discord.js"
+import BotClient from "../BotClient.js"
 import url from "url"
 import pathModule from "path"
 import fs from "fs"
 import { loadSyncJSON5 } from "@buildtheearth/bot-utils"
 
 export default class WebEvents {
-    client: Client
+    client: BotClient
 
     private objs: Map<string, any>
 
-    constructor(client: Client) {
+    constructor(client: BotClient) {
         this.client = client
         this.objs = new Map()
     }

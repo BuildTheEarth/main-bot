@@ -1,15 +1,15 @@
-import Discord, { ButtonInteraction } from "discord.js"
-import Client from "../struct/Client.js"
+import { ButtonInteraction, GuildMember, TextChannel, User } from "discord.js"
+import BotClient from "../struct/BotClient.js"
 import CommandMessage from "../struct/CommandMessage.js"
 import TimedPunishment from "../entities/TimedPunishment.entity.js"
 import ActionLog from "../entities/ActionLog.entity.js"
-import GuildMember from "../struct/discord/GuildMember.js"
+import BotGuildMember from "../struct/discord/BotGuildMember.js"
 import { noop } from "@buildtheearth/bot-utils"
 
 async function log(
-    client: Client,
+    client: BotClient,
     message: CommandMessage | ButtonInteraction,
-    user: Discord.User,
+    user: User,
     type: "warn" | "mute" | "kick" | "ban",
     reason: string,
     image: string | null,
@@ -35,7 +35,7 @@ async function log(
         .fetch({ user, cache: true })
         .catch(noop)
 
-    const member: Discord.GuildMember | null = memberTemp || null
+    const member: GuildMember | null = memberTemp || null
 
     await log.notifyMember(client)
     if (type === "ban") {
@@ -43,10 +43,10 @@ async function log(
             .main()
             .channels.cache.find(
                 ch => ch.name == "review-committee-private"
-            ) as Discord.TextChannel
+            ) as TextChannel
         if (
             member &&
-            GuildMember.hasRole(member, globalThis.client.roles.BUILDER, client) &&
+            BotGuildMember.hasRole(member, globalThis.client.roles.BUILDER, client) &&
             reviewerChannel
         )
             await client.response.sendSuccess(
@@ -59,7 +59,7 @@ async function log(
         })
     }
     if (type === "mute") {
-        if (member) await GuildMember.mute(member, reason)
+        if (member) await BotGuildMember.mute(member, reason)
     }
     if (type === "kick") {
         if (member)
@@ -72,8 +72,8 @@ async function log(
 }
 
 async function timedPunishment(
-    client: Client,
-    member: Discord.User,
+    client: BotClient,
+    member: User,
     type: "mute" | "ban",
     length: number | null
 ) {
@@ -88,9 +88,9 @@ async function timedPunishment(
 }
 
 export default async function punish(
-    client: Client,
+    client: BotClient,
     message: CommandMessage | ButtonInteraction,
-    member: Discord.User,
+    member: User,
     type: "warn" | "mute" | "kick" | "ban",
     reason: string,
     image: string | null,

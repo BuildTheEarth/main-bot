@@ -1,7 +1,7 @@
 import { noop } from "@buildtheearth/bot-utils"
 import { GuildMember } from "discord.js"
 import typeorm from "typeorm"
-import Client from "../struct/Client.js"
+import BotClient from "../struct/BotClient.js"
 import SnowflakeColumn from "./decorators/SnowflakeColumn.decorator.js"
 
 @typeorm.Entity({ name: "reaction_roles" })
@@ -33,7 +33,7 @@ export default class ReactionRole extends typeorm.BaseEntity {
     @typeorm.Column({ default: true })
     blacklistType!: boolean
 
-    public static async load(client: Client): Promise<Map<string, ReactionRole>> {
+    public static async load(client: BotClient): Promise<Map<string, ReactionRole>> {
         const reactionRoles = await this.find()
         for (const role of reactionRoles) {
             client.reactionRoles.set(`${role.emoji}.${role.messageId}`, role)
@@ -50,7 +50,7 @@ export default class ReactionRole extends typeorm.BaseEntity {
     }
 
     public static async add(
-        client: Client,
+        client: BotClient,
         emoji: string,
         channelId: string,
         messageId: string,
@@ -89,7 +89,7 @@ export default class ReactionRole extends typeorm.BaseEntity {
     }
 
     public static async addBlacklistedRole(
-        client: Client,
+        client: BotClient,
         id: number,
         blacklistRole: string
     ): Promise<boolean> {
@@ -107,7 +107,7 @@ export default class ReactionRole extends typeorm.BaseEntity {
     }
 
     public static async addRequiredRole(
-        client: Client,
+        client: BotClient,
         id: number,
         requireRole: string
     ): Promise<boolean> {
@@ -125,7 +125,7 @@ export default class ReactionRole extends typeorm.BaseEntity {
     }
 
     public static async removeBlacklistedRole(
-        client: Client,
+        client: BotClient,
         id: number,
         blacklistRole: string
     ): Promise<boolean> {
@@ -146,7 +146,7 @@ export default class ReactionRole extends typeorm.BaseEntity {
     }
 
     public static async removeRequiredRole(
-        client: Client,
+        client: BotClient,
         id: number,
         requireRole: string
     ): Promise<boolean> {
@@ -165,7 +165,7 @@ export default class ReactionRole extends typeorm.BaseEntity {
     }
 
     public static async canReact(
-        client: Client,
+        client: BotClient,
         emoji: string,
         channelId: string,
         messageId: string,
@@ -197,7 +197,7 @@ export default class ReactionRole extends typeorm.BaseEntity {
     }
 
     public static async react(
-        client: Client,
+        client: BotClient,
         emoji: string,
         channelId: string,
         messageId: string,
@@ -224,7 +224,7 @@ export default class ReactionRole extends typeorm.BaseEntity {
     }
 
     public static async unreact(
-        client: Client,
+        client: BotClient,
         emoji: string,
         channelId: string,
         messageId: string,

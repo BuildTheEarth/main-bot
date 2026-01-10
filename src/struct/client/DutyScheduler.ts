@@ -1,20 +1,20 @@
 import { hexToNum } from "@buildtheearth/bot-utils"
-import Discord from "discord.js"
 import toggleDutyRole from "../../util/toggleDutyRole.util.js"
-import Client from "../Client.js"
+import BotClient from "../BotClient.js"
 import { Cron } from "croner"
+import { GuildMember, Snowflake } from "discord.js"
 
 export default class DutyScheduler {
-    dutyScheduler: Map<Discord.Snowflake, [Cron, Date]>
-    client: Client
-    public constructor(client: Client) {
-        this.dutyScheduler = new Map<Discord.Snowflake, [Cron, Date]>()
+    dutyScheduler: Map<Snowflake, [Cron, Date]>
+    client: BotClient
+    public constructor(client: BotClient) {
+        this.dutyScheduler = new Map<Snowflake, [Cron, Date]>()
         this.client = client
     }
 
     public async scheduleDuty(
         time: number,
-        user: Discord.GuildMember,
+        user: GuildMember,
         roles: ("SUPPORT" | "MODERATOR" | "HELPER")[]
     ): Promise<void> {
         if (roles.includes("HELPER") && !roles.includes("MODERATOR")) {
@@ -43,8 +43,8 @@ export default class DutyScheduler {
     }
 
     public async cancelWithCheck(
-        user: Discord.GuildMember,
-        userWhoDid: Discord.GuildMember
+        user: GuildMember,
+        userWhoDid: GuildMember
     ): Promise<boolean> {
         if (this.dutyScheduler.has(user.id)) {
             this.dutyScheduler.get(user.id)?.[0].stop()
@@ -64,7 +64,7 @@ export default class DutyScheduler {
         }
     }
 
-    public checkDuty(user: Discord.GuildMember): Date | null {
+    public checkDuty(user: GuildMember): Date | null {
         if (this.dutyScheduler.has(user.id)) {
             const date = this.dutyScheduler.get(user.id)?.[1]
             return date ? date : null

@@ -1,8 +1,8 @@
-import Client from "../struct/Client.js"
+import BotClient from "./BotClient.js"
 import Args from "./Args.js"
 import ApiTypes = require("discord-api-types/v10")
 import CommandMessage from "./CommandMessage.js"
-import Discord from "discord.js"
+import { AutocompleteInteraction } from "discord.js"
 
 export default class Command implements CommandProperties {
     name: string
@@ -22,7 +22,7 @@ export default class Command implements CommandProperties {
     devOnly?: boolean
     globalRegister?: boolean
     userInstallContext?: boolean
-    run: (client: Client, message: CommandMessage, args: Args) => void | Promise<void>
+    run: (client: BotClient, message: CommandMessage, args: Args) => void | Promise<void>
 
     constructor(properties: CommandProperties) {
         this.seperator = properties.seperator || " "
@@ -56,7 +56,7 @@ export interface CommandProperties extends SubCommandProperties {
     seperator?: string
     globalRegister?: boolean
     userInstallContext?: boolean
-    run: (client: Client, message: CommandMessage, args: Args) => void
+    run: (client: BotClient, message: CommandMessage, args: Args) => void
 }
 
 export interface SubCommandProperties {
@@ -110,8 +110,8 @@ export interface CommandArgs {
     autocomplete?: {
         enable: boolean
         handler: (
-            client: Client,
-            autocomplete: Discord.AutocompleteInteraction
+            client: BotClient,
+            autocomplete: AutocompleteInteraction
         ) => void | Promise<void>
     }
     maxLenOrValue?: number

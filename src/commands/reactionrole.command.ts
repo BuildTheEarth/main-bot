@@ -1,4 +1,4 @@
-import Client from "../struct/Client.js"
+import BotClient from "../struct/BotClient.js"
 import Command from "../struct/Command.js"
 
 import CommandMessage from "../struct/CommandMessage.js"
@@ -219,7 +219,7 @@ export default new Command({
             ]
         }
     ],
-    async run(this: Command, client: Client, message: CommandMessage, args: Args) {
+    async run(this: Command, client: BotClient, message: CommandMessage, args: Args) {
         const subcommandGroup = args.consumeSubcommandGroupIf(["blacklist", "require"])
         const subcommand = args.consumeSubcommand()
         if (subcommand == "list" && !subcommandGroup) {

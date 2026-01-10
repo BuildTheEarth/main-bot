@@ -1,12 +1,13 @@
 import { hexToNum, hexToRGB } from "@buildtheearth/bot-utils"
-import Client from "../Client.js"
-import Discord from "discord.js"
+import BotClient from "../BotClient.js"
+
 import { ActionRowBuilder, ButtonBuilder } from "@discordjs/builders"
+import { APIEmbed, ButtonStyle } from "discord.js"
 
 type PendingBlockPageAction = "NEXT" | "PREVIOUS" | "STAY"
 
 export default class BlockPage {
-    client: Client
+    client: BotClient
     rgbColor: [number, number, number]
     count: number
     version: string
@@ -16,7 +17,7 @@ export default class BlockPage {
     private page: number
 
     constructor(
-        client: Client,
+        client: BotClient,
         rgbColor: [number, number, number],
         count: number,
         version: string,
@@ -70,7 +71,7 @@ export default class BlockPage {
         }|${this.page}|${this.userID}|PREVIOUS`
     }
 
-    getEmbeds(authorName: string): Discord.APIEmbed[] {
+    getEmbeds(authorName: string): APIEmbed[] {
         return [
             {
                 title: `Blocks Closest Matching | ${this.version} | Page ${this.page}`,
@@ -88,12 +89,12 @@ export default class BlockPage {
     getButtons() {
         const nextButton = new ButtonBuilder()
         nextButton.setCustomId(this.nextCustomId())
-        nextButton.setStyle(Discord.ButtonStyle.Primary)
+        nextButton.setStyle(ButtonStyle.Primary)
         nextButton.setLabel(client.config.emojis.right as string)
 
         const previousButton = new ButtonBuilder()
         previousButton.setCustomId(this.previousCustomId())
-        previousButton.setStyle(Discord.ButtonStyle.Primary)
+        previousButton.setStyle(ButtonStyle.Primary)
         previousButton.setLabel(client.config.emojis.left as string)
 
         const interactionRow = new ActionRowBuilder<ButtonBuilder>()
@@ -109,7 +110,7 @@ export default class BlockPage {
         }
     }
 
-    public static fromCustomId(client: Client, customID: string): BlockPage {
+    public static fromCustomId(client: BotClient, customID: string): BlockPage {
         const arr = customID.split("|")
 
         let pendingAction = arr[7] as PendingBlockPageAction

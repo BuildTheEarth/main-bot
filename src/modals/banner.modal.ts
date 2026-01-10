@@ -1,9 +1,11 @@
-import Discord from "discord.js"
+import { ModalSubmitInteraction } from "discord.js"
 import BannerImage from "../entities/BannerImage.entity.js"
 import fetch from "node-fetch"
+import BotClient from "../struct/BotClient.js"
 
 export default async function createBanner(
-    interaction: Discord.ModalSubmitInteraction
+    interaction: ModalSubmitInteraction,
+    client: BotClient
 ): Promise<void> {
     const image = interaction.fields.getTextInputValue("img_url")
     const location = interaction.fields.getTextInputValue("location")

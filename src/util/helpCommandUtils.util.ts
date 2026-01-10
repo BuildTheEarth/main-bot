@@ -1,13 +1,13 @@
-import Discord from "discord.js"
+import { APIEmbed } from "discord.js"
 import Command, { CommandArgs, SubCommandProperties } from "../struct/Command.js"
 import _ from "lodash"
-import Client from "../struct/Client.js"
+import BotClient from "../struct/BotClient.js"
 
 export default function getHelpMessage(
     command: Command,
     slashcommand: boolean,
-    client: Client
-): Discord.APIEmbed {
+    client: BotClient
+): APIEmbed {
     let text = `**${command.name}**\n${command.description}`
     const commandPrefix = (slashcommand ? "/" : client.config.prefix) + command.name
 
@@ -58,7 +58,7 @@ function argsToStrCommand(command: Command, slashcommand: boolean): string {
 function argsToStrSubCommand(
     command: Command,
     slashcommand: boolean,
-    client: Client
+    client: BotClient
 ): string {
     let args = "\n\n**Subcommands**\n"
     const subcommands: Array<SubCommandProperties> | null = _.cloneDeep(

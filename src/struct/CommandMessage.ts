@@ -1,24 +1,24 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import Discord from "discord.js"
-import Client from "../struct/Client.js"
+import BotClient from "./BotClient.js"
 import { vsprintf } from "sprintf-js"
 import _ from "lodash"
 import { noop } from "@buildtheearth/bot-utils"
 import replaceTypes from "../util/replaceTypes.util.js"
+import { ActionRowData, APIEmbed, Attachment, AttachmentBuilder, BufferResolvable, ButtonInteraction, ChatInputCommandInteraction, CommandInteraction, Guild, GuildMember, InteractionEditReplyOptions, InteractionReplyOptions, Message, MessageComponent, MessageFlags, MessageMentionOptions, ModalActionRowComponentData, ModalBuilder, Snowflake, TextBasedChannel, User } from "discord.js"
 
 export default class CommandMessage {
-    message: Discord.ChatInputCommandInteraction
-    channel!: Discord.TextBasedChannel
-    member: Discord.GuildMember
-    author: Discord.User
-    client: Client
-    guild!: Discord.Guild
-    id: Discord.Snowflake
+    message: ChatInputCommandInteraction
+    channel!: TextBasedChannel
+    member: GuildMember
+    author: User
+    client: BotClient
+    guild!: Guild
+    id: Snowflake
     createdTimestamp: number
     messages: Record<string, string>
     locale: string
 
-    constructor(message: Discord.ChatInputCommandInteraction, client: Client) {
+    constructor(message: ChatInputCommandInteraction, client: BotClient) {
         this.client = client
         this.message = message
         if (message.channel) this.channel = message.channel
@@ -26,8 +26,8 @@ export default class CommandMessage {
         this.id = message.id
         this.createdTimestamp = message.createdTimestamp
         //set author property to message author
-        this.member = this.message.member as Discord.GuildMember
-        this.author = this.message.user as Discord.User
+        this.member = this.message.member as GuildMember
+        this.author = this.message.user as User
         this.locale = this.message.locale
         this.messages = new Proxy(
             {},
@@ -40,7 +40,7 @@ export default class CommandMessage {
     }
 
     public async sendError(
-        embed: string | Discord.APIEmbed,
+        embed: string | APIEmbed,
         ephemeral: boolean = true
     ): Promise<CommandMessage> {
         return client.response.sendError(this, embed, ephemeral)
@@ -69,7 +69,7 @@ export default class CommandMessage {
     }
 
     public async sendSuccess(
-        embed: string | Discord.APIEmbed,
+        embed: string | APIEmbed,
         ephemeral: boolean = false
     ): Promise<CommandMessage> {
         return client.response.sendSuccess(this, embed, ephemeral)
@@ -95,15 +95,15 @@ export default class CommandMessage {
 
     async send(payload: MessageOptions): Promise<CommandMessage> {
         if (this.message.deferred)
-            await this.message.followUp(payload as Discord.InteractionReplyOptions)
-        else await this.message.reply(payload as Discord.InteractionReplyOptions)
+            await this.message.followUp(payload as InteractionReplyOptions)
+        else await this.message.reply(payload as InteractionReplyOptions)
 
         return this
     }
 
     async react(emoji: string): Promise<CommandMessage> {
         await this.message.followUp({
-            ephemeral: true,
+            flags: MessageFlags.Ephemeral,
             content: emoji
         })
 
@@ -120,17 +120,17 @@ export default class CommandMessage {
     }
 
     async edit(payload: MessageOptions): Promise<CommandMessage> {
-        await this.message.editReply(payload as Discord.InteractionReplyOptions)
+        await this.message.editReply(payload as InteractionEditReplyOptions)
 
         return this
     }
 
-    isSlashCommand(): this is this & { message: Discord.CommandInteraction } {
+    isSlashCommand(): this is this & { message: CommandInteraction } {
         //Literally to avoid some extra refactoring cause of typeguard stuff
         return true
     }
 
-    isNormalCommand(): this is this & { message: Discord.Message } {
+    isNormalCommand(): this is this & { message: Message } {
         //Literally to avoid some extra refactoring cause of typeguard stuff
         return false
     }
@@ -153,8 +153,8 @@ export default class CommandMessage {
     }
 
     public static async showModal(
-        client: Client,
-        interaction: Discord.CommandInteraction | Discord.ButtonInteraction,
+        client: BotClient,
+        interaction: CommandInteraction | ButtonInteraction,
         modalName: string,
         placeholders?: Record<string, string | undefined>
     ): Promise<string> {
@@ -180,11 +180,11 @@ export default class CommandMessage {
             })
         }
         await interaction.showModal(
-            new Discord.ModalBuilder(
+            new ModalBuilder(
                 replaceTypes(
                     modal as {
                         components:
-                            | Discord.ActionRowData<Discord.ModalActionRowComponentData>[]
+                            | ActionRowData<ModalActionRowComponentData>[]
                         customId: string
                         title: string
                     }
@@ -198,17 +198,17 @@ export default class CommandMessage {
 
 export interface MessageOptions {
     ephemeral?: boolean
-    embeds?: Discord.APIEmbed[]
-    components?: Discord.MessageComponent[]
+    embeds?: APIEmbed[]
+    components?: MessageComponent[]
     content?: string
-    allowedMentions?: Discord.MessageMentionOptions
+    allowedMentions?: MessageMentionOptions
     files?:
         | {
-              attachment: Discord.BufferResolvable
+              attachment: BufferResolvable
               name?: string
               description: string
           }
-        | Discord.BufferResolvable[]
-        | Discord.Attachment[]
-        | Discord.AttachmentBuilder[]
+        | BufferResolvable[]
+        | Attachment[]
+        | AttachmentBuilder[]
 }

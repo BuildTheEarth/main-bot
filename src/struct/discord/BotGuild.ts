@@ -1,22 +1,22 @@
 import { noop } from "@buildtheearth/bot-utils"
-import Discord from "discord.js"
+import { Guild, GuildMember, Role, UserResolvable } from "discord.js"
 
-export default class Guild {
+export default class BotGuild {
     static async member(
-        guild: Discord.Guild,
-        user: Discord.UserResolvable
-    ): Promise<Discord.GuildMember> {
-        return (await guild.members.fetch(user)) as Discord.GuildMember
+        guild: Guild,
+        user: UserResolvable
+    ): Promise<GuildMember> {
+        return (await guild.members.fetch(user)) as GuildMember
     }
 
-    static role(guild: Discord.Guild, name: string[]): Discord.Role {
+    static role(guild: Guild, name: string[]): Role {
         return (
             guild?.roles?.cache?.find(role => name.includes(role.id)) ||
             guild.roles.highest
         )
     }
 
-    static roleByName(guild: Discord.Guild, name: string): Discord.Role {
+    static roleByName(guild: Guild, name: string): Role {
         return (
             guild?.roles?.cache?.find(role => name === role.name) || guild.roles.highest
         )

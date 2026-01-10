@@ -1,10 +1,12 @@
-import Discord from "discord.js"
 import Suggestion from "../entities/Suggestion.entity.js"
 import { truncateString } from "@buildtheearth/bot-utils"
 import { isSuggestInfo } from "../typings/InteractionInfo.js"
+import { ModalSubmitInteraction, TextChannel, ThreadAutoArchiveDuration } from "discord.js"
+import BotClient from "../struct/BotClient.js"
 
 export default async function createSuggestion(
-    interaction: Discord.ModalSubmitInteraction
+    interaction: ModalSubmitInteraction,
+    client: BotClient
 ): Promise<void> {
     const customId = interaction.customId
     const info = client.interactionInfo.get(customId)
@@ -64,7 +66,7 @@ export default async function createSuggestion(
         const suggestionsID = client.config.suggestions[category]
         const suggestions = client.channels.cache.get(
             suggestionsID
-        ) as Discord.TextChannel
+        ) as TextChannel
 
         const embed = await suggestion.displayEmbed(client)
         const suggestionMessage = await suggestions.send({ embeds: [embed] })
@@ -76,7 +78,7 @@ export default async function createSuggestion(
                 const thread = await (
                     client.channels.cache.get(
                         client.config.suggestions.discussion[staff ? "staff" : "main"]
-                    ) as Discord.TextChannel
+                    ) as TextChannel
                 ).threads.fetch(old.thread)
                 if (thread)
                     client.response.sendSuccess(thread, {
@@ -89,10 +91,10 @@ export default async function createSuggestion(
         } else {
             const newIdentifier = await suggestion.getIdentifier()
             const thread = await (
-                suggestionMessage.channel as Discord.TextChannel
+                suggestionMessage.channel as TextChannel
             ).threads.create({
                 name: `${newIdentifier} - ${truncateString(title, 10)}`,
-                autoArchiveDuration: Discord.ThreadAutoArchiveDuration.OneWeek,
+                autoArchiveDuration: ThreadAutoArchiveDuration.OneWeek,
                 startMessage: suggestionMessage
             })
             await thread.setRateLimitPerUser(1)
@@ -108,6 +110,6 @@ export default async function createSuggestion(
         await suggestionMessage.react(client.config.emojis.upvote)
         await suggestionMessage.react(client.config.emojis.downvote)
         //some nice cleanup
-        globalThis.client.interactionInfo.delete(customId)
+        client.interactionInfo.delete(customId)
     }
 }

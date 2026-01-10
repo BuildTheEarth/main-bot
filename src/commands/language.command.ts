@@ -1,11 +1,11 @@
-import Client from "../struct/Client.js"
-import Discord from "discord.js"
+import BotClient from "../struct/BotClient.js"
 import Args from "../struct/Args.js"
 import Command from "../struct/Command.js"
-import Guild from "../struct/discord/Guild.js"
+import BotGuild from "../struct/discord/BotGuild.js"
 
 import { noop } from "@buildtheearth/bot-utils"
 import CommandMessage from "../struct/CommandMessage.js"
+import { GuildMember } from "discord.js"
 
 const ROLE_NAMES = [
     "English",
@@ -51,12 +51,12 @@ export default new Command({
             choices: ROLE_NAMES //NOTE: To stay under the 25 entry limit and not offend any one language in specific, since it is choices we simply just have the role names only, the normal command will support them all, feel free to suggest a better solution
         }
     ],
-    async run(this: Command, client: Client, message: CommandMessage, args: Args) {
+    async run(this: Command, client: BotClient, message: CommandMessage, args: Args) {
         const user = await args.consumeUser("member")
         if (!user)
             return message.sendErrorMessage(user === undefined ? "noUser" : "invalidUser")
-
-        const member: Discord.GuildMember | null = await (
+        
+        const member: GuildMember | null = await (
             await client.customGuilds.main()
         ).members
             .fetch({ user, cache: true })
@@ -70,7 +70,7 @@ export default new Command({
 
         await message.continue()
 
-        const role = Guild.roleByName(client.customGuilds.main(), language)
+        const role = BotGuild.roleByName(client.customGuilds.main(), language)
         await member.roles.add(role)
         await message.sendSuccessMessage("roleAdded")
     }

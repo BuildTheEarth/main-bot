@@ -1,9 +1,9 @@
-import Discord, { AutocompleteInteraction, ModalSubmitInteraction } from "discord.js"
+import { AutocompleteInteraction, GuildMember, Interaction, InteractionType, MessageFlags, ModalSubmitInteraction, Role, User } from "discord.js"
 import Args from "../struct/Args.js"
-import Client from "../struct/Client.js"
+import BotClient from "../struct/BotClient.js"
 import CommandMessage from "../struct/CommandMessage.js"
-import GuildMember from "../struct/discord/GuildMember.js"
-import Role from "../struct/discord/Role.js"
+import BotGuildMember from "../struct/discord/BotGuildMember.js"
+import BotRole from "../struct/discord/BotRole.js"
 
 import chalk = require("chalk")
 import ModerationMenu from "../entities/ModerationMenu.entity.js"
@@ -19,14 +19,14 @@ import languageDropdown from "../dropdowns/language.dropdown.js"
 import teamMenu from "../menus/team.menu.js"
 
 export default async function (
-    this: Client,
-    interaction: Discord.Interaction
+    this: BotClient,
+    interaction: Interaction
 ): Promise<unknown> {
     if (interaction.user.bot) return
 
     if (
-        interaction.type != Discord.InteractionType.ApplicationCommand &&
-        interaction.type != Discord.InteractionType.ApplicationCommandAutocomplete
+        interaction.type != InteractionType.ApplicationCommand &&
+        interaction.type != InteractionType.ApplicationCommandAutocomplete
     ) {
         const runInteraction = this.componentHandlers.findFromIdAndInteractionType(
             interaction.customId,
@@ -35,15 +35,15 @@ export default async function (
         if (runInteraction) await runInteraction.run(this, interaction)
     }
 
-    if (interaction.type === Discord.InteractionType.MessageComponent) {
+    if (interaction.type === InteractionType.MessageComponent) {
         if (interaction.isStringSelectMenu()) {
             if (interaction.customId.split(".")[0] === "info") {
                 if (interaction.customId === "info.languages")
                     return await languageDropdown(this, interaction)
             } else {
                 if (
-                    !GuildMember.hasRole(
-                        interaction.member as Discord.GuildMember,
+                    !BotGuildMember.hasRole(
+                        interaction.member as GuildMember,
                         [
                             globalThis.client.roles.MODERATOR,
                             globalThis.client.roles.HELPER,
@@ -54,7 +54,7 @@ export default async function (
                 ) {
                     await interaction.deferUpdate()
                     await interaction.followUp({
-                        ephemeral: true,
+                        flags: MessageFlags.Ephemeral,
                         content: client.messages.getMessage(
                             "noPermsMod",
                             interaction.locale
@@ -73,8 +73,8 @@ export default async function (
         if (interaction.isButton()) {
             if (_.startsWith(interaction.customId, "modmenu.")) {
                 if (
-                    !GuildMember.hasRole(
-                        interaction.member as Discord.GuildMember,
+                    !BotGuildMember.hasRole(
+                        interaction.member as GuildMember,
                         [
                             globalThis.client.roles.MODERATOR,
                             globalThis.client.roles.HELPER,
@@ -85,7 +85,7 @@ export default async function (
                 ) {
                     await interaction.deferUpdate()
                     await interaction.followUp({
-                        ephemeral: true,
+                        flags: MessageFlags.Ephemeral,
                         content: client.messages.getMessage(
                             "noPermsMod",
                             interaction.locale
@@ -122,8 +122,8 @@ export default async function (
         if (command) {
             const hasPermission =
                 interaction.member &&
-                GuildMember.hasRole(
-                    interaction.member as Discord.GuildMember,
+                BotGuildMember.hasRole(
+                    interaction.member as GuildMember,
                     command.permission,
                     this
                 )
@@ -133,15 +133,15 @@ export default async function (
             }
 
             const label = interaction.member
-                ? Role.format(
-                      (interaction.member as Discord.GuildMember).roles
-                          .highest as Discord.Role
+                ? BotRole.format(
+                      (interaction.member as GuildMember).roles
+                          .highest as Role
                   )
                 : chalk.blueBright("DMs")
             const tag =
                 command.name === "suggest" && !interaction.guild
                     ? "(Anonymous)"
-                    : (interaction.user as Discord.User).tag
+                    : (interaction.user as User).tag
 
             try {
                 await command.run(this, new CommandMessage(interaction, this), args)
@@ -166,14 +166,14 @@ export default async function (
         }
     }
 
-    if (interaction.type === Discord.InteractionType.ModalSubmit) {
+    if (interaction.type === InteractionType.ModalSubmit) {
         if (interaction instanceof ModalSubmitInteraction) {
             const type = interaction.customId.split(".")[0]
             if (type === "suggestmodal") {
-                return createSuggestion(interaction)
+                return createSuggestion(interaction, this)
             }
             if (type === "bannermodal") {
-                return createBanner(interaction)
+                return createBanner(interaction, this)
             }
             if (type === "snippetmodal") {
                 return createSnippet(interaction, this)
@@ -190,7 +190,7 @@ export default async function (
         }
     }
 
-    if (interaction.type === Discord.InteractionType.ApplicationCommandAutocomplete) {
+    if (interaction.type === InteractionType.ApplicationCommandAutocomplete) {
         if (interaction instanceof AutocompleteInteraction) {
             const cmd = interaction.commandName
             const command = this.customCommands.search(cmd)

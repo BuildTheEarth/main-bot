@@ -1,11 +1,14 @@
-import Client from "../struct/Client.js"
+import BotClient from "../struct/BotClient.js"
 import { loadSyncJSON5 } from "@buildtheearth/bot-utils"
 import Args from "../struct/Args.js"
 import path from "path"
 import url from "url"
 import Command from "../struct/Command.js"
-import GuildMember from "../struct/discord/GuildMember.js"
-import Guild from "../struct/discord/Guild.js"
+import BotGuildMember from "../struct/discord/BotGuildMember.js"
+import BotGuild from "../struct/discord/BotGuild.js"
+import { noop } from "@buildtheearth/bot-utils"
+import CommandMessage from "../struct/CommandMessage.js"
+import { GuildMember } from "discord.js"
 
 const pseudoteamPositions: Record<string, Record<string, string>> = loadSyncJSON5(
     path.join(
@@ -25,10 +28,6 @@ const roleConfig = loadSyncJSON5(
             `../../../config/extensions/roles/${client.config.guilds.main}.json5`
     )
 )
-
-import { noop } from "@buildtheearth/bot-utils"
-import Discord from "discord.js"
-import CommandMessage from "../struct/CommandMessage.js"
 
 export default new Command({
     name: "position",
@@ -99,7 +98,7 @@ export default new Command({
             ]
         }
     ],
-    async run(this: Command, client: Client, message: CommandMessage, args: Args) {
+    async run(this: Command, client: BotClient, message: CommandMessage, args: Args) {
         const user = await args.consumeUser("member")
         if (!user)
             return message.sendErrorMessage(user === undefined ? "noUser" : "invalidUser")
@@ -107,7 +106,7 @@ export default new Command({
         const subcommand = args.consumeSubcommand()
         if (subcommand === "manage") {
             if (
-                !GuildMember.hasRole(
+                !BotGuildMember.hasRole(
                     message.member,
                     [client.roles.HELPER, client.roles.MODERATOR, client.roles.MANAGER],
                     client
@@ -132,7 +131,7 @@ export default new Command({
             )
                 return message.sendErrorMessage("noRolePerms")
 
-            const member: Discord.GuildMember | null = await message.guild.members
+            const member: GuildMember | null = await message.guild.members
                 .fetch({ user, cache: true })
                 .catch(noop)
             if (!member) return message.sendErrorMessage("notInGuild")
@@ -148,7 +147,7 @@ export default new Command({
         let position = args.consumeIf(["bto", "vcc", "vs", "teamstaff", "builder"], "position")
         if (!position)
             for (const [team, lead] of Object.entries(pseudoteamPositions.leads))
-                if (GuildMember.hasRole(message.member, client.roles[lead], client))
+                if (BotGuildMember.hasRole(message.member, client.roles[lead], client))
                     position = team
         if (!position) return
 
@@ -159,11 +158,11 @@ export default new Command({
                 ? client.customGuilds.main()
                 : client.customGuilds.staff()
 
-        if (!GuildMember.hasRole(message.member, client.roles[lead], client))
+        if (!BotGuildMember.hasRole(message.member, client.roles[lead], client))
             return message.sendErrorMessage("notLead", expanded)
-        const role = Guild.role(guild, client.roles[expanded])
+        const role = BotGuild.role(guild, client.roles[expanded])
 
-        const member: Discord.GuildMember | null = await guild.members
+        const member: GuildMember | null = await guild.members
             .fetch({ user, cache: true })
             .catch(noop)
         if (!member) return message.sendErrorMessage("notInGuild")

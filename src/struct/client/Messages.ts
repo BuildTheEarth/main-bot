@@ -1,9 +1,9 @@
-import Client from "../Client.js"
+import BotClient from "../BotClient.js"
 
 export default class Messages {
-    client: Client
+    client: BotClient
 
-    constructor(client: Client) {
+    constructor(client: BotClient) {
         this.client = client
     }
 

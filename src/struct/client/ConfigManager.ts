@@ -1,7 +1,7 @@
 import path from "path"
 import JSON5 from "json5"
 import fs from "fs"
-import Client from "../Client.js"
+import BotClient from "../BotClient.js"
 import { SuggestionStatus } from "../../entities/Suggestion.entity.js"
 import { Action } from "../../entities/ActionLog.entity.js"
 import { EmojiIdentifierResolvable } from "discord.js"
@@ -40,7 +40,7 @@ export type ImagesConfig = {
 }
 
 export default class ConfigManager {
-    client: Client
+    client: BotClient
     prefix!: string
     appeal!: string
     vanity!: string
@@ -67,7 +67,7 @@ export default class ConfigManager {
     websiteToken!: string
     wmSocket!: string
 
-    constructor(client: Client) {
+    constructor(client: BotClient) {
         this.client = client
         this.submodules = { messages: new MessagesConfig(this.client) }
         //sorry for the hacky stuff here, use self instead of this

@@ -1,10 +1,9 @@
-import Client from "../struct/Client.js"
+import BotClient from "../struct/BotClient.js"
 import Args from "../struct/Args.js"
 import Command from "../struct/Command.js"
-
-import Discord from "discord.js"
 import CommandMessage from "../struct/CommandMessage.js"
 import { hexToNum } from "@buildtheearth/bot-utils"
+import { TextChannel } from "discord.js"
 
 export default new Command({
     name: "purge",
@@ -19,14 +18,14 @@ export default new Command({
             optionType: "INTEGER"
         }
     ],
-    async run(this: Command, client: Client, message: CommandMessage, args: Args) {
+    async run(this: Command, client: BotClient, message: CommandMessage, args: Args) {
         const amount = Number(args.consume("amount"))
         if (!amount) return message.sendErrorMessage("invalidAmount")
         if (Number.isNaN(amount)) return message.sendErrorMessage("invalidAmount")
         if (amount > 100) return message.sendErrorMessage("purgeLimit")
         if (amount < 1) return message.sendErrorMessage("purgeTooLow")
 
-        const purged = await (message.channel as Discord.TextChannel).bulkDelete(
+        const purged = await (message.channel as TextChannel).bulkDelete(
             amount,
             true
         )

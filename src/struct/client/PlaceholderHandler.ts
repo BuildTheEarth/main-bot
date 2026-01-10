@@ -1,13 +1,13 @@
 import { trimSides } from "@buildtheearth/bot-utils"
 import Placeholder from "../../entities/Placeholder.entity.js"
-import Client from "../Client.js"
+import BotClient from "../BotClient.js"
 import iso6391 from "./iso6391.js"
 import { Collection } from "discord.js"
 
 export default class PlaceholderHandler {
-    client: Client
+    client: BotClient
 
-    constructor(client: Client) {
+    constructor(client: BotClient) {
         this.client = client
     }
 

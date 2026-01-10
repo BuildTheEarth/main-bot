@@ -1,11 +1,11 @@
 import typeorm from "typeorm"
-import type Client from "../struct/Client.js"
+import type BotClient from "../struct/BotClient.js"
 import SnowflakePrimaryColumn from "./decorators/SnowflakePrimaryColumn.decorator.js"
 import milliseconds from "./transformers/milliseconds.transformer.js"
-import unicode from "./transformers/unicode.transformer.js"
-import Discord from "discord.js"
+import unicode from "./transformers/unicode.transformer.js" 
+import { Collection } from "discord.js"
 
-export type bannedTypes = Discord.Collection<string, BannedWord>
+export type bannedTypes = Collection<string, BannedWord>
 
 export interface bannedInfo {
     punishment_type: "BAN" | "WARN" | "MUTE" | "KICK" | "DELETE"
@@ -26,7 +26,7 @@ export interface bannedWordsOptions {
 export default class BannedWord extends typeorm.BaseEntity {
     static async createBannedWord(
         options: bannedWordsOptions,
-        client: Client
+        client: BotClient
     ): Promise<BannedWord> {
         const created = new BannedWord()
         if (options.word !== undefined) created.word = options.word.toLowerCase()
@@ -70,19 +70,19 @@ export default class BannedWord extends typeorm.BaseEntity {
 
     static async loadWords(): Promise<{ banned: bannedTypes; except: Array<string> }> {
         const values = await this.find()
-        const banned: bannedTypes = new Discord.Collection<string, BannedWord>()
+        const banned: bannedTypes = new Collection<string, BannedWord>()
         const except: Array<string> = []
-        values.forEach(word => {
+        values.forEach((word: BannedWord) => {
             if (word.exception) except.push(word.word.toLowerCase())
             else banned.set(word.word.toLowerCase(), word)
         })
         return { banned: banned, except: except }
     }
 
-    async deleteWord(client: Client): Promise<void> {
+    async deleteWord(client: BotClient): Promise<void> {
         if (this.exception)
             client.filterWordsCached.except = client.filterWordsCached.except.filter(
-                value => value !== this.word
+                (value: string) => value !== this.word
             )
         else client.filterWordsCached.banned.delete(this.word.toLowerCase())
         await this.remove()

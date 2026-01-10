@@ -1,4 +1,20 @@
-import Discord from "discord.js"
+import {
+    Message,
+    EmbedBuilder,
+    EmbedField,
+    escapeMarkdown,
+    SelectMenuComponentOptionData,
+    ActionRowBuilder,
+    StringSelectMenuBuilder,
+    ButtonBuilder,
+    ButtonStyle,
+    TextChannel,
+    StringSelectMenuInteraction,
+    ButtonInteraction,
+    Interaction,
+    GuildMember,
+    MessageFlags
+} from "discord.js"
 import _ from "lodash"
 import path from "path"
 import url from "url"
@@ -16,7 +32,7 @@ const punishmentValues = loadSyncJSON5(
             "../../../config/extensions/punishmentValues.json5"
     )
 )
-import Client from "../struct/Client.js"
+import BotClient from "../struct/BotClient.js"
 import { BannedWordObj } from "../struct/client/BannedWordFilter.js"
 import { bannedWordsOptions } from "./BannedWord.entity.js"
 import SnowflakeColumn from "./decorators/SnowflakeColumn.decorator.js"
@@ -25,8 +41,7 @@ import JSON5 from "json5"
 import punish from "../util/punish.util.js"
 import { noop } from "@buildtheearth/bot-utils"
 import TimedPunishment from "./TimedPunishment.entity.js"
-
-import GuildMember from "../struct/discord/GuildMember.js"
+import BotGuildMember from "../struct/discord/BotGuildMember.js"
 
 function getDuration(duration: number): string {
     if (duration === null) return "Indefinite"
@@ -36,13 +51,13 @@ function getDuration(duration: number): string {
 @typeorm.Entity({ name: "moderation_menus" })
 export default class ModerationMenu extends typeorm.BaseEntity {
     public static async createMenu(
-        message: Discord.Message,
+        message: Message,
         filterResponse: BannedWordObj[],
-        client: Client
+        client: BotClient
     ): Promise<ModerationMenu | undefined> {
         if (!message.member) return
         if (
-            GuildMember.hasRole(
+            BotGuildMember.hasRole(
                 message.member,
                 [
                     globalThis.client.roles.HELPER,
@@ -56,11 +71,13 @@ export default class ModerationMenu extends typeorm.BaseEntity {
 
         await message.delete().catch(noop)
 
-        const tempMessage = await message.channel
-            .send(`<@${message.author.id}>, your message contained blocked words!`)
-            .catch(noop)
+        if (message.channel.isSendable()) {
+            const tempMessage = await message.channel
+                .send(`<@${message.author.id}>, your message contained blocked words!`)
+                .catch(noop)
 
-        setTimeout(async () => await tempMessage?.delete()?.catch(noop), 1500)
+            setTimeout(async () => await tempMessage?.delete()?.catch(noop), 1500)
+        }
 
         let truePunishments = getMostSevereList(filterResponse, client)
 
@@ -78,8 +95,8 @@ export default class ModerationMenu extends typeorm.BaseEntity {
                 existingMenu.current_word = existingMenu.punishments[0].word
             existingMenu.save()
 
-            const embed = new Discord.EmbedBuilder()
-                .addFields(<Discord.EmbedField[]>[
+            const embed = new EmbedBuilder()
+                .addFields(<EmbedField[]>[
                     {
                         name: "User",
                         value: `<@${existingMenu.member}> (${existingMenu.member})`
@@ -108,7 +125,7 @@ export default class ModerationMenu extends typeorm.BaseEntity {
                     { name: "Reason", value: existingMenu.punishments[0].reason },
                     {
                         name: "Trigger",
-                        value: Discord.escapeMarkdown(
+                        value: escapeMarkdown(
                             existingMenu.punishments[0].word ?? "",
                             { maskedLink: true }
                         )
@@ -133,34 +150,34 @@ export default class ModerationMenu extends typeorm.BaseEntity {
                     )}, Word is ${punishment.word}`,
                     value: punishment.word,
                     default: false
-                } as Discord.SelectMenuComponentOptionData
+                } as SelectMenuComponentOptionData
                 return punish
             })
 
             const row = [
-                new Discord.ActionRowBuilder<Discord.StringSelectMenuBuilder>().addComponents(
-                    new Discord.StringSelectMenuBuilder()
+                new ActionRowBuilder<StringSelectMenuBuilder>().addComponents(
+                    new StringSelectMenuBuilder()
                         .setCustomId(`modmenu.${existingMenu.member}.menu`)
                         .setMinValues(1)
                         .setMaxValues(1)
                         .addOptions(punishmentOptions)
                         .setPlaceholder("Select a punishment")
                 ),
-                new Discord.ActionRowBuilder<Discord.ButtonBuilder>().addComponents(
-                    new Discord.ButtonBuilder()
+                new ActionRowBuilder<ButtonBuilder>().addComponents(
+                    new ButtonBuilder()
                         .setCustomId(`modmenu.${existingMenu.member}.punish`)
-                        .setStyle(Discord.ButtonStyle.Danger)
+                        .setStyle(ButtonStyle.Danger)
                         .setLabel("Punish"),
-                    new Discord.ButtonBuilder()
+                    new ButtonBuilder()
                         .setCustomId(`modmenu.${existingMenu.member}.pardon`)
-                        .setStyle(Discord.ButtonStyle.Success)
+                        .setStyle(ButtonStyle.Success)
                         .setLabel("Pardon")
                 )
             ]
 
             const channel = (await client.channels.fetch(
                 client.config.logging.modLogs
-            )) as Discord.TextChannel
+            )) as TextChannel
 
             const modMenuMessage = await channel.messages.fetch({
                 message: existingMenu.message,
@@ -174,8 +191,8 @@ export default class ModerationMenu extends typeorm.BaseEntity {
         }
 
         if (truePunishments[0].punishment_type === "DELETE") {
-            const embed = new Discord.EmbedBuilder()
-                .addFields(<Discord.EmbedField[]>[
+            const embed = new EmbedBuilder()
+                .addFields(<EmbedField[]>[
                     {
                         name: "User",
                         value: `<@${message.author.id}> (${message.author.id})`
@@ -190,7 +207,7 @@ export default class ModerationMenu extends typeorm.BaseEntity {
                     },
                     {
                         name: "Trigger",
-                        value: Discord.escapeMarkdown(truePunishments[0].word ?? "", {
+                        value: escapeMarkdown(truePunishments[0].word ?? "", {
                             maskedLink: true
                         })
                     }
@@ -199,7 +216,7 @@ export default class ModerationMenu extends typeorm.BaseEntity {
 
             const channel = (await client.channels.fetch(
                 client.config.logging.modLogs
-            )) as Discord.TextChannel
+            )) as TextChannel
             await channel.send({
                 content: `<@&${globalThis.client.roles.MODERATOR_ON_DUTY[0]}>`,
                 embeds: [embed]
@@ -220,8 +237,8 @@ export default class ModerationMenu extends typeorm.BaseEntity {
         if (modMenu.punishments[0].word)
             modMenu.current_word = modMenu.punishments[0].word
 
-        const embed = new Discord.EmbedBuilder()
-            .addFields(<Discord.EmbedField[]>[
+        const embed = new EmbedBuilder()
+            .addFields(<EmbedField[]>[
                 { name: "User", value: `<@${modMenu.member}> (${modMenu.member})` },
                 {
                     name: "Message",
@@ -244,7 +261,7 @@ export default class ModerationMenu extends typeorm.BaseEntity {
                 { name: "Reason", value: modMenu.punishments[0].reason },
                 {
                     name: "Trigger",
-                    value: Discord.escapeMarkdown(modMenu.punishments[0].word ?? "", {
+                    value: escapeMarkdown(modMenu.punishments[0].word ?? "", {
                         maskedLink: true
                     })
                 }
@@ -259,34 +276,35 @@ export default class ModerationMenu extends typeorm.BaseEntity {
                 )}, Word is ${punishment.word}`,
                 value: punishment.word,
                 default: false
-            } as Discord.SelectMenuComponentOptionData
+            } as SelectMenuComponentOptionData
             return punish
         })
 
         const row = [
-            new Discord.ActionRowBuilder<Discord.StringSelectMenuBuilder>().addComponents(
-                new Discord.StringSelectMenuBuilder()
+            new ActionRowBuilder<StringSelectMenuBuilder>().addComponents(
+                new StringSelectMenuBuilder()
                     .setCustomId(`modmenu.${modMenu.member}.menu`)
                     .setMinValues(1)
                     .setMaxValues(1)
                     .addOptions(punishmentOptions)
                     .setPlaceholder("Select a punishment")
             ),
-            new Discord.ActionRowBuilder<Discord.ButtonBuilder>().addComponents(
-                new Discord.ButtonBuilder()
+            new ActionRowBuilder<ButtonBuilder>().addComponents(
+                new ButtonBuilder()
                     .setCustomId(`modmenu.${modMenu.member}.punish`)
-                    .setStyle(Discord.ButtonStyle.Danger)
+                    .setStyle(ButtonStyle.Danger)
                     .setLabel("Punish"),
-                new Discord.ButtonBuilder()
+                new ButtonBuilder()
                     .setCustomId(`modmenu.${modMenu.member}.pardon`)
-                    .setStyle(Discord.ButtonStyle.Success)
+                    .setStyle(ButtonStyle.Success)
                     .setLabel("Pardon")
             )
         ]
+
         //TODO: FINISH THIS
         const channel = (await client.channels.fetch(
             client.config.logging.modLogs
-        )) as Discord.TextChannel
+        )) as TextChannel
 
         modMenu.message = (
             await channel.send({
@@ -303,8 +321,8 @@ export default class ModerationMenu extends typeorm.BaseEntity {
 
     public static async updateMenu(
         id: string,
-        interaction: Discord.SelectMenuInteraction,
-        client: Client
+        interaction: StringSelectMenuInteraction,
+        client: BotClient
     ): Promise<ModerationMenu | null> {
         const modMenu = await ModerationMenu.findOne({ member: id })
 
@@ -316,8 +334,8 @@ export default class ModerationMenu extends typeorm.BaseEntity {
 
         if (!punishment) return null
 
-        const embed = new Discord.EmbedBuilder()
-            .addFields(<Discord.EmbedField[]>[
+        const embed = new EmbedBuilder()
+            .addFields(<EmbedField[]>[
                 { name: "User", value: `<@${modMenu.member}> (${modMenu.member})` },
                 {
                     name: "Message",
@@ -336,7 +354,7 @@ export default class ModerationMenu extends typeorm.BaseEntity {
                 { name: "Reason", value: punishment.reason },
                 {
                     name: "Trigger",
-                    value: Discord.escapeMarkdown(punishment.word ?? "", {
+                    value: escapeMarkdown(punishment.word ?? "", {
                         maskedLink: true
                     })
                 }
@@ -350,9 +368,9 @@ export default class ModerationMenu extends typeorm.BaseEntity {
     }
     public static async punishPerson(
         id: string,
-        interaction: Discord.ButtonInteraction,
-        client: Client,
-        replyInteraction: Discord.ButtonInteraction
+        interaction: ButtonInteraction,
+        client: BotClient,
+        replyInteraction: ButtonInteraction
     ): Promise<void> {
         const messages = {
             alreadyPunished: "Invalid error message for context"
@@ -397,7 +415,7 @@ export default class ModerationMenu extends typeorm.BaseEntity {
 
         if (!interaction.guild) return
 
-        const member: Discord.GuildMember | null = await interaction.guild.members
+        const member: GuildMember | null = await interaction.guild.members
             .fetch({ user, cache: false })
             .catch(noop)
 
@@ -426,7 +444,7 @@ export default class ModerationMenu extends typeorm.BaseEntity {
         }
 
         if (member) {
-            if (GuildMember.hasRole(member, globalThis.client.roles.STAFF, client)) {
+            if (BotGuildMember.hasRole(member, globalThis.client.roles.STAFF, client)) {
                 replyInteraction.editReply({
                     content: client.messages.getMessage("isStaffBan", interaction.locale)
                 })
@@ -493,7 +511,7 @@ export default class ModerationMenu extends typeorm.BaseEntity {
         })
         await client.log(log)
 
-        const embed = new Discord.EmbedBuilder()
+        const embed = new EmbedBuilder()
             .addFields([
                 { name: "User", value: `<@${modMenu.member}> (${modMenu.member})` },
                 {
@@ -512,7 +530,7 @@ export default class ModerationMenu extends typeorm.BaseEntity {
             ])
             .setColor(hexToRGB(client.config.colors.success))
 
-        await (interaction.message as Discord.Message).edit({
+        await (interaction.message as Message).edit({
             embeds: [embed],
             components: []
         })
@@ -522,14 +540,14 @@ export default class ModerationMenu extends typeorm.BaseEntity {
 
     public static async pardon(
         id: string,
-        interaction: Discord.ButtonInteraction,
-        client: Client
+        interaction: ButtonInteraction,
+        client: BotClient
     ): Promise<void> {
         const modMenu = await ModerationMenu.findOne({ member: id })
 
         if (!modMenu) return
 
-        const embed = new Discord.EmbedBuilder()
+        const embed = new EmbedBuilder()
             .addFields([
                 { name: "User", value: `<@${modMenu.member}> (${modMenu.member})` },
                 {
@@ -548,7 +566,7 @@ export default class ModerationMenu extends typeorm.BaseEntity {
             ])
             .setColor(hexToRGB(client.config.colors.success))
 
-        await (interaction.message as Discord.Message).edit({
+        await (interaction.message as Message).edit({
             content: `<@&${globalThis.client.roles.MODERATOR_ON_DUTY[0]}>`,
             embeds: [embed],
             components: []
@@ -559,18 +577,18 @@ export default class ModerationMenu extends typeorm.BaseEntity {
 
     public static async pardonConfirm(
         id: string,
-        interaction: Discord.ButtonInteraction,
-        client: Client
+        interaction: ButtonInteraction,
+        client: BotClient
     ): Promise<void> {
         const components = [
-            new Discord.ActionRowBuilder<Discord.ButtonBuilder>().addComponents(
-                new Discord.ButtonBuilder()
+            new ActionRowBuilder<ButtonBuilder>().addComponents(
+                new ButtonBuilder()
                     .setCustomId(`yes.${interaction.id}.modmenu`)
-                    .setStyle(Discord.ButtonStyle.Danger)
+                    .setStyle(ButtonStyle.Danger)
                     .setLabel("Pardon"),
-                new Discord.ButtonBuilder()
+                new ButtonBuilder()
                     .setCustomId(`no.${interaction.id}.modmenu`)
-                    .setStyle(Discord.ButtonStyle.Success)
+                    .setStyle(ButtonStyle.Success)
                     .setLabel("No")
             )
         ]
@@ -578,10 +596,10 @@ export default class ModerationMenu extends typeorm.BaseEntity {
             content: "Are you sure you want to pardon this user?",
             components: components,
             fetchReply: true,
-            ephemeral: true
+            flags: MessageFlags.Ephemeral
         })
 
-        const interactionFunc = async (interactionCurr: Discord.Interaction) => {
+        const interactionFunc = async (interactionCurr: Interaction) => {
             if (
                 !(
                     interactionCurr.isButton() &&
@@ -622,28 +640,28 @@ export default class ModerationMenu extends typeorm.BaseEntity {
 
     public static async punishConfirm(
         id: string,
-        interaction: Discord.ButtonInteraction,
-        client: Client
+        interaction: ButtonInteraction,
+        client: BotClient
     ): Promise<void> {
         const components = [
-            new Discord.ActionRowBuilder<Discord.ButtonBuilder>().addComponents(
-                new Discord.ButtonBuilder()
+            new ActionRowBuilder<ButtonBuilder>().addComponents(
+                new ButtonBuilder()
                     .setCustomId(`yes.${interaction.id}.modmenu`)
-                    .setStyle(Discord.ButtonStyle.Danger)
+                    .setStyle(ButtonStyle.Danger)
                     .setLabel("Punish"),
-                new Discord.ButtonBuilder()
+                new ButtonBuilder()
                     .setCustomId(`no.${interaction.id}.modmenu`)
-                    .setStyle(Discord.ButtonStyle.Success)
+                    .setStyle(ButtonStyle.Success)
                     .setLabel("No")
             )
         ]
         const followMessage = await interaction.followUp({
             content: "Are you sure you want to punish this user?",
             components: components,
-            ephemeral: true
+            flags: MessageFlags.Ephemeral
         })
 
-        const interactionFunc = async (interactionCurr: Discord.Interaction) => {
+        const interactionFunc = async (interactionCurr: Interaction) => {
             if (
                 !(
                     interactionCurr.isButton() &&
@@ -712,7 +730,7 @@ export default class ModerationMenu extends typeorm.BaseEntity {
 
 function getMostSevereList(
     punishments: BannedWordObj[],
-    client: Client
+    client: BotClient
 ): bannedWordsOptions[] {
     const punishmentWords: bannedWordsOptions[] = []
     for (const punishment of punishments) {

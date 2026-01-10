@@ -1,4 +1,4 @@
-import Client from "../struct/Client.js"
+import BotClient from "../struct/BotClient.js"
 import Args from "../struct/Args.js"
 import Command from "../struct/Command.js"
 
@@ -81,7 +81,7 @@ export default new Command({
             args: []
         }
     ],
-    async run(this: Command, client: Client, message: CommandMessage, args: Args) {
+    async run(this: Command, client: BotClient, message: CommandMessage, args: Args) {
         const subcommand = args.consumeSubcommand().toLowerCase()
 
         if (subcommand === "list" || !subcommand) {

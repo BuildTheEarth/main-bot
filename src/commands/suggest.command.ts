@@ -1,4 +1,4 @@
-import Client from "../struct/Client.js"
+import BotClient from "../struct/BotClient.js"
 import Command from "../struct/Command.js"
 import Args from "../struct/Args.js"
 import CommandMessage from "../struct/CommandMessage.js"
@@ -23,7 +23,7 @@ export default new Command({
     description: "Make a suggestion.",
     permission: globalThis.client.roles.ANY,
     dms: true,
-    async run(this: Command, _client: Client, message: CommandMessage, args: Args) {
+    async run(this: Command, _client: BotClient, message: CommandMessage, args: Args) {
         const anon = args.consumeBoolean("anon")
         const subsuggestion = args.consume("number")
         const modalId = await message.showModal("suggest")

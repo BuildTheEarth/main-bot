@@ -1,5 +1,5 @@
-import Discord from "discord.js"
-import Client from "../struct/Client.js"
+import { GuildMember, APIEmbed, escapeMarkdown, Emoji, Activity, ActivityType } from "discord.js"
+import BotClient from "../struct/BotClient.js"
 import Args from "../struct/Args.js"
 import {
     formatTimestamp,
@@ -38,18 +38,18 @@ export default new Command({
             optionType: "USER"
         }
     ],
-    async run(this: Command, client: Client, message: CommandMessage, args: Args) {
+    async run(this: Command, client: BotClient, message: CommandMessage, args: Args) {
         const user = await args.consumeUser("member")
         if (!user)
             return message.sendErrorMessage(user === undefined ? "noUser" : "invalidUser")
 
         await message.continue()
 
-        const member: Discord.GuildMember | null = await message.guild.members
+        const member: GuildMember | null = await message.guild.members
             .fetch({ user, cache: true })
             .catch(() => null)
 
-        const embed = <Discord.APIEmbed>{
+        const embed = <APIEmbed>({
             color: hexToNum(client.config.colors.info),
             thumbnail: {
                 url: user.displayAvatarURL({
@@ -62,7 +62,7 @@ export default new Command({
             fields: [
                 {
                     name: "Tag",
-                    value: Discord.escapeMarkdown(user.tag),
+                    value: escapeMarkdown(user.tag),
                     inline: true
                 },
                 {
@@ -71,7 +71,7 @@ export default new Command({
                     inline: true
                 }
             ]
-        }
+        })
 
         if (!embed.fields) return // again never gonna happen
 
@@ -79,7 +79,7 @@ export default new Command({
             if (member.nickname)
                 embed.fields.push({
                     name: "Nick",
-                    value: Discord.escapeMarkdown(member.nickname),
+                    value: escapeMarkdown(member.nickname),
                     inline: true
                 })
 
@@ -145,18 +145,18 @@ export default new Command({
         }
 
         // uh...
-        const humanizeEmoji = (emoji: Discord.Emoji) =>
+        const humanizeEmoji = (emoji: Emoji) =>
             !emoji.id
                 ? emoji.name
                 : `<${emoji.animated ? "a" : ""}:${emoji.name}:${emoji.id}>`
-        const humanizeStatus = (status: Discord.Activity) =>
+        const humanizeStatus = (status: Activity) =>
             (status.emoji ? humanizeEmoji(status.emoji) + " " : "") +
-            (status.state ? Discord.escapeMarkdown(status.state) : "")
-        const humanizeActivity = (act: Discord.Activity) =>
-            `${activityTypes[act.type] || Discord.ActivityType[act.type]} **${
-                act.type === Discord.ActivityType.Custom
+            (status.state ? escapeMarkdown(status.state) : "")
+        const humanizeActivity = (act: Activity) =>
+            `${activityTypes[act.type] || ActivityType[act.type]} **${
+                act.type === ActivityType.Custom
                     ? humanizeStatus(act)
-                    : Discord.escapeMarkdown(act.name)
+                    : escapeMarkdown(act.name)
             }**`
 
         if (member?.partial) await member.fetch()

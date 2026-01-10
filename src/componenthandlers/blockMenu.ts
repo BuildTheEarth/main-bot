@@ -1,15 +1,15 @@
 import { noop } from "@buildtheearth/bot-utils"
-import Client from "../struct/Client.js"
+import BotClient from "../struct/BotClient.js"
 import BlockPage from "../struct/client/BlockPage.js"
 import { ComponentHandler } from "../struct/client/ComponentHandlersList.js"
-import Discord from "discord.js"
+import { InteractionType, Interaction, MessageFlags } from "discord.js"
 
 export default new ComponentHandler({
     name: "BlockMenu",
     prefix: "blockPage|",
-    passTypes: [Discord.InteractionType.MessageComponent],
-    async run(client: Client, interaction: Discord.Interaction) {
-        if (interaction.type != Discord.InteractionType.MessageComponent) return
+    passTypes: [InteractionType.MessageComponent],
+    async run(client: BotClient, interaction: Interaction) {
+        if (interaction.type != InteractionType.MessageComponent) return
 
         if (!interaction.isButton()) return
 
@@ -19,7 +19,7 @@ export default new ComponentHandler({
             return await interaction
                 .reply({
                     content: "Sorry, but you did not create this menu!",
-                    ephemeral: true
+                    flags: MessageFlags.Ephemeral
                 })
                 .catch(noop)
         }
@@ -30,7 +30,7 @@ export default new ComponentHandler({
                 return await interaction
                     .reply({
                         content: "Hey there! Enough pages for you!",
-                        ephemeral: true
+                        flags: MessageFlags.Ephemeral
                     })
                     .catch(noop)
             }
@@ -40,7 +40,7 @@ export default new ComponentHandler({
                 return await interaction
                     .reply({
                         content: "Hey there! Enough pages for you!",
-                        ephemeral: true
+                        flags: MessageFlags.Ephemeral
                     })
                     .catch(noop)
             }
@@ -57,7 +57,7 @@ export default new ComponentHandler({
         } else {
             await interaction.reply({
                 content: "Sorry, but you cannot use this menu anymore!",
-                ephemeral: true
+                flags: MessageFlags.Ephemeral
             })
         }
     }

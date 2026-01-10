@@ -1,10 +1,10 @@
-import Discord from "discord.js"
-import Client from "../struct/Client.js"
+import { MessageFlags, StringSelectMenuInteraction } from "discord.js"
+import BotClient from "../struct/BotClient.js"
 import { noop } from "@buildtheearth/bot-utils"
 
 export default async function languageDropdown(
-    client: Client,
-    interaction: Discord.StringSelectMenuInteraction
+    client: BotClient,
+    interaction: StringSelectMenuInteraction
 ): Promise<any> {
     const roles = interaction.values.map(e => e.replace("language.", ""))
 
@@ -39,5 +39,5 @@ export default async function languageDropdown(
         if (!currRoles.includes(role)) await member.roles.add(role)
     }
 
-    return await interaction.reply({ content: "Roles have been given!", ephemeral: true })
+    return await interaction.reply({ content: "Roles have been given!", flags: MessageFlags.Ephemeral })
 }

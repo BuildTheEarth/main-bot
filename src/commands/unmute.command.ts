@@ -1,4 +1,4 @@
-import Client from "../struct/Client.js"
+import BotClient from "../struct/BotClient.js"
 import Args from "../struct/Args.js"
 import TimedPunishment from "../entities/TimedPunishment.entity.js"
 import ActionLog from "../entities/ActionLog.entity.js"
@@ -29,7 +29,7 @@ export default new Command({
             optionType: "STRING"
         }
     ],
-    async run(this: Command, client: Client, message: CommandMessage, args: Args) {
+    async run(this: Command, client: BotClient, message: CommandMessage, args: Args) {
         const user = await args.consumeUser("member")
 
         if (!user)

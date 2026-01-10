@@ -1,7 +1,6 @@
 import DBuilders = require("@discordjs/builders")
 import Command, { CommandArgs, SubCommandProperties } from "../struct/Command.js"
 import _ from "lodash"
-import Client from "../struct/Client.js"
 
 
 export default function commandToSlash(command: Command): DBuilders.SlashCommandBuilder[] {

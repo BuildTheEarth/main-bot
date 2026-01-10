@@ -1,6 +1,6 @@
+import { Message } from "discord.js"
 import Placeholder from "../entities/Placeholder.entity.js"
 import Snippet from "../entities/Snippet.entity.js"
-import Discord from "discord.js"
 import Suggestion from "../entities/Suggestion.entity.js"
 import SuspiciousUser from "../entities/SuspiciousUser.entity.js"
 
@@ -29,7 +29,7 @@ export interface SuggestModalInfo {
 
 export interface SuggestionModalInfo {
     suggestion: Suggestion
-    message: Discord.Message
+    message: Message
     modalType: "suggestionmodal"
 }
 

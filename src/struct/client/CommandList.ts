@@ -1,9 +1,9 @@
-import Discord from "discord.js"
+import { ApplicationCommand, ApplicationCommandPermissions, ApplicationCommandPermissionsUpdateData, ApplicationCommandPermissionType, Collection } from "discord.js"
 import Command from "../Command.js"
 import loadDir from "../../util/loadDir.util.js"
-import Client from "../Client.js"
+import BotClient from "../BotClient.js"
 import CommandUtils from "../../util/commandUtils.util.js"
-import Guild from "../discord/Guild.js"
+import BotGuild from "../discord/BotGuild.js"
 
 import pathModule from "path"
 import url from "url"
@@ -11,13 +11,13 @@ import TranslateUtils from "../../util/TranslateUtils.util.js"
 import commandToSlash from "../../util/commandUtils.util.js"
 
 interface PermsObj {
-    [name: string]: Discord.ApplicationCommandPermissionsUpdateData
+    [name: string]: ApplicationCommandPermissionsUpdateData
 }
 
-export default class CommandList extends Discord.Collection<string, Command> {
-    client: Client
+export default class CommandList extends Collection<string, Command> {
+    client: BotClient
 
-    constructor(client: Client) {
+    constructor(client: BotClient) {
         super()
         this.client = client
     }
@@ -40,8 +40,8 @@ export default class CommandList extends Discord.Collection<string, Command> {
             ///if (command.name in oldCommands ) continue
             //for (const tmp in command.aliases) if (tmp in oldCommands) continue
             let permsTemp: string[][]
-            const permsMain: Array<Discord.ApplicationCommandPermissions> = []
-            const permsStaff: Array<Discord.ApplicationCommandPermissions> = []
+            const permsMain: Array<ApplicationCommandPermissions> = []
+            const permsStaff: Array<ApplicationCommandPermissions> = []
             let isStringArr = false
             command.permission.forEach(value => (isStringArr = typeof value != "object"))
             const isStringArrFunc = (roles: string[] | string[][]): roles is string[] =>
@@ -54,19 +54,19 @@ export default class CommandList extends Discord.Collection<string, Command> {
                 let roleStaff
 
                 if (await this.client.customGuilds.main())
-                    roleMain = Guild.role(await this.client.customGuilds.main(), perm)
+                    roleMain = BotGuild.role(await this.client.customGuilds.main(), perm)
                 if (await this.client.customGuilds.staff())
-                    roleStaff = Guild.role(await this.client.customGuilds.staff(), perm)
+                    roleStaff = BotGuild.role(await this.client.customGuilds.staff(), perm)
                 if (roleMain && permsTemp[0] != globalThis.client.roles.ANY)
                     permsMain.push({
                         id: roleMain.id,
-                        type: Discord.ApplicationCommandPermissionType.Role,
+                        type: ApplicationCommandPermissionType.Role,
                         permission: true
                     })
                 if (roleStaff && permsTemp[0] != globalThis.client.roles.ANY)
                     permsStaff.push({
                         id: roleStaff.id,
-                        type: Discord.ApplicationCommandPermissionType.Role,
+                        type: ApplicationCommandPermissionType.Role,
                         permission: true
                     })
             }
@@ -82,7 +82,7 @@ export default class CommandList extends Discord.Collection<string, Command> {
                     if (command.userInstallContext) {
                         //https://discord.com/developers/docs/tutorials/developing-a-user-installable-app#step-2-setting-up-commands
                         //@ts-ignore Hope and pray that this exists in the discord api
-                        cmdJSON["integration_types"] = [0, 1]
+                        cmdJSON["integratqion_types"] = [0, 1]
                         //@ts-ignore Hope and pray that this exists in the discord api
                         cmdJSON["contexts"] = [0, 1, 2]
                     }
@@ -194,8 +194,8 @@ export default class CommandList extends Discord.Collection<string, Command> {
     }
 
     async loadOne(name: string): Promise<void> {
-        let registerPermsMain: Discord.ApplicationCommandPermissions[] | null = null
-        let registerPermsStaff: Discord.ApplicationCommandPermissions[] | null = null
+        let registerPermsMain: ApplicationCommandPermissions[] | null = null
+        let registerPermsStaff: ApplicationCommandPermissions[] | null = null
 
         const registerCommands = []
         const path =
@@ -204,8 +204,8 @@ export default class CommandList extends Discord.Collection<string, Command> {
         const command: Command = (await import(path)).default
         this.set(command.name, command)
         let permsTemp: string[][]
-        const permsMain: Array<Discord.ApplicationCommandPermissions> = []
-        const permsStaff: Array<Discord.ApplicationCommandPermissions> = []
+        const permsMain: Array<ApplicationCommandPermissions> = []
+        const permsStaff: Array<ApplicationCommandPermissions> = []
         let isStringArr = false
         command.permission.forEach(value => (isStringArr = typeof value != "object"))
         const isStringArrFunc = (roles: string[] | string[][]): roles is string[] =>
@@ -214,18 +214,18 @@ export default class CommandList extends Discord.Collection<string, Command> {
         else permsTemp = command.permission
         permsTemp.push(this.client.roles.BOT_DEVELOPER)
         for await (const perm of permsTemp) {
-            const roleMain = Guild.role(await this.client.customGuilds.main(), perm)
-            const roleStaff = Guild.role(await this.client.customGuilds.staff(), perm)
+            const roleMain = BotGuild.role(await this.client.customGuilds.main(), perm)
+            const roleStaff = BotGuild.role(await this.client.customGuilds.staff(), perm)
             if (roleMain)
                 permsMain.push({
                     id: roleMain.id,
-                    type: Discord.ApplicationCommandPermissionType.Role,
+                    type: ApplicationCommandPermissionType.Role,
                     permission: true
                 })
             if (roleStaff)
                 permsStaff.push({
                     id: roleStaff.id,
-                    type: Discord.ApplicationCommandPermissionType.Role,
+                    type: ApplicationCommandPermissionType.Role,
                     permission: true
                 })
         }
@@ -249,7 +249,7 @@ export default class CommandList extends Discord.Collection<string, Command> {
 
         if (this.client.customGuilds.main()) {
             for (const cmd of registerCommands) {
-                const commandRegistered: Discord.ApplicationCommand =
+                const commandRegistered: ApplicationCommand =
                     //@ts-ignore
                     await this.client.customGuilds.main().commands.create(cmd)
                 if (registerPermsMain !== null)
@@ -262,7 +262,7 @@ export default class CommandList extends Discord.Collection<string, Command> {
 
         if (this.client.customGuilds.staff()) {
             for (const cmd of registerCommands) {
-                const commandRegistered: Discord.ApplicationCommand =
+                const commandRegistered: ApplicationCommand =
                     //@ts-ignore
                     await this.client.customGuilds.staff().commands.create(cmd)
                 if (registerPermsStaff !== null)

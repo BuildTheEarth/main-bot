@@ -1,10 +1,9 @@
-import Client from "../struct/Client.js"
+import BotClient from "../struct/BotClient.js"
 import Args from "../struct/Args.js"
 import Command from "../struct/Command.js"
-
-import Discord from "discord.js"
 import ApiTypes = require("discord-api-types/v10")
 import CommandMessage from "../struct/CommandMessage.js"
+import { TextChannel } from "discord.js"
 
 export default new Command({
     name: "slowmode",
@@ -30,14 +29,14 @@ export default new Command({
             channelTypes: [ApiTypes.ChannelType.GuildText]
         }
     ],
-    async run(this: Command, client: Client, message: CommandMessage, args: Args) {
+    async run(this: Command, client: BotClient, message: CommandMessage, args: Args) {
         const firstArg = args.consume("time")
         const slowmode = Math.round(Number(firstArg))
         const channel =
             (await args.consumeChannel("channel")) ||
-            (message.channel as Discord.TextChannel)
+            (message.channel as TextChannel)
         if (isNaN(slowmode)) {
-            const current = (channel as Discord.TextChannel).rateLimitPerUser
+            const current = (channel as TextChannel).rateLimitPerUser
             const s = current === 1 ? "" : "s"
             const formatted = current === 0 ? "disabled" : `${current} second${s}`
             return message.sendSuccessMessage("currentSlowmode", formatted)
@@ -53,7 +52,7 @@ export default new Command({
 
         const reason = `By ${message.member.user.tag} (${message.member.id})`
 
-        ;(channel as Discord.TextChannel).setRateLimitPerUser(slowmode, reason)
+        ;(channel as TextChannel).setRateLimitPerUser(slowmode, reason)
 
         const s = slowmode === 1 ? "" : "s"
         message.sendSuccess(

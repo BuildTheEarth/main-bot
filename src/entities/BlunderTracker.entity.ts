@@ -1,6 +1,6 @@
 import { TextChannel } from "discord.js"
 import typeorm from "typeorm"
-import Client from "../struct/Client.js"
+import BotClient from "../struct/BotClient.js"
 import SnowflakeColumn from "./decorators/SnowflakeColumn.decorator.js"
 import unicode from "./transformers/unicode.transformer.js"
 const NO_PLURAL = [
@@ -51,11 +51,11 @@ export default class BlunderTracker extends typeorm.BaseEntity {
     @SnowflakeColumn()
     channel!: string
 
-    static async inc(client: Client): Promise<void> {
+    static async inc(client: BotClient): Promise<void> {
         for (const count of await this.find()) count.update(client)
     }
 
-    async update(client: Client): Promise<void> {
+    async update(client: BotClient): Promise<void> {
         const channel = (await client.customGuilds.staff()).channels.cache.get(
             this.channel
         ) as TextChannel
@@ -91,13 +91,13 @@ export default class BlunderTracker extends typeorm.BaseEntity {
         }
     }
 
-    async reset(client: Client): Promise<void> {
+    async reset(client: BotClient): Promise<void> {
         this.lastBlunder = new Date()
         await this.save()
         await this.update(client)
     }
 
-    async roleToTeam(client: Client): Promise<string> {
+    async roleToTeam(client: BotClient): Promise<string> {
         if (!this.role) return ""
         const role = (await client.customGuilds.staff()).roles.cache.get(this.role)
         if (!role) return ""

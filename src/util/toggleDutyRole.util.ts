@@ -1,10 +1,10 @@
-import Discord from "discord.js"
-import GuildMember from "../struct/discord/GuildMember.js"
-import Client from "../struct/Client.js"
+import BotGuildMember from "../struct/discord/BotGuildMember.js"
+import BotClient from "../struct/BotClient.js"
+import { GuildMember } from "discord.js"
 export default async function toggleDutyRole(
-    user: Discord.GuildMember,
+    user: GuildMember,
     roles: ("SUPPORT" | "MODERATOR" | "HELPER")[],
-    client: Client
+    client: BotClient
 ): Promise<boolean> {
     if (roles.includes("HELPER") && roles.includes("MODERATOR") == false) {
         roles.pop()
@@ -12,7 +12,7 @@ export default async function toggleDutyRole(
     } else if (roles.includes("HELPER") && roles.includes("MODERATOR")) {
         roles.pop()
     }
-    return await GuildMember.toggleRole(
+    return await BotGuildMember.toggleRole(
         user,
         roles.map(role => client.roles[role + "_ON_DUTY"]),
         "User went on/off duty.",

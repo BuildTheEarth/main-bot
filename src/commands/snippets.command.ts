@@ -1,11 +1,11 @@
-import Client from "../struct/Client.js"
+import BotClient from "../struct/BotClient.js"
 import Args from "../struct/Args.js"
 import Command from "../struct/Command.js"
 import Snippet from "../entities/Snippet.entity.js"
 
 import languages from "../struct/client/iso6391.js"
-import GuildMember from "../struct/discord/GuildMember.js"
-import Discord from "discord.js"
+import GuildMember from "../struct/discord/BotGuildMember.js"
+import { ActionRowBuilder, ButtonBuilder, ButtonStyle, Interaction, ButtonInteraction, Message, MessageFlags } from "discord.js"
 import CommandMessage from "../struct/CommandMessage.js"
 import { hexToNum } from "@buildtheearth/bot-utils"
 
@@ -227,7 +227,7 @@ export default new Command({
             ]
         }
     ],
-    async run(this: Command, client: Client, message: CommandMessage, args: Args) {
+    async run(this: Command, client: BotClient, message: CommandMessage, args: Args) {
         const rules = !!args.consumeIf(["rule", "rules"], "subsnippet")
 
         const teams = !!args.consumeIf(["team", "teams"], "subsnippet")
@@ -327,11 +327,11 @@ export default new Command({
                 }
             }
             if (snippetEmbeds.length <= 1) return message.send({ embeds: snippetEmbeds })
-            let row = new Discord.ActionRowBuilder<Discord.ButtonBuilder>().addComponents(
-                new Discord.ButtonBuilder()
+            let row = new ActionRowBuilder<ButtonBuilder>().addComponents(
+                new ButtonBuilder()
                     .setCustomId(`${message.id}.forwards`)
                     .setLabel(client.config.emojis.right.toString())
-                    .setStyle(Discord.ButtonStyle.Success)
+                    .setStyle(ButtonStyle.Success)
             )
             const sentMessage = await message.send({
                 embeds: [snippetEmbeds[0]],
@@ -341,7 +341,7 @@ export default new Command({
             let page = 1
             let old = 1
 
-            const interactionFunc = async (interaction: Discord.Interaction) => {
+            const interactionFunc = async (interaction: Interaction) => {
                 if (
                     !(
                         interaction.isButton() &&
@@ -354,48 +354,48 @@ export default new Command({
                 if (interaction.user.id !== message.member.id)
                     return interaction.reply({
                         content: message.messages.wrongUser,
-                        ephemeral: true
+                        flags: MessageFlags.Ephemeral
                     })
                 if (
-                    (interaction as Discord.ButtonInteraction).customId ===
+                    (interaction as ButtonInteraction).customId ===
                     `${message.id}.forwards`
                 )
                     page += 1
                 if (
-                    (interaction as Discord.ButtonInteraction).customId ===
+                    (interaction as ButtonInteraction).customId ===
                     `${message.id}.back`
                 )
                     page -= 1
                 if (page === 1) {
                     row =
-                        new Discord.ActionRowBuilder<Discord.ButtonBuilder>().addComponents(
-                            new Discord.ButtonBuilder()
+                        new ActionRowBuilder<ButtonBuilder>().addComponents(
+                            new ButtonBuilder()
                                 .setCustomId(`${message.id}.forwards`)
                                 .setLabel(client.config.emojis.right.toString())
-                                .setStyle(Discord.ButtonStyle.Success)
+                                .setStyle(ButtonStyle.Success)
                         )
                 } else if (page === snippetEmbeds.length) {
                     row =
-                        new Discord.ActionRowBuilder<Discord.ButtonBuilder>().addComponents(
-                            new Discord.ButtonBuilder()
+                        new ActionRowBuilder<ButtonBuilder>().addComponents(
+                            new ButtonBuilder()
                                 .setCustomId(`${message.id}.back`)
                                 .setLabel(client.config.emojis.left.toString())
-                                .setStyle(Discord.ButtonStyle.Success)
+                                .setStyle(ButtonStyle.Success)
                         )
                 } else {
-                    row = new Discord.ActionRowBuilder<Discord.ButtonBuilder>()
+                    row = new ActionRowBuilder<ButtonBuilder>()
 
                         .addComponents(
-                            new Discord.ButtonBuilder()
+                            new ButtonBuilder()
                                 .setCustomId(`${message.id}.back`)
                                 .setLabel(client.config.emojis.left.toString())
-                                .setStyle(Discord.ButtonStyle.Success)
+                                .setStyle(ButtonStyle.Success)
                         )
                         .addComponents(
-                            new Discord.ButtonBuilder()
+                            new ButtonBuilder()
                                 .setCustomId(`${message.id}.forwards`)
                                 .setLabel(client.config.emojis.right.toString())
-                                .setStyle(Discord.ButtonStyle.Success)
+                                .setStyle(ButtonStyle.Success)
                         )
                 }
 
@@ -403,10 +403,10 @@ export default new Command({
                 old = page
 
                 const embed = snippetEmbeds[page - 1]
-                await (interaction as Discord.ButtonInteraction).update({
+                await (interaction as ButtonInteraction).update({
                     components: [row]
                 })
-                if (interaction.message instanceof Discord.Message) {
+                if (interaction.message instanceof Message) {
                     try {
                         await interaction.message.edit({ embeds: [embed] })
                     } catch {

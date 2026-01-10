@@ -1,8 +1,8 @@
-import Client from "../struct/Client.js"
+import BotClient from "../struct/BotClient.js"
 import Args from "../struct/Args.js"
 import Command from "../struct/Command.js"
-import GuildMember from "../struct/discord/GuildMember.js"
-import Guild from "../struct/discord/Guild.js"
+import BotGuildMember from "../struct/discord/BotGuildMember.js"
+import BotGuild from "../struct/discord/BotGuild.js"
 
 import {
     formatTimestamp,
@@ -13,7 +13,7 @@ import {
 } from "@buildtheearth/bot-utils"
 import AdvancedBuilder from "../entities/AdvancedBuilder.entity.js"
 import CommandMessage from "../struct/CommandMessage.js"
-import Discord from "discord.js"
+import { TextChannel } from "discord.js"
 
 export default new Command({
     name: "honor",
@@ -103,7 +103,7 @@ export default new Command({
         }
     ],
 
-    async run(client: Client, message: CommandMessage, args: Args) {
+    async run(client: BotClient, message: CommandMessage, args: Args) {
         const subcommand = args.consumeSubcommand()
         const user = await args.consumeUser("user")
 
@@ -115,7 +115,7 @@ export default new Command({
             .catch(noop)
         if (
             !member ||
-            !GuildMember.hasRole(member, globalThis.client.roles.BUILDER, client)
+            !BotGuildMember.hasRole(member, globalThis.client.roles.BUILDER, client)
         )
             return message.sendErrorMessage("noBuilder")
 
@@ -174,7 +174,7 @@ export default new Command({
             const roleName =
                 type.toLowerCase() === "cool_build" ? "COOL_BUILD" : "ADVANCED_BUILDER"
 
-            const role = Guild.role(
+            const role = BotGuild.role(
                 await client.customGuilds.main(),
                 client.roles[roleName]
             )
@@ -220,13 +220,13 @@ export default new Command({
                             .main()
                             .channels.cache.find(
                                 ch => ch.name == "builder-chat"
-                            ) as Discord.TextChannel
+                            ) as TextChannel
                         if (!progressChannel) {
                             progressChannel = client.customGuilds
                                 .main()
                                 .channels.cache.find(
                                     ch => ch.name == "builders-chat"
-                                ) as Discord.TextChannel
+                                ) as TextChannel
                         }
                         if (progressChannel) {
                             await client.response.sendSuccess(

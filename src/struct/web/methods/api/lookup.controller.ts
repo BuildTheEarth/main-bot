@@ -1,17 +1,12 @@
 import {
     Controller,
     Get,
-    Post,
-    Param,
     Req,
     Res,
-    Body,
     Query,
     ParseArrayPipe,
     ParseBoolPipe
 } from "@nestjs/common"
-import GuildMember from "../../../discord/GuildMember.js"
-import Discord from "discord.js"
 import { Response, Request } from "express"
 import { fetchPeopleByRoles } from "../../../../util/roles.util.js"
 import { noop } from "@buildtheearth/bot-utils"

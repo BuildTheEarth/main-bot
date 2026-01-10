@@ -1,5 +1,5 @@
-import Discord from "discord.js"
-import Client from "../struct/Client.js"
+import {APIEmbed} from "discord.js"
+import BotClient from "../struct/BotClient.js"
 import Args from "../struct/Args.js"
 import Command from "../struct/Command.js"
 
@@ -35,7 +35,7 @@ export default new Command({
             required: false
         }
     ],
-    async run(this: Command, client: Client, message: CommandMessage, args: Args) {
+    async run(this: Command, client: BotClient, message: CommandMessage, args: Args) {
         const user = await args.consumeUser("user")
 
         if (!user)
@@ -76,7 +76,7 @@ export default new Command({
         const clean = !actionLogs.length
         for (const log of actionLogs) categorizedLogs[log.action].push(log)
 
-        const embed: Discord.APIEmbed = {
+        const embed: APIEmbed = {
             thumbnail: {
                 url: user.displayAvatarURL({
                     size: 64,

@@ -8,15 +8,15 @@ const duplicateChars = loadSyncJSON5(
             "../../../../config/extensions/duplicateChars.json5"
     )
 )
-import Client from "../Client.js"
+import BotClient from "../BotClient.js"
 import BannedWord from "../../entities/BannedWord.entity.js"
 
 const ALPHABET = "abcdefghijklmnopqrstuvwxyz"
 
 export default class BannedWordFilter {
-    client: Client
+    client: BotClient
 
-    constructor(client: Client) {
+    constructor(client: BotClient) {
         this.client = client
     }
 

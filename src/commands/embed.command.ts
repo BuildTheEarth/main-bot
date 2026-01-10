@@ -1,4 +1,4 @@
-import Client from "../struct/Client.js"
+import BotClient from "../struct/BotClient.js"
 import Command from "../struct/Command.js"
 
 import CommandMessage from "../struct/CommandMessage.js"
@@ -6,7 +6,7 @@ import Args from "../struct/Args.js"
 import { formatTimestamp, noop } from "@buildtheearth/bot-utils"
 import fetch from "node-fetch"
 import _ from "lodash"
-import Discord from "discord.js"
+import { ChannelType, PermissionFlagsBits } from "discord.js"
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function isNil(value: any): value is null | undefined {
@@ -26,7 +26,7 @@ export default new Command({
             required: true
         }
     ],
-    async run(this: Command, client: Client, message: CommandMessage, args: Args) {
+    async run(this: Command, client: BotClient, message: CommandMessage, args: Args) {
 
         await message.continue()
 
@@ -60,10 +60,10 @@ export default new Command({
             channel.permissionsFor(message.member) &&
             channel
                 .permissionsFor(client.user)
-                ?.has(Discord.PermissionFlagsBits.ViewChannel)
+                ?.has(PermissionFlagsBits.ViewChannel)
         if (!perms) return message.sendErrorMessage("noChannelPerms")
 
-        if (!channel || !(channel.type === Discord.ChannelType.GuildText)) {
+        if (!channel || !(channel.type === ChannelType.GuildText)) {
             return message.sendErrorMessage("provideMsgUrl")
         }
 

@@ -1,17 +1,17 @@
-import Client from "../struct/Client.js"
-import GuildMember from "../struct/discord/GuildMember.js"
-import Guild from "../struct/discord/Guild.js"
+import BotClient from "../struct/BotClient.js"
+import BotGuildMember from "../struct/discord/BotGuildMember.js"
+import BotGuild from "../struct/discord/BotGuild.js"
 import Snippet from "../entities/Snippet.entity.js"
 import languages from "../struct/client/iso6391.js"
 
 import chalk = require("chalk")
 import { noop } from "@buildtheearth/bot-utils"
-import Discord from "discord.js"
+import { Message, MessageType } from "discord.js"
 import typeorm from "typeorm"
 import ModerationMenu from "../entities/ModerationMenu.entity.js"
 import { runBtCommand } from "../commands/team.command.js"
 
-function consumeCommand(client: Client, message: Discord.Message): string {
+function consumeCommand(client: BotClient, message: Message): string {
     const content = message.content
     const prefix = client.config.prefix
     const prefixLength = prefix.length
@@ -24,7 +24,7 @@ function consumeCommand(client: Client, message: Discord.Message): string {
     return commandName || ""
 }
 
-function consumeLang(client: Client, message: Discord.Message): string {
+function consumeLang(client: BotClient, message: Message): string {
     const content = message.content
     const prefix = client.config.prefix
     const prefixLength = prefix.length
@@ -37,7 +37,7 @@ function consumeLang(client: Client, message: Discord.Message): string {
     return commandName || ""
 }
 
-function consumeTeam(client: Client, message: Discord.Message): string {
+function consumeTeam(client: BotClient, message: Message): string {
     const content = message.content
     const prefix = client.config.prefix
     const prefixLength = prefix.length
@@ -50,15 +50,15 @@ function consumeTeam(client: Client, message: Discord.Message): string {
     return commandSplit.join(" ").trim() || ""
 }
 
-export default async function (this: Client, message: Discord.Message): Promise<unknown> {
+export default async function (this: BotClient, message: Message): Promise<unknown> {
     if (message.partial) await message.fetch().catch(noop)
     if (message.author.bot) return
     const Snippets = Snippet.getRepository()
 
     const mainGuild = await this.customGuilds.main()
     const main = mainGuild.id === message.guild?.id
-    if (main && message.type === Discord.MessageType.GuildBoostTier3) {
-        await Guild.setVanityCode()
+    if (main && message.type === MessageType.GuildBoostTier3) {
+        await BotGuild.setVanityCode()
         this.logger.info(`Set vanity code to ${chalk.hex("#FF73FA")(this.config.vanity)}`)
         return
     }
@@ -112,7 +112,7 @@ export default async function (this: Client, message: Discord.Message): Promise<
                 return
             }
 
-            await message.channel.send({content: snippet.body, allowedMentions: {parse: []}}).catch(() => null)
+            if (message.channel.isSendable()) await message.channel.send({content: snippet.body, allowedMentions: {parse: []}}).catch(() => null)
 
             return
         }
@@ -120,11 +120,11 @@ export default async function (this: Client, message: Discord.Message): Promise<
         if (command.name === "team") {
             const team = consumeTeam(this, message)
             if (!team || team === "")
-                return client.response.sendError(
+                return this.response.sendError(
                     message,
-                    client.messages.getMessage("noTeam", "en-US")
+                    this.messages.getMessage("noTeam", "en-US")
                 )
-            return await runBtCommand(client, message, team)
+            return await runBtCommand(this, message, team)
         }
 
         return // do Absolutely Nothing
@@ -134,7 +134,7 @@ export default async function (this: Client, message: Discord.Message): Promise<
     if (
         suggestions.includes(message.channel.id) &&
         message.member &&
-        !GuildMember.hasRole(message.member, globalThis.client.roles.MANAGER, this)
+        !BotGuildMember.hasRole(message.member, globalThis.client.roles.MANAGER, this)
     ) {
         const error = await this.response.sendError(
             message,
@@ -148,7 +148,7 @@ export default async function (this: Client, message: Discord.Message): Promise<
         return
     }
 
-    if (message.content.toLowerCase() === "donde es server")
+    if (message.content.toLowerCase() === "donde es server" && message.channel.isSendable())
         return await message.channel.send("hay un server!")
     if (message.content) {
         const bannedWords = this.filter.findBannedWord(message.content)

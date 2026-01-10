@@ -1,4 +1,4 @@
-import Client from "../struct/Client.js"
+import BotClient from "../struct/BotClient.js"
 import Args from "../struct/Args.js"
 import Command from "../struct/Command.js"
 
@@ -17,7 +17,7 @@ export default new Command({
             optionType: "BOOLEAN"
         }
     ],
-    async run(this: Command, client: Client, message: CommandMessage, args: Args) {
+    async run(this: Command, client: BotClient, message: CommandMessage, args: Args) {
         if (!args.consumeBoolean("bye")) await message.react("👋").catch(() => null)
         process.exit(0)
     }

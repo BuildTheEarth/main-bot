@@ -1,13 +1,13 @@
 import Command from "../struct/Command.js"
 
-import Client from "../struct/Client.js"
+import BotClient from "../struct/BotClient.js"
 import CommandMessage from "../struct/CommandMessage.js"
 import Args from "../struct/Args.js"
-import GuildMember from "../struct/discord/GuildMember.js"
+import GuildMember from "../struct/discord/BotGuildMember.js"
 
 import BlunderTracker from "../entities/BlunderTracker.entity.js"
 import ApiTypes = require("discord-api-types/v10")
-import Discord, { GuildTextBasedChannel } from "discord.js"
+import {ChannelType, GuildTextBasedChannel } from "discord.js"
 import typeorm from "typeorm"
 
 export default new Command({
@@ -77,7 +77,7 @@ export default new Command({
             permission: globalThis.client.roles.STAFF
         }
     ],
-    async run(this: Command, client: Client, message: CommandMessage, args: Args) {
+    async run(this: Command, client: BotClient, message: CommandMessage, args: Args) {
         const subcommand = args.consumeSubcommandIf(["commit", "new", "delete", "list"])
         if (!subcommand) return message.sendErrorMessage("noSubcommand")
 
@@ -133,7 +133,7 @@ export default new Command({
             const role = await args.consumeRole("team")
 
             const channel = await args.consumeChannel("channel")
-            if (!channel || !(channel.type === Discord.ChannelType.GuildText))
+            if (!channel || !(channel.type === ChannelType.GuildText))
                 return message.sendErrorMessage("noChannel")
             if (
                 (channel as GuildTextBasedChannel).guild?.id !==

@@ -1,16 +1,16 @@
-import Discord from "discord.js"
-import Client from "../Client.js"
+import BotClient from "../BotClient.js"
 import pathModule from "path"
 import url from "url"
 import fs from "fs"
 import { loadSyncJSON5 } from "@buildtheearth/bot-utils"
+import { Collection } from "discord.js"
 
 // eslint-disable-next-line @typescript-eslint/ban-types
 export default class AssetList {
-    client: Client
-    collection: Discord.Collection<string, { [key: string]: any }> =
-        new Discord.Collection()
-    constructor(client: Client) {
+    client: BotClient
+    collection: Collection<string, { [key: string]: any }> =
+        new Collection()
+    constructor(client: BotClient) {
         this.client = client
     }
 

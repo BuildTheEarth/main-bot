@@ -1,133 +1,137 @@
 import { hexToNum } from "@buildtheearth/bot-utils"
-import Discord from "discord.js"
-import Client from "../Client.js"
+import BotClient from "../BotClient.js"
 import CommandMessage from "../CommandMessage.js"
+import { ModalSubmitInteraction, APIEmbed, InteractionResponse, ButtonInteraction, TextBasedChannel, Message, PartialGroupDMMessageManager, PartialGroupDMChannel, MessageFlags } from "discord.js"
 
 export default class Response {
-    client: Client
+    client: BotClient
 
-    constructor(client: Client) {
+    constructor(client: BotClient) {
         this.client = client
     }
 
     async sendError(
-        message: Discord.ModalSubmitInteraction,
-        embed: string | Discord.APIEmbed,
+        message: ModalSubmitInteraction,
+        embed: string | APIEmbed,
         ephemeral?: boolean
-    ): Promise<Discord.InteractionResponse>
+    ): Promise<InteractionResponse>
 
     async sendError(
-        message: Discord.ButtonInteraction,
-        embed: string | Discord.APIEmbed,
+        message: ButtonInteraction,
+        embed: string | APIEmbed,
         ephemeral?: boolean
-    ): Promise<Discord.InteractionResponse>
+    ): Promise<InteractionResponse>
 
     async sendError(
         message: CommandMessage,
-        embed: string | Discord.APIEmbed,
+        embed: string | APIEmbed,
         ephemeral?: boolean
     ): Promise<CommandMessage>
 
     async sendError(
-        message: Discord.TextBasedChannel | Discord.Message,
-        embed: string | Discord.APIEmbed,
+        message: TextBasedChannel | Message,
+        embed: string | APIEmbed,
         ephemeral?: boolean
-    ): Promise<Discord.Message>
+    ): Promise<Message>
 
     async sendError(
-        message: CommandMessage | Discord.TextBasedChannel | Discord.Message,
-        embed: string | Discord.APIEmbed,
+        message: CommandMessage | TextBasedChannel | Message,
+        embed: string | APIEmbed,
         ephemeral?: boolean
-    ): Promise<Discord.Message | CommandMessage>
+    ): Promise<Message | CommandMessage>
 
     async sendError(
         message:
             | CommandMessage
-            | Discord.TextBasedChannel
-            | Discord.Message
-            | Discord.ModalSubmitInteraction
-            | Discord.ButtonInteraction,
-        embed: string | Discord.APIEmbed,
+            | TextBasedChannel
+            | Message
+            | ModalSubmitInteraction
+            | ButtonInteraction,
+        embed: string | APIEmbed,
         ephemeral: boolean = true
     ): Promise<
         | CommandMessage
-        | Discord.Message
-        | Discord.ModalSubmitInteraction
-        | Discord.InteractionResponse
+        | Message
+        | ModalSubmitInteraction
+        | InteractionResponse
     > {
         if (typeof embed === "string") embed = { description: embed }
         embed.color = hexToNum(this.client.config.colors.error)
         if (message instanceof CommandMessage)
             return message.send({ embeds: [embed], ephemeral: ephemeral })
-        else if (message instanceof Discord.Message)
+        else if (message instanceof Message)
             return message.reply({
                 embeds: [embed],
                 allowedMentions: { repliedUser: false }
             })
-        else if (message instanceof Discord.ModalSubmitInteraction)
-            return message.reply({ embeds: [embed], ephemeral: ephemeral })
-        else if (message instanceof Discord.ButtonInteraction)
-            return message.reply({ embeds: [embed], ephemeral: ephemeral })
-        else return message.send({ embeds: [embed] })
+        else if (message instanceof ModalSubmitInteraction)
+            return message.reply({ embeds: [embed], flags: ephemeral ? MessageFlags.Ephemeral : undefined })
+        else if (message instanceof ButtonInteraction)
+            return message.reply({ embeds: [embed], flags: ephemeral ? MessageFlags.Ephemeral : undefined })
+        else if (message.isSendable()) return message.send({ embeds: [embed] })
+        
+        return (await message.fetchOwner()).send({ embeds: [embed] })
     }
 
     async sendSuccess(
-        message: Discord.ButtonInteraction,
-        embed: string | Discord.APIEmbed,
+        message: ButtonInteraction,
+        embed: string | APIEmbed,
         ephemeral?: boolean
-    ): Promise<Discord.InteractionResponse>
+    ): Promise<InteractionResponse>
 
     async sendSuccess(
-        message: Discord.ModalSubmitInteraction,
-        embed: string | Discord.APIEmbed,
+        message: ModalSubmitInteraction,
+        embed: string | APIEmbed,
         ephemeral?: boolean
-    ): Promise<Discord.InteractionResponse>
+    ): Promise<InteractionResponse>
 
     async sendSuccess(
         message: CommandMessage,
-        embed: string | Discord.APIEmbed,
+        embed: string | APIEmbed,
         ephemeral?: boolean
     ): Promise<CommandMessage>
 
     async sendSuccess(
-        message: Discord.TextBasedChannel | Discord.Message,
-        embed: string | Discord.APIEmbed,
+        message: TextBasedChannel | Message,
+        embed: string | APIEmbed,
         ephemeral?: boolean
-    ): Promise<Discord.Message>
+    ): Promise<Message>
 
     async sendSuccess(
-        message: CommandMessage | Discord.TextBasedChannel | Discord.Message,
-        embed: string | Discord.APIEmbed,
+        message: CommandMessage | TextBasedChannel | Message,
+        embed: string | APIEmbed,
         ephemeral?: boolean
-    ): Promise<Discord.Message | CommandMessage>
+    ): Promise<Message | CommandMessage>
 
     async sendSuccess(
         message:
             | CommandMessage
-            | Discord.TextBasedChannel
-            | Discord.Message
-            | Discord.ModalSubmitInteraction
-            | Discord.ButtonInteraction,
-        embed: string | Discord.APIEmbed,
+            | TextBasedChannel
+            | Message
+            | ModalSubmitInteraction
+            | ButtonInteraction,
+        embed: string | APIEmbed,
         ephemeral: boolean = false
-    ): Promise<CommandMessage | Discord.Message | Discord.InteractionResponse> {
+    ): Promise<CommandMessage | Message | InteractionResponse> {
         if (typeof embed === "string") embed = { description: embed }
         embed.color = hexToNum(this.client.config.colors.success)
         if (message instanceof CommandMessage)
             return message.send({ embeds: [embed], ephemeral: ephemeral })
-        else if (message instanceof Discord.Message)
+        else if (message instanceof Message)
             return message.reply({
                 embeds: [embed],
                 allowedMentions: { repliedUser: false, parse: ['users'] }
             })
-        else if (message instanceof Discord.ModalSubmitInteraction)
+        else if (message instanceof ModalSubmitInteraction)
             return message.reply({
                 embeds: [embed],
-                ephemeral: ephemeral,
+                flags: ephemeral ? MessageFlags.Ephemeral : undefined,
                 allowedMentions: { repliedUser: false, parse: ['users'] }
             })
-        else if (message instanceof Discord.ButtonInteraction)
-            return message.reply({ embeds: [embed], ephemeral: ephemeral })
-        else return message.send({ embeds: [embed] })
+        else if (message instanceof ButtonInteraction)
+            return message.reply({ embeds: [embed], flags: ephemeral ? MessageFlags.Ephemeral : undefined })
+        else if (message.isSendable()) return message.send({ embeds: [embed] })
+        
+        return (await message.fetchOwner()).send({ embeds: [embed] })
     }
 }

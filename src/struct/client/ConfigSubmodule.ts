@@ -1,7 +1,7 @@
-import Client from "../Client.js"
+import BotClient from "../BotClient.js"
 
 export default interface ConfigSubmodule {
-    client: Client
+    client: BotClient
 
     load(): void | Promise<void>
 

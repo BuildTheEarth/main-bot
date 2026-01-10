@@ -1,7 +1,7 @@
 import typeorm from "typeorm"
 import SnowflakePrimaryColumn from "./decorators/SnowflakePrimaryColumn.decorator.js"
-import Client from "../struct/Client.js"
-import Guild from "../struct/discord/Guild.js"
+import BotClient from "../struct/BotClient.js"
+import Guild from "../struct/discord/BotGuild.js"
 import { noop } from "@buildtheearth/bot-utils"
 import { Cron } from "croner"
 
@@ -19,7 +19,7 @@ export default class AdvancedBuilder extends typeorm.BaseEntity {
     @typeorm.Column({ name: "role_name", default: "ADVANCED_BUILDER", nullable: false })
     roleName!: "ADVANCED_BUILDER" | "COOL_BUILD"
 
-    async removeBuilder(client: Client): Promise<void> {
+    async removeBuilder(client: BotClient): Promise<void> {
         if (client.honorBuilderTimeouts.has(this.builder))
             client.honorBuilderTimeouts.get(this.builder)?.stop()
         const role = Guild.role(
@@ -35,7 +35,7 @@ export default class AdvancedBuilder extends typeorm.BaseEntity {
         await this.remove()
     }
 
-    schedule(client: Client): void {
+    schedule(client: BotClient): void {
         if (client.honorBuilderTimeouts.has(this.builder))
             client.honorBuilderTimeouts.get(this.builder)?.stop()
         let time = this.givenAt || new Date()
@@ -54,7 +54,7 @@ export default class AdvancedBuilder extends typeorm.BaseEntity {
         )
     }
 
-    newDuration(client: Client, duration: number): boolean {
+    newDuration(client: BotClient, duration: number): boolean {
         if (client.honorBuilderTimeouts.has(this.builder)) {
             this.duration = duration
 
@@ -68,7 +68,7 @@ export default class AdvancedBuilder extends typeorm.BaseEntity {
         }
     }
 
-    extend(client: Client, extend: number): boolean {
+    extend(client: BotClient, extend: number): boolean {
         if (this.duration + extend < 0) return false
 
         let time = this.givenAt || new Date()

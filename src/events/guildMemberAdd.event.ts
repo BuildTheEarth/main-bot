@@ -1,12 +1,12 @@
-import Client from "../struct/Client.js"
-import GuildMember from "../struct/discord/GuildMember.js"
-import Discord from "discord.js"
+import BotClient from "../struct/BotClient.js"
+import BotGuildMember from "../struct/discord/BotGuildMember.js"
+import { GuildMember } from "discord.js"
 import TimedPunishment from "../entities/TimedPunishment.entity.js"
 
 export default async function guildMemberAdd(
-    this: Client,
-    member: Discord.GuildMember
+    this: BotClient,
+    member: GuildMember
 ): Promise<void> {
     const mute = await TimedPunishment.findOne({ member: member.id })
-    if (mute) GuildMember.mute(member, "Mute on re-join")
+    if (mute) BotGuildMember.mute(member, "Mute on re-join")
 }

@@ -1,4 +1,4 @@
-import Client from "../struct/Client.js"
+import BotClient from "../struct/BotClient.js"
 import Args from "../struct/Args.js"
 import Command from "../struct/Command.js"
 
@@ -33,7 +33,7 @@ export default new Command({
             optionType: "BOOLEAN"
         }
     ],
-    async run(this: Command, client: Client, message: CommandMessage, args: Args) {
+    async run(this: Command, client: BotClient, message: CommandMessage, args: Args) {
         const user = (await args.consumeUser("user")) || message.member
         const size =
             Number(args.consumeIf(arg => !Number.isNaN(Number(arg)), "size")) || 512

@@ -1,24 +1,24 @@
-import Discord from "discord.js"
-import Client from "../Client.js"
+import BotClient from "../BotClient.js"
 import pathModule from "path"
 import url from "url"
 import fs from "fs"
 import { loadSyncJSON5 } from "@buildtheearth/bot-utils"
 import loadDir from "../../util/loadDir.util.js"
 import _ from "lodash"
+import { InteractionType, Interaction, Collection } from "discord.js"
 
 export interface ComponentHandlerProperties {
     name: string
     prefix: string
-    passTypes: Discord.InteractionType[]
-    run: (client: Client, interaction: Discord.Interaction) => void
+    passTypes: InteractionType[]
+    run: (client: BotClient, interaction: Interaction) => void
 }
 
 export class ComponentHandler implements ComponentHandlerProperties {
     name: string
     prefix: string
-    passTypes: Discord.InteractionType[]
-    run: (client: Client, interaction: Discord.Interaction) => void
+    passTypes: InteractionType[]
+    run: (client: BotClient, interaction: Interaction) => void
 
     constructor(props: ComponentHandlerProperties) {
         this.name = props.name
@@ -29,9 +29,9 @@ export class ComponentHandler implements ComponentHandlerProperties {
 }
 
 export default class ComponentHandlersList {
-    client: Client
-    collection: Discord.Collection<string, ComponentHandler> = new Discord.Collection()
-    constructor(client: Client) {
+    client: BotClient
+    collection: Collection<string, ComponentHandler> = new Collection()
+    constructor(client: BotClient) {
         this.client = client
     }
 
@@ -43,7 +43,7 @@ export default class ComponentHandlersList {
         )
     }
 
-    findFromIdAndInteractionType(id: string, interactionType: Discord.InteractionType) {
+    findFromIdAndInteractionType(id: string, interactionType: InteractionType) {
         return this.collection.find((value, ignoreMeCauseLodashExists) => {
             return (
                 _.startsWith(id, value.prefix) &&

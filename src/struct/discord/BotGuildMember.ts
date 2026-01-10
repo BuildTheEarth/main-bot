@@ -1,13 +1,13 @@
-import Discord from "discord.js"
-import Guild from "./Guild.js"
+import { GuildMember } from "discord.js"
+import BotGuild from "./BotGuild.js"
 
-import Client from "../Client.js"
+import BotClient from "../BotClient.js"
 
-export default class GuildMember {
+export default class BotGuildMember {
     static hasRole(
-        user: Discord.GuildMember,
+        user: GuildMember,
         roles: string[] | string[][],
-        client: Client,
+        client: BotClient,
         botDevBypass = true
     ): boolean {
         let isStringArr = false
@@ -30,52 +30,52 @@ export default class GuildMember {
     }
 
     static async mute(
-        user: Discord.GuildMember,
+        user: GuildMember,
         reason: string
-    ): Promise<Discord.GuildMember> {
+    ): Promise<GuildMember> {
         await user.roles
-            .add(Guild.role(user.guild, globalThis.client.roles.MUTED), reason)
+            .add(BotGuild.role(user.guild, globalThis.client.roles.MUTED), reason)
             .catch(error => console.log(error))
         return user
     }
 
     static async addRole(
-        user: Discord.GuildMember,
+        user: GuildMember,
         roles: string[] | string[][],
         reason: string
-    ): Promise<Discord.GuildMember> {
+    ): Promise<GuildMember> {
         let isStringArr = false
         roles.forEach(value => (isStringArr = typeof value != "object"))
         const isStringArrFunc = (roles: string[] | string[][]): roles is string[] =>
             isStringArr
         if (isStringArrFunc(roles)) roles = [roles]
         for (const role of roles) {
-            await user.roles.add(Guild.role(user.guild, role), reason)
+            await user.roles.add(BotGuild.role(user.guild, role), reason)
         }
         return user
     }
 
     static async removeRole(
-        user: Discord.GuildMember,
+        user: GuildMember,
         roles: string[] | string[][],
         reason: string
-    ): Promise<Discord.GuildMember> {
+    ): Promise<GuildMember> {
         let isStringArr = false
         roles.forEach(value => (isStringArr = typeof value != "object"))
         const isStringArrFunc = (roles: string[] | string[][]): roles is string[] =>
             isStringArr
         if (isStringArrFunc(roles)) roles = [roles]
         for (const role of roles) {
-            await user.roles.remove(Guild.role(user.guild, role), reason)
+            await user.roles.remove(BotGuild.role(user.guild, role), reason)
         }
         return user
     }
 
     static async toggleRole(
-        user: Discord.GuildMember,
+        user: GuildMember,
         roles: string[] | string[][],
         reason: string,
-        client: Client
+        client: BotClient
     ): Promise<boolean> {
         let isStringArr = false
         roles.forEach(value => (isStringArr = typeof value != "object"))
@@ -84,19 +84,19 @@ export default class GuildMember {
         if (isStringArrFunc(roles)) roles = [roles]
         const shouldAdd: boolean[] = []
         for (const role of roles) {
-            shouldAdd.push(!GuildMember.hasRole(user, role, client, false))
+            shouldAdd.push(!BotGuildMember.hasRole(user, role, client, false))
         }
         if (shouldAdd.includes(false)) {
             for await (const role of roles) {
-                if (GuildMember.hasRole(user, role, client, false)) {
-                    await GuildMember.removeRole(user, role, reason)
+                if (BotGuildMember.hasRole(user, role, client, false)) {
+                    await BotGuildMember.removeRole(user, role, reason)
                 }
             }
             return false
         } else {
             for await (const role of roles) {
-                if (!GuildMember.hasRole(user, role, client, false)) {
-                    await GuildMember.addRole(user, role, reason)
+                if (!BotGuildMember.hasRole(user, role, client, false)) {
+                    await BotGuildMember.addRole(user, role, reason)
                 }
             }
             return true
@@ -104,11 +104,11 @@ export default class GuildMember {
     }
 
     static async unmute(
-        user: Discord.GuildMember,
+        user: GuildMember,
         reason: string
-    ): Promise<Discord.GuildMember> {
+    ): Promise<GuildMember> {
         await user.roles.remove(
-            Guild.role(user.guild, globalThis.client.roles.MUTED),
+            BotGuild.role(user.guild, globalThis.client.roles.MUTED),
             reason
         )
         return user

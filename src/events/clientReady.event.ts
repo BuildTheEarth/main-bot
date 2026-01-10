@@ -1,17 +1,17 @@
 import chalk = require("chalk")
-import Discord from "discord.js"
 import BannerImage from "../entities/BannerImage.entity.js"
 import TimedPunishment from "../entities/TimedPunishment.entity.js"
 import AdvancedBuilder from "../entities/AdvancedBuilder.entity.js"
-import Client from "../struct/Client.js"
-import Guild from "../struct/discord/Guild.js"
+import BotClient from "../struct/BotClient.js"
+import BotGuild from "../struct/discord/BotGuild.js"
 import Reminder from "../entities/Reminder.entity.js"
 import BlunderTracker from "../entities/BlunderTracker.entity.js"
 import { Cron } from "croner"
 import TeamPointsUser from "../entities/TeamPointsUser.entity.js"
 import { noop } from "@buildtheearth/bot-utils"
+import { ActivityType } from "discord.js"
 
-export default async function ready(this: Client): Promise<void> {
+export default async function clientReady(this: BotClient): Promise<void> {
     if (!this.user) return //never gonna happen, its on ready, discord.js needs some better type assertion
 
     this.logger.debug("Loading commands...")
@@ -40,7 +40,7 @@ export default async function ready(this: Client): Promise<void> {
     }
 
     const activity = `with ${(await this.customGuilds.main()).memberCount} users`
-    this.user.setActivity(activity, { type: Discord.ActivityType.Playing })
+    this.user.setActivity(activity, { type: ActivityType.Playing })
 
     // schedule punishment undoings, banner queue cycles, the blunder tracker interval, and advanced builder removals!
     BannerImage.schedule(this)
@@ -57,7 +57,7 @@ export default async function ready(this: Client): Promise<void> {
 
         if (outdated) {
             const reason = "Reached level 3 boosting"
-            await Guild.setVanityCode()
+            await BotGuild.setVanityCode()
 
             const pink = chalk.hex("#FF73FA")
             this.logger.info(`Set vanity code to ${pink(this.config.vanity)}.`)

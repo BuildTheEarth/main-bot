@@ -1,7 +1,7 @@
 import typeorm from "typeorm"
 import SnowflakeColumn from "./decorators/SnowflakeColumn.decorator.js"
-import Discord from "discord.js"
-import Client from "../struct/Client.js"
+import { APIEmbed, Guild, User } from "discord.js"
+import BotClient from "../struct/BotClient.js"
 import TimedPunishment from "./TimedPunishment.entity.js"
 import milliseconds from "./transformers/milliseconds.transformer.js"
 import unicode from "./transformers/unicode.transformer.js"
@@ -106,12 +106,12 @@ export default class ActionLog extends typeorm.BaseEntity {
         return formatted
     }
 
-    async displayEmbed(client: Client): Promise<Discord.APIEmbed> {
+    async displayEmbed(client: BotClient): Promise<APIEmbed> {
         const length =
             this.length !== null && this.length !== undefined
                 ? formatPunishmentTime(this.length, true)
                 : "\u200B"
-        const embed: Discord.APIEmbed = {
+        const embed: APIEmbed = {
             color: hexToNum(client.config.colors.success),
             author: { name: `Case #${this.id} (${this.action})` },
             thumbnail: { url: client.config.assets.cases[this.action] },
@@ -151,12 +151,12 @@ export default class ActionLog extends typeorm.BaseEntity {
         return embed
     }
 
-    private displayNotification(client: Client): Discord.APIEmbed {
+    private displayNotification(client: BotClient): APIEmbed {
         const length = this.length ? " " + formatPunishmentTime(this.length) : ""
         const actioned = pastTense(this.action)
         const color = this.action.startsWith("un") ? "success" : "error"
 
-        const embed: Discord.APIEmbed = {
+        const embed: APIEmbed = {
             color: hexToNum(client.config.colors[color]),
             description: `*<@${this.executor}> has ${actioned} you${length}:*\n\n${this.reason}`,
             image: this.reasonImage ? { url: this.reasonImage } : undefined
@@ -170,7 +170,7 @@ export default class ActionLog extends typeorm.BaseEntity {
         return embed
     }
 
-    async notifyMember(client: Client): Promise<void> {
+    async notifyMember(client: BotClient): Promise<void> {
         const user = await client.users.fetch(this.member, { force: true })
         if (!user) return
 
@@ -185,7 +185,7 @@ export default class ActionLog extends typeorm.BaseEntity {
         }
     }
 
-    async updateNotification(client: Client): Promise<void> {
+    async updateNotification(client: BotClient): Promise<void> {
         if (!this.notification) return
         const user = await client.users.fetch(this.member, { force: true })
         if (!user) return
@@ -200,7 +200,7 @@ export default class ActionLog extends typeorm.BaseEntity {
         await notification.edit({ embeds: [embed] }).catch(noop)
     }
 
-    async contextUrl(client: Client): Promise<URL> {
+    async contextUrl(client: BotClient): Promise<URL> {
         return new URL(
             `https://discord.com/channels/${(await client.customGuilds.main()).id}/${
                 this.channel

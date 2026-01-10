@@ -1,9 +1,9 @@
-import Discord from "discord.js"
-import Client from "../struct/Client.js"
+import { Guild } from "discord.js"
+import BotClient from "../struct/BotClient.js"
 
 export default async function guildCreate(
-    this: Client,
-    guild: Discord.Guild
+    this: BotClient,
+    guild: Guild
 ): Promise<void> {
     if (!(guild.id == this.config.guilds.main || guild.id == this.config.guilds.staff)) {
         await guild.leave()

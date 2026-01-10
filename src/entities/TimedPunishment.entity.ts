@@ -1,7 +1,7 @@
 import typeorm from "typeorm"
 import SnowflakeColumn from "./decorators/SnowflakeColumn.decorator.js"
-import Client from "../struct/Client.js"
-import GuildMember from "../struct/discord/GuildMember.js"
+import BotClient from "../struct/BotClient.js"
+import BotGuildMember from "../struct/discord/BotGuildMember.js"
 import milliseconds from "./transformers/milliseconds.transformer.js"
 import { noop, pastTense } from "@buildtheearth/bot-utils"
 import { Cron } from "croner"
@@ -27,7 +27,7 @@ export default class TimedPunishment extends typeorm.BaseEntity {
         return new Date(this.createdAt.getTime() + this.length)
     }
 
-    async undo(client: Client): Promise<void> {
+    async undo(client: BotClient): Promise<void> {
         if (client.punishmentTimeouts.has(this.member)) {
             const setPunish = client.punishmentTimeouts.get(this.member)
             if (setPunish && setPunish[this.type]) {
@@ -44,7 +44,7 @@ export default class TimedPunishment extends typeorm.BaseEntity {
                 .members.fetch({ user })
                 .catch(noop)
             if (!member) return
-            await GuildMember.unmute(member, "End of punishment").catch(noop)
+            await BotGuildMember.unmute(member, "End of punishment").catch(noop)
         } else if (this.type === "ban") {
             await (await client.customGuilds.main()).members
                 .unban(user, "End of punishment")
@@ -55,7 +55,7 @@ export default class TimedPunishment extends typeorm.BaseEntity {
         client.logger.info(`Automatically ${undid} ${user.tag}.`)
     }
 
-    schedule(client: Client): void {
+    schedule(client: BotClient): void {
         let setPunish: {
             ban: Cron | null
             mute: Cron | null

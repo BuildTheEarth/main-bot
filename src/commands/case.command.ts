@@ -1,9 +1,9 @@
-import Client from "../struct/Client.js"
+import BotClient from "../struct/BotClient.js"
 import Args from "../struct/Args.js"
 import Command from "../struct/Command.js"
 import ActionLog from "../entities/ActionLog.entity.js"
 
-import GuildMember from "../struct/discord/GuildMember.js"
+import GuildMember from "../struct/discord/BotGuildMember.js"
 import CommandMessage from "../struct/CommandMessage.js"
 
 export default new Command({
@@ -77,7 +77,7 @@ export default new Command({
             ]
         }
     ],
-    async run(this: Command, client: Client, message: CommandMessage, args: Args) {
+    async run(this: Command, client: BotClient, message: CommandMessage, args: Args) {
         const subcommand = args.consumeSubcommandIf(["edit", "delete", "check"])
         const id = Number(args.consume("id"))
         if (Number.isNaN(id)) return message.sendErrorMessage("noCaseId")

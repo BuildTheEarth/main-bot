@@ -1,18 +1,18 @@
-import Discord from "discord.js"
-import Client from "../struct/Client.js"
-import GuildMember from "../struct/discord/GuildMember.js"
+import BotClient from "../struct/BotClient.js"
+import BotGuildMember from "../struct/discord/BotGuildMember.js"
 import { noop, trimSides } from "@buildtheearth/bot-utils"
 import ReactionRole from "../entities/ReactionRole.entity.js"
+import { GuildMember, MessageReaction, TextChannel, User } from "discord.js"
 export default async function messageReactionAdd(
-    this: Client,
-    reaction: Discord.MessageReaction,
-    user: Discord.User
+    this: BotClient,
+    reaction: MessageReaction,
+    user: User
 ): Promise<void> {
     if (reaction.partial) await reaction.fetch().catch(noop)
 
     const guild = reaction.message.guild
     if (guild) {
-        const member: Discord.GuildMember | null = await guild.members
+        const member: GuildMember | null = await guild.members
             .fetch({ user, cache: true })
             .catch(() => null)
 
@@ -25,20 +25,20 @@ export default async function messageReactionAdd(
                 member
             )
 
-        const channel = reaction.message.channel as Discord.TextChannel
+        const channel = reaction.message.channel as TextChannel
 
         const channelRaw = reaction.message.channel
 
         const logChannel = (await this.channels.fetch(
             this.config.logging.modLogs
-        )) as Discord.TextChannel
+        )) as TextChannel
 
         if (
             guild.id === this.config.guilds.staff &&
             channel.name === "weekly-updates" &&
             reaction.emoji.name === "📣" &&
             member &&
-            GuildMember.hasRole(member, globalThis.client.roles.MANAGER, this)
+            BotGuildMember.hasRole(member, globalThis.client.roles.MANAGER, this)
         ) {
             await reaction.users.remove(user)
             let update = reaction.message.content
@@ -51,7 +51,7 @@ export default async function messageReactionAdd(
                     channel.name === "updates" &&
                     // @ts-ignore
                     channel.guild?.id === this.config.guilds.main
-            ) as Discord.TextChannel
+            ) as TextChannel
 
             if (update) await updates.send(update)
             await this.response.sendSuccess(
@@ -71,7 +71,7 @@ export default async function messageReactionAdd(
                     .replaceAll(">", "")) !=
                 (reaction.emoji.name === this.config.emojis.delete) &&
             member &&
-            GuildMember.hasRole(
+            BotGuildMember.hasRole(
                 member,
                 [
                     globalThis.client.roles.MODERATOR,
@@ -135,7 +135,7 @@ export default async function messageReactionAdd(
                     .replaceAll(">", "")) !=
                 (reaction.emoji.name === this.config.emojis.pin) &&
             member &&
-            GuildMember.hasRole(
+            BotGuildMember.hasRole(
                 member,
                 [
                     globalThis.client.roles.MODERATOR,

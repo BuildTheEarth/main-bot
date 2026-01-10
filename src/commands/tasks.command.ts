@@ -1,7 +1,7 @@
 // TODO: stop using repositories whenever TypeORM adds And() and Or() operators...
 import Includes from "../entities/operators/Includes.operator.js"
-import Discord from "discord.js"
-import Client from "../struct/Client.js"
+import { escapeMarkdown, SendableChannels, TextBasedChannel, TextChannel } from "discord.js"
+import BotClient from "../struct/BotClient.js"
 import Args from "../struct/Args.js"
 import Command from "../struct/Command.js"
 import Task, { TaskStatus, TaskStatuses } from "../entities/Task.entity.js"
@@ -86,7 +86,7 @@ export default new Command({
             ]
         }
     ],
-    async run(this: Command, client: Client, message: CommandMessage, args: Args) {
+    async run(this: Command, client: BotClient, message: CommandMessage, args: Args) {
         if (!client.db) return
         const Tasks = client.db.getRepository(Task)
         const subcommand = args.consumeSubcommandIf(
@@ -122,7 +122,7 @@ export default new Command({
 
             await message.sendSuccessMessage(
                 "savedTask",
-                Discord.escapeMarkdown(task.title),
+                escapeMarkdown(task.title),
                 task.id
             )
         } else if (subcommand === "status") {
@@ -186,7 +186,7 @@ export default new Command({
             await message.continue()
 
             const channel =
-                ((await args.consumeChannel("channel")) as Discord.TextBasedChannel) ||
+                ((await args.consumeChannel("channel")) as SendableChannels) ||
                 message
             const tasks = await Task.find({
                 where: {
@@ -198,6 +198,7 @@ export default new Command({
             if (!tasks.length) return message.sendErrorMessage("noTasks")
 
             const report = tasks.map(task => `•   ${task.title}`).join("\n")
+
             await channel.send({
                 content: `Task report from <@${message.member.id}>:\n\n${report}`,
                 allowedMentions: { parse: [] }

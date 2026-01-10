@@ -1,7 +1,7 @@
 import { Controller, Get, Res } from "@nestjs/common"
 import { Response } from "express"
-import { Client } from "discord.js"
 import { Gauge, register } from "prom-client"
+import BotClient from "../../../BotClient.js"
 
 @Controller("/api/v1/metrics")
 export default class MetricsController {
@@ -19,7 +19,7 @@ export default class MetricsController {
     }
 
     // Function to update members count gauge
-    private async updateMembersCount(client: Client) {
+    private async updateMembersCount(client: BotClient) {
         try {
             for (const guild of [
                 globalThis.client.customGuilds.main(),
@@ -34,7 +34,7 @@ export default class MetricsController {
     }
 
     // Function to start updating members count periodically
-    private startUpdatingMembersCount(client: Client) {
+    private startUpdatingMembersCount(client: BotClient) {
         setInterval(() => this.updateMembersCount(client), 5000)
     }
 

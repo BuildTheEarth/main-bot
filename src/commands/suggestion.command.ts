@@ -1,5 +1,5 @@
-import Discord, { FetchedThreads } from "discord.js"
-import Client from "../struct/Client.js"
+import { ActionRowBuilder, APIEmbed, ButtonBuilder, ButtonInteraction, ButtonStyle, DMChannel, escapeMarkdown, FetchedThreads, Interaction, Message, MessageFlags, TextChannel, ThreadChannel, User } from "discord.js"
+import BotClient from "../struct/BotClient.js"
 import Args from "../struct/Args.js"
 import Command from "../struct/Command.js"
 import Suggestion, {
@@ -23,7 +23,7 @@ const suggestionStatusActions = loadSyncJSON5(
             "../../../config/extensions/suggestionStatusActions.json5"
     )
 )
-import GuildMember from "../struct/discord/GuildMember.js"
+import GuildMember from "../struct/discord/BotGuildMember.js"
 import CommandMessage from "../struct/CommandMessage.js"
 
 export default new Command({
@@ -134,7 +134,7 @@ export default new Command({
             ]
         }
     ],
-    async run(this: Command, client: Client, message: CommandMessage, args: Args) {
+    async run(this: Command, client: BotClient, message: CommandMessage, args: Args) {
         const Suggestions = client.db?.getRepository(Suggestion)
         const staff = message.guild?.id === client.config.guilds.staff
         const category = staff ? "staff" : "main"
@@ -184,13 +184,13 @@ export default new Command({
             .catch(() => null)
         if (
             !suggestionsChannelRaw ||
-            !(suggestionsChannelRaw instanceof Discord.TextChannel)
+            !(suggestionsChannelRaw instanceof TextChannel)
         )
             return
 
         //TODO: Migrate to the new qna channels when they come out
 
-        const suggestions: Discord.TextChannel | null = suggestionsChannelRaw
+        const suggestions: TextChannel | null = suggestionsChannelRaw
 
         if (subcommand === "search") {
             const PER_PAGE = 10
@@ -203,7 +203,7 @@ export default new Command({
                 .split(/,? ?/)
                 .map(s => s.toLowerCase())
             if (!statuses.length) statuses = Object.keys(SuggestionStatuses)
-            const cleanQuery = Discord.escapeMarkdown(truncateString(query, 50))
+            const cleanQuery = escapeMarkdown(truncateString(query, 50))
 
             const queryBuilder = Suggestions?.createQueryBuilder("suggestion")
             const selection = queryBuilder
@@ -226,7 +226,7 @@ export default new Command({
 
             const paginate = total > PER_PAGE
 
-            const embed = <Discord.APIEmbed>{
+            const embed = <APIEmbed>{
                 color: hexToNum(client.config.colors.success),
                 description: `Results found for **${cleanQuery}**:`,
                 footer: {}
@@ -234,7 +234,7 @@ export default new Command({
 
             const formatResults = async (
                 results: Suggestion[],
-                embed: Discord.APIEmbed
+                embed: APIEmbed
             ) => {
                 embed.fields = []
                 for (const suggestion of results) {
@@ -253,11 +253,11 @@ export default new Command({
             const pages = Math.ceil(total / PER_PAGE)
             if (embed.footer !== undefined)
                 embed.footer.text = `${total} results total, page 1/${pages}`
-            let row = new Discord.ActionRowBuilder<Discord.ButtonBuilder>().addComponents(
-                new Discord.ButtonBuilder()
+            let row = new ActionRowBuilder<ButtonBuilder>().addComponents(
+                new ButtonBuilder()
                     .setCustomId(`${message.id}.forwards`)
                     .setLabel(client.config.emojis.right.toString())
-                    .setStyle(Discord.ButtonStyle.Success)
+                    .setStyle(ButtonStyle.Success)
             )
             const sentMessage = await message.send({
                 embeds: [embed],
@@ -267,7 +267,7 @@ export default new Command({
             let old = 1
             let page = 1
 
-            const interactionFunc = async (interaction: Discord.Interaction) => {
+            const interactionFunc = async (interaction: Interaction) => {
                 if (
                     !(
                         interaction.isButton() &&
@@ -280,48 +280,48 @@ export default new Command({
                 if (interaction.user.id !== message.author.id)
                     return interaction.reply({
                         content: message.messages.wrongUser,
-                        ephemeral: true
+                        flags: MessageFlags.Ephemeral
                     })
                 if (
-                    (interaction as Discord.ButtonInteraction).customId ===
+                    (interaction as ButtonInteraction).customId ===
                     `${message.id}.forwards`
                 )
                     page += 1
                 if (
-                    (interaction as Discord.ButtonInteraction).customId ===
+                    (interaction as ButtonInteraction).customId ===
                     `${message.id}.back`
                 )
                     page -= 1
                 if (page === 1) {
                     row =
-                        new Discord.ActionRowBuilder<Discord.ButtonBuilder>().addComponents(
-                            new Discord.ButtonBuilder()
+                        new ActionRowBuilder<ButtonBuilder>().addComponents(
+                            new ButtonBuilder()
                                 .setCustomId(`${message.id}.forwards`)
                                 .setLabel(client.config.emojis.right.toString())
-                                .setStyle(Discord.ButtonStyle.Success)
+                                .setStyle(ButtonStyle.Success)
                         )
                 } else if (page === pages) {
                     row =
-                        new Discord.ActionRowBuilder<Discord.ButtonBuilder>().addComponents(
-                            new Discord.ButtonBuilder()
+                        new ActionRowBuilder<ButtonBuilder>().addComponents(
+                            new ButtonBuilder()
                                 .setCustomId(`${message.id}.back`)
                                 .setLabel(client.config.emojis.left.toString())
-                                .setStyle(Discord.ButtonStyle.Success)
+                                .setStyle(ButtonStyle.Success)
                         )
                 } else {
-                    row = new Discord.ActionRowBuilder<Discord.ButtonBuilder>()
+                    row = new ActionRowBuilder<ButtonBuilder>()
 
                         .addComponents(
-                            new Discord.ButtonBuilder()
+                            new ButtonBuilder()
                                 .setCustomId(`${message.id}.back`)
                                 .setLabel(client.config.emojis.left.toString())
-                                .setStyle(Discord.ButtonStyle.Success)
+                                .setStyle(ButtonStyle.Success)
                         )
                         .addComponents(
-                            new Discord.ButtonBuilder()
+                            new ButtonBuilder()
                                 .setCustomId(`${message.id}.forwards`)
                                 .setLabel(client.config.emojis.right.toString())
-                                .setStyle(Discord.ButtonStyle.Success)
+                                .setStyle(ButtonStyle.Success)
                         )
                 }
 
@@ -332,10 +332,10 @@ export default new Command({
                 if (results) await formatResults(results, embed)
                 if (embed.footer !== undefined)
                     embed.footer.text = `${total} results total, page ${page}/${pages}`
-                await (interaction as Discord.ButtonInteraction).update({
+                await (interaction as ButtonInteraction).update({
                     components: [row]
                 })
-                if (interaction.message instanceof Discord.Message) {
+                if (interaction.message instanceof Message) {
                     try {
                         await interaction.message.edit({ embeds: [embed] })
                     } catch {
@@ -366,18 +366,18 @@ export default new Command({
         const suggestion = await Suggestion.findByIdentifier(identifier, staff)
         if (!suggestion) return message.sendErrorMessage("invalidSuggestionNumber")
 
-        const suggestionMessage: Discord.Message | null = await suggestions.messages
+        const suggestionMessage: Message | null = await suggestions.messages
             .fetch(suggestion.message)
             .catch(noop)
         if (!suggestionMessage) return message.sendErrorMessage("utlSuggestion")
 
-        let thread: Discord.ThreadChannel | null = null
+        let thread: ThreadChannel | null = null
 
         if (suggestion.thread) {
             thread = await (
                 client.channels.cache.get(
                     client.config.suggestions.discussion[category]
-                ) as Discord.TextChannel
+                ) as TextChannel
             ).threads.fetch(suggestion.thread)
             if ((thread as unknown as FetchedThreads).threads) thread = null
         }
@@ -483,11 +483,11 @@ export default new Command({
             }
 
             if (status !== oldStatus) {
-                const author: Discord.User | null = await client.users
+                const author: User | null = await client.users
                     .fetch(suggestion.author, { force: true })
                     .catch(noop)
                 if (author) {
-                    const dms = (await author.createDM()) as Discord.DMChannel
+                    const dms = (await author.createDM()) as DMChannel
                     const updater = `<@${suggestion.statusUpdater}>`
                     // marked as something -> marked your suggestion as something
                     const actioned = suggestionStatusActions[status]
@@ -496,7 +496,7 @@ export default new Command({
                         .trim()
                     const number = await suggestion.getIdentifier()
                     const title = `[${suggestion.title}](${suggestion.getURL(client)})`
-                    const cleanTitle = Discord.escapeMarkdown(title)
+                    const cleanTitle = escapeMarkdown(title)
 
                     const update = `${updater} ${actioned}: **#${number} — ${cleanTitle}**.`
                     dms.send({

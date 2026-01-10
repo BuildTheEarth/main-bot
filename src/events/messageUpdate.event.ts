@@ -1,12 +1,12 @@
-import Client from "../struct/Client.js"
-import Discord from "discord.js"
+import BotClient from "../struct/BotClient.js"
 import ModerationMenu from "../entities/ModerationMenu.entity.js"
 import { noop } from "@buildtheearth/bot-utils"
+import { Message } from "discord.js"
 
 export default async function (
-    this: Client,
-    oldMessage: Discord.Message,
-    newMessage: Discord.Message
+    this: BotClient,
+    oldMessage: Message,
+    newMessage: Message
 ): Promise<unknown> {
     if (newMessage?.partial) await newMessage.fetch().catch(noop)
 

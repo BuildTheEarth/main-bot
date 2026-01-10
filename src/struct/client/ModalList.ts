@@ -1,9 +1,9 @@
-import Discord from "discord.js"
-import Client from "../Client.js"
+import BotClient from "../BotClient.js"
 import pathModule from "path"
 import url from "url"
 import fs from "fs"
 import { loadSyncJSON5 } from "@buildtheearth/bot-utils"
+import { Collection } from "discord.js"
 
 function getDirectories(source: fs.PathLike): string[] {
     return fs
@@ -14,12 +14,12 @@ function getDirectories(source: fs.PathLike): string[] {
 
 // eslint-disable-next-line @typescript-eslint/ban-types
 export default class ModalList {
-    client: Client
-    collection: Discord.Collection<
+    client: BotClient
+    collection: Collection<
         string,
         { [key: string]: { components: unknown[]; customId: string; title: string } }
-    > = new Discord.Collection()
-    constructor(client: Client) {
+    > = new Collection()
+    constructor(client: BotClient) {
         this.client = client
     }
 

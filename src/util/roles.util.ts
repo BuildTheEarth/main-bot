@@ -2,7 +2,7 @@ import { loadSyncJSON5, noop } from "@buildtheearth/bot-utils"
 import url from "url"
 import path from "path"
 import fs from "fs"
-import Client from "../struct/Client.js"
+import BotClient from "../struct/BotClient.js"
 import { Role } from "discord.js"
 
 interface RoleData {
@@ -12,7 +12,7 @@ interface RoleData {
     joinDate?: number
 }
 
-export function loadRoles(client: Client): Record<string, string[]> {
+export function loadRoles(client: BotClient): Record<string, string[]> {
     const roles: Record<string, string[]> = {}
     const mainPath = path.join(
         path.dirname(url.fileURLToPath(import.meta.url)) +
@@ -55,7 +55,7 @@ export function loadRoles(client: Client): Record<string, string[]> {
 }
 
 export async function fetchPeopleByRoles(
-    client: Client,
+    client: BotClient,
     roles: string[],
     extended: boolean
 ): Promise<Map<string, RoleData[]>> {

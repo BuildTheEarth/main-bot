@@ -1,12 +1,12 @@
-import Client from "../struct/Client.js"
+import BotClient from "../struct/BotClient.js"
 import Command from "../struct/Command.js"
 
 import CommandMessage from "../struct/CommandMessage.js"
 import Args from "../struct/Args.js"
-import GuildMember from "../struct/discord/GuildMember.js"
-import Discord from "discord.js"
+import BotGuildMember from "../struct/discord/BotGuildMember.js"
 import { hexToNum, humanizeConstant } from "@buildtheearth/bot-utils"
 import { discordEpoch } from "../util/discordEpoch.js"
+import { AttachmentBuilder } from "discord.js"
 
 export default new Command({
     name: "role",
@@ -46,7 +46,7 @@ export default new Command({
             ]
         }
     ],
-    async run(this: Command, client: Client, message: CommandMessage, args: Args) {
+    async run(this: Command, client: BotClient, message: CommandMessage, args: Args) {
         const subcommand = args.consumeSubcommandIf(["view", "download"])
         const role = await args.consumeRole("role")
         if (!role) {
@@ -189,7 +189,7 @@ export default new Command({
             })
         } else if (subcommand === "download") {
             if (
-                !GuildMember.hasRole(
+                !BotGuildMember.hasRole(
                     message.member,
                     [
                         globalThis.client.roles.SUBTEAM_LEAD,
@@ -241,7 +241,7 @@ export default new Command({
             }
 
             const buf = Buffer.from(JSON.stringify(roleData, null, 4))
-            const file = new Discord.AttachmentBuilder(buf)
+            const file = new AttachmentBuilder(buf)
                 .setFile(buf)
                 .setName("roleData.json")
             await message.send({ files: [file] })

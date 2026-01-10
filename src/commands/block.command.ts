@@ -1,7 +1,5 @@
-import Client from "../struct/Client.js"
+import BotClient from "../struct/BotClient.js"
 import Command from "../struct/Command.js"
-
-import Discord, { EmbedData } from "discord.js"
 import Args from "../struct/Args.js"
 import CommandMessage from "../struct/CommandMessage.js"
 import { hexToNum, hexToRGB } from "@buildtheearth/bot-utils"
@@ -71,7 +69,7 @@ export default new Command({
             ]
         }
     ],
-    async run(this: Command, client: Client, message: CommandMessage, args: Args) {
+    async run(this: Command, client: BotClient, message: CommandMessage, args: Args) {
         const subcommand = args.consumeSubcommandIf(["image", "color"])
 
         if (!subcommand) return message.sendErrorMessage("howDidThisHappen")

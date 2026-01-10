@@ -1,10 +1,10 @@
-import Client from "../struct/Client.js"
+import BotClient from "../struct/BotClient.js"
 import Args from "../struct/Args.js"
 import Command from "../struct/Command.js"
-import Guild from "../struct/discord/Guild.js"
+import Guild from "../struct/discord/BotGuild.js"
 
 import ApiTypes = require("discord-api-types/v10")
-import Discord from "discord.js"
+import {TextChannel, PermissionFlagsBits} from "discord.js"
 import CommandMessage from "../struct/CommandMessage.js"
 
 export default new Command({
@@ -33,23 +33,23 @@ export default new Command({
             optionType: "BOOLEAN"
         }
     ],
-    async run(this: Command, client: Client, message: CommandMessage, args: Args) {
+    async run(this: Command, client: BotClient, message: CommandMessage, args: Args) {
         if (!client.user) return
         const channel = (await args.consumeChannel("channel")) || message.channel
         if (channel.isDMBased()) return message.sendErrorMessage("dmBased")
         const bypass = args.consumeBoolean("bypass") || false
         const perms =
-            (channel as Discord.TextChannel)
+            (channel as TextChannel)
                 .permissionsFor(message.member)
-                .has(Discord.PermissionFlagsBits.ViewChannel) &&
-            (channel as Discord.TextChannel)
+                .has(PermissionFlagsBits.ViewChannel) &&
+            (channel as TextChannel)
                 .permissionsFor(client.user)
-                ?.has(Discord.PermissionFlagsBits.ViewChannel)
+                ?.has(PermissionFlagsBits.ViewChannel)
 
         if (bypass) {
             const managerChat = client.customGuilds
                 .staff()
-                .channels.cache.find(ch => ch.name == "management") as Discord.TextChannel
+                .channels.cache.find(ch => ch.name == "management") as TextChannel
             if (managerChat)
                 await client.response.sendError(
                     managerChat,
@@ -65,7 +65,7 @@ export default new Command({
         /*eslint-disable */
         const reason = `Access requested by ${message.member.user.tag} (${message.member.id})`
         /*eslint-enable */
-        await (channel as Discord.TextChannel).permissionOverwrites.edit(manager, {
+        await (channel as TextChannel).permissionOverwrites.edit(manager, {
             ManageRoles: true,
             ViewChannel: true,
             ManageChannels: true

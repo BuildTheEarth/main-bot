@@ -1,10 +1,10 @@
 import { noop } from "@buildtheearth/bot-utils"
-import Client from "../struct/Client.js"
-import Discord from "discord.js"
+import BotClient from "../struct/BotClient.js"
+import { ButtonInteraction, MessageFlags } from "discord.js"
 
 export default async function teamMenu(
-    client: Client,
-    interaction: Discord.ButtonInteraction
+    client: BotClient,
+    interaction: ButtonInteraction
 ): Promise<any> {
     const continent = interaction.customId
 
@@ -20,14 +20,14 @@ export default async function teamMenu(
 
     if (!validContinents.includes(continent))
         return await interaction
-            .reply({ content: "Invalid Region", ephemeral: true })
+            .reply({ content: "Invalid Region", flags: MessageFlags.Ephemeral })
             .catch(noop)
 
     const data = client.assets.getAsset(continent)
 
     if (!data)
         return await interaction
-            .reply({ content: "Invalid Region", ephemeral: true })
+            .reply({ content: "Invalid Region", flags: MessageFlags.Ephemeral })
             .catch(noop)
 
     return await interaction.reply(data).catch(noop)

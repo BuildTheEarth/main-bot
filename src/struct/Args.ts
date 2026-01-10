@@ -1,6 +1,6 @@
 import { ms } from "@buildtheearth/bot-utils"
-import Discord from "discord.js"
 import CommandMessage from "./CommandMessage.js"
+import { Attachment, Channel, CommandInteraction, Role, User } from "discord.js"
 
 export default class Args {
     raw: string
@@ -16,7 +16,7 @@ export default class Args {
     split(argNames: string[]): string[] {
         const returnArgs: string[] = []
         argNames.forEach(element => {
-            const tempEle = (this.message.message as Discord.CommandInteraction).options
+            const tempEle = (this.message.message).options
                 .get(element)
                 ?.value?.toString()
             if (tempEle) returnArgs.push(tempEle)
@@ -27,7 +27,7 @@ export default class Args {
     splitMultiple(argNames: string[]): string[] {
         const returnArgs: string[] = []
         argNames.forEach(element => {
-            const tempEle = (this.message.message as Discord.CommandInteraction).options
+            const tempEle = (this.message.message).options
                 .get(element)
                 ?.value?.toString()
             if (tempEle) returnArgs.push(tempEle)
@@ -38,7 +38,7 @@ export default class Args {
     get(argName: string): string
     get(argName: string, count: number | undefined): string[]
     get(argName: string): string | string[] | null {
-        const retVal = (this.message.message as Discord.CommandInteraction).options.get(
+        const retVal = (this.message.message).options.get(
             argName
         )
         if (retVal) {
@@ -67,12 +67,13 @@ export default class Args {
         const tempArg = this.message.message.options.get(argName)
         if (tempArg && tempArg.value) arg = tempArg.value.toString().replace(/\\n/g, "\n")
         else arg = ""
+
         let valid = false
 
-        if (typeof equals === "string") valid = equals.toLowerCase() === arg.toLowerCase()
-        else if (Array.isArray(equals)) valid = equals.includes(arg)
-        else if (equals instanceof RegExp) valid = equals.test(arg)
-        else if (typeof equals === "function") valid = equals(arg)
+        if (typeof equals === "string") valid = equals.toLowerCase() === arg!.toLowerCase()
+        else if (Array.isArray(equals)) valid = equals.includes(arg!)
+        else if (equals instanceof RegExp) valid = equals.test(arg!)
+        else if (typeof equals === "function") valid = equals(arg!)
         if (!valid) return null
 
         return typeof equals === "function" || equals instanceof RegExp
@@ -87,7 +88,7 @@ export default class Args {
         argNames.forEach(element => {
             let option: string | null = null
             const tempValue = (
-                this.message.message as Discord.CommandInteraction
+                this.message.message
             ).options.get(element)?.value
             if (tempValue) option = tempValue.toString().replace(/\\n/g, "\n")
             if (option) returnArgs.push(option)
@@ -173,22 +174,22 @@ export default class Args {
         return null
     }
 
-    async consumeChannel(argName: string): Promise<Discord.Channel> {
-        return this.message.message.options.getChannel(argName) as Discord.Channel
+    async consumeChannel(argName: string): Promise<Channel> {
+        return this.message.message.options.getChannel(argName) as Channel
     }
 
-    async consumeUser(argName: string): Promise<Discord.User | null> {
+    async consumeUser(argName: string): Promise<User | null> {
         return this.message.message.options.getUser(argName)
     }
 
-    async consumeRole(argName: string): Promise<Discord.Role> {
-        return this.message.message.options.getRole(argName) as Discord.Role
+    async consumeRole(argName: string): Promise<Role> {
+        return this.message.message.options.getRole(argName) as Role
     }
 
     consumeAttachment(
         argName: string,
-        check?: (attachment: Discord.Attachment) => boolean
-    ): Discord.Attachment | null {
+        check?: (attachment: Attachment) => boolean
+    ): Attachment | null {
         const attachment = this.message.message.options.getAttachment(argName)
         if (attachment && (!check || check(attachment))) return attachment
         return null
@@ -204,7 +205,7 @@ export default class Args {
         let url: string | null = null
         const attachment = this.consumeAttachment(
             argName,
-            (attachment: Discord.Attachment) => {
+            (attachment: Attachment) => {
                 if (attachment.contentType?.startsWith("image/")) return true
                 return false
             }

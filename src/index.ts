@@ -1,35 +1,35 @@
 import "reflect-metadata"
-import Discord from "discord.js"
-import Client from "./struct/Client.js"
+import { IntentsBitField, Partials } from "discord.js"
+import BotClient from "./struct/BotClient.js"
 import { loadRoles } from "./util/roles.util.js"
 
 declare global {
     // eslint-disable-next-line no-var
-    var client: Client
+    var client: BotClient
     // eslint-disable-next-line no-var
     var fileExtension: string
 }
 
-const client = new Client({
+const client = new BotClient({
     intents: [
-        Discord.IntentsBitField.Flags.Guilds,
-        Discord.IntentsBitField.Flags.GuildMembers,
-        Discord.IntentsBitField.Flags.GuildBans,
-        Discord.IntentsBitField.Flags.GuildEmojisAndStickers,
-        Discord.IntentsBitField.Flags.GuildIntegrations,
-        Discord.IntentsBitField.Flags.GuildWebhooks,
-        Discord.IntentsBitField.Flags.GuildInvites,
-        Discord.IntentsBitField.Flags.MessageContent,
-        Discord.IntentsBitField.Flags.GuildVoiceStates,
-        Discord.IntentsBitField.Flags.GuildMessages,
-        Discord.IntentsBitField.Flags.GuildMessageReactions,
-        Discord.IntentsBitField.Flags.DirectMessages,
-        Discord.IntentsBitField.Flags.DirectMessageReactions
+        IntentsBitField.Flags.Guilds,
+        IntentsBitField.Flags.GuildMembers,
+        IntentsBitField.Flags.GuildBans,
+        IntentsBitField.Flags.GuildEmojisAndStickers,
+        IntentsBitField.Flags.GuildIntegrations,
+        IntentsBitField.Flags.GuildWebhooks,
+        IntentsBitField.Flags.GuildInvites,
+        IntentsBitField.Flags.MessageContent,
+        IntentsBitField.Flags.GuildVoiceStates,
+        IntentsBitField.Flags.GuildMessages,
+        IntentsBitField.Flags.GuildMessageReactions,
+        IntentsBitField.Flags.DirectMessages,
+        IntentsBitField.Flags.DirectMessageReactions
     ],
     partials: [
-        Discord.Partials.Channel,
-        Discord.Partials.Message,
-        Discord.Partials.Reaction
+        Partials.Channel,
+        Partials.Message,
+        Partials.Reaction
     ]
 })
 global.client = client

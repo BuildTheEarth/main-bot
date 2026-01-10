@@ -1,6 +1,6 @@
 import typeorm from "typeorm"
-import Discord from "discord.js"
-import Client from "../struct/Client.js"
+import { APIEmbed } from "discord.js"
+import BotClient from "../struct/BotClient.js"
 import languages from "../struct/client/iso6391.js"
 import { hexToNum } from "@buildtheearth/bot-utils"
 import unicode from "./transformers/unicode.transformer.js"
@@ -28,7 +28,7 @@ export default class Snippet extends typeorm.BaseEntity {
 
     public static teams: string[] = []
 
-    displayEmbed(client: Client): Discord.APIEmbed {
+    displayEmbed(client: BotClient): APIEmbed {
         const language = languages.getName(this.language)
         return {
             color: hexToNum(client.config.colors.success),

@@ -1,12 +1,13 @@
 import typeorm from "typeorm"
-import Discord, { ButtonBuilder } from "discord.js"
-import Client from "../struct/Client.js"
+import BotClient from "../struct/BotClient.js"
 import { hexToNum, noop } from "@buildtheearth/bot-utils"
 import SnowflakeColumn from "./decorators/SnowflakeColumn.decorator.js"
-import GuildMember from "../struct/discord/GuildMember.js"
+import BotGuildMember from "../struct/discord/BotGuildMember.js"
 import CommandMessage from "../struct/CommandMessage.js"
 import unicode from "./transformers/unicode.transformer.js"
 import { discordEpoch } from "../util/discordEpoch.js"
+import { ActionRowBuilder, APIEmbed, ButtonBuilder, ButtonInteraction, ButtonStyle, ChannelType, ComponentType, InteractionButtonComponentData, Message, MessageCreateOptions, MessageEditOptions, TextChannel, ThreadAutoArchiveDuration, ThreadChannel, User } from "discord.js"
+import Writeable from "../typings/writeable.js"
 
 @typeorm.Entity({ name: "suspicious_users" })
 export default class SuspiciousUser extends typeorm.BaseEntity {
@@ -44,17 +45,17 @@ export default class SuspiciousUser extends typeorm.BaseEntity {
     threadId?: string
 
     public static async fetchChannel(
-        client: Client
-    ): Promise<Discord.TextChannel | null> {
+        client: BotClient
+    ): Promise<TextChannel | null> {
         const channelID = client.config.suspiciousUsers
         const channel = await client.channels.fetch(channelID).catch(noop)
-        if (channel?.type === Discord.ChannelType.GuildText) {
-            return channel as Discord.TextChannel
+        if (channel?.type === ChannelType.GuildText) {
+            return channel as TextChannel
         }
         return null
     }
 
-    private async fetchMessage(client: Client): Promise<Discord.Message | null> {
+    private async fetchMessage(client: BotClient): Promise<Message | null> {
         const channel = await SuspiciousUser.fetchChannel(client)
         if (channel) {
             return channel.messages.fetch(this.messageId).catch(noop)
@@ -62,12 +63,12 @@ export default class SuspiciousUser extends typeorm.BaseEntity {
         return null
     }
 
-    private async fetchUser(client: Client): Promise<Discord.User | null> {
+    private async fetchUser(client: BotClient): Promise<User | null> {
         const user = await client.users.fetch(this.userId).catch(noop)
         return user
     }
 
-    private async fetchThread(client: Client): Promise<Discord.ThreadChannel | null> {
+    private async fetchThread(client: BotClient): Promise<ThreadChannel | null> {
         const channel = await SuspiciousUser.fetchChannel(client)
         if (channel && this.threadId) {
             return channel.threads.fetch(this.threadId).catch(noop)
@@ -75,14 +76,14 @@ export default class SuspiciousUser extends typeorm.BaseEntity {
         return null
     }
 
-    private async fetchSubmitter(client: Client): Promise<Discord.User | null> {
+    private async fetchSubmitter(client: BotClient): Promise<User | null> {
         const user = await client.users.fetch(this.submitterId).catch(noop)
         return user
     }
 
     private async updateSubmitter(
-        client: Client,
-        payload: Discord.MessageCreateOptions
+        client: BotClient,
+        payload: MessageCreateOptions
     ): Promise<void> {
         const user = await this.fetchSubmitter(client)
         if (user) {
@@ -96,7 +97,7 @@ export default class SuspiciousUser extends typeorm.BaseEntity {
         }
     }
 
-    private async denySubmitter(client: Client): Promise<void> {
+    private async denySubmitter(client: BotClient): Promise<void> {
         await this.updateSubmitter(client, {
             embeds: [
                 {
@@ -109,7 +110,7 @@ export default class SuspiciousUser extends typeorm.BaseEntity {
         }).catch(noop)
     }
 
-    private async acceptSubmitter(client: Client): Promise<void> {
+    private async acceptSubmitter(client: BotClient): Promise<void> {
         await this.updateSubmitter(client, {
             embeds: [
                 {
@@ -122,8 +123,8 @@ export default class SuspiciousUser extends typeorm.BaseEntity {
         }).catch(noop)
     }
 
-    createEmbed(): Discord.MessageCreateOptions {
-        const embed = <Discord.APIEmbed>{
+    createEmbed(): MessageCreateOptions {
+        const embed = <APIEmbed>{
             title: "Suspicious User Report",
             fields: [
                 {
@@ -161,38 +162,39 @@ export default class SuspiciousUser extends typeorm.BaseEntity {
             })
         }
 
-        const options: Discord.MessageCreateOptions = { embeds: [embed], components: [] }
+        //Doing some serious typing funnies here
+        const options: Writeable<MessageCreateOptions> = { embeds: [embed], components: Array() }
 
         if (!(this.approved || this.denied)) {
-            const actionRow = new Discord.ActionRowBuilder<ButtonBuilder>()
-            const approvedButton: Discord.InteractionButtonComponentData = {
-                style: Discord.ButtonStyle.Primary,
+            const actionRow = new ActionRowBuilder<ButtonBuilder>()
+            const approvedButton: InteractionButtonComponentData = {
+                style: ButtonStyle.Primary,
                 customId: `suspicious_user.${this.id}.approved`,
                 label: "Approve",
-                type: Discord.ComponentType.Button
+                type: ComponentType.Button
             }
-            const deniedButton: Discord.InteractionButtonComponentData = {
-                style: Discord.ButtonStyle.Danger,
+            const deniedButton: InteractionButtonComponentData = {
+                style: ButtonStyle.Danger,
                 customId: `suspicious_user.${this.id}.denied`,
                 label: "Deny",
-                type: Discord.ComponentType.Button
+                type: ComponentType.Button
             }
             actionRow.addComponents([
-                new Discord.ButtonBuilder(approvedButton),
-                new Discord.ButtonBuilder(deniedButton)
+                new ButtonBuilder(approvedButton),
+                new ButtonBuilder(deniedButton)
             ])
             options.components?.push(actionRow)
         }
 
-        return options
+        return options as MessageCreateOptions
     }
 
-    createEditEmbed(): Discord.MessageEditOptions {
-        return this.createEmbed() as Discord.MessageEditOptions
+    createEditEmbed(): MessageEditOptions {
+        return this.createEmbed() as MessageEditOptions
     }
 
     public static async createReport(
-        client: Client,
+        client: BotClient,
         user: string,
         submitter: string,
         evidence: string
@@ -209,11 +211,11 @@ export default class SuspiciousUser extends typeorm.BaseEntity {
             await sususer.save()
             const message = await channel.send(sususer.createEmbed())
             sususer.messageId = message.id
-            if (message && channel.type === Discord.ChannelType.GuildText) {
+            if (message && channel.type === ChannelType.GuildText) {
                 sususer.threadId = (
                     await message.startThread({
                         name: `Suspicious User Report: ${sususer.id}`,
-                        autoArchiveDuration: Discord.ThreadAutoArchiveDuration.OneWeek
+                        autoArchiveDuration: ThreadAutoArchiveDuration.OneWeek
                     })
                 ).id
             } else {
@@ -254,8 +256,8 @@ export default class SuspiciousUser extends typeorm.BaseEntity {
     }
 
     public static async buttonPress(
-        client: Client,
-        button: Discord.ButtonInteraction
+        client: BotClient,
+        button: ButtonInteraction
     ): Promise<void> {
         const id = button.customId.split(".")[1]
         const sususer = await SuspiciousUser.findOne({ where: { id: id } })
@@ -266,7 +268,7 @@ export default class SuspiciousUser extends typeorm.BaseEntity {
             .catch(noop)
         if (
             !guildMember ||
-            !GuildMember.hasRole(
+            !BotGuildMember.hasRole(
                 guildMember,
                 [client.roles.MODERATOR, client.roles.HELPER, client.roles.MANAGER],
                 client

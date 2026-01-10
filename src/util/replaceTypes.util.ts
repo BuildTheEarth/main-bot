@@ -1,25 +1,25 @@
-import Discord from "discord.js"
+import { ActionRowData, ComponentType, ModalActionRowComponentData, TextInputStyle } from "discord.js"
 import _ from "lodash"
 
-function transform(val: string): Discord.ComponentType {
-    if (val === "ACTION_ROW") return Discord.ComponentType.ActionRow
-    if (val === "BUTTON") return Discord.ComponentType.Button
-    if (val === "SELECT_MENU") return Discord.ComponentType.SelectMenu
-    if (val === "TEXT_INPUT") return Discord.ComponentType.TextInput
-    return Discord.ComponentType.ActionRow
+function transform(val: string): ComponentType {
+    if (val === "ACTION_ROW") return ComponentType.ActionRow
+    if (val === "BUTTON") return ComponentType.Button
+    if (val === "SELECT_MENU") return ComponentType.StringSelect
+    if (val === "TEXT_INPUT") return ComponentType.TextInput
+    return ComponentType.ActionRow
 }
 
-function transformStyle(val: string): Discord.TextInputStyle {
-    if (val === "SHORT") return Discord.TextInputStyle.Short
-    return Discord.TextInputStyle.Paragraph
+function transformStyle(val: string): TextInputStyle {
+    if (val === "SHORT") return TextInputStyle.Short
+    return TextInputStyle.Paragraph
 }
 
 export default function replaceTypes(json: {
-    components: Discord.ActionRowData<Discord.ModalActionRowComponentData>[]
+    components: ActionRowData<ModalActionRowComponentData>[]
     customId: string
     title: string
 }): {
-    components: Discord.ActionRowData<Discord.ModalActionRowComponentData>[]
+    components: ActionRowData<ModalActionRowComponentData>[]
     customId: string
     title: string
 } {

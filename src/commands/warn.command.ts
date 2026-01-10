@@ -1,10 +1,10 @@
-import Discord from "discord.js"
-import Client from "../struct/Client.js"
+import BotClient from "../struct/BotClient.js"
 import Args from "../struct/Args.js"
 import Command from "../struct/Command.js"
 
 import CommandMessage from "../struct/CommandMessage.js"
 import punish from "../util/punish.util.js"
+import { GuildMember } from "discord.js"
 
 export default new Command({
     name: "warn",
@@ -35,7 +35,7 @@ export default new Command({
             optionType: "STRING"
         }
     ],
-    async run(this: Command, client: Client, message: CommandMessage, args: Args) {
+    async run(this: Command, client: BotClient, message: CommandMessage, args: Args) {
         const user = await args.consumeUser("member")
 
         if (!user)
@@ -48,7 +48,7 @@ export default new Command({
             args.consumeRest(["reason"])
         )
         if (!reason) return message.sendErrorMessage("noReason")
-        const member: Discord.GuildMember | null = await message.guild.members
+        const member: GuildMember | null = await message.guild.members
             .fetch({ user, cache: false })
             .catch(() => null)
         if (!member) return message.sendErrorMessage("notInGuild")

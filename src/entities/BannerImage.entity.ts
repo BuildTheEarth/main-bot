@@ -1,6 +1,6 @@
 import typeorm from "typeorm"
-import Discord from "discord.js"
-import type Client from "../struct/Client.js"
+import { TextChannel, APIEmbed } from "discord.js"
+import type BotClient from "../struct/BotClient.js"
 import { quote } from "@buildtheearth/bot-utils"
 import { Cron } from "croner"
 import unicode from "./transformers/unicode.transformer.js"
@@ -30,7 +30,7 @@ export default class BannerImage extends typeorm.BaseEntity {
         return `**#${this.id}:** [Link](${this.url}), by ${this.credit}`
     }
 
-    static async cycle(client: Client): Promise<void> {
+    static async cycle(client: BotClient): Promise<void> {
         if (!client.customGuilds.main().features.includes("BANNER")) return
         const next = await this.findOne({ order: { id: "ASC" } })
 
@@ -45,13 +45,13 @@ export default class BannerImage extends typeorm.BaseEntity {
         await client.customGuilds
             .main()
             .setBanner(bannerBuffer, "Updated banner with first image in queue.")
-            .catch(e => console.log(e))
+            .catch((e: any) => console.log(e))
 
         const updates = (await client.customGuilds.main()).channels.cache.find(
-            channel => channel.name === "updates"
-        ) as Discord.TextChannel
+            (channel: any) => channel.name === "updates"
+        ) as TextChannel
 
-        const embed: Discord.APIEmbed = {
+        const embed: APIEmbed = {
             author: { name: "New banner!" },
             description: `This week's banner was built by **${next.credit}**, and it's located in **${next.location}**.`,
             image: next
@@ -64,7 +64,7 @@ export default class BannerImage extends typeorm.BaseEntity {
         client.logger.info("Updated banner with first image in queue.")
     }
 
-    static schedule(client: Client): void {
+    static schedule(client: BotClient): void {
         if (client.bannerCycleTimeout) client.bannerCycleTimeout.stop()
 
         client.bannerCycleTimeout = new Cron("0 0 * * 1", () => {

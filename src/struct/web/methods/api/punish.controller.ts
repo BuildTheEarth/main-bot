@@ -1,4 +1,4 @@
-import Discord from "discord.js"
+import { Collection, GuildMember } from "discord.js"
 import typeorm, { FindManyOptions } from "typeorm"
 import { Controller, Get, Param, Req, Res } from "@nestjs/common"
 import ActionLog, { Action } from "../../../../entities/ActionLog.entity.js"
@@ -53,7 +53,7 @@ export default class PunishController {
                     .send({ error: "NOT_FOUND", message: "Not found: user" })
             }
 
-            let user: Discord.GuildMember
+            let user: GuildMember
 
             try {
                 user = await globalThis.client.customGuilds
@@ -123,7 +123,7 @@ export default class PunishController {
 
 
 
-        let categorizedLogs: Discord.Collection<Action, (ActionLog | TimedPunishment)[] | number> = new Discord.Collection([
+        let categorizedLogs: Collection<Action, (ActionLog | TimedPunishment)[] | number> = new Collection([
             ["warn", []],
             ["mute", []],
             ["kick", []],
@@ -133,7 +133,7 @@ export default class PunishController {
         ])
 
         if (count) {
-            categorizedLogs = new Discord.Collection([
+            categorizedLogs = new Collection([
                 ["warn", 0],
                 ["mute", 0],
                 ["kick", 0],

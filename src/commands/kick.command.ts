@@ -1,12 +1,12 @@
-import Client from "../struct/Client.js"
-import Discord from "discord.js"
+import BotClient from "../struct/BotClient.js"
 import Args from "../struct/Args.js"
 import Command from "../struct/Command.js"
-import GuildMember from "../struct/discord/GuildMember.js"
+import BotGuildMember from "../struct/discord/BotGuildMember.js"
 
 import { noop } from "@buildtheearth/bot-utils"
 import CommandMessage from "../struct/CommandMessage.js"
 import punish from "../util/punish.util.js"
+import { GuildMember } from "discord.js"
 
 export default new Command({
     name: "kick",
@@ -33,11 +33,11 @@ export default new Command({
             optionType: "STRING"
         }
     ],
-    async run(this: Command, client: Client, message: CommandMessage, args: Args) {
+    async run(this: Command, client: BotClient, message: CommandMessage, args: Args) {
         const user = await args.consumeUser("member")
         if (!user)
             return message.sendErrorMessage(user === undefined ? "noUser" : "invalidUser")
-        const member: Discord.GuildMember | null = await message.guild.members
+        const member: GuildMember | null = await message.guild.members
             .fetch({ user, cache: false })
             .catch(noop)
         if (!member) return message.sendErrorMessage("notInGuild")
@@ -45,7 +45,7 @@ export default new Command({
         if (member.user.bot) return message.sendErrorMessage("isBot")
         if (member.id === message.member.user.id)
             return message.sendErrorMessage("isSelfKick")
-        if (GuildMember.hasRole(member, globalThis.client.roles.STAFF, client))
+        if (BotGuildMember.hasRole(member, globalThis.client.roles.STAFF, client))
             return message.sendErrorMessage("isStaffKick")
 
         const image = args.consumeImage("image_url")

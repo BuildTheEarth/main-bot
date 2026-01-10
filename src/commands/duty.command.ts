@@ -1,7 +1,7 @@
-import Client from "../struct/Client.js"
+import BotClient from "../struct/BotClient.js"
 import Args from "../struct/Args.js"
 import Command from "../struct/Command.js"
-import GuildMember from "../struct/discord/GuildMember.js"
+import GuildMember from "../struct/discord/BotGuildMember.js"
 import CommandMessage from "../struct/CommandMessage.js"
 import toggleDutyRole from "../util/toggleDutyRole.util.js"
 import {
@@ -123,7 +123,7 @@ export default new Command({
             ]
         }
     ],
-    async run(this: Command, client: Client, message: CommandMessage, args: Args) {
+    async run(this: Command, client: BotClient, message: CommandMessage, args: Args) {
         const subcommand = args.consumeSubcommandIf([
             "set",
             "schedule",

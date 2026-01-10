@@ -1,5 +1,5 @@
 import Args from "../struct/Args.js"
-import Client from "../struct/Client.js"
+import BotClient from "../struct/BotClient.js"
 import Command from "../struct/Command.js"
 
 import BannerImage from "../entities/BannerImage.entity.js"
@@ -32,7 +32,7 @@ import CommandMessage from "../struct/CommandMessage.js"
 
 // prettier-ignore
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-const _ = { Args, Client, Command, BannerImage, ActionLog, ModerationNote, ModpackImage, Snippet, Suggestion, TimedPunishment, CommandList, ConfigManager, EventList, flattenMarkdown, formatPunishmentTime, formatTimestamp, humanizeArray, humanizeConstant, isURL, loadDir, noop, pastTense, languages, stringifyAnything, truncateString }
+const _ = { Args, BotClient, Command, BannerImage, ActionLog, ModerationNote, ModpackImage, Snippet, Suggestion, TimedPunishment, CommandList, ConfigManager, EventList, flattenMarkdown, formatPunishmentTime, formatTimestamp, humanizeArray, humanizeConstant, isURL, loadDir, noop, pastTense, languages, stringifyAnything, truncateString }
 
 export default new Command({
     name: "eval",
@@ -48,7 +48,7 @@ export default new Command({
             optionType: "STRING"
         }
     ],
-    async run(this: Command, client: Client, message: CommandMessage, args: Args) {
+    async run(this: Command, client: BotClient, message: CommandMessage, args: Args) {
         if (!client.token) return
         const code = args.removeCodeblock(args.consumeRest(["code"]))
         await message.continue()

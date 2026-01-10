@@ -1,13 +1,13 @@
-import Discord from "discord.js"
+import { Collection } from "discord.js"
 import loadDir from "../../util/loadDir.util.js"
-import Client from "../Client.js"
+import BotClient from "../BotClient.js"
 import pathModule from "path"
 import url from "url"
 
 // eslint-disable-next-line @typescript-eslint/ban-types
-export default class EventList extends Discord.Collection<string, Function> {
-    client: Client
-    constructor(client: Client) {
+export default class EventList extends Collection<string, Function> {
+    client: BotClient
+    constructor(client: BotClient) {
         super()
         this.client = client
     }

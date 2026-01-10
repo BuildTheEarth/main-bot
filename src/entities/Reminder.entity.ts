@@ -1,6 +1,6 @@
 import typeorm from "typeorm"
 import SnowflakeColumn from "./decorators/SnowflakeColumn.decorator.js"
-import Client from "../struct/Client.js"
+import BotClient from "../struct/BotClient.js"
 import { TextChannel } from "discord.js"
 import { Cron } from "croner"
 import dateEpochTransformer from "./transformers/dateEpoch.transformer.js"
@@ -34,7 +34,7 @@ export default class Reminder extends typeorm.BaseEntity {
         return reminder.nextFireDate.getTime() - Date.now()
     }
 
-    async send(client: Client): Promise<void> {
+    async send(client: BotClient): Promise<void> {
         const channel = client.channels.cache.get(this.channel) as TextChannel
         if (!channel) return
 
@@ -50,7 +50,7 @@ export default class Reminder extends typeorm.BaseEntity {
         await this.save()
     }
 
-    async schedule(client: Client): Promise<void> {
+    async schedule(client: BotClient): Promise<void> {
         client.reminderTimeouts.set(
             this.id,
             new Cron(this.interval, () => {

@@ -1,12 +1,12 @@
 import typeorm, { Migration } from "typeorm"
-import Discord from "discord.js"
+import { APIEmbed, Client, Collection, GuildManager, Message, TextChannel, User } from "discord.js"
 import EventList from "./client/EventList.js"
 import CommandList from "./client/CommandList.js"
 import ConfigManager from "./client/ConfigManager.js"
 import createLogger = require("@buildtheearth/bot-logger")
 import ActionLog from "../entities/ActionLog.entity.js"
 import Snippet from "../entities/Snippet.entity.js"
-import GuildManager from "./discord/GuildManager.js"
+import BotGuildManager from "./discord/BotGuildManager.js"
 import Response from "./discord/Response.js"
 import WebserverHandler from "./client/WebserverHandler.js"
 import BannedWord, { bannedTypes } from "../entities/BannedWord.entity.js"
@@ -27,9 +27,9 @@ import WebEvents from "./client/WebEvents.js"
 import AssetList from "./client/AssetList.js"
 import ComponentHandlersList from "./client/ComponentHandlersList.js"
 
-export default class Client extends Discord.Client {
-    declare guilds: Discord.GuildManager
-    customGuilds = new GuildManager(this)
+export default class BotClient extends Client {
+    declare guilds: GuildManager
+    customGuilds = new BotGuildManager(this)
     db: typeorm.Connection | null = null
     // @ts-ignore weird issues with call signatures
     logger = createLogger({
@@ -41,11 +41,11 @@ export default class Client extends Discord.Client {
     assets = new AssetList(this)
     customCommands = new CommandList(this)
     componentHandlers = new ComponentHandlersList(this)
-    aliases = new Discord.Collection()
+    aliases = new Collection()
     response = new Response(this)
     webserver = new WebserverHandler(this)
     filterWordsCached: { banned: bannedTypes; except: Array<string> } = {
-        banned: new Discord.Collection<string, BannedWord>(),
+        banned: new Collection<string, BannedWord>(),
         except: new Array<string>()
     }
 
@@ -57,7 +57,7 @@ export default class Client extends Discord.Client {
     dutyScheduler = new DutyScheduler(this)
     messages = new Messages(this)
     placeholder = new PlaceholderHandler(this)
-    deletedMessages = new WeakSet<Discord.Message>()
+    deletedMessages = new WeakSet<Message>()
     roles: Record<string, string[]> = {}
     interactionInfo: Map<string, InteractionInfo> = new Map()
     reactionRoles: Map<string, ReactionRole> = new Map()
@@ -135,18 +135,18 @@ export default class Client extends Discord.Client {
     }
 
     async log(
-        log: ActionLog | Snippet | Placeholder | Discord.APIEmbed,
+        log: ActionLog | Snippet | Placeholder | APIEmbed,
         action?: "add" | "edit" | "delete",
-        executor?: Discord.User
+        executor?: User
     ): Promise<void> {
-        const channel: Discord.TextChannel | null = (await this.channels
+        const channel: TextChannel | null = (await this.channels
             .fetch(
                 log instanceof Snippet || log instanceof Placeholder
                     ? this.config.logging.snippetLogs
                     : this.config.logging.modLogs,
                 { force: true }
             )
-            .catch(() => null)) as Discord.TextChannel | null
+            .catch(() => null)) as TextChannel | null
         if (!channel) return
 
         if (log instanceof ActionLog) {

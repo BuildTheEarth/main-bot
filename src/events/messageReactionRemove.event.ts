@@ -1,13 +1,13 @@
-import Discord from "discord.js"
-import Client from "../struct/Client.js"
-import GuildMember from "../struct/discord/GuildMember.js"
+import { MessageReaction, User, TextChannel } from "discord.js"
+import BotClient from "../struct/BotClient.js"
+import BotGuildMember from "../struct/discord/BotGuildMember.js"
 import { noop } from "@buildtheearth/bot-utils"
 import ReactionRole from "../entities/ReactionRole.entity.js"
 
 export default async function messageReactionRemove(
-    this: Client,
-    reaction: Discord.MessageReaction,
-    user: Discord.User
+    this: BotClient,
+    reaction: MessageReaction,
+    user: User
 ): Promise<void> {
     const guild = reaction.message.guild
     if (guild) {
@@ -15,11 +15,11 @@ export default async function messageReactionRemove(
 
         const channelRaw = reaction.message.channel
 
-        const channel = reaction.message.channel as Discord.TextChannel
+        const channel = reaction.message.channel as TextChannel
 
         const logChannel = (await this.channels.fetch(
             this.config.logging.modLogs
-        )) as Discord.TextChannel
+        )) as TextChannel
 
         if (
             guild.id === this.config.guilds.main &&
@@ -32,7 +32,7 @@ export default async function messageReactionRemove(
                     .replaceAll(">", "")) !=
                 (reaction.emoji.name === this.config.emojis.pin) &&
             member &&
-            GuildMember.hasRole(
+            BotGuildMember.hasRole(
                 member,
                 [
                     globalThis.client.roles.MODERATOR,

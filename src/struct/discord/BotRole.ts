@@ -1,8 +1,8 @@
 import chalk = require("chalk")
-import Discord from "discord.js"
+import { Role } from "discord.js"
 
-export default class Role {
-    static format(role: Discord.Role): string {
+export default class BotRole {
+    static format(role: Role): string {
         // "#000000" is not black, but the default role color
         if (role) {
             const color =

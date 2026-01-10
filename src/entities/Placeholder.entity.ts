@@ -1,6 +1,6 @@
 import typeorm from "typeorm"
-import Discord from "discord.js"
-import Client from "../struct/Client.js"
+import { Collection, APIEmbed } from "discord.js"
+import BotClient from "../struct/BotClient.js"
 import languages from "../struct/client/iso6391.js"
 import { hexToNum } from "@buildtheearth/bot-utils"
 import unicode from "./transformers/unicode.transformer.js"
@@ -19,7 +19,7 @@ export default class Placeholder extends typeorm.BaseEntity {
     @typeorm.Column({ length: 2000, transformer: unicode })
     body!: string
 
-    displayEmbed(client: Client): Discord.APIEmbed {
+    displayEmbed(client: BotClient): APIEmbed {
         const language = languages.getName(this.language)
         return {
             color: hexToNum(client.config.colors.success),
@@ -28,9 +28,9 @@ export default class Placeholder extends typeorm.BaseEntity {
         }
     }
 
-    static async loadPlaceholders(): Promise<Discord.Collection<string, Placeholder>> {
+    static async loadPlaceholders(): Promise<Collection<string, Placeholder>> {
         const values = await this.find()
-        const placeholders = new Discord.Collection<string, Placeholder>()
+        const placeholders = new Collection<string, Placeholder>()
         values.forEach(word => {
             placeholders.set(word.name + " " + word.language, word)
         })

@@ -1,9 +1,9 @@
 import typeorm from "typeorm"
 import SnowflakeColumn from "./decorators/SnowflakeColumn.decorator.js"
-import Discord from "discord.js"
+import { APIEmbed} from "discord.js"
 import path from "path"
 import url from "url"
-import Client from "../struct/Client.js"
+import BotClient from "../struct/BotClient.js"
 import { hexToNum, loadSyncJSON5, replaceAsync } from "@buildtheearth/bot-utils"
 import unicode from "./transformers/unicode.transformer.js"
 const suggestionStatusActions = loadSyncJSON5(
@@ -84,7 +84,7 @@ export default class Suggestion extends typeorm.BaseEntity {
     @SnowflakeColumn({ nullable: true })
     deleter?: string
 
-    static async findNumber(staff: boolean, client: Client): Promise<number> {
+    static async findNumber(staff: boolean, client: BotClient): Promise<number> {
         const field = staff ? "staff" : "main"
         const existing = await this.count({
             where: {
@@ -145,7 +145,7 @@ export default class Suggestion extends typeorm.BaseEntity {
         return !!identifier.number && !!identifier.extension
     }
 
-    getURL(client: Client): string {
+    getURL(client: BotClient): string {
         const category = this.staff ? "staff" : "main"
         const guild = client.config.guilds[category]
         const channel = client.config.suggestions[category]
@@ -153,7 +153,7 @@ export default class Suggestion extends typeorm.BaseEntity {
         return `https://discord.com/channels/${guild}/${channel}/${message}`
     }
 
-    async displayEmbed(client: Client): Promise<Discord.APIEmbed> {
+    async displayEmbed(client: BotClient): Promise<APIEmbed> {
         const identifier = await this.getIdentifier()
 
         if (this.deletedAt) {
@@ -165,7 +165,7 @@ export default class Suggestion extends typeorm.BaseEntity {
             }
         }
 
-        const embed = <Discord.APIEmbed>{
+        const embed = <APIEmbed>{
             color: hexToNum("#999999"),
             author: { name: `#${identifier} — ${this.title}` },
             description: this.body,

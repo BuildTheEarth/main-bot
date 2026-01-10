@@ -1,12 +1,12 @@
-import Discord from "discord.js"
+import { ModalSubmitInteraction } from "discord.js"
 import Snippet from "../entities/Snippet.entity.js"
-import Client from "../struct/Client.js"
+import BotClient from "../struct/BotClient.js"
 import languages from "../struct/client/iso6391.js"
 import { isSnippetInfo } from "../typings/InteractionInfo.js"
 
 export default async function createSnippet(
-    interaction: Discord.ModalSubmitInteraction,
-    client: Client
+    interaction: ModalSubmitInteraction,
+    client: BotClient
 ): Promise<void> {
     const customId = interaction.customId
     const info = client.interactionInfo.get(customId)

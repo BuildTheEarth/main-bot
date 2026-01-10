@@ -1,9 +1,9 @@
-import Client from "../struct/Client.js"
+import BotClient from "../struct/BotClient.js"
 import Command from "../struct/Command.js"
 import Args from "../struct/Args.js"
 import fetch from "node-fetch"
 import CommandMessage from "../struct/CommandMessage.js"
-import Discord, { ChannelType } from "discord.js"
+import { ChannelType, APIEmbed } from "discord.js"
 import {
     currentEnv,
     formatPunishmentTime,
@@ -33,7 +33,7 @@ export default new Command({
             description: "Get info about moderation!"
         }
     ],
-    async run(this: Command, client: Client, message: CommandMessage, args: Args) {
+    async run(this: Command, client: BotClient, message: CommandMessage, args: Args) {
         const subcommand = args.consumeSubcommandIf(["bot", "server", "moderation"])
 
         if (subcommand === "bot" || !subcommand) {
@@ -47,7 +47,7 @@ export default new Command({
                 message: string
                 html_url: string
             }
-            const embed = <Discord.APIEmbed>{
+            const embed = <APIEmbed>{
                 title: "Info about main-bot",
                 thumbnail: { url: client.user?.displayAvatarURL() },
                 fields: [
@@ -76,7 +76,7 @@ export default new Command({
         if (subcommand === "server") {
             const guild = message.guild
 
-            const embed = <Discord.APIEmbed>{
+            const embed = <APIEmbed>{
                 title: "Server Info",
                 thumbnail: { url: guild.iconURL() },
                 fields: [

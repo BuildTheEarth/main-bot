@@ -1,12 +1,12 @@
-import Client from "../struct/Client.js"
+import BotClient from "../struct/BotClient.js"
 import Args from "../struct/Args.js"
 import Command from "../struct/Command.js"
 
 import typeorm from "typeorm"
 import Snippet from "../entities/Snippet.entity.js"
 import CommandMessage from "../struct/CommandMessage.js"
-import Discord from "discord.js"
 import { noop } from "@buildtheearth/bot-utils"
+import { AutocompleteInteraction, Message } from "discord.js"
 
 export default new Command({
     name: "team",
@@ -25,7 +25,7 @@ export default new Command({
             }
         }
     ],
-    async run(this: Command, client: Client, message: CommandMessage, args: Args) {
+    async run(this: Command, client: BotClient, message: CommandMessage, args: Args) {
         const input = args.consumeRest(["team"]).toLowerCase()
         if (!input) return message.sendErrorMessage("noTeam")
         await message.continue()
@@ -34,8 +34,8 @@ export default new Command({
 })
 
 export async function handleBtAuto(
-    _client: Client,
-    autocomplete: Discord.AutocompleteInteraction
+    _client: BotClient,
+    autocomplete: AutocompleteInteraction
 ): Promise<void> {
     const focusedOption = autocomplete.options.getFocused(true)
     const val = focusedOption.value
@@ -51,8 +51,8 @@ export async function handleBtAuto(
 }
 
 export async function runBtCommand(
-    client: Client,
-    message: CommandMessage | Discord.Message,
+    client: BotClient,
+    message: CommandMessage | Message,
     arg: string
 ): Promise<unknown> {
     const Snippets = Snippet.getRepository()

@@ -1,10 +1,10 @@
-import Discord from "discord.js"
-import Client from "../struct/Client.js"
+import { ModalSubmitInteraction } from "discord.js"
+import BotClient from "../struct/BotClient.js"
 import { isSuspiciousUserModalInfo } from "../typings/InteractionInfo.js"
 
 export default async function createSuspiciousUser(
-    interaction: Discord.ModalSubmitInteraction,
-    client: Client
+    interaction: ModalSubmitInteraction,
+    client: BotClient
 ): Promise<void> {
     const customId = interaction.customId
     const info = client.interactionInfo.get(customId)

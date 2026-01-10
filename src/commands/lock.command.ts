@@ -1,8 +1,8 @@
-import Client from "../struct/Client.js"
+import BotClient from "../struct/BotClient.js"
 import Args from "../struct/Args.js"
 import Command from "../struct/Command.js"
 
-import Discord from "discord.js"
+import { TextChannel } from "discord.js"
 import ApiTypes = require("discord-api-types/v10")
 import CommandMessage from "../struct/CommandMessage.js"
 import { hexToNum } from "@buildtheearth/bot-utils"
@@ -24,10 +24,10 @@ export default new Command({
             channelTypes: [ApiTypes.ChannelType.GuildText]
         }
     ],
-    async run(this: Command, client: Client, message: CommandMessage, args: Args) {
+    async run(this: Command, client: BotClient, message: CommandMessage, args: Args) {
         const channel =
-            ((await args.consumeChannel("channel")) as Discord.TextChannel) ||
-            (message.channel as Discord.TextChannel)
+            ((await args.consumeChannel("channel")) as TextChannel) ||
+            (message.channel as TextChannel)
 
         const reason = `Locked by ${message.member.user.tag} (${message.member.id})`
 

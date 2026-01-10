@@ -1,5 +1,5 @@
 import { Controller, Get, Post, Param, Req, Res, Body } from "@nestjs/common"
-import Discord from "discord.js"
+import { GuildMember } from "discord.js"
 import { Response, Request } from "express"
 
 @Controller("/api/v1/role")
@@ -27,7 +27,7 @@ export default class RoleController {
             })
         }
 
-        let user: Discord.GuildMember
+        let user: GuildMember
 
         try {
             user = await globalThis.client.customGuilds

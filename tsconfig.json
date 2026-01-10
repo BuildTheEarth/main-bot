@@ -3,7 +3,7 @@
         "esModuleInterop": true,
         "experimentalDecorators": true,
         "emitDecoratorMetadata": true,
-        "module": "esnext",
+        "module": "nodenext",
         "target": "esnext",
         "outDir": "./dist",
         "moduleResolution": "nodenext",

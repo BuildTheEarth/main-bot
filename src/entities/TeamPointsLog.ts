@@ -1,10 +1,10 @@
 import { hexToRGB, noop, truncateString } from "@buildtheearth/bot-utils"
-import Discord from "discord.js"
 import typeorm, { FindManyOptions } from "typeorm"
 import SnowflakeColumn from "./decorators/SnowflakeColumn.decorator.js"
 import TeamPointsUser from "./TeamPointsUser.entity.js"
 import unicode from "./transformers/unicode.transformer.js"
 import Sentiment = require("sentiment")
+import { ChannelType, EmbedBuilder, GuildTextBasedChannel, SendableChannelTypes, TextBasedChannel } from "discord.js"
 
 @typeorm.Entity({ name: "teampoints_log" })
 export default class TeamPointsLog extends typeorm.BaseEntity {
@@ -100,14 +100,14 @@ export default class TeamPointsLog extends typeorm.BaseEntity {
         return log
     }
 
-    public static async getLogChannel(): Promise<Discord.TextBasedChannel | null> {
+    public static async getLogChannel(): Promise<GuildTextBasedChannel | null> {
         const returnChannel = await client.channels
             .fetch(client.config.logging.pointLog)
             .catch(noop)
         if (!returnChannel) {
             return null
         }
-        if (returnChannel.type === Discord.ChannelType.GuildText) return returnChannel
+        if (returnChannel.type === ChannelType.GuildText) return returnChannel
         return null
     }
 
@@ -116,7 +116,7 @@ export default class TeamPointsLog extends typeorm.BaseEntity {
         if (!channel) {
             return
         }
-        const embed = new Discord.EmbedBuilder()
+        const embed = new EmbedBuilder()
         embed.setTitle(`${this.pointChange > 0 ? "Gave" : "Took"} points`)
         embed.setDescription(
             `<@${this.actorId}> ${this.pointChange > 0 ? "gave" : "took"} ${

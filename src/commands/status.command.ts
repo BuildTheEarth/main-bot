@@ -1,5 +1,4 @@
-import Discord from "discord.js"
-import Client from "../struct/Client.js"
+import BotClient from "../struct/BotClient.js"
 import Command from "../struct/Command.js"
 import { hexToNum, hexToRGB, noop } from "@buildtheearth/bot-utils"
 import fetch from "node-fetch"
@@ -7,6 +6,7 @@ import MinecraftServerStatus from "../typings/MinecraftServerStatus.js"
 import CommandMessage from "../struct/CommandMessage.js"
 import WebSocket from "ws"
 import _ from "lodash"
+import { APIEmbed, escapeMarkdown } from "discord.js"
 
 
 export default new Command({
@@ -16,7 +16,7 @@ export default new Command({
     permission: globalThis.client.roles.ANY,
     globalRegister: true,
     userInstallContext: true,
-    async run(this: Command, client: Client, message: CommandMessage) {
+    async run(this: Command, client: BotClient, message: CommandMessage) {
         await message.continue()
 
         const ws = new WebSocket(client.config.wmSocket);
@@ -47,7 +47,7 @@ export default new Command({
             if (!trueData) return await message.sendErrorMessageSeen("networkOffline")
 
             if (trueData.length == 0) {
-                const embed = <Discord.APIEmbed>{
+                const embed = <APIEmbed>{
                     title: "No players are online",
                     description: message.getMessage("networkOnline"),
                     footer: { text: "IP: BuildTheEarth.net, bedrock.BuildTheEarth.net" },
@@ -76,12 +76,11 @@ export default new Command({
                     return {name: entry[0] || "No Server", value: "**Nobody online**"}
                 }
 
-                let localCharCount =  _.sum(entry[1].map((e) => " - " + Discord.escapeMarkdown(e).length + "\n"))
+                let localCharCount =  _.sum(entry[1].map((e) => " - " + escapeMarkdown(e).length + "\n"))
                 charCount += entry[0].length + 3 + localCharCount
                 if (localCharCount > 1024) numbersOnly = true
 
-                return {name: entry[0], value: entry[1].map((e) => "- " + Discord.escapeMarkdown(e)).join("\n")}
-
+                return {name: entry[0], value: entry[1].map((e) => "- " + escapeMarkdown(e)).join("\n")}
             })
 
             if (charCount > 5800 || numbersOnly) {
@@ -96,7 +95,7 @@ export default new Command({
 
 
 
-            const embed = <Discord.APIEmbed>{
+            const embed = <APIEmbed>{
                 description: message.getMessage("networkOnline"),
                 fields: embedFields,
                 footer: { text: `BuildTheEarth.net Total Players: ${trueData.length}` },

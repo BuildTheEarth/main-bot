@@ -1,13 +1,13 @@
 import ConfigSubmodule from "./ConfigSubmodule.js"
 import fs from "fs"
 import { loadJSON5 } from "@buildtheearth/bot-utils"
-import Client from "../Client.js"
+import BotClient from "../BotClient.js"
 
 export default class MessagesConfig implements ConfigSubmodule {
-    client: Client
+    client: BotClient
     json: Record<string, Record<string, string[]>> = { en: {} }
 
-    constructor(client: Client) {
+    constructor(client: BotClient) {
         this.client = client
     }
 

@@ -1,10 +1,8 @@
-import Client from "../struct/Client.js"
+import BotClient from "../struct/BotClient.js"
 import Command from "../struct/Command.js"
-
 import CommandMessage from "../struct/CommandMessage.js"
 import Args from "../struct/Args.js"
 import BannedWord from "../entities/BannedWord.entity.js"
-import Discord from "discord.js"
 import {
     formatPunishmentTime,
     hexToNum,
@@ -12,6 +10,7 @@ import {
     humanizeConstant,
     truncateString
 } from "@buildtheearth/bot-utils"
+import { ActionRowBuilder, ButtonBuilder, ButtonInteraction, ButtonStyle, Interaction, Message, MessageFlags} from "discord.js"
 
 const punishmentTypes = ["BAN", "MUTE", "KICK", "WARN", "DELETE"]
 
@@ -120,7 +119,7 @@ export default new Command({
         globalThis.client.roles.SENIOR_MODERATOR,
         globalThis.client.roles.MANAGER
     ],
-    async run(this: Command, client: Client, message: CommandMessage, args: Args) {
+    async run(this: Command, client: BotClient, message: CommandMessage, args: Args) {
         const subcommandGroup = args.consumeSubcommandGroupIf(["block", "except"])
         if (!subcommandGroup)
             return message.sendErrorMessage(
@@ -262,7 +261,7 @@ export default new Command({
 async function getList(
     exception: boolean,
     message: CommandMessage,
-    client: Client
+    client: BotClient
 ): Promise<void | CommandMessage> {
     await message.continue()
     const words = await BannedWord.find({ exception: exception })
@@ -325,11 +324,11 @@ async function getList(
               }\n`
     }
     if (wordEmbeds.length <= 1) return message.send({ embeds: wordEmbeds })
-    let row = new Discord.ActionRowBuilder<Discord.ButtonBuilder>().addComponents(
-        new Discord.ButtonBuilder()
+    let row = new ActionRowBuilder<ButtonBuilder>().addComponents(
+        new ButtonBuilder()
             .setCustomId(`${message.id}.forwards`)
             .setLabel(client.config.emojis.right.toString())
-            .setStyle(Discord.ButtonStyle.Success)
+            .setStyle(ButtonStyle.Success)
     )
     const sentMessage = await message.send({
         embeds: [wordEmbeds[0]],
@@ -339,7 +338,7 @@ async function getList(
     let page = 1
     let old = 1
 
-    const interactionFunc = async (interaction: Discord.Interaction) => {
+    const interactionFunc = async (interaction: Interaction) => {
         if (
             !(
                 interaction.isButton() &&
@@ -352,43 +351,43 @@ async function getList(
         if (interaction.user.id !== message.member.id)
             return interaction.reply({
                 content: message.messages.wrongUser,
-                ephemeral: true
+                flags: MessageFlags.Ephemeral
             })
         if (
-            (interaction as Discord.ButtonInteraction).customId ===
+            (interaction as ButtonInteraction).customId ===
             `${message.id}.forwards`
         )
             page += 1
-        if ((interaction as Discord.ButtonInteraction).customId === `${message.id}.back`)
+        if ((interaction as ButtonInteraction).customId === `${message.id}.back`)
             page -= 1
         if (page === 1) {
-            row = new Discord.ActionRowBuilder<Discord.ButtonBuilder>().addComponents(
-                new Discord.ButtonBuilder()
+            row = new ActionRowBuilder<ButtonBuilder>().addComponents(
+                new ButtonBuilder()
                     .setCustomId(`${message.id}.forwards`)
                     .setLabel(client.config.emojis.right.toString())
-                    .setStyle(Discord.ButtonStyle.Success)
+                    .setStyle(ButtonStyle.Success)
             )
         } else if (page === wordEmbeds.length) {
-            row = new Discord.ActionRowBuilder<Discord.ButtonBuilder>().addComponents(
-                new Discord.ButtonBuilder()
+            row = new ActionRowBuilder<ButtonBuilder>().addComponents(
+                new ButtonBuilder()
                     .setCustomId(`${message.id}.back`)
                     .setLabel(client.config.emojis.left.toString())
-                    .setStyle(Discord.ButtonStyle.Success)
+                    .setStyle(ButtonStyle.Success)
             )
         } else {
-            row = new Discord.ActionRowBuilder<Discord.ButtonBuilder>()
+            row = new ActionRowBuilder<ButtonBuilder>()
 
                 .addComponents(
-                    new Discord.ButtonBuilder()
+                    new ButtonBuilder()
                         .setCustomId(`${message.id}.back`)
                         .setLabel(client.config.emojis.left.toString())
-                        .setStyle(Discord.ButtonStyle.Success)
+                        .setStyle(ButtonStyle.Success)
                 )
                 .addComponents(
-                    new Discord.ButtonBuilder()
+                    new ButtonBuilder()
                         .setCustomId(`${message.id}.forwards`)
                         .setLabel(client.config.emojis.right.toString())
-                        .setStyle(Discord.ButtonStyle.Success)
+                        .setStyle(ButtonStyle.Success)
                 )
         }
 
@@ -396,10 +395,10 @@ async function getList(
         old = page
 
         const embed = wordEmbeds[page - 1]
-        await (interaction as Discord.ButtonInteraction).update({
+        await (interaction as ButtonInteraction).update({
             components: [row]
         })
-        if (interaction.message instanceof Discord.Message) {
+        if (interaction.message instanceof Message) {
             try {
                 await interaction.message.edit({ embeds: [embed] })
             } catch {

@@ -1,17 +1,17 @@
 import fs from "fs"
 import path from "path"
-import Discord from "discord.js"
+import { Collection } from "discord.js"
 import Command from "../struct/Command.js"
-import Client from "../struct/Client.js"
+import BotClient from "../struct/BotClient.js"
 import url from "url"
 
 export default async function loadDir<T>(
     dir: string,
-    client: Client,
+    client: BotClient,
     process?: (value: T) => T | Promise<T>,
-    baseCollection?: Discord.Collection<string, T>
-): Promise<Discord.Collection<string, T>> {
-    const result = baseCollection || new Discord.Collection<string, T>()
+    baseCollection?: Collection<string, T>
+): Promise<Collection<string, T>> {
+    const result = baseCollection || new Collection<string, T>()
     const files = await fs.promises.readdir(url.pathToFileURL(dir))
     for (const file of files) {
         const name = file.replace(/.js|.ts$/, "")

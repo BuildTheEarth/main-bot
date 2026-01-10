@@ -1,8 +1,8 @@
 import { noop } from "@buildtheearth/bot-utils"
-import Discord from "discord.js"
 import typeorm from "typeorm"
-import Client from "../struct/Client.js"
+import BotClient from "../struct/BotClient.js"
 import SnowflakePrimaryColumn from "./decorators/SnowflakePrimaryColumn.decorator.js"
+import { GuildMember } from "discord.js"
 
 @typeorm.Entity({ name: "teampoint_permissions" })
 export default class TeamPointPerms extends typeorm.BaseEntity {
@@ -100,7 +100,7 @@ export default class TeamPointPerms extends typeorm.BaseEntity {
         }))
     }
 
-    public static async getPermsForMember(member: Discord.GuildMember): Promise<
+    public static async getPermsForMember(member: GuildMember): Promise<
         {
             roleId: string
             maxPoints: number
@@ -122,7 +122,7 @@ export default class TeamPointPerms extends typeorm.BaseEntity {
         }))
     }
 
-    public static async getHighestPerms(member: Discord.GuildMember): Promise<{
+    public static async getHighestPerms(member: GuildMember): Promise<{
         roleId: string
         maxPoints: number
         minPoints: number
@@ -146,7 +146,7 @@ export default class TeamPointPerms extends typeorm.BaseEntity {
     }
 
     public static async getHighestPermsId(
-        client: Client,
+        client: BotClient,
         memberId: string
     ): Promise<{
         roleId: string | null

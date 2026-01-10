@@ -1,7 +1,7 @@
 import { Controller, Get, Post, Param, Req, Res, Body } from "@nestjs/common"
-import GuildMember from "../../../discord/GuildMember.js"
-import Discord from "discord.js"
+import BotGuildMember from "../../../discord/BotGuildMember.js"
 import { Response, Request } from "express"
+import { GuildMember } from "discord.js"
 
 @Controller("/api/v1/builder")
 export default class BuilderController {
@@ -28,7 +28,7 @@ export default class BuilderController {
             })
         }
 
-        let user: Discord.GuildMember
+        let user: GuildMember
 
         try {
             user = await globalThis.client.customGuilds
@@ -48,7 +48,7 @@ export default class BuilderController {
 
         const userInfo = {
             id: user.id,
-            hasBuilder: GuildMember.hasRole(
+            hasBuilder: BotGuildMember.hasRole(
                 user,
                 globalThis.client.roles.BUILDER,
                 globalThis.client,
@@ -97,7 +97,7 @@ export default class BuilderController {
             })
         }
 
-        let user: Discord.GuildMember
+        let user: GuildMember
 
         try {
             user = await globalThis.client.customGuilds
@@ -117,14 +117,14 @@ export default class BuilderController {
 
         try {
             if (add === true) {
-                await GuildMember.addRole(
+                await BotGuildMember.addRole(
                     user,
                     globalThis.client.roles.BUILDER,
                     "API request from Build Team Bot"
                 )
             }
             if (add === false) {
-                await GuildMember.removeRole(
+                await BotGuildMember.removeRole(
                     user,
                     globalThis.client.roles.BUILDER,
                     "API request from Build Team Bot"
@@ -139,7 +139,7 @@ export default class BuilderController {
 
         const userInfo = {
             id: user.id,
-            hasBuilder: GuildMember.hasRole(
+            hasBuilder: BotGuildMember.hasRole(
                 user,
                 globalThis.client.roles.BUILDER,
                 globalThis.client,

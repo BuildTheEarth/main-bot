@@ -1,7 +1,7 @@
-import Client from "../struct/Client.js"
+import BotClient from "../struct/BotClient.js"
 import Args from "../struct/Args.js"
 import Command from "../struct/Command.js"
-import Discord from "discord.js"
+import { APIEmbed } from "discord.js"
 
 import ModerationNote from "../entities/ModerationNote.entity.js"
 import CommandMessage from "../struct/CommandMessage.js"
@@ -82,7 +82,7 @@ export default new Command({
             ]
         }
     ],
-    async run(this: Command, client: Client, message: CommandMessage, args: Args) {
+    async run(this: Command, client: BotClient, message: CommandMessage, args: Args) {
         const subcommand = args.consumeSubcommandIf(["add", "edit", "clear", "check"])
         const user = await args.consumeUser("member")
         if (!user)
@@ -98,7 +98,7 @@ export default new Command({
         const note = await ModerationNote.findOne(user.id)
 
         if ((!subcommand && !body) || (subcommand === "check" && !body)) {
-            const embed = <Discord.APIEmbed>{
+            const embed = <APIEmbed>{
                 thumbnail: {
                     url: user.displayAvatarURL({
                         size: 64,
