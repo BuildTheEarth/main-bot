@@ -5,8 +5,9 @@ import Command from "../struct/Command.js"
 import GuildMember from "../struct/discord/GuildMember.js"
 
 import CommandMessage from "../struct/CommandMessage.js"
-import CommandUtils from "../util/CommandUtils.util.js"
+import CommandUtils from "../util/commandUtils.util.js"
 import { truncateString } from "@buildtheearth/bot-utils"
+import getHelpMessage from "../util/helpCommandUtils.util.js"
 
 export default new Command({
     name: "help",
@@ -43,7 +44,7 @@ export default new Command({
             if (!GuildMember.hasRole(member, command.permission, client))
                 return message.sendErrorMessage("noPerms")
 
-            const embed = CommandUtils.getHelpMessage(
+            const embed = getHelpMessage(
                 command,
                 message.isSlashCommand(),
                 client

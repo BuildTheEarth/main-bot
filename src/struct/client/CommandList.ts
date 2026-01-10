@@ -2,12 +2,13 @@ import Discord from "discord.js"
 import Command from "../Command.js"
 import loadDir from "../../util/loadDir.util.js"
 import Client from "../Client.js"
-import CommandUtils from "../../util/CommandUtils.util.js"
+import CommandUtils from "../../util/commandUtils.util.js"
 import Guild from "../discord/Guild.js"
 
 import pathModule from "path"
 import url from "url"
 import TranslateUtils from "../../util/TranslateUtils.util.js"
+import commandToSlash from "../../util/commandUtils.util.js"
 
 interface PermsObj {
     [name: string]: Discord.ApplicationCommandPermissionsUpdateData
@@ -69,7 +70,7 @@ export default class CommandList extends Discord.Collection<string, Command> {
                         permission: true
                     })
             }
-            for await (const cmd of CommandUtils.commandToSlash(command)) {
+            for await (const cmd of commandToSlash(command)) {
                 const pushCmd = cmd
                 //NOTE: Discord api major change hack fix
                 pushCmd.setDefaultPermission(true)
@@ -229,7 +230,7 @@ export default class CommandList extends Discord.Collection<string, Command> {
                 })
         }
 
-        for await (const cmd of CommandUtils.commandToSlash(command)) {
+        for await (const cmd of commandToSlash(command)) {
             const pushCmd = cmd
             if (permsTemp[0] == globalThis.client.roles.ANY)
                 pushCmd.setDefaultPermission(true)
