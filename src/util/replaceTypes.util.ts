@@ -1,4 +1,9 @@
-import { ActionRowData, ComponentType, ModalActionRowComponentData, TextInputStyle } from "discord.js"
+import {
+    ActionRowData,
+    ComponentType,
+    ModalActionRowComponentData,
+    TextInputStyle
+} from "discord.js"
 import _ from "lodash"
 
 function transform(val: string): ComponentType {

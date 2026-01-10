@@ -40,7 +40,7 @@ export default class Reminder extends typeorm.BaseEntity {
 
         channel.send({
             content: this.message,
-            allowedMentions: { parse: ['users', 'roles'] }
+            allowedMentions: { parse: ["users", "roles"] }
         })
         const tempReminderTimeout = client.reminderTimeouts.get(this.id)
         if (tempReminderTimeout) {

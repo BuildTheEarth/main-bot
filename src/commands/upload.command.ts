@@ -2,7 +2,7 @@ import BotClient from "../struct/BotClient.js"
 import Args from "../struct/Args.js"
 import Command from "../struct/Command.js"
 
-import fetch, {FormData} from "node-fetch"
+import fetch, { FormData } from "node-fetch"
 
 import CommandMessage from "../struct/CommandMessage.js"
 import { noop } from "@buildtheearth/bot-utils"
@@ -11,14 +11,17 @@ export default new Command({
     name: "upload",
     aliases: [],
     description: "Upload images to the s3 bucket.",
-    permission: [globalThis.client.roles.MANAGER, globalThis.client.roles.BUILDER_COUNCIL],
+    permission: [
+        globalThis.client.roles.MANAGER,
+        globalThis.client.roles.BUILDER_COUNCIL
+    ],
     args: [
         {
             name: "image",
             description: "Image to upload",
             required: true,
             optionType: "ATTACHMENT"
-        },
+        }
     ],
     async run(this: Command, client: BotClient, message: CommandMessage, args: Args) {
         const attachment = args.consumeAttachment("image")
@@ -26,7 +29,12 @@ export default new Command({
 
         if (!attachment.contentType) return await message.sendErrorMessage("noImage")
 
-        if (!["image/png", "image/jpg", "image/jpeg", "image/gif"].includes(attachment.contentType)) return await message.sendErrorMessage("invalidImage")
+        if (
+            !["image/png", "image/jpg", "image/jpeg", "image/gif"].includes(
+                attachment.contentType
+            )
+        )
+            return await message.sendErrorMessage("invalidImage")
 
         const fileName = attachment.name
 
@@ -46,13 +54,13 @@ export default new Command({
             method: "POST",
             body: formData,
             headers: {
-                "Authorization": `Bearer ${client.config.websiteToken}`
+                Authorization: `Bearer ${client.config.websiteToken}`
             }
-        });
+        })
 
         if (resp.status != 200) return await message.sendErrorMessage("httpError")
- 
-        const body = await resp.json() as {src: string}
+
+        const body = (await resp.json()) as { src: string }
 
         const url = body.src
 

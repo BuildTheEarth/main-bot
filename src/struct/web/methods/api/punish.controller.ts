@@ -12,7 +12,6 @@ function getType(entity: ActionLog | TimedPunishment): Action {
     } else {
         return entity.type
     }
-
 }
 @Controller("/api/v1/punish")
 export default class PunishController {
@@ -26,26 +25,26 @@ export default class PunishController {
         const params = req.query
         const showDeleted = params["showDeleted"] ? true : false
         const count = params["count"] ? true : false
-        const group = params["noGroup"] ? false: true
-        const timed = params["timedPunishment"] ? true: false
+        const group = params["noGroup"] ? false : true
+        const timed = params["timedPunishment"] ? true : false
         const noZero = (params["noZero"] ? true : false) && timed
-
 
         let since = 0
 
         if (typeof params["since"] == "string") {
             since = ms(params["since"])
         }
-        
+
         let order = true
 
         if (params["order"] == "ASC") order = false
 
-        let criteria: typeorm.FindManyOptions<ActionLog> |  typeorm.FindManyOptions<TimedPunishment> = {}
+        let criteria:
+            | typeorm.FindManyOptions<ActionLog>
+            | typeorm.FindManyOptions<TimedPunishment> = {}
 
         if (id) {
             const userList = typeof id === "string" ? id : null // we need to add proper multi-user support later
-
 
             if (!userList) {
                 return res
@@ -64,7 +63,7 @@ export default class PunishController {
                     .status(404)
                     .send({ error: "NOT_FOUND", message: "Not found: user" })
             }
-    
+
             if (!user) {
                 return res
                     .status(404)
@@ -77,53 +76,60 @@ export default class PunishController {
                 criteria = {
                     where: {
                         member: user.id,
-                        deletedAt: timed? typeorm.Not<TimedPunishment>(typeorm.IsNull()) :typeorm.Not<ActionLog>(typeorm.IsNull())
+                        deletedAt: timed
+                            ? typeorm.Not<TimedPunishment>(typeorm.IsNull())
+                            : typeorm.Not<ActionLog>(typeorm.IsNull())
                     }
                 }
-    
+
                 criteria.withDeleted = true
             }
         } else {
             if (showDeleted) {
                 criteria = {
                     where: {
-                        deletedAt: timed? typeorm.Not<TimedPunishment>(typeorm.IsNull()) :typeorm.Not<ActionLog>(typeorm.IsNull())
+                        deletedAt: timed
+                            ? typeorm.Not<TimedPunishment>(typeorm.IsNull())
+                            : typeorm.Not<ActionLog>(typeorm.IsNull())
                     }
                 }
-    
+
                 criteria.withDeleted = true
             }
         }
 
         let actionLogs: (ActionLog | TimedPunishment)[] | null = null
 
-        if (timed) actionLogs = await TimedPunishment.find(criteria as FindManyOptions<TimedPunishment>)
+        if (timed)
+            actionLogs = await TimedPunishment.find(
+                criteria as FindManyOptions<TimedPunishment>
+            )
         else actionLogs = await ActionLog.find(criteria as FindManyOptions<ActionLog>)
 
         if (!actionLogs) return
 
-        
-        actionLogs = actionLogs.filter((value) => {
-            if (since <= value.createdAt.getTime()) {
-                if (noZero) return (value as TimedPunishment).length > 0
-                else return true;
-            } else return false;
-        }
-            
-        ).sort((a, b) => {
-            if (a.createdAt == b.createdAt) return 0
-            if (a.createdAt > b.createdAt) return order ? -1: 1
-            else return order ? 1: -1
-        })
+        actionLogs = actionLogs
+            .filter(value => {
+                if (since <= value.createdAt.getTime()) {
+                    if (noZero) return (value as TimedPunishment).length > 0
+                    else return true
+                } else return false
+            })
+            .sort((a, b) => {
+                if (a.createdAt == b.createdAt) return 0
+                if (a.createdAt > b.createdAt) return order ? -1 : 1
+                else return order ? 1 : -1
+            })
 
         if (!group) {
             res.send(actionLogs)
             return
         }
 
-
-
-        let categorizedLogs: Collection<Action, (ActionLog | TimedPunishment)[] | number> = new Collection([
+        let categorizedLogs: Collection<
+            Action,
+            (ActionLog | TimedPunishment)[] | number
+        > = new Collection([
             ["warn", []],
             ["mute", []],
             ["kick", []],
@@ -143,17 +149,18 @@ export default class PunishController {
             ])
 
             for (const log of actionLogs) {
-                categorizedLogs.set(getType(log), (categorizedLogs.get(getType(log)) as number) + 1) 
+                categorizedLogs.set(
+                    getType(log),
+                    (categorizedLogs.get(getType(log)) as number) + 1
+                )
             }
-        }
-        
-        else for (const log of actionLogs) {
-            const pushArr = categorizedLogs.get(getType(log))
-            if (!pushArr) continue
-            if (typeof pushArr != "number") pushArr.push(log)
-        }
+        } else
+            for (const log of actionLogs) {
+                const pushArr = categorizedLogs.get(getType(log))
+                if (!pushArr) continue
+                if (typeof pushArr != "number") pushArr.push(log)
+            }
 
-            
         res.send(Object.fromEntries(categorizedLogs))
 
         return

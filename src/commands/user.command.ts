@@ -1,4 +1,11 @@
-import { GuildMember, APIEmbed, escapeMarkdown, Emoji, Activity, ActivityType } from "discord.js"
+import {
+    GuildMember,
+    APIEmbed,
+    escapeMarkdown,
+    Emoji,
+    Activity,
+    ActivityType
+} from "discord.js"
 import BotClient from "../struct/BotClient.js"
 import Args from "../struct/Args.js"
 import {
@@ -49,7 +56,7 @@ export default new Command({
             .fetch({ user, cache: true })
             .catch(() => null)
 
-        const embed = <APIEmbed>({
+        const embed = <APIEmbed>{
             color: hexToNum(client.config.colors.info),
             thumbnail: {
                 url: user.displayAvatarURL({
@@ -71,7 +78,7 @@ export default new Command({
                     inline: true
                 }
             ]
-        })
+        }
 
         if (!embed.fields) return // again never gonna happen
 

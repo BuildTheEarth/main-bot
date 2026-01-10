@@ -44,7 +44,9 @@ export default class AdvancedBuilder extends typeorm.BaseEntity {
 
         if (time <= new Date()) {
             this.removeBuilder(client)
-            client.logger.info(`Removing advanced builder at schedule, date ${time.toISOString()}`)
+            client.logger.info(
+                `Removing advanced builder at schedule, date ${time.toISOString()}`
+            )
             return
         }
 

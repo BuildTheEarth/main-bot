@@ -2,6 +2,7 @@ import "reflect-metadata"
 import { IntentsBitField, Partials } from "discord.js"
 import BotClient from "./struct/BotClient.js"
 import { loadRoles } from "./util/roles.util.js"
+import OAuthToken from "./entities/OAuthToken.entity.js"
 
 declare global {
     // eslint-disable-next-line no-var
@@ -26,11 +27,7 @@ const client = new BotClient({
         IntentsBitField.Flags.DirectMessages,
         IntentsBitField.Flags.DirectMessageReactions
     ],
-    partials: [
-        Partials.Channel,
-        Partials.Message,
-        Partials.Reaction
-    ]
+    partials: [Partials.Channel, Partials.Message, Partials.Reaction]
 })
 global.client = client
 

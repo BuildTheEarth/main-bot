@@ -2,7 +2,7 @@ import typeorm from "typeorm"
 import type BotClient from "../struct/BotClient.js"
 import SnowflakePrimaryColumn from "./decorators/SnowflakePrimaryColumn.decorator.js"
 import milliseconds from "./transformers/milliseconds.transformer.js"
-import unicode from "./transformers/unicode.transformer.js" 
+import unicode from "./transformers/unicode.transformer.js"
 import { Collection } from "discord.js"
 
 export type bannedTypes = Collection<string, BannedWord>

@@ -25,10 +25,7 @@ export default new Command({
         if (amount > 100) return message.sendErrorMessage("purgeLimit")
         if (amount < 1) return message.sendErrorMessage("purgeTooLow")
 
-        const purged = await (message.channel as TextChannel).bulkDelete(
-            amount,
-            true
-        )
+        const purged = await (message.channel as TextChannel).bulkDelete(amount, true)
 
         await message.continue()
 

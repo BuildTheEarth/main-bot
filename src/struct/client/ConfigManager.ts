@@ -57,6 +57,7 @@ export default class ConfigManager {
     colors!: ColorPalette & { suggestions: SuggestionCategories }
     assets!: AssetList
     token!: string
+    clientSecret!: string
     modpackAuth!: string
     interKey!: string
     apiWhitelist!: string[]

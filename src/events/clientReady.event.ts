@@ -10,10 +10,16 @@ import { Cron } from "croner"
 import TeamPointsUser from "../entities/TeamPointsUser.entity.js"
 import { noop } from "@buildtheearth/bot-utils"
 import { ActivityType } from "discord.js"
+import getBearerToken from "../util/getBearerToken.util.js"
+import OAuthToken from "../entities/OAuthToken.entity.js"
 
 export default async function clientReady(this: BotClient): Promise<void> {
     if (!this.user) return //never gonna happen, its on ready, discord.js needs some better type assertion
 
+    this.logger.debug("Handling oauth token...")
+    await OAuthToken.initToken(this)
+    this.logger.info("Handled oauth token.")
+    
     this.logger.debug("Loading commands...")
     await this.customCommands.load()
     this.logger.info("Loaded commands.")

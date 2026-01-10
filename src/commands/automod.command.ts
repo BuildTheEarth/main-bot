@@ -10,7 +10,15 @@ import {
     humanizeConstant,
     truncateString
 } from "@buildtheearth/bot-utils"
-import { ActionRowBuilder, ButtonBuilder, ButtonInteraction, ButtonStyle, Interaction, Message, MessageFlags} from "discord.js"
+import {
+    ActionRowBuilder,
+    ButtonBuilder,
+    ButtonInteraction,
+    ButtonStyle,
+    Interaction,
+    Message,
+    MessageFlags
+} from "discord.js"
 
 const punishmentTypes = ["BAN", "MUTE", "KICK", "WARN", "DELETE"]
 
@@ -353,10 +361,7 @@ async function getList(
                 content: message.messages.wrongUser,
                 flags: MessageFlags.Ephemeral
             })
-        if (
-            (interaction as ButtonInteraction).customId ===
-            `${message.id}.forwards`
-        )
+        if ((interaction as ButtonInteraction).customId === `${message.id}.forwards`)
             page += 1
         if ((interaction as ButtonInteraction).customId === `${message.id}.back`)
             page -= 1

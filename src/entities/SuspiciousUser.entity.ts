@@ -6,7 +6,23 @@ import BotGuildMember from "../struct/discord/BotGuildMember.js"
 import CommandMessage from "../struct/CommandMessage.js"
 import unicode from "./transformers/unicode.transformer.js"
 import { discordEpoch } from "../util/discordEpoch.js"
-import { ActionRowBuilder, APIEmbed, ButtonBuilder, ButtonInteraction, ButtonStyle, ChannelType, ComponentType, InteractionButtonComponentData, Message, MessageCreateOptions, MessageEditOptions, TextChannel, ThreadAutoArchiveDuration, ThreadChannel, User } from "discord.js"
+import {
+    ActionRowBuilder,
+    APIEmbed,
+    ButtonBuilder,
+    ButtonInteraction,
+    ButtonStyle,
+    ChannelType,
+    ComponentType,
+    InteractionButtonComponentData,
+    Message,
+    MessageCreateOptions,
+    MessageEditOptions,
+    TextChannel,
+    ThreadAutoArchiveDuration,
+    ThreadChannel,
+    User
+} from "discord.js"
 import Writeable from "../typings/writeable.js"
 
 @typeorm.Entity({ name: "suspicious_users" })
@@ -44,9 +60,7 @@ export default class SuspiciousUser extends typeorm.BaseEntity {
     @SnowflakeColumn({ nullable: true, default: null })
     threadId?: string
 
-    public static async fetchChannel(
-        client: BotClient
-    ): Promise<TextChannel | null> {
+    public static async fetchChannel(client: BotClient): Promise<TextChannel | null> {
         const channelID = client.config.suspiciousUsers
         const channel = await client.channels.fetch(channelID).catch(noop)
         if (channel?.type === ChannelType.GuildText) {
@@ -163,7 +177,10 @@ export default class SuspiciousUser extends typeorm.BaseEntity {
         }
 
         //Doing some serious typing funnies here
-        const options: Writeable<MessageCreateOptions> = { embeds: [embed], components: Array() }
+        const options: Writeable<MessageCreateOptions> = {
+            embeds: [embed],
+            components: Array()
+        }
 
         if (!(this.approved || this.denied)) {
             const actionRow = new ActionRowBuilder<ButtonBuilder>()

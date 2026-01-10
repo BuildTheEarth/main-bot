@@ -1,4 +1,13 @@
-import { AutocompleteInteraction, GuildMember, Interaction, InteractionType, MessageFlags, ModalSubmitInteraction, Role, User } from "discord.js"
+import {
+    AutocompleteInteraction,
+    GuildMember,
+    Interaction,
+    InteractionType,
+    MessageFlags,
+    ModalSubmitInteraction,
+    Role,
+    User
+} from "discord.js"
 import Args from "../struct/Args.js"
 import BotClient from "../struct/BotClient.js"
 import CommandMessage from "../struct/CommandMessage.js"
@@ -134,8 +143,7 @@ export default async function (
 
             const label = interaction.member
                 ? BotRole.format(
-                      (interaction.member as GuildMember).roles
-                          .highest as Role
+                      (interaction.member as GuildMember).roles.highest as Role
                   )
                 : chalk.blueBright("DMs")
             const tag =

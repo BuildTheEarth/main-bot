@@ -1,6 +1,6 @@
 import typeorm from "typeorm"
 import SnowflakeColumn from "./decorators/SnowflakeColumn.decorator.js"
-import { APIEmbed} from "discord.js"
+import { APIEmbed } from "discord.js"
 import path from "path"
 import url from "url"
 import BotClient from "../struct/BotClient.js"

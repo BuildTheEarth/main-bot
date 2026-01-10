@@ -16,9 +16,7 @@ export default class Args {
     split(argNames: string[]): string[] {
         const returnArgs: string[] = []
         argNames.forEach(element => {
-            const tempEle = (this.message.message).options
-                .get(element)
-                ?.value?.toString()
+            const tempEle = this.message.message.options.get(element)?.value?.toString()
             if (tempEle) returnArgs.push(tempEle)
         })
         return returnArgs
@@ -27,9 +25,7 @@ export default class Args {
     splitMultiple(argNames: string[]): string[] {
         const returnArgs: string[] = []
         argNames.forEach(element => {
-            const tempEle = (this.message.message).options
-                .get(element)
-                ?.value?.toString()
+            const tempEle = this.message.message.options.get(element)?.value?.toString()
             if (tempEle) returnArgs.push(tempEle)
         })
         return returnArgs
@@ -38,9 +34,7 @@ export default class Args {
     get(argName: string): string
     get(argName: string, count: number | undefined): string[]
     get(argName: string): string | string[] | null {
-        const retVal = (this.message.message).options.get(
-            argName
-        )
+        const retVal = this.message.message.options.get(argName)
         if (retVal) {
             if (retVal.value) return retVal.value.toString().replace(/\\n/g, "\n")
         }
@@ -70,7 +64,8 @@ export default class Args {
 
         let valid = false
 
-        if (typeof equals === "string") valid = equals.toLowerCase() === arg!.toLowerCase()
+        if (typeof equals === "string")
+            valid = equals.toLowerCase() === arg!.toLowerCase()
         else if (Array.isArray(equals)) valid = equals.includes(arg!)
         else if (equals instanceof RegExp) valid = equals.test(arg!)
         else if (typeof equals === "function") valid = equals(arg!)
@@ -87,9 +82,7 @@ export default class Args {
         const returnArgs: string[] = []
         argNames.forEach(element => {
             let option: string | null = null
-            const tempValue = (
-                this.message.message
-            ).options.get(element)?.value
+            const tempValue = this.message.message.options.get(element)?.value
             if (tempValue) option = tempValue.toString().replace(/\\n/g, "\n")
             if (option) returnArgs.push(option)
         })
@@ -203,13 +196,10 @@ export default class Args {
 
     consumeImage(argName: string): string | null {
         let url: string | null = null
-        const attachment = this.consumeAttachment(
-            argName,
-            (attachment: Attachment) => {
-                if (attachment.contentType?.startsWith("image/")) return true
-                return false
-            }
-        )
+        const attachment = this.consumeAttachment(argName, (attachment: Attachment) => {
+            if (attachment.contentType?.startsWith("image/")) return true
+            return false
+        })
         if (attachment) url = attachment.url
         if (!url) url = this.consumeIf(/https?:\/\/(.+)?\.(jpe?g|png|gif)/i, argName)
         if (url) {

@@ -2,10 +2,7 @@ import { noop } from "@buildtheearth/bot-utils"
 import { Guild, GuildMember, Role, UserResolvable } from "discord.js"
 
 export default class BotGuild {
-    static async member(
-        guild: Guild,
-        user: UserResolvable
-    ): Promise<GuildMember> {
+    static async member(guild: Guild, user: UserResolvable): Promise<GuildMember> {
         return (await guild.members.fetch(user)) as GuildMember
     }
 

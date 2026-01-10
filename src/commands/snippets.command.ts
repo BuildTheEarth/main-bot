@@ -5,7 +5,15 @@ import Snippet from "../entities/Snippet.entity.js"
 
 import languages from "../struct/client/iso6391.js"
 import GuildMember from "../struct/discord/BotGuildMember.js"
-import { ActionRowBuilder, ButtonBuilder, ButtonStyle, Interaction, ButtonInteraction, Message, MessageFlags } from "discord.js"
+import {
+    ActionRowBuilder,
+    ButtonBuilder,
+    ButtonStyle,
+    Interaction,
+    ButtonInteraction,
+    Message,
+    MessageFlags
+} from "discord.js"
 import CommandMessage from "../struct/CommandMessage.js"
 import { hexToNum } from "@buildtheearth/bot-utils"
 
@@ -361,27 +369,22 @@ export default new Command({
                     `${message.id}.forwards`
                 )
                     page += 1
-                if (
-                    (interaction as ButtonInteraction).customId ===
-                    `${message.id}.back`
-                )
+                if ((interaction as ButtonInteraction).customId === `${message.id}.back`)
                     page -= 1
                 if (page === 1) {
-                    row =
-                        new ActionRowBuilder<ButtonBuilder>().addComponents(
-                            new ButtonBuilder()
-                                .setCustomId(`${message.id}.forwards`)
-                                .setLabel(client.config.emojis.right.toString())
-                                .setStyle(ButtonStyle.Success)
-                        )
+                    row = new ActionRowBuilder<ButtonBuilder>().addComponents(
+                        new ButtonBuilder()
+                            .setCustomId(`${message.id}.forwards`)
+                            .setLabel(client.config.emojis.right.toString())
+                            .setStyle(ButtonStyle.Success)
+                    )
                 } else if (page === snippetEmbeds.length) {
-                    row =
-                        new ActionRowBuilder<ButtonBuilder>().addComponents(
-                            new ButtonBuilder()
-                                .setCustomId(`${message.id}.back`)
-                                .setLabel(client.config.emojis.left.toString())
-                                .setStyle(ButtonStyle.Success)
-                        )
+                    row = new ActionRowBuilder<ButtonBuilder>().addComponents(
+                        new ButtonBuilder()
+                            .setCustomId(`${message.id}.back`)
+                            .setLabel(client.config.emojis.left.toString())
+                            .setStyle(ButtonStyle.Success)
+                    )
                 } else {
                     row = new ActionRowBuilder<ButtonBuilder>()
 

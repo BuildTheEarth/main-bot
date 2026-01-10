@@ -1,4 +1,19 @@
-import { ActionRowBuilder, APIEmbed, ButtonBuilder, ButtonInteraction, ButtonStyle, DMChannel, escapeMarkdown, FetchedThreads, Interaction, Message, MessageFlags, TextChannel, ThreadChannel, User } from "discord.js"
+import {
+    ActionRowBuilder,
+    APIEmbed,
+    ButtonBuilder,
+    ButtonInteraction,
+    ButtonStyle,
+    DMChannel,
+    escapeMarkdown,
+    FetchedThreads,
+    Interaction,
+    Message,
+    MessageFlags,
+    TextChannel,
+    ThreadChannel,
+    User
+} from "discord.js"
 import BotClient from "../struct/BotClient.js"
 import Args from "../struct/Args.js"
 import Command from "../struct/Command.js"
@@ -182,10 +197,7 @@ export default new Command({
         const suggestionsChannelRaw = await client.channels
             .fetch(suggestionsID, { force: true })
             .catch(() => null)
-        if (
-            !suggestionsChannelRaw ||
-            !(suggestionsChannelRaw instanceof TextChannel)
-        )
+        if (!suggestionsChannelRaw || !(suggestionsChannelRaw instanceof TextChannel))
             return
 
         //TODO: Migrate to the new qna channels when they come out
@@ -232,10 +244,7 @@ export default new Command({
                 footer: {}
             }
 
-            const formatResults = async (
-                results: Suggestion[],
-                embed: APIEmbed
-            ) => {
+            const formatResults = async (results: Suggestion[], embed: APIEmbed) => {
                 embed.fields = []
                 for (const suggestion of results) {
                     const number = await suggestion.getIdentifier()
@@ -287,27 +296,22 @@ export default new Command({
                     `${message.id}.forwards`
                 )
                     page += 1
-                if (
-                    (interaction as ButtonInteraction).customId ===
-                    `${message.id}.back`
-                )
+                if ((interaction as ButtonInteraction).customId === `${message.id}.back`)
                     page -= 1
                 if (page === 1) {
-                    row =
-                        new ActionRowBuilder<ButtonBuilder>().addComponents(
-                            new ButtonBuilder()
-                                .setCustomId(`${message.id}.forwards`)
-                                .setLabel(client.config.emojis.right.toString())
-                                .setStyle(ButtonStyle.Success)
-                        )
+                    row = new ActionRowBuilder<ButtonBuilder>().addComponents(
+                        new ButtonBuilder()
+                            .setCustomId(`${message.id}.forwards`)
+                            .setLabel(client.config.emojis.right.toString())
+                            .setStyle(ButtonStyle.Success)
+                    )
                 } else if (page === pages) {
-                    row =
-                        new ActionRowBuilder<ButtonBuilder>().addComponents(
-                            new ButtonBuilder()
-                                .setCustomId(`${message.id}.back`)
-                                .setLabel(client.config.emojis.left.toString())
-                                .setStyle(ButtonStyle.Success)
-                        )
+                    row = new ActionRowBuilder<ButtonBuilder>().addComponents(
+                        new ButtonBuilder()
+                            .setCustomId(`${message.id}.back`)
+                            .setLabel(client.config.emojis.left.toString())
+                            .setStyle(ButtonStyle.Success)
+                    )
                 } else {
                     row = new ActionRowBuilder<ButtonBuilder>()
 

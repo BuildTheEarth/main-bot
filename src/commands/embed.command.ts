@@ -27,7 +27,6 @@ export default new Command({
         }
     ],
     async run(this: Command, client: BotClient, message: CommandMessage, args: Args) {
-
         await message.continue()
 
         const urlRegex =
@@ -43,7 +42,6 @@ export default new Command({
             messageId: messagePropsTemp[7]
         }
 
-
         const guild = await client.guilds.fetch(messageProps.guildId).catch(noop)
 
         if (!guild) {
@@ -58,9 +56,7 @@ export default new Command({
 
         const perms =
             channel.permissionsFor(message.member) &&
-            channel
-                .permissionsFor(client.user)
-                ?.has(PermissionFlagsBits.ViewChannel)
+            channel.permissionsFor(client.user)?.has(PermissionFlagsBits.ViewChannel)
         if (!perms) return message.sendErrorMessage("noChannelPerms")
 
         if (!channel || !(channel.type === ChannelType.GuildText)) {
@@ -75,32 +71,32 @@ export default new Command({
             return message.sendErrorMessage("provideMsgUrl")
         }
 
-        const messageAttachments = [...embedMessage.attachments.values()].map((e) => e.toJSON()).map((e) => {
-            //@ts-ignore
-            e.filename = e.name
-            //@ts-ignore
-            e.name = undefined
-            //@ts-ignore
-            e.attachment = undefined
-            //@ts-ignore
-            e.content_type = e.contentType
-            //@ts-ignore
-            e.contentType = undefined
-            //@ts-ignore
-            e.proxy_url = e.proxyURL
-            //@ts-ignore
-            e.proxyURL = undefined
-            //@ts-ignore
-            e.description = e.description ?? undefined
+        const messageAttachments = [...embedMessage.attachments.values()]
+            .map(e => e.toJSON())
+            .map(e => {
+                //@ts-ignore
+                e.filename = e.name
+                //@ts-ignore
+                e.name = undefined
+                //@ts-ignore
+                e.attachment = undefined
+                //@ts-ignore
+                e.content_type = e.contentType
+                //@ts-ignore
+                e.contentType = undefined
+                //@ts-ignore
+                e.proxy_url = e.proxyURL
+                //@ts-ignore
+                e.proxyURL = undefined
+                //@ts-ignore
+                e.description = e.description ?? undefined
 
-            console.log(e)
-            return e
-            
-        })
+                console.log(e)
+                return e
+            })
 
         console.log("attachments")
         console.log(messageAttachments)
-
 
         const webhookJson = {
             messages: [
@@ -123,9 +119,7 @@ export default new Command({
 
         const buffer = Buffer.from(JSON.stringify(webhookJson))
         const reqData = buffer.toString("base64")
-        const discohookUrl = `https://discohook.app/?data=${encodeURIComponent(
-            reqData
-        )}`
+        const discohookUrl = `https://discohook.app/?data=${encodeURIComponent(reqData)}`
 
         console.log(reqData)
 
@@ -156,7 +150,5 @@ export default new Command({
             data.url,
             formatTimestamp(new Date(data.expires), "R")
         )
-
-        
     }
 })

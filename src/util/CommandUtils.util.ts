@@ -2,8 +2,9 @@ import DBuilders = require("@discordjs/builders")
 import Command, { CommandArgs, SubCommandProperties } from "../struct/Command.js"
 import _ from "lodash"
 
-
-export default function commandToSlash(command: Command): DBuilders.SlashCommandBuilder[] {
+export default function commandToSlash(
+    command: Command
+): DBuilders.SlashCommandBuilder[] {
     const commands = []
     let builder = new DBuilders.SlashCommandBuilder()
         .setName(command.name)
@@ -21,9 +22,7 @@ export default function commandToSlash(command: Command): DBuilders.SlashCommand
                 return builder.addSubcommandGroup(addSubcommandGroup(subcommand))
             } else {
                 if (command.inheritGlobalArgs)
-                    return builder.addSubcommand(
-                        addSubcommand(subcommand, command.args)
-                    )
+                    return builder.addSubcommand(addSubcommand(subcommand, command.args))
                 return builder.addSubcommand(addSubcommand(subcommand))
             }
         })
@@ -40,11 +39,7 @@ export default function commandToSlash(command: Command): DBuilders.SlashCommand
         builder.addSubcommand(addSubcommand(baseSubCom))
     }
 
-    if (
-        command.subcommands &&
-        command.subcommands.length == 0 &&
-        !command.basesubcommand
-    )
+    if (command.subcommands && command.subcommands.length == 0 && !command.basesubcommand)
         if (command.args)
             _.cloneDeep(command.args)
                 .sort((x, y) => {
@@ -270,5 +265,3 @@ function addOption(
     }
     return builder
 }
-
-

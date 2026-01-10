@@ -69,24 +69,20 @@ export default class BlunderTracker extends typeorm.BaseEntity {
         else dayCount = "countless"
 
         if (message)
-            message.edit(
-                {
-                    content:
-                        `\`${dayCount}\` days since ${await this.roleToTeam(client)} ${this.description
-                        }`,
-                    allowedMentions: { parse: [] }
-                }
-            )
+            message.edit({
+                content: `\`${dayCount}\` days since ${await this.roleToTeam(client)} ${
+                    this.description
+                }`,
+                allowedMentions: { parse: [] }
+            })
         else {
             channel
-                .send(
-                    {
-                        content:
-                            `\`${dayCount}\` days since ${await this.roleToTeam(client)} ${this.description
-                            }`,
-                        allowedMentions: { parse: [] }
-                    }
-                )
+                .send({
+                    content: `\`${dayCount}\` days since ${await this.roleToTeam(
+                        client
+                    )} ${this.description}`,
+                    allowedMentions: { parse: [] }
+                })
                 .then(msg => (this.message = msg.id))
         }
     }

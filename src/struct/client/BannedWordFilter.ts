@@ -1,4 +1,3 @@
-// Literally all of this code is taken from https://github.com/cAttte/fanum so thank him
 import path from "path"
 import url from "url"
 import { loadSyncJSON5, isSingular, pluralize } from "@buildtheearth/bot-utils"
@@ -104,10 +103,9 @@ export default class BannedWordFilter {
         const profanities = []
         const regexBody = this.createWordRegex(word, Infinity)
         const regex = new RegExp(regexBody, "g")
-        const matches = text.matchAll(regex);
+        const matches = text.matchAll(regex)
 
         for (const match of matches) {
-
             if (match[0] == "") continue
 
             if (word instanceof BannedWord)
@@ -130,7 +128,6 @@ export default class BannedWordFilter {
 
         return profanities
     }
-
 
     findException(match: BannedWordObj, input: string, exceptions: string[]): boolean {
         if (match.index === undefined) return false
@@ -162,9 +159,7 @@ export default class BannedWordFilter {
     }
 
     createWordRegex(word: string | BannedWord, max: number = Infinity): string {
-
-        if (word instanceof BannedWord)
-            word = word.word
+        if (word instanceof BannedWord) word = word.word
 
         let startStar = false
         let endStar = false

@@ -144,7 +144,10 @@ export default new Command({
             return message.sendSuccessMessage("roleSuccess")
         }
 
-        let position = args.consumeIf(["bto", "vcc", "vs", "teamstaff", "builder"], "position")
+        let position = args.consumeIf(
+            ["bto", "vcc", "vs", "teamstaff", "builder"],
+            "position"
+        )
         if (!position)
             for (const [team, lead] of Object.entries(pseudoteamPositions.leads))
                 if (BotGuildMember.hasRole(message.member, client.roles[lead], client))

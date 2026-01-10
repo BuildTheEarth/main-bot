@@ -33,8 +33,7 @@ export default new Command({
         const firstArg = args.consume("time")
         const slowmode = Math.round(Number(firstArg))
         const channel =
-            (await args.consumeChannel("channel")) ||
-            (message.channel as TextChannel)
+            (await args.consumeChannel("channel")) || (message.channel as TextChannel)
         if (isNaN(slowmode)) {
             const current = (channel as TextChannel).rateLimitPerUser
             const s = current === 1 ? "" : "s"

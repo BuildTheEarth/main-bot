@@ -4,7 +4,7 @@ import Command from "../struct/Command.js"
 import Guild from "../struct/discord/BotGuild.js"
 
 import ApiTypes = require("discord-api-types/v10")
-import {TextChannel, PermissionFlagsBits} from "discord.js"
+import { TextChannel, PermissionFlagsBits } from "discord.js"
 import CommandMessage from "../struct/CommandMessage.js"
 
 export default new Command({

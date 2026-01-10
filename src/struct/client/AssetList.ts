@@ -8,8 +8,7 @@ import { Collection } from "discord.js"
 // eslint-disable-next-line @typescript-eslint/ban-types
 export default class AssetList {
     client: BotClient
-    collection: Collection<string, { [key: string]: any }> =
-        new Collection()
+    collection: Collection<string, { [key: string]: any }> = new Collection()
     constructor(client: BotClient) {
         this.client = client
     }

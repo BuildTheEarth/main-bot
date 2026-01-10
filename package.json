@@ -7,6 +7,7 @@
         "@buildtheearth/bot-logger": "1.0.3",
         "@buildtheearth/bot-utils": "^1.2.0",
         "@discordjs/builders": "^1.5.0",
+        "@discordjs/core": "^2.4.0",
         "@nestjs/common": "10.2.10",
         "@nestjs/core": "10.2.10",
         "@nestjs/platform-express": "^10.2.10",

@@ -1,6 +1,11 @@
 // TODO: stop using repositories whenever TypeORM adds And() and Or() operators...
 import Includes from "../entities/operators/Includes.operator.js"
-import { escapeMarkdown, SendableChannels, TextBasedChannel, TextChannel } from "discord.js"
+import {
+    escapeMarkdown,
+    SendableChannels,
+    TextBasedChannel,
+    TextChannel
+} from "discord.js"
 import BotClient from "../struct/BotClient.js"
 import Args from "../struct/Args.js"
 import Command from "../struct/Command.js"
@@ -186,8 +191,7 @@ export default new Command({
             await message.continue()
 
             const channel =
-                ((await args.consumeChannel("channel")) as SendableChannels) ||
-                message
+                ((await args.consumeChannel("channel")) as SendableChannels) || message
             const tasks = await Task.find({
                 where: {
                     assignees: Includes(message.member.id),

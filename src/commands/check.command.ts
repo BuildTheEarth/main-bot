@@ -1,4 +1,4 @@
-import {APIEmbed} from "discord.js"
+import { APIEmbed } from "discord.js"
 import BotClient from "../struct/BotClient.js"
 import Args from "../struct/Args.js"
 import Command from "../struct/Command.js"

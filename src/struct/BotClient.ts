@@ -1,5 +1,13 @@
 import typeorm, { Migration } from "typeorm"
-import { APIEmbed, Client, Collection, GuildManager, Message, TextChannel, User } from "discord.js"
+import {
+    APIEmbed,
+    Client,
+    Collection,
+    GuildManager,
+    Message,
+    TextChannel,
+    User
+} from "discord.js"
 import EventList from "./client/EventList.js"
 import CommandList from "./client/CommandList.js"
 import ConfigManager from "./client/ConfigManager.js"

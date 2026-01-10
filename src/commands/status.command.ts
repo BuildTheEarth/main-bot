@@ -8,7 +8,6 @@ import WebSocket from "ws"
 import _ from "lodash"
 import { APIEmbed, escapeMarkdown } from "discord.js"
 
-
 export default new Command({
     name: "status",
     aliases: ["online", "network"],
@@ -19,27 +18,24 @@ export default new Command({
     async run(this: Command, client: BotClient, message: CommandMessage) {
         await message.continue()
 
-        const ws = new WebSocket(client.config.wmSocket);
+        const ws = new WebSocket(client.config.wmSocket)
 
-        ws.on('error', async () => {
+        ws.on("error", async () => {
             return await message.sendErrorMessageSeen("networkOffline")
-        });
+        })
 
-        ws.on('open', function open() {
+        ws.on("open", function open() {
             const request = {
-                "salt": "ABCDE",
-                "id": "BOT",
-                "type": "all_players",
-                "data": {
-
-                }
+                salt: "ABCDE",
+                id: "BOT",
+                type: "all_players",
+                data: {}
             }
 
             ws.send(JSON.stringify(request))
-        });
+        })
 
-        ws.on('message', async (data: string) => {
-    
+        ws.on("message", async (data: string) => {
             const jsonParsed = JSON.parse(data)
 
             const trueData: any[] = jsonParsed["data"]["response_data"]
@@ -54,46 +50,72 @@ export default new Command({
                     color: hexToNum(client.config.colors.success)
                 }
 
-                return await message.send({embeds: [embed]})
+                return await message.send({ embeds: [embed] })
             }
 
             const playersPerServer = new Map<string, string[]>()
 
-            trueData.forEach((player: {Attributes: {LAST_SERVER: string}, Name: string, DiscordID?: string}) => {
-                if (playersPerServer.has(player.Attributes.LAST_SERVER)) {
-                    playersPerServer.get(player.Attributes.LAST_SERVER)?.push(player.Name + (player["DiscordID"] ? ` (<@${player.DiscordID}>)` : "") )
-                } else {
-                    playersPerServer.set(player.Attributes.LAST_SERVER, [player.Name + (player["DiscordID"] ? ` (<@${player.DiscordID}>)` : "")])
+            trueData.forEach(
+                (player: {
+                    Attributes: { LAST_SERVER: string }
+                    Name: string
+                    DiscordID?: string
+                }) => {
+                    if (playersPerServer.has(player.Attributes.LAST_SERVER)) {
+                        playersPerServer
+                            .get(player.Attributes.LAST_SERVER)
+                            ?.push(
+                                player.Name +
+                                    (player["DiscordID"]
+                                        ? ` (<@${player.DiscordID}>)`
+                                        : "")
+                            )
+                    } else {
+                        playersPerServer.set(player.Attributes.LAST_SERVER, [
+                            player.Name +
+                                (player["DiscordID"] ? ` (<@${player.DiscordID}>)` : "")
+                        ])
+                    }
                 }
-            })
+            )
 
-            let charCount = 0;
+            let charCount = 0
 
-            let numbersOnly = false;
+            let numbersOnly = false
 
-            let embedFields: {name: string, value: string}[] = Array.from(playersPerServer.entries()).map((entry: [string, string[]]) => {
+            let embedFields: { name: string; value: string }[] = Array.from(
+                playersPerServer.entries()
+            ).map((entry: [string, string[]]) => {
                 if (!entry || !entry[1] || !entry[0]) {
-                    return {name: entry[0] || "No Server", value: "**Nobody online**"}
+                    return { name: entry[0] || "No Server", value: "**Nobody online**" }
                 }
 
-                let localCharCount =  _.sum(entry[1].map((e) => " - " + escapeMarkdown(e).length + "\n"))
+                let localCharCount = _.sum(
+                    entry[1].map(e => " - " + escapeMarkdown(e).length + "\n")
+                )
                 charCount += entry[0].length + 3 + localCharCount
                 if (localCharCount > 1024) numbersOnly = true
 
-                return {name: entry[0], value: entry[1].map((e) => "- " + escapeMarkdown(e)).join("\n")}
+                return {
+                    name: entry[0],
+                    value: entry[1].map(e => "- " + escapeMarkdown(e)).join("\n")
+                }
             })
 
             if (charCount > 5800 || numbersOnly) {
-                embedFields = Array.from(playersPerServer.entries()).map((entry: [string, string[]]) => {
-                    if (!entry || !entry[1] || !entry[0]) {
-                        return {name: entry[0] || "No Server", value: "**Nobody online**"}
+                embedFields = Array.from(playersPerServer.entries()).map(
+                    (entry: [string, string[]]) => {
+                        if (!entry || !entry[1] || !entry[0]) {
+                            return {
+                                name: entry[0] || "No Server",
+                                value: "**Nobody online**"
+                            }
+                        }
+
+                        return { name: entry[0], value: entry[1].length + " members" }
                     }
-    
-                    return {name: entry[0], value: entry[1].length + " members"}
-                })
+                )
             }
-
-
 
             const embed = <APIEmbed>{
                 description: message.getMessage("networkOnline"),
@@ -102,8 +124,7 @@ export default new Command({
                 color: hexToNum(client.config.colors.success)
             }
 
-            return await message.send({embeds: [embed]})
-        });
-        
+            return await message.send({ embeds: [embed] })
+        })
     }
 })

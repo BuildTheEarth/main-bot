@@ -22,15 +22,13 @@ export default new Command({
     ],
     async run(this: Command, client: BotClient, message: CommandMessage, args: Args) {
         const channel =
-            (await args.consumeChannel("channel")) ||
-            (message.channel as TextChannel)
+            (await args.consumeChannel("channel")) || (message.channel as TextChannel)
         /*eslint-disable */
         const reason = `By ${message.member.user.tag} (${message.member.id})`
         /*eslint-enable */
-        await (channel as TextChannel).permissionOverwrites.edit(
-            message.guild.id,
-            { SendMessages: null }
-        ) // There is no non-hacky reason support here now
+        await (channel as TextChannel).permissionOverwrites.edit(message.guild.id, {
+            SendMessages: null
+        }) // There is no non-hacky reason support here now
 
         await message.sendSuccessMessage("unlockedChannel", channel)
         await client.log({

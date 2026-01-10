@@ -78,7 +78,10 @@ export default class ModpackImage extends typeorm.BaseEntity {
 
         const response: Response = await fetch(this.API_URL, {
             method: "POST",
-            headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
+            headers: {
+                "Authorization": `Bearer ${token}`,
+                "Content-Type": "application/json"
+            },
             //Using json as I doubt the api supports JSON5 *yet*
             body: JSON.stringify(object)
         })

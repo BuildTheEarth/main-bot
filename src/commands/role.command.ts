@@ -241,9 +241,7 @@ export default new Command({
             }
 
             const buf = Buffer.from(JSON.stringify(roleData, null, 4))
-            const file = new AttachmentBuilder(buf)
-                .setFile(buf)
-                .setName("roleData.json")
+            const file = new AttachmentBuilder(buf).setFile(buf).setName("roleData.json")
             await message.send({ files: [file] })
         }
     }

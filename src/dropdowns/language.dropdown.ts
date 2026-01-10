@@ -39,5 +39,8 @@ export default async function languageDropdown(
         if (!currRoles.includes(role)) await member.roles.add(role)
     }
 
-    return await interaction.reply({ content: "Roles have been given!", flags: MessageFlags.Ephemeral })
+    return await interaction.reply({
+        content: "Roles have been given!",
+        flags: MessageFlags.Ephemeral
+    })
 }

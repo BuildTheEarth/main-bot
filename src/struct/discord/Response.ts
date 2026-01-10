@@ -1,7 +1,17 @@
 import { hexToNum } from "@buildtheearth/bot-utils"
 import BotClient from "../BotClient.js"
 import CommandMessage from "../CommandMessage.js"
-import { ModalSubmitInteraction, APIEmbed, InteractionResponse, ButtonInteraction, TextBasedChannel, Message, PartialGroupDMMessageManager, PartialGroupDMChannel, MessageFlags } from "discord.js"
+import {
+    ModalSubmitInteraction,
+    APIEmbed,
+    InteractionResponse,
+    ButtonInteraction,
+    TextBasedChannel,
+    Message,
+    PartialGroupDMMessageManager,
+    PartialGroupDMChannel,
+    MessageFlags
+} from "discord.js"
 
 export default class Response {
     client: BotClient
@@ -49,12 +59,7 @@ export default class Response {
             | ButtonInteraction,
         embed: string | APIEmbed,
         ephemeral: boolean = true
-    ): Promise<
-        | CommandMessage
-        | Message
-        | ModalSubmitInteraction
-        | InteractionResponse
-    > {
+    ): Promise<CommandMessage | Message | ModalSubmitInteraction | InteractionResponse> {
         if (typeof embed === "string") embed = { description: embed }
         embed.color = hexToNum(this.client.config.colors.error)
         if (message instanceof CommandMessage)
@@ -65,11 +70,17 @@ export default class Response {
                 allowedMentions: { repliedUser: false }
             })
         else if (message instanceof ModalSubmitInteraction)
-            return message.reply({ embeds: [embed], flags: ephemeral ? MessageFlags.Ephemeral : undefined })
+            return message.reply({
+                embeds: [embed],
+                flags: ephemeral ? MessageFlags.Ephemeral : undefined
+            })
         else if (message instanceof ButtonInteraction)
-            return message.reply({ embeds: [embed], flags: ephemeral ? MessageFlags.Ephemeral : undefined })
+            return message.reply({
+                embeds: [embed],
+                flags: ephemeral ? MessageFlags.Ephemeral : undefined
+            })
         else if (message.isSendable()) return message.send({ embeds: [embed] })
-        
+
         return (await message.fetchOwner()).send({ embeds: [embed] })
     }
 
@@ -120,18 +131,21 @@ export default class Response {
         else if (message instanceof Message)
             return message.reply({
                 embeds: [embed],
-                allowedMentions: { repliedUser: false, parse: ['users'] }
+                allowedMentions: { repliedUser: false, parse: ["users"] }
             })
         else if (message instanceof ModalSubmitInteraction)
             return message.reply({
                 embeds: [embed],
                 flags: ephemeral ? MessageFlags.Ephemeral : undefined,
-                allowedMentions: { repliedUser: false, parse: ['users'] }
+                allowedMentions: { repliedUser: false, parse: ["users"] }
             })
         else if (message instanceof ButtonInteraction)
-            return message.reply({ embeds: [embed], flags: ephemeral ? MessageFlags.Ephemeral : undefined })
+            return message.reply({
+                embeds: [embed],
+                flags: ephemeral ? MessageFlags.Ephemeral : undefined
+            })
         else if (message.isSendable()) return message.send({ embeds: [embed] })
-        
+
         return (await message.fetchOwner()).send({ embeds: [embed] })
     }
 }

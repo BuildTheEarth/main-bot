@@ -4,7 +4,13 @@ import SnowflakeColumn from "./decorators/SnowflakeColumn.decorator.js"
 import TeamPointsUser from "./TeamPointsUser.entity.js"
 import unicode from "./transformers/unicode.transformer.js"
 import Sentiment = require("sentiment")
-import { ChannelType, EmbedBuilder, GuildTextBasedChannel, SendableChannelTypes, TextBasedChannel } from "discord.js"
+import {
+    ChannelType,
+    EmbedBuilder,
+    GuildTextBasedChannel,
+    SendableChannelTypes,
+    TextBasedChannel
+} from "discord.js"
 
 @typeorm.Entity({ name: "teampoints_log" })
 export default class TeamPointsLog extends typeorm.BaseEntity {

@@ -44,11 +44,7 @@ export default new Command({
             if (!BotGuildMember.hasRole(member, command.permission, client))
                 return message.sendErrorMessage("noPerms")
 
-            const embed = getHelpMessage(
-                command,
-                message.isSlashCommand(),
-                client
-            )
+            const embed = getHelpMessage(command, message.isSlashCommand(), client)
 
             return message.sendSuccess(embed)
         }

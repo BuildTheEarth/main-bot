@@ -125,10 +125,9 @@ export default class ModerationMenu extends typeorm.BaseEntity {
                     { name: "Reason", value: existingMenu.punishments[0].reason },
                     {
                         name: "Trigger",
-                        value: escapeMarkdown(
-                            existingMenu.punishments[0].word ?? "",
-                            { maskedLink: true }
-                        )
+                        value: escapeMarkdown(existingMenu.punishments[0].word ?? "", {
+                            maskedLink: true
+                        })
                     }
                 ])
                 .setColor(hexToRGB(client.config.colors.error))

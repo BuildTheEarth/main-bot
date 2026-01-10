@@ -55,7 +55,7 @@ export default new Command({
         const user = await args.consumeUser("member")
         if (!user)
             return message.sendErrorMessage(user === undefined ? "noUser" : "invalidUser")
-        
+
         const member: GuildMember | null = await (
             await client.customGuilds.main()
         ).members

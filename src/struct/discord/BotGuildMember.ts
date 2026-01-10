@@ -29,10 +29,7 @@ export default class BotGuildMember {
         return false
     }
 
-    static async mute(
-        user: GuildMember,
-        reason: string
-    ): Promise<GuildMember> {
+    static async mute(user: GuildMember, reason: string): Promise<GuildMember> {
         await user.roles
             .add(BotGuild.role(user.guild, globalThis.client.roles.MUTED), reason)
             .catch(error => console.log(error))
@@ -103,10 +100,7 @@ export default class BotGuildMember {
         }
     }
 
-    static async unmute(
-        user: GuildMember,
-        reason: string
-    ): Promise<GuildMember> {
+    static async unmute(user: GuildMember, reason: string): Promise<GuildMember> {
         await user.roles.remove(
             BotGuild.role(user.guild, globalThis.client.roles.MUTED),
             reason

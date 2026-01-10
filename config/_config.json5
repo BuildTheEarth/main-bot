@@ -90,6 +90,7 @@
         }
     },
     token: "",
+    clientSecret: "",
     modpackAuth: "",
     interKey: "",
     wmSocket: "",

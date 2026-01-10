@@ -28,7 +28,6 @@ export default function getHelpMessage(
     return { description: text }
 }
 
-
 function argsToStrCommand(command: Command, slashcommand: boolean): string {
     let trueSeperator = " "
     if (!slashcommand && command.seperator) trueSeperator = command.seperator
@@ -175,7 +174,6 @@ function argsToStrSubCommand(
     return args
 }
 
-
 //impl of python rstrip cause there dosent seem to be any good alternative in js, yes I did steal this from stackoveflow and modify it so TS dosent yell at me
 function rstrip(str: string, characters: string) {
     let end = str.length - 1
@@ -184,4 +182,3 @@ function rstrip(str: string, characters: string) {
     }
     return str.substr(0, end + 1)
 }
-

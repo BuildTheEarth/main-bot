@@ -112,7 +112,10 @@ export default async function (this: BotClient, message: Message): Promise<unkno
                 return
             }
 
-            if (message.channel.isSendable()) await message.channel.send({content: snippet.body, allowedMentions: {parse: []}}).catch(() => null)
+            if (message.channel.isSendable())
+                await message.channel
+                    .send({ content: snippet.body, allowedMentions: { parse: [] } })
+                    .catch(() => null)
 
             return
         }
@@ -148,7 +151,10 @@ export default async function (this: BotClient, message: Message): Promise<unkno
         return
     }
 
-    if (message.content.toLowerCase() === "donde es server" && message.channel.isSendable())
+    if (
+        message.content.toLowerCase() === "donde es server" &&
+        message.channel.isSendable()
+    )
         return await message.channel.send("hay un server!")
     if (message.content) {
         const bannedWords = this.filter.findBannedWord(message.content)

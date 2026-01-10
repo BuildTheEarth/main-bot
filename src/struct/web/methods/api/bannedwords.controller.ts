@@ -4,10 +4,7 @@ import { Response, Request } from "express"
 @Controller("/api/v1/bannedwords")
 export default class BannedWordsController {
     @Get()
-    async getBannedWords(
-        @Req() req: Request,
-        @Res() res: Response,
-    ): Promise<unknown> {
+    async getBannedWords(@Req() req: Request, @Res() res: Response): Promise<unknown> {
         res.type("application/json")
 
         const bannedWords = globalThis.client.filterWordsCached.banned
@@ -17,7 +14,7 @@ export default class BannedWordsController {
             banned: bannedWords,
             exceptions: exceptions
         }
-        
+
         res.send(formattedReturns)
 
         return

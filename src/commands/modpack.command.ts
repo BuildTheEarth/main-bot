@@ -132,7 +132,7 @@ export default new Command({
             if (!isImage) return message.sendErrorMessage("pleaseImage")
 
             const dimensions = sizeOf(buff)
-            if ((dimensions.width / dimensions.height !== 16 / 9) && key !== "logo")
+            if (dimensions.width / dimensions.height !== 16 / 9 && key !== "logo")
                 return message.sendErrorMessage("not16To9")
 
             const image = new ModpackImage()

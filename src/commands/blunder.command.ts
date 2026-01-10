@@ -7,14 +7,18 @@ import GuildMember from "../struct/discord/BotGuildMember.js"
 
 import BlunderTracker from "../entities/BlunderTracker.entity.js"
 import ApiTypes = require("discord-api-types/v10")
-import {ChannelType, GuildTextBasedChannel } from "discord.js"
+import { ChannelType, GuildTextBasedChannel } from "discord.js"
 import typeorm from "typeorm"
 
 export default new Command({
     name: "blunder",
     aliases: [],
     description: "Count the low amount of days since the staff team last made a blunder",
-    permission: [globalThis.client.roles.STAFF, globalThis.client.roles.BUILD_TEAM_STAFF, globalThis.client.roles.TEAM_OWNER_STAFF],
+    permission: [
+        globalThis.client.roles.STAFF,
+        globalThis.client.roles.BUILD_TEAM_STAFF,
+        globalThis.client.roles.TEAM_OWNER_STAFF
+    ],
     subcommands: [
         {
             name: "commit",
@@ -87,15 +91,15 @@ export default new Command({
 
         const canManage = message.member
             ? GuildMember.hasRole(
-                staffMember,
-                //Broadly widening permissions for blunder command
-                [
-                    globalThis.client.roles.STAFF,
-                    globalThis.client.roles.BUILD_TEAM_STAFF,
-                    globalThis.client.roles.TEAM_OWNER_STAFF
-                ],
-                client
-            )
+                  staffMember,
+                  //Broadly widening permissions for blunder command
+                  [
+                      globalThis.client.roles.STAFF,
+                      globalThis.client.roles.BUILD_TEAM_STAFF,
+                      globalThis.client.roles.TEAM_OWNER_STAFF
+                  ],
+                  client
+              )
             : false
 
         if (subcommand == "commit") {
@@ -105,9 +109,12 @@ export default new Command({
 
             if (id) {
                 blunder = await BlunderTracker.findOne(id)
-                if (!blunder)
-                    return message.sendErrorMessage("invalidBlunderID")
-                if (blunder.role && !staffMember.roles.cache.has(blunder.role) && !canManage)
+                if (!blunder) return message.sendErrorMessage("invalidBlunderID")
+                if (
+                    blunder.role &&
+                    !staffMember.roles.cache.has(blunder.role) &&
+                    !canManage
+                )
                     return message.sendErrorMessage("noPerms")
             } else {
                 const rolesDescending = staffMember.roles.cache.sort(
@@ -152,12 +159,12 @@ export default new Command({
             blunder.channel = channel.id
             blunder.description = description
 
-            const msg = await channel.send(
-                {
-                    content: `\`unknown\` days since ${blunder.role ? (await blunder.roleToTeam(client)) + " " : ""
-                        }${blunder.description}`, allowedMentions: { parse: [] }
-                }
-            )
+            const msg = await channel.send({
+                content: `\`unknown\` days since ${
+                    blunder.role ? (await blunder.roleToTeam(client)) + " " : ""
+                }${blunder.description}`,
+                allowedMentions: { parse: [] }
+            })
             blunder.message = msg.id
             await blunder.save()
             await message.sendSuccessMessage("blunderTrackerCreated")
@@ -199,8 +206,10 @@ export default new Command({
                     blunders
                         .map(
                             blunder =>
-                                `[**${blunder.id}:**](https://discord.com/channels/${staffMember.guild.id
-                                }/${blunder.channel}/${blunder.message}) days since ${blunder.role ? `<@&${blunder.role}> ` : ""
+                                `[**${blunder.id}:**](https://discord.com/channels/${
+                                    staffMember.guild.id
+                                }/${blunder.channel}/${blunder.message}) days since ${
+                                    blunder.role ? `<@&${blunder.role}> ` : ""
                                 }${blunder.description}`
                         )
                         .join("\n") || "None :(",

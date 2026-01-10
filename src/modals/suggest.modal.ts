@@ -1,7 +1,11 @@
 import Suggestion from "../entities/Suggestion.entity.js"
 import { truncateString } from "@buildtheearth/bot-utils"
 import { isSuggestInfo } from "../typings/InteractionInfo.js"
-import { ModalSubmitInteraction, TextChannel, ThreadAutoArchiveDuration } from "discord.js"
+import {
+    ModalSubmitInteraction,
+    TextChannel,
+    ThreadAutoArchiveDuration
+} from "discord.js"
 import BotClient from "../struct/BotClient.js"
 
 export default async function createSuggestion(
@@ -64,9 +68,7 @@ export default async function createSuggestion(
 
         const category = staff ? "staff" : "main"
         const suggestionsID = client.config.suggestions[category]
-        const suggestions = client.channels.cache.get(
-            suggestionsID
-        ) as TextChannel
+        const suggestions = client.channels.cache.get(suggestionsID) as TextChannel
 
         const embed = await suggestion.displayEmbed(client)
         const suggestionMessage = await suggestions.send({ embeds: [embed] })

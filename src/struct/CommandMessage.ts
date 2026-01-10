@@ -4,7 +4,29 @@ import { vsprintf } from "sprintf-js"
 import _ from "lodash"
 import { noop } from "@buildtheearth/bot-utils"
 import replaceTypes from "../util/replaceTypes.util.js"
-import { ActionRowData, APIEmbed, Attachment, AttachmentBuilder, BufferResolvable, ButtonInteraction, ChatInputCommandInteraction, CommandInteraction, Guild, GuildMember, InteractionEditReplyOptions, InteractionReplyOptions, Message, MessageComponent, MessageFlags, MessageMentionOptions, ModalActionRowComponentData, ModalBuilder, Snowflake, TextBasedChannel, User } from "discord.js"
+import {
+    ActionRowData,
+    APIEmbed,
+    Attachment,
+    AttachmentBuilder,
+    BufferResolvable,
+    ButtonInteraction,
+    ChatInputCommandInteraction,
+    CommandInteraction,
+    Guild,
+    GuildMember,
+    InteractionEditReplyOptions,
+    InteractionReplyOptions,
+    Message,
+    MessageComponent,
+    MessageFlags,
+    MessageMentionOptions,
+    ModalActionRowComponentData,
+    ModalBuilder,
+    Snowflake,
+    TextBasedChannel,
+    User
+} from "discord.js"
 
 export default class CommandMessage {
     message: ChatInputCommandInteraction
@@ -183,8 +205,7 @@ export default class CommandMessage {
             new ModalBuilder(
                 replaceTypes(
                     modal as {
-                        components:
-                            | ActionRowData<ModalActionRowComponentData>[]
+                        components: ActionRowData<ModalActionRowComponentData>[]
                         customId: string
                         title: string
                     }

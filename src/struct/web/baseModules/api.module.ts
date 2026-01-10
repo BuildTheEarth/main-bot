@@ -9,6 +9,7 @@ import MetricsController from "../methods/api/metrics.controller.js"
 import LookupController from "../methods/api/lookup.controller.js"
 import BannedWordsController from "../methods/api/bannedwords.controller.js"
 import PlaceholderController from "../methods/api/placeholders.controller.js"
+import OAuthController from "../methods/api/oauth.controller.js"
 
 @Module({
     imports: [],
@@ -22,7 +23,8 @@ import PlaceholderController from "../methods/api/placeholders.controller.js"
         MetricsController,
         LookupController,
         BannedWordsController,
-        PlaceholderController
+        PlaceholderController,
+        OAuthController
     ],
     providers: []
 })
