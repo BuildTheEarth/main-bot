@@ -5,7 +5,6 @@ import { loadSyncJSON5, noop } from "@buildtheearth/bot-utils"
 import path from "path"
 import url from "url"
 import fs from "fs"
-import { loadRoles } from "../../../util/roles.util.js"
 
 @Controller("/api/v1/role")
 export default class RoleController {
@@ -137,8 +136,8 @@ export default class RoleController {
             })
         }
 
-        // Load role mappings from the existing role system
-        const roleMappings = loadRoles(globalThis.client)
+        // Use role mappings already loaded in the client
+        const roleMappings = globalThis.client.roles
 
         // Fetch the user from both guilds
         const mainGuild = globalThis.client.customGuilds.main()
@@ -179,7 +178,8 @@ export default class RoleController {
         }
 
         for (const roleKey of roles) {
-            // Get role IDs for this key from the role mappings
+            // Get role IDs for this key from the role mappings already loaded in client
+            // The client.roles contains an array of role IDs for each key
             const roleIds = roleMappings[roleKey]
             
             if (!roleIds || roleIds.length === 0) {
@@ -195,7 +195,7 @@ export default class RoleController {
                 continue
             }
 
-            // The loadRoles function returns an array of role IDs
+            // client.roles contains an array of role IDs for each key
             // We need to determine which role ID belongs to which guild
             for (const roleId of roleIds) {
                 // Check if this role exists in main guild
