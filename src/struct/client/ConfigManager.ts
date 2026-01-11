@@ -37,6 +37,7 @@ export type ImagesConfig = {
     bindPort: number
     bindAddress: string
     apiUrl: string
+    baseUrl: string
 }
 
 export default class ConfigManager {

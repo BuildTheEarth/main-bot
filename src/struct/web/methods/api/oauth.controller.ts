@@ -16,7 +16,7 @@ export default class OAuthController {
         const token = await oauth.tokenExchange({
             grant_type: "authorization_code",
             code: req.query.code as string,
-            redirect_uri: `${req.protocol}://${req.get("host")}/oauth`,
+            redirect_uri: `${globalThis.client.config.images.baseUrl}/oauth`,
             client_id: globalThis.client.user!.id as Snowflake,
             client_secret: globalThis.client.config.clientSecret
         })
