@@ -1,15 +1,17 @@
-import { OAuth2API } from "@discordjs/core";
-import { Controller, Get, Param, Req, Res} from "@nestjs/common";
-import { REST, Snowflake } from "discord.js";
+import { OAuth2API } from "@discordjs/core"
+import { Controller, Get, Param, Req, Res } from "@nestjs/common"
+import { REST, Snowflake } from "discord.js"
 import { Response, Request } from "express"
-import OAuthToken from "../../../../entities/OAuthToken.entity.js";
-
+import OAuthToken from "../../../../entities/OAuthToken.entity.js"
 
 @Controller("/oauth")
 export default class OAuthController {
     @Get()
-    async oauth(@Req() req: Request, @Res() res: Response, @Param("code") code: string): Promise<void> {
-
+    async oauth(
+        @Req() req: Request,
+        @Res() res: Response,
+        @Param("code") code: string
+    ): Promise<void> {
         const oauth = new OAuth2API(new REST({ version: "10" }))
         const token = await oauth.tokenExchange({
             grant_type: "authorization_code",
@@ -20,16 +22,17 @@ export default class OAuthController {
         })
 
         res.type("application/json")
-        
-        if (token.scope.includes("applications.commands.permissions.update")) 
-        {
+
+        if (token.scope.includes("applications.commands.permissions.update")) {
             //store
             await OAuthToken.setToken(token.access_token, token.refresh_token)
-            res.send({ "message": "Thank you for authorizing! Successfully authenticated." })
+            res.send({
+                message: "Thank you for authorizing! Successfully authenticated."
+            })
+        } else {
+            res.status(403).send({
+                message: "You must have the required permissions to use this application."
+            })
         }
-        else {
-            res.status(403).send({ "message": "You must have the required permissions to use this application." })
-        }
-        
     }
 }

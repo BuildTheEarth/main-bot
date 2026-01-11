@@ -1,6 +1,6 @@
 import typeorm from "typeorm"
 import SnowflakeColumn from "./decorators/SnowflakeColumn.decorator.js"
-import { APIEmbed, Guild, User } from "discord.js"
+import { APIEmbed } from "discord.js"
 import BotClient from "../struct/BotClient.js"
 import TimedPunishment from "./TimedPunishment.entity.js"
 import milliseconds from "./transformers/milliseconds.transformer.js"

@@ -1,8 +1,6 @@
 import BotClient from "../struct/BotClient.js"
 import Command from "../struct/Command.js"
-import { hexToNum, hexToRGB, noop } from "@buildtheearth/bot-utils"
-import fetch from "node-fetch"
-import MinecraftServerStatus from "../typings/MinecraftServerStatus.js"
+import { hexToNum } from "@buildtheearth/bot-utils"
 import CommandMessage from "../struct/CommandMessage.js"
 import WebSocket from "ws"
 import _ from "lodash"
@@ -90,7 +88,7 @@ export default new Command({
                     return { name: entry[0] || "No Server", value: "**Nobody online**" }
                 }
 
-                let localCharCount = _.sum(
+                const localCharCount = _.sum(
                     entry[1].map(e => " - " + escapeMarkdown(e).length + "\n")
                 )
                 charCount += entry[0].length + 3 + localCharCount

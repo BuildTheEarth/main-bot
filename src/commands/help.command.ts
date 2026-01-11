@@ -4,7 +4,6 @@ import Command from "../struct/Command.js"
 import BotGuildMember from "../struct/discord/BotGuildMember.js"
 
 import CommandMessage from "../struct/CommandMessage.js"
-import CommandUtils from "../util/commandUtils.util.js"
 import { truncateString } from "@buildtheearth/bot-utils"
 import getHelpMessage from "../util/helpCommandUtils.util.js"
 import { ChannelType, GuildMember } from "discord.js"

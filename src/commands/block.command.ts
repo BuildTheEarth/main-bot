@@ -2,9 +2,6 @@ import BotClient from "../struct/BotClient.js"
 import Command from "../struct/Command.js"
 import Args from "../struct/Args.js"
 import CommandMessage from "../struct/CommandMessage.js"
-import { hexToNum, hexToRGB } from "@buildtheearth/bot-utils"
-import { createCommonJS } from "mlly"
-const { __dirname, __filename, require } = createCommonJS(import.meta.url)
 //@ts-ignore I'm sorry but sharp imports are just broken for typings :sob:
 import sharp from "sharp"
 import fetch from "node-fetch"

@@ -8,10 +8,10 @@ import Cron from "croner"
 export default class OAuthToken extends typeorm.BaseEntity {
     @typeorm.PrimaryGeneratedColumn()
     id!: number
-    
+
     @typeorm.Column({ length: 255 })
     bearerToken!: string
-    
+
     @typeorm.Column({ length: 255 })
     refreshToken!: string
 
@@ -33,7 +33,7 @@ export default class OAuthToken extends typeorm.BaseEntity {
 
     public static async initToken(client: BotClient): Promise<void> {
         const existing = await OAuthToken.findOne()
-        
+
         if (existing) {
             const token = await this.refreshToken(client)
 
@@ -50,11 +50,11 @@ export default class OAuthToken extends typeorm.BaseEntity {
         if (existing) {
             const oauth = new OAuth2API(new REST({ version: "10" }))
             try {
-            const result = await oauth.refreshToken({
-                grant_type: "refresh_token",
-                refresh_token: existing.refreshToken,
-                client_id: client.user!.id as Snowflake,
-                client_secret: client.config.clientSecret
+                const result = await oauth.refreshToken({
+                    grant_type: "refresh_token",
+                    refresh_token: existing.refreshToken,
+                    client_id: client.user!.id as Snowflake,
+                    client_secret: client.config.clientSecret
                 })
 
                 await OAuthToken.setToken(result.access_token, result.refresh_token)
@@ -71,14 +71,17 @@ export default class OAuthToken extends typeorm.BaseEntity {
 
     public static async getToken(): Promise<string | null> {
         const existing = await OAuthToken.findOne()
-        
+
         if (existing) {
             return existing.bearerToken
-        }   
+        }
         return null
     }
 
-    public static async generateOauthURL(client: BotClient, redirectUri: string): Promise<string> {
+    public static async generateOauthURL(
+        client: BotClient,
+        redirectUri: string
+    ): Promise<string> {
         const oauth = new OAuth2API(new REST({ version: "10" }))
         const url = oauth.generateAuthorizationURL({
             client_id: client.user!.id as Snowflake,

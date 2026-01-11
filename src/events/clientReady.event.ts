@@ -19,7 +19,7 @@ export default async function clientReady(this: BotClient): Promise<void> {
     this.logger.debug("Handling oauth token...")
     await OAuthToken.initToken(this)
     this.logger.info("Handled oauth token.")
-    
+
     this.logger.debug("Loading commands...")
     await this.customCommands.load()
     this.logger.info("Loaded commands.")

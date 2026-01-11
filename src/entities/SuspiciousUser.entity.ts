@@ -179,7 +179,7 @@ export default class SuspiciousUser extends typeorm.BaseEntity {
         //Doing some serious typing funnies here
         const options: Writeable<MessageCreateOptions> = {
             embeds: [embed],
-            components: Array()
+            components: []
         }
 
         if (!(this.approved || this.denied)) {

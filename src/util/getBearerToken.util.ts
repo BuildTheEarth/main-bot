@@ -1,7 +1,7 @@
 import BotClient from "../struct/BotClient.js"
 import { makeURLSearchParams, REST } from "@discordjs/rest"
 import { Routes } from "discord-api-types/v10"
-import {RESTPostOAuth2ClientCredentialsResult} from "@discordjs/core"
+import { RESTPostOAuth2ClientCredentialsResult } from "@discordjs/core"
 
 export default async function getBearerToken(client: BotClient): Promise<string | null> {
     const rest = new REST({ version: "10" })
@@ -14,18 +14,18 @@ export default async function getBearerToken(client: BotClient): Promise<string 
             }),
             passThroughBody: true,
             headers: {
-                Authorization: `Basic ${btoa(`${client.user!.id}:${client.config.clientSecret}`)}`,
+                "Authorization": `Basic ${btoa(
+                    `${client.user!.id}:${client.config.clientSecret}`
+                )}`,
                 "Content-Type": "application/x-www-form-urlencoded"
             },
             auth: false
         })) as RESTPostOAuth2ClientCredentialsResult
 
-        console.log (result)
+        console.log(result)
 
         return result.access_token
-    }
-
-    catch (error) {
+    } catch (error) {
         client.logger.error("Failed to get bearer token:", error)
         return null
     }

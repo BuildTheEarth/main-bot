@@ -113,7 +113,7 @@ export default class BlockPage {
     public static fromCustomId(client: BotClient, customID: string): BlockPage {
         const arr = customID.split("|")
 
-        let pendingAction = arr[7] as PendingBlockPageAction
+        const pendingAction = arr[7] as PendingBlockPageAction
 
         return new BlockPage(
             client,

@@ -1,16 +1,19 @@
-import { ApplicationCommand, ApplicationCommandPermissions, ApplicationCommandPermissionsUpdateData, ApplicationCommandPermissionType, Collection, EditApplicationCommandPermissionsMixin } from "discord.js"
+import {
+    ApplicationCommand,
+    ApplicationCommandPermissions,
+    ApplicationCommandPermissionsUpdateData,
+    ApplicationCommandPermissionType,
+    Collection,
+    EditApplicationCommandPermissionsMixin
+} from "discord.js"
 import Command from "../Command.js"
 import loadDir from "../../util/loadDir.util.js"
 import BotClient from "../BotClient.js"
-import CommandUtils from "../../util/commandUtils.util.js"
 import BotGuild from "../discord/BotGuild.js"
-
 import pathModule from "path"
 import url from "url"
 import TranslateUtils from "../../util/TranslateUtils.util.js"
 import commandToSlash from "../../util/commandUtils.util.js"
-import getBearerToken from "../../util/getBearerToken.util.js"
-import { OAuth2API } from "@discordjs/core"
 import OAuthToken from "../../entities/OAuthToken.entity.js"
 
 interface PermsObj {
@@ -34,6 +37,12 @@ export default class CommandList extends Collection<string, Command> {
         )
 
         const bearerToken = await OAuthToken.getToken()
+
+        if (bearerToken == null) {
+            this.client.logger?.warn(
+                "No OAuth token found, skipping command permission setup."
+            )
+        }
 
         //const oldCommands = await (await this.client.application.commands.fetch()).map((cmd) => cmd.name)
         const registerPermsMain: PermsObj = {}
@@ -61,7 +70,10 @@ export default class CommandList extends Collection<string, Command> {
                 if (await this.client.customGuilds.main())
                     roleMain = BotGuild.role(await this.client.customGuilds.main(), perm)
                 if (await this.client.customGuilds.staff())
-                    roleStaff = BotGuild.role(await this.client.customGuilds.staff(), perm)
+                    roleStaff = BotGuild.role(
+                        await this.client.customGuilds.staff(),
+                        perm
+                    )
                 if (roleMain && permsTemp[0] != globalThis.client.roles.ANY)
                     permsMain.push({
                         id: roleMain.id,
@@ -122,14 +134,16 @@ export default class CommandList extends Collection<string, Command> {
                 .commands.set(registerCommands)
             for (const cmd of commands.values())
                 if (registerPermsMain[cmd.name]) registerPermsMain[cmd.name].id = cmd.id
-            
+
             if (bearerToken != null) {
                 const permsToSet = Object.values(registerPermsMain)
                 console.log("yahoo")
                 // Run permission updates in background to avoid blocking the main flow
                 void (async () => {
                     try {
-                        this.client.logger?.info("Setting application command permissions (main)...")
+                        this.client.logger?.info(
+                            "Setting application command permissions (main)..."
+                        )
                         await Promise.all(
                             permsToSet.map(permission =>
                                 this.client.application?.commands.permissions.set({
@@ -140,14 +154,18 @@ export default class CommandList extends Collection<string, Command> {
                                 })
                             )
                         )
-                        this.client.logger?.info("Set application command permissions (main).")
+                        this.client.logger?.info(
+                            "Set application command permissions (main)."
+                        )
                     } catch (e: any) {
-                        this.client.logger?.error(`Failed to set application command permissions (main): ${e}`)
+                        this.client.logger?.error(
+                            `Failed to set application command permissions (main): ${e}`
+                        )
                     }
                 })()
             }
             //NOTE: Discord disabled the endpoint with 0 notice
-            //Yeah no discord messed up the endpoint, I don't want auth 
+            //Yeah no discord messed up the endpoint, I don't want auth
             //Maybe one day i'll do an oauth redirect flow but not today
         }
 
@@ -162,7 +180,9 @@ export default class CommandList extends Collection<string, Command> {
                 const permsToSetStaff = Object.values(registerPermsStaff)
                 void (async () => {
                     try {
-                        this.client.logger?.info("Setting application command permissions (staff)...")
+                        this.client.logger?.info(
+                            "Setting application command permissions (staff)..."
+                        )
                         await Promise.all(
                             permsToSetStaff.map(permission =>
                                 this.client.application?.commands.permissions.set({
@@ -173,9 +193,13 @@ export default class CommandList extends Collection<string, Command> {
                                 })
                             )
                         )
-                        this.client.logger?.info("Set application command permissions (staff).")
+                        this.client.logger?.info(
+                            "Set application command permissions (staff)."
+                        )
                     } catch (e: any) {
-                        this.client.logger?.error(`Failed to set application command permissions (staff): ${e}`)
+                        this.client.logger?.error(
+                            `Failed to set application command permissions (staff): ${e}`
+                        )
                     }
                 })()
             }
@@ -195,7 +219,7 @@ export default class CommandList extends Collection<string, Command> {
         const path = require.resolve(
             pathModule.join(
                 pathModule.dirname(url.fileURLToPath(import.meta.url)) +
-                `/../../commands/${name}.${globalThis.fileExtension}`
+                    `/../../commands/${name}.${globalThis.fileExtension}`
             )
         )
         const command = this.get(name)
@@ -293,7 +317,7 @@ export default class CommandList extends Collection<string, Command> {
 
         if (this.client.customGuilds.main()) {
             await Promise.all(
-                registerCommands.map(async (cmd) => {
+                registerCommands.map(async cmd => {
                     const commandRegistered: ApplicationCommand =
                         //@ts-ignore
                         await this.client.customGuilds.main().commands.create(cmd)
@@ -310,7 +334,7 @@ export default class CommandList extends Collection<string, Command> {
 
         if (this.client.customGuilds.staff()) {
             await Promise.all(
-                registerCommands.map(async (cmd) => {
+                registerCommands.map(async cmd => {
                     const commandRegistered: ApplicationCommand =
                         //@ts-ignore
                         await this.client.customGuilds.staff().commands.create(cmd)
