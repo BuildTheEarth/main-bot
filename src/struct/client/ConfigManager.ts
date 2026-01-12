@@ -68,6 +68,7 @@ export default class ConfigManager {
     suspiciousUsers!: string
     websiteToken!: string
     wmSocket!: string
+    oauthEnabled!: boolean
 
     constructor(client: BotClient) {
         this.client = client

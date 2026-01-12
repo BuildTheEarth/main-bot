@@ -302,5 +302,7 @@
     validUntilHonor: ["The honor is now valid until %1s"],
     howDidThisHappen: ["I have no clue how this happend, please talk to the Bot Developers immediately"],
     provideValidHexCode: ["Please provide a valid hex color code!"],
-    invalidImage: ["Please provide a valid image of type png, jpeg, jfif, or heic"]
+    invalidImage: ["Please provide a valid image of type png, jpeg, jfif, or heic"],
+    noOauthToken: ["No OAuth token found. Use the \`link\` subcommand to link an admin account."],
+    oauthTokenInfo: ["Token is valid and expires at %1s. The scopes granted are `%2s`."],
 }

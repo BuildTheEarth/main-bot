@@ -12,6 +12,14 @@ export default class OAuthController {
         @Res() res: Response,
         @Param("code") code: string
     ): Promise<void> {
+
+        if (!globalThis.client.config.oauthEnabled) {
+            res.status(503).send({
+                message: "OAuth is currently disabled."
+            })
+            return
+        }
+        
         const oauth = new OAuth2API(new REST({ version: "10" }))
         const token = await oauth.tokenExchange({
             grant_type: "authorization_code",

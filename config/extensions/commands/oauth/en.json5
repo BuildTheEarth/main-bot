@@ -1,0 +1,29 @@
+{
+    name: "oauth",
+    translated_name: "oauth",
+    aliases: [],
+    description: "Manage OAuth token.",
+    translated_description: "Manage OAuth token.",
+    subcommands: [
+        {
+            name: "status",
+            translated_name: "status",
+            description: "Get oauth status",
+            translated_description: "Get oauth status"
+        },
+        {
+            name: "link",
+            translated_name: "link",
+            description: "Get oauth link",
+            translated_description: "Get oauth link",
+            args: [
+                {
+                    name: "redirect_url",
+                    translated_name: "redirect_url",
+                    description: "Redirect URL to be used.",
+                    translated_description: "Redirect URL to be used."
+                },
+            ]
+        }
+    ],
+}

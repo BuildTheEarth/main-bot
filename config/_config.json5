@@ -102,5 +102,6 @@
         name: "",
         user: "",
         pass: ""
-    }
+    },
+    oauthEnabled: false,
 }
