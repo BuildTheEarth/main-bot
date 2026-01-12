@@ -16,6 +16,7 @@ const pseudoteamPositions: Record<string, Record<string, string>> = loadSyncJSON
             "../../../config/extensions/pseudoteamPositions.json5"
     )
 )
+
 const forbiddenRoles = loadSyncJSON5(
     path.join(
         path.dirname(url.fileURLToPath(import.meta.url)) +

@@ -336,7 +336,7 @@
         }
       }
     },
-    "/api/v1/role": {
+    "/api/v1/role/{id}": {
       "get": {
         "tags": [
           "website",
@@ -348,10 +348,9 @@
         "parameters": [
           {
             "name": "id",
-            "in": "query",
+            "in": "path",
             "description": "The Discord Snowflake User ID of target",
             "required": true,
-            "explode": true,
             "schema": {
               "type": "string",
               "example": "635411595253776385"
@@ -410,6 +409,207 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/notFoundError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "website"
+        ],
+        "summary": "Add or remove roles from a user",
+        "description": "Adds or removes roles from a Discord user in both main and staff servers. Uses role keys from the existing role mapping system that are validated against a whitelist.",
+        "operationId": "roleModify",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The Discord Snowflake User ID of target",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "635411595253776385"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Request Body",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["add", "roles"],
+                "properties": {
+                  "add": {
+                    "type": "boolean",
+                    "description": "True to add roles, false to remove roles",
+                    "example": true
+                  },
+                  "roles": {
+                    "type": "array",
+                    "description": "Array of role keys to add or remove (keys must be in the whitelist and exist in role mapping files for main/staff servers)",
+                    "items": {
+                      "type": "string",
+                      "example": "TEAM_OWNER"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Roles modified successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "userId": {
+                      "type": "string",
+                      "description": "User ID",
+                      "example": "635411595253776385"
+                    },
+                    "operation": {
+                      "type": "string",
+                      "description": "Operation performed",
+                      "example": "add"
+                    },
+                    "results": {
+                      "type": "object",
+                      "properties": {
+                        "main": {
+                          "type": "object",
+                          "description": "Results for main Discord server",
+                          "properties": {
+                            "success": {
+                              "type": "array",
+                              "description": "Role keys successfully modified",
+                              "items": {
+                                "type": "string",
+                                "example": "TEAM_OWNER"
+                              }
+                            },
+                            "failure": {
+                              "type": "array",
+                              "description": "Roles that failed to modify",
+                              "items": {
+                                "type": "object",
+                                "properties": {
+                                  "roleKey": {
+                                    "type": "string"
+                                  },
+                                  "error": {
+                                    "type": "string"
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        },
+                        "staff": {
+                          "type": "object",
+                          "description": "Results for staff Discord server",
+                          "properties": {
+                            "success": {
+                              "type": "array",
+                              "description": "Role keys successfully modified",
+                              "items": {
+                                "type": "string",
+                                "example": "TEAM_OWNER"
+                              }
+                            },
+                            "failure": {
+                              "type": "array",
+                              "description": "Roles that failed to modify",
+                              "items": {
+                                "type": "object",
+                                "properties": {
+                                  "roleKey": {
+                                    "type": "string"
+                                  },
+                                  "error": {
+                                    "type": "string"
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Input Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/paramError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden - Role key not in whitelist",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "example": "FORBIDDEN"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "One or more role keys are not allowed to be synced"
+                    },
+                    "invalidRoles": {
+                      "type": "array",
+                      "items": {
+                        "type": "string",
+                        "example": "UNKNOWN_ROLE"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "User not found in any guild",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/notFoundError"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Service Unavailable - Whitelist not configured",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "example": "SERVICE_UNAVAILABLE"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Role sync whitelist is not configured or empty"
+                    }
+                  }
                 }
               }
             }
