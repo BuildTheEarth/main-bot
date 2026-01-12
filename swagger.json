@@ -336,7 +336,7 @@
         }
       }
     },
-    "/api/v1/role": {
+    "/api/v1/role/{id}": {
       "get": {
         "tags": [
           "website",
@@ -348,10 +348,9 @@
         "parameters": [
           {
             "name": "id",
-            "in": "query",
+            "in": "path",
             "description": "The Discord Snowflake User ID of target",
             "required": true,
-            "explode": true,
             "schema": {
               "type": "string",
               "example": "635411595253776385"
@@ -492,7 +491,7 @@
                               "description": "Role keys successfully modified",
                               "items": {
                                 "type": "string",
-                                "example": "buildteam_owner"
+                                "example": "TEAM_OWNER"
                               }
                             },
                             "failure": {
@@ -521,7 +520,7 @@
                               "description": "Role keys successfully modified",
                               "items": {
                                 "type": "string",
-                                "example": "buildteam_owner"
+                                "example": "TEAM_OWNER"
                               }
                             },
                             "failure": {
