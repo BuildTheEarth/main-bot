@@ -34,6 +34,7 @@ import ReactionRole from "../entities/ReactionRole.entity.js"
 import WebEvents from "./client/WebEvents.js"
 import AssetList from "./client/AssetList.js"
 import ComponentHandlersList from "./client/ComponentHandlersList.js"
+import ContextMenuCommandList from "./client/ContextMenuCommandList.js"
 
 export default class BotClient extends Client {
     declare guilds: GuildManager
@@ -71,6 +72,7 @@ export default class BotClient extends Client {
     reactionRoles: Map<string, ReactionRole> = new Map()
     webEvents = new WebEvents(this)
     teamsCron: Cron | null = null
+    contextMenuCommandList = new ContextMenuCommandList(this)
 
     async initDatabase(): Promise<void> {
         const db = this.config.database

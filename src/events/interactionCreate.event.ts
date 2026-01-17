@@ -174,6 +174,61 @@ export default async function (
         }
     }
 
+    if (interaction.isContextMenuCommand()) {
+        const command = this.contextMenuCommandList.getByName(interaction.commandName)
+        if (command) {
+            const hasPermission =
+                interaction.member &&
+                BotGuildMember.hasRole(
+                    interaction.member as GuildMember,
+                    command.permissions,
+                    this
+                )
+            if (command.permissions !== globalThis.client.roles.ANY && !hasPermission) {
+                return interaction.reply({
+                    content: client.messages.getMessage(
+                        "noPerms",
+                        interaction.locale
+                    ),
+                    ephemeral: true
+                })
+            }
+            
+            const label = interaction.member
+                ? BotRole.format(
+                      (interaction.member as GuildMember).roles.highest as Role
+                  )
+                : chalk.blueBright("DMs")
+            const tag =
+                command.name === "suggest" && !interaction.guild
+                    ? "(Anonymous)"
+                    : (interaction.user as User).tag
+            try {
+                await command.run(this, interaction)
+            } catch (error) {
+                interaction.reply(
+                    {
+                        content: "An unknown error occurred! Please contact one of the bot developers for help."
+                    }   
+                )
+                if (error instanceof Error) {
+                    const stack = (error.stack as string)
+                        .split("\n")
+                        .map(line => "    " + line)
+                        .join("\n")
+                    return this.logger.error(
+                        `${label} ${tag} tried to run '${command.name}' context menu command:\n${stack}`
+                    )
+                }
+            }
+
+            this.logger.info(
+                `${label} ${tag} ran '${command.name}' context menu command.`
+            )
+            return
+        }
+    }
+
     if (interaction.type === InteractionType.ModalSubmit) {
         if (interaction instanceof ModalSubmitInteraction) {
             const type = interaction.customId.split(".")[0]

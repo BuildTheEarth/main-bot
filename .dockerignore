@@ -1,5 +1,6 @@
 # Install Data
 node_modules
+node_modules/
 
 # Build
 dist/
@@ -7,8 +8,8 @@ dist/
 # Logs
 logs/
 
-#Webserver stuff
+# Webserver stuff
 images/
 
-#Docker
+# Docker
 docker_env/

@@ -486,132 +486,135 @@ export default new Command({
                 snippet.aliases.splice(snippet.aliases.indexOf(alias), 1)
                 await snippet.save()
                 return message.sendSuccessMessage(
-                    "removedAlias",
+                    "removeAlias",
                     alias,
                     name,
                     currType,
                     languageName
                 )
             }
-        }
-        const editPermissions = [
-            globalThis.client.roles.SUPPORT,
-            globalThis.client.roles.MANAGER,
-            globalThis.client.roles.PR_TRANSLATION_TEAM
-        ]
-        const deletePermissions = [
-            globalThis.client.roles.SUPPORT,
-            globalThis.client.roles.MANAGER
-        ]
-        if (
-            !GuildMember.hasRole(message.member, editPermissions, client) &&
-            subcommand !== "source"
-        )
-            return
-        const canDelete = GuildMember.hasRole(message.member, deletePermissions, client)
-        if (subcommand === "delete" && !canDelete) return
+        } else {
 
-        const name = args.consume("name").toLowerCase()
-        let language = args.consume("language").toLowerCase()
-        const languageName = languages.getName(language)
-        if (!name) return message.sendErrorMessage("noName")
-        if (!languageName && !teams) return message.sendErrorMessage("invalidSnippetLang")
-        if (languageName && teams) language = "en"
-        if (!languageName && teams) language = "en"
 
-        if (
-            !(
+            const editPermissions = [
+                globalThis.client.roles.SUPPORT,
+                globalThis.client.roles.MANAGER,
+                globalThis.client.roles.PR_TRANSLATION_TEAM
+            ]
+            const deletePermissions = [
+                globalThis.client.roles.SUPPORT,
+                globalThis.client.roles.MANAGER
+            ]
+            if (
+                !GuildMember.hasRole(message.member, editPermissions, client) &&
+                subcommand !== "source"
+            )
+                return
+            const canDelete = GuildMember.hasRole(message.member, deletePermissions, client)
+            if (subcommand === "delete" && !canDelete) return
+
+            const name = args.consume("name").toLowerCase()
+            let language = args.consume("language").toLowerCase()
+            const languageName = languages.getName(language)
+            if (!name) return message.sendErrorMessage("noName")
+            if (!languageName && !teams) return message.sendErrorMessage("invalidSnippetLang")
+            if (languageName && teams) language = "en"
+            if (!languageName && teams) language = "en"
+
+            if (
+                !(
+                    (subcommand === "add" && !subcommandGroup) ||
+                    (subcommand === "edit" && !subcommandGroup)
+                )
+            )
+                await message.continue()
+
+            const existingSnippet = await Snippet.findOne({
+                name: name,
+                language: language,
+                type: currType
+            })
+
+            if (
                 (subcommand === "add" && !subcommandGroup) ||
                 (subcommand === "edit" && !subcommandGroup)
-            )
-        )
-            await message.continue()
+            ) {
+                const body = args.consumeRest(["body"])
+                let snippet: Snippet | null = null
 
-        const existingSnippet = await Snippet.findOne({
-            name: name,
-            language: language,
-            type: currType
-        })
-
-        if (
-            (subcommand === "add" && !subcommandGroup) ||
-            (subcommand === "edit" && !subcommandGroup)
-        ) {
-            const body = args.consumeRest(["body"])
-            let snippet: Snippet | null = null
-
-            if (subcommand === "add") {
-                if (client.customCommands.search(name))
-                    return message.sendErrorMessage("alreadyInUse")
-                if (existingSnippet) return message.sendErrorMessage("alreadyExists")
-                if (rules) {
-                    if (Number.isNaN(Number(name))) {
-                        return message.sendErrorMessage("invalidRuleName")
+                if (subcommand === "add") {
+                    if (client.customCommands.search(name))
+                        return message.sendErrorMessage("alreadyInUse")
+                    if (existingSnippet) return message.sendErrorMessage("alreadyExists")
+                    if (rules) {
+                        if (Number.isNaN(Number(name))) {
+                            return message.sendErrorMessage("invalidRuleName")
+                        }
                     }
+                    if (!body) {
+                        const modalId = await message.showModal("snippet")
+                        return client.interactionInfo.set(modalId, {
+                            name: name,
+                            language: language,
+                            type: currType,
+                            subcommand: "add",
+                            modalType: "snippetmodal"
+                        })
+                    }
+                    snippet = new Snippet()
+                    snippet.name = name
+                    snippet.language = language
+                    snippet.aliases = []
+                    snippet.type = currType
+                } else if (subcommand === "edit") {
+                    if (!existingSnippet)
+                        return message.sendErrorMessage("nonexistantSnippet")
+                    if (!body) {
+                        const modalId = await message.showModal("snippet", {
+                            body: existingSnippet.body
+                        })
+                        return client.interactionInfo.set(modalId, {
+                            name: name,
+                            language: language,
+                            type: currType,
+                            subcommand: "edit",
+                            modalType: "snippetmodal",
+                            existingSnippet: existingSnippet
+                        })
+                    }
+                    if (existingSnippet.body === body)
+                        return message.sendErrorMessage("noChange")
+                    snippet = existingSnippet
                 }
-                if (!body) {
-                    const modalId = await message.showModal("snippet")
-                    return client.interactionInfo.set(modalId, {
-                        name: name,
-                        language: language,
-                        type: currType,
-                        subcommand: "add",
-                        modalType: "snippetmodal"
-                    })
-                }
-                snippet = new Snippet()
-                snippet.name = name
-                snippet.language = language
-                snippet.aliases = []
-                snippet.type = currType
-            } else if (subcommand === "edit") {
-                if (!existingSnippet)
-                    return message.sendErrorMessage("nonexistantSnippet")
-                if (!body) {
-                    const modalId = await message.showModal("snippet", {
-                        body: existingSnippet.body
-                    })
-                    return client.interactionInfo.set(modalId, {
-                        name: name,
-                        language: language,
-                        type: currType,
-                        subcommand: "edit",
-                        modalType: "snippetmodal",
-                        existingSnippet: existingSnippet
-                    })
-                }
-                if (existingSnippet.body === body)
-                    return message.sendErrorMessage("noChange")
-                snippet = existingSnippet
+
+                if (snippet) snippet.body = body
+                await snippet?.save()
+                const messageToSend =
+                    subcommand === "add"
+                        ? message.getMessage("addedSnippet", name, currType, language)
+                        : message.getMessage("editedSnippet", name, currType, language)
+                await message.sendSuccess(messageToSend)
+                if (snippet) await client.log(snippet, subcommand, message.member.user)
+            } else if (subcommand === "delete" && !subcommandGroup) {
+                if (!existingSnippet) return message.sendErrorMessage("snippetNotFound")
+
+                await existingSnippet.remove()
+                await message.sendSuccessMessage("deletedSnippet", name, currType, language)
+                await client.log(existingSnippet, "delete", message.member.user)
+            } else if (subcommand === "source" && !subcommandGroup) {
+                if (!existingSnippet) return message.sendErrorMessage("snippetNotFound")
+                await message.send({
+                    embeds: [
+                        {
+                            color: hexToNum(client.config.colors.info),
+                            description:
+                                `The **${existingSnippet.name}** ${currType} responds with ` +
+                                `the following text in ${languageName}:` +
+                                `\n\`\`\`\n${existingSnippet.body}\`\`\``
+                        }
+                    ]
+                })
             }
-
-            if (snippet) snippet.body = body
-            await snippet?.save()
-            const messageToSend =
-                subcommand === "add"
-                    ? message.getMessage("addedSnippet", name, currType, language)
-                    : message.getMessage("editedSnippet", name, currType, language)
-            await message.sendSuccess(messageToSend)
-            if (snippet) await client.log(snippet, subcommand, message.member.user)
-        } else if (subcommand === "delete" && !subcommandGroup) {
-            if (!existingSnippet) return message.sendErrorMessage("snippetNotFound")
-
-            await existingSnippet.remove()
-            await message.sendSuccessMessage("deletedSnippet", name, currType, language)
-            await client.log(existingSnippet, "delete", message.member.user)
-        } else if (subcommand === "source" && !subcommandGroup) {
-            if (!existingSnippet) return message.sendErrorMessage("snippetNotFound")
-            await message.send({
-                embeds: [
-                    {
-                        color: hexToNum(client.config.colors.info),
-                        description:
-                            `The **${existingSnippet.name}** ${currType} responds with ` +
-                            `the following text in ${languageName}:` +
-                            `\n\`\`\`\n${existingSnippet.body}\`\`\``
-                    }
-                ]
-            })
         }
     }
 })

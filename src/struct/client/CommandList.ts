@@ -63,15 +63,15 @@ export default class CommandList extends Collection<string, Command> {
             if (isStringArrFunc(command.permission)) permsTemp = [command.permission]
             else permsTemp = command.permission
             permsTemp.push(this.client.roles.BOT_DEVELOPER)
-            for await (const perm of permsTemp) {
+            for (const perm of permsTemp) {
                 let roleMain
                 let roleStaff
 
-                if (await this.client.customGuilds.main())
-                    roleMain = BotGuild.role(await this.client.customGuilds.main(), perm)
-                if (await this.client.customGuilds.staff())
+                if (this.client.customGuilds.main())
+                    roleMain = BotGuild.role(this.client.customGuilds.main(), perm)
+                if (this.client.customGuilds.staff())
                     roleStaff = BotGuild.role(
-                        await this.client.customGuilds.staff(),
+                        this.client.customGuilds.staff(),
                         perm
                     )
                 if (roleMain && permsTemp[0] != globalThis.client.roles.ANY)
@@ -87,6 +87,22 @@ export default class CommandList extends Collection<string, Command> {
                         permission: true
                     })
             }
+
+            //If the command isn't for everyone, restrict by default
+            if (!permsTemp.includes(globalThis.client.roles.ANY)) {
+                permsMain.push({
+                        id: this.client.customGuilds.main().roles.everyone.id,
+                        type: ApplicationCommandPermissionType.Role,
+                        permission: false
+                })
+
+                permsStaff.push({
+                        id: this.client.customGuilds.staff().roles.everyone.id,
+                        type: ApplicationCommandPermissionType.Role,
+                        permission: false
+                })
+            }
+
             for await (const cmd of commandToSlash(command)) {
                 const pushCmd = cmd
                 //NOTE: Discord api major change hack fix
@@ -206,6 +222,10 @@ export default class CommandList extends Collection<string, Command> {
         }
 
         await this.client.application?.commands.set(registerCommandGlobal)
+
+        await this.client.contextMenuCommandList.load()
+
+        await this.client.contextMenuCommandList.register(bearerToken)
     }
 
     search(name: string): Command | undefined {

@@ -16,9 +16,9 @@ module.exports = {
     docker: {
       default: npsUtils.series('npm start docker.build', 'npm start docker.compose'),
       compose: "docker compose up",
-      build: "docker build . -t buildtheearth/main-bot --no-cache=true",
+      build: "docker build . -t buildtheearth/main-bot --no-cache",
       run: "docker run buildtheearth/main-bot",
-      test: "docker run --rm buildtheearth/main-bot",
+      test: "docker run buildtheearth/main-bot",
       production: "docker run buildtheearth/main-bot -d"
     },
     start: {

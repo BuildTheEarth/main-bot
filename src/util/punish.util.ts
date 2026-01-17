@@ -1,4 +1,4 @@
-import { ButtonInteraction, GuildMember, TextChannel, User } from "discord.js"
+import { ButtonInteraction, ContextMenuCommandInteraction, GuildMember, TextChannel, User } from "discord.js"
 import BotClient from "../struct/BotClient.js"
 import CommandMessage from "../struct/CommandMessage.js"
 import TimedPunishment from "../entities/TimedPunishment.entity.js"
@@ -8,7 +8,7 @@ import { noop } from "@buildtheearth/bot-utils"
 
 async function log(
     client: BotClient,
-    message: CommandMessage | ButtonInteraction,
+    message: CommandMessage | ButtonInteraction | ContextMenuCommandInteraction,
     user: User,
     type: "warn" | "mute" | "kick" | "ban",
     reason: string,
@@ -26,6 +26,7 @@ async function log(
     if (image) log.reasonImage = image
     log.length = length
     if (message instanceof ButtonInteraction) log.channel = message.channelId
+    else if (message instanceof ContextMenuCommandInteraction) log.channel = message.channelId
     else log.channel = message.channel.id
     log.message = messageId
     if ((type === "ban" || type === "mute") && punishment) log.punishment = punishment
@@ -42,7 +43,7 @@ async function log(
         const reviewerChannel = client.customGuilds
             .main()
             .channels.cache.find(
-                ch => ch.name == "review-committee-private"
+                ch => ch.name == "builder-council"
             ) as TextChannel
         if (
             member &&
@@ -89,7 +90,7 @@ async function timedPunishment(
 
 export default async function punish(
     client: BotClient,
-    message: CommandMessage | ButtonInteraction,
+    message: CommandMessage | ButtonInteraction | ContextMenuCommandInteraction,
     member: User,
     type: "warn" | "mute" | "kick" | "ban",
     reason: string,
