@@ -18,6 +18,13 @@ export default async function (
 
     if (oldMessage?.author?.bot) return
 
+    if (oldMessage.content === newMessage.content) return
+
+    const HOUR = 1000 * 60 * 60;
+    const anHourAgo = Date.now() - HOUR
+
+    if (newMessage.createdAt < anHourAgo) return
+
     if (newMessage.content) {
         const bannedWords = this.filter.findBannedWord(newMessage.content)
         if (bannedWords.length >= 1 && newMessage.guild?.id === this.config.guilds.main)
