@@ -2,7 +2,7 @@
 
 const npsUtils = require('nps-utils');
 
-const clean = npsUtils.rimraf('/dist');
+const clean = npsUtils.rimraf('dist');
 
 module.exports = {
   scripts: {
