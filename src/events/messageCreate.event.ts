@@ -1,6 +1,7 @@
 import { hexToNum, noop } from "@buildtheearth/bot-utils"
 import crypto from "crypto"
-import { Message, MessageType, TextChannel } from "discord.js"
+import { Message, MessageType } from "discord.js"
+import fetch from "node-fetch"
 import typeorm from "typeorm"
 import { runBtCommand } from "../commands/team.command.js"
 import ModerationMenu from "../entities/ModerationMenu.entity.js"
@@ -9,7 +10,6 @@ import BotClient from "../struct/BotClient.js"
 import languages from "../struct/client/iso6391.js"
 import BotGuild from "../struct/discord/BotGuild.js"
 import BotGuildMember from "../struct/discord/BotGuildMember.js"
-
 import chalk = require("chalk")
 
 const ATTACHMENT_DUPLICATE_WINDOW = 30_000
@@ -185,31 +185,61 @@ export default async function (this: BotClient, message: Message): Promise<unkno
     if (main && message.attachments.size > 0) {
         const attachmentCount = message.attachments.size
 
-        if (attachmentCount == 2 || attachmentCount == 4) {
-            message.attachments.forEach(attachment => {
-                getAttachmentHash(attachment.url).then(async hash => {
-                    if (!hash) return
-                    const now = Date.now()
-                    clearOldAttachmentHashes(now)
+        // if (attachmentCount == 2 || attachmentCount == 4) {
+        //     message.attachments.forEach(attachment => {
+        //         getAttachmentHash(attachment.url).then(async hash => {
+        //             if (!hash) return
+        //             const now = Date.now()
+        //             clearOldAttachmentHashes(now)
 
-                    const previous = recentAttachmentHashes.get(hash)
-                    recentAttachmentHashes.set(hash, now)
-                    if (previous && now - previous <= ATTACHMENT_DUPLICATE_WINDOW) {
-                        message.delete().catch(noop)
-                        const bannedWords = this.filter.findBannedWord("SUS_ATTACHMENT")
+        //             const previous = recentAttachmentHashes.get(hash)
+        //             recentAttachmentHashes.set(hash, now)
+        //             if (previous && now - previous <= ATTACHMENT_DUPLICATE_WINDOW) {
+        //                 message.delete().catch(noop)
+        //                 const bannedWords = this.filter.findBannedWord("SUS_ATTACHMENT")
 
-                        if (bannedWords.length >= 1) {
-                            return ModerationMenu.createMenu(message, bannedWords, this)
-                        } else {
-                            await client.log({
-                                color: hexToNum(client.config.colors.info),
-                                author: { name: "Attachment Delete" },
-                                description: `Message with ${attachmentCount} attachments by ${message.member} in ${message.channel} deleted. No moderation action found.`
-                            })
-                        }
+        //                 if (bannedWords.length >= 1) {
+        //                     return ModerationMenu.createMenu(message, bannedWords, this)
+        //                 } else {
+        //                     await client.log({
+        //                         color: hexToNum(client.config.colors.info),
+        //                         author: { name: "Attachment Delete" },
+        //                         description: `Message with ${attachmentCount} attachments by ${message.member} in ${message.channel} deleted. No moderation action found.`
+        //                     })
+        //                 }
+        //             }
+        //         })
+        //     })
+        // }
+        if (attachmentCount === 2 || attachmentCount === 4) {
+            const messageHashes = new Set<string>()
+
+            for (const attachment of message.attachments.values()) {
+                const hash = await getAttachmentHash(attachment.url)
+                if (!hash) continue
+                if (messageHashes.has(hash)) continue
+
+                messageHashes.add(hash)
+                const now = Date.now()
+                clearOldAttachmentHashes(now)
+
+                const previous = recentAttachmentHashes.get(hash)
+                recentAttachmentHashes.set(hash, now)
+                if (previous && now - previous <= ATTACHMENT_DUPLICATE_WINDOW) {
+                    const bannedWords = this.filter.findBannedWord("SUS_ATTACHMENT")
+                    if (bannedWords.length >= 1) {
+                        await ModerationMenu.createMenu(message, bannedWords, this)
+                    } else {
+                        await message.delete().catch(noop)
+                        await this.log({
+                            color: hexToNum(this.config.colors.info),
+                            author: { name: "Attachment Delete" },
+                            description: `Message with ${attachmentCount} attachments by ${message.member} in ${message.channel} deleted. No moderation action found.`
+                        })
+                        break
                     }
-                })
-            })
+                }
+            }
         }
     }
 }
