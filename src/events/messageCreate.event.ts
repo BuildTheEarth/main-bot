@@ -1,15 +1,19 @@
-import BotClient from "../struct/BotClient.js"
-import BotGuildMember from "../struct/discord/BotGuildMember.js"
-import BotGuild from "../struct/discord/BotGuild.js"
+import { hexToNum, noop } from "@buildtheearth/bot-utils"
+import crypto from "crypto"
+import { Message, MessageType, TextChannel } from "discord.js"
+import typeorm from "typeorm"
+import { runBtCommand } from "../commands/team.command.js"
+import ModerationMenu from "../entities/ModerationMenu.entity.js"
 import Snippet from "../entities/Snippet.entity.js"
+import BotClient from "../struct/BotClient.js"
 import languages from "../struct/client/iso6391.js"
+import BotGuild from "../struct/discord/BotGuild.js"
+import BotGuildMember from "../struct/discord/BotGuildMember.js"
 
 import chalk = require("chalk")
-import { noop } from "@buildtheearth/bot-utils"
-import { Message, MessageType } from "discord.js"
-import typeorm from "typeorm"
-import ModerationMenu from "../entities/ModerationMenu.entity.js"
-import { runBtCommand } from "../commands/team.command.js"
+
+const ATTACHMENT_DUPLICATE_WINDOW = 30_000
+const recentAttachmentHashes: Map<string, number> = new Map()
 
 function consumeCommand(client: BotClient, message: Message): string {
     const content = message.content
@@ -48,6 +52,22 @@ function consumeTeam(client: BotClient, message: Message): string {
     const commandSplit = command.split(" ")
     commandSplit.shift()
     return commandSplit.join(" ").trim() || ""
+}
+
+function clearOldAttachmentHashes(now: number): void {
+    for (const [hash, timestamp] of recentAttachmentHashes) {
+        if (now - timestamp > ATTACHMENT_DUPLICATE_WINDOW) {
+            recentAttachmentHashes.delete(hash)
+        }
+    }
+}
+
+async function getAttachmentHash(url: string): Promise<string | null> {
+    const attachmentFetch = await fetch(url).catch(noop)
+    if (!attachmentFetch?.ok) return null
+    const arrayBuffer = await attachmentFetch.arrayBuffer().catch(() => null)
+    if (!arrayBuffer) return null
+    return crypto.createHash("sha256").update(new Uint8Array(arrayBuffer)).digest("hex")
 }
 
 export default async function (this: BotClient, message: Message): Promise<unknown> {
@@ -158,7 +178,38 @@ export default async function (this: BotClient, message: Message): Promise<unkno
         return await message.channel.send("hay un server!")
     if (message.content) {
         const bannedWords = this.filter.findBannedWord(message.content)
-        if (bannedWords.length >= 1 && message.guild?.id === this.config.guilds.main)
+        if (bannedWords.length >= 1 && message.guild?.id === this.config.guilds.main) {
             return ModerationMenu.createMenu(message, bannedWords, this)
+        }
+    }
+    if (main && message.attachments.size > 0) {
+        const attachmentCount = message.attachments.size
+
+        if (attachmentCount == 2 || attachmentCount == 4) {
+            message.attachments.forEach(attachment => {
+                getAttachmentHash(attachment.url).then(async hash => {
+                    if (!hash) return
+                    const now = Date.now()
+                    clearOldAttachmentHashes(now)
+
+                    const previous = recentAttachmentHashes.get(hash)
+                    recentAttachmentHashes.set(hash, now)
+                    if (previous && now - previous <= ATTACHMENT_DUPLICATE_WINDOW) {
+                        message.delete().catch(noop)
+                        const bannedWords = this.filter.findBannedWord("SUS_ATTACHMENT")
+
+                        if (bannedWords.length >= 1) {
+                            return ModerationMenu.createMenu(message, bannedWords, this)
+                        } else {
+                            await client.log({
+                                color: hexToNum(client.config.colors.info),
+                                author: { name: "Attachment Delete" },
+                                description: `Message with ${attachmentCount} attachments by ${message.member} in ${message.channel} deleted. No moderation action found.`
+                            })
+                        }
+                    }
+                })
+            })
+        }
     }
 }
