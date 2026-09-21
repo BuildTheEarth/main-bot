@@ -29,7 +29,7 @@
         "form-data": "^4.0.0",
         "gitmoji-cli": "^4.11.0",
         "js-yaml": "4.1.0",
-        "json5": "2.2.0",
+        "json5": "2.2.3",
         "minecraft-block-info": "github:XboxBedrock/minecraft-block-info",
         "mlly": "^1.7.1",
         "mysql-backup": "^1.0.0",
