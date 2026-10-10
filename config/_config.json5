@@ -104,4 +104,12 @@
         pass: ""
     },
     oauthEnabled: false,
+    suggestionDashboard: {
+        enabled: false,
+        channels: {
+            main: "692251560981430292",
+            staff: "705286174356537394"
+        },
+        mainAccessRoleId: "691343715117039666"
+    }
 }

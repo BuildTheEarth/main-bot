@@ -32,6 +32,7 @@ export default async function (
     interaction: Interaction
 ): Promise<unknown> {
     if (interaction.user.bot) return
+    if (await this.suggestionDashboard.handleInteraction(interaction)) return
 
     if (
         interaction.type != InteractionType.ApplicationCommand &&
@@ -186,14 +187,11 @@ export default async function (
                 )
             if (command.permissions !== globalThis.client.roles.ANY && !hasPermission) {
                 return interaction.reply({
-                    content: client.messages.getMessage(
-                        "noPerms",
-                        interaction.locale
-                    ),
+                    content: client.messages.getMessage("noPerms", interaction.locale),
                     ephemeral: true
                 })
             }
-            
+
             const label = interaction.member
                 ? BotRole.format(
                       (interaction.member as GuildMember).roles.highest as Role
@@ -206,11 +204,10 @@ export default async function (
             try {
                 await command.run(this, interaction)
             } catch (error) {
-                interaction.reply(
-                    {
-                        content: "An unknown error occurred! Please contact one of the bot developers for help."
-                    }   
-                )
+                interaction.reply({
+                    content:
+                        "An unknown error occurred! Please contact one of the bot developers for help."
+                })
                 if (error instanceof Error) {
                     const stack = (error.stack as string)
                         .split("\n")

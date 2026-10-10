@@ -14,15 +14,22 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
+    - name: Build the Docker image
+      run: docker build . --file Dockerfile --tag buildtheearth/main-bot:$(git rev-parse --short HEAD) --tag buildtheearth/main-bot:latest
     - name: Docker login
+      if: github.event_name == 'push' && github.ref == 'refs/heads/main' && github.repository == 'BuildTheEarth/main-bot'
       env:
         DOCKER_USER: ${{secrets.DOCKER_USER}}
         DOCKER_PASSWORD: ${{secrets.DOCKER_PASSWORD}}
       run: |
-        docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
-    - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag buildtheearth/main-bot:$(git rev-parse --short HEAD) --tag buildtheearth/main-bot:latest
+        if [ -z "$DOCKER_USER" ] || [ -z "$DOCKER_PASSWORD" ]; then
+          echo "::error::Configure DOCKER_USER and DOCKER_PASSWORD in the repository's Actions secrets."
+          exit 1
+        fi
+        printf '%s' "$DOCKER_PASSWORD" | docker login --username "$DOCKER_USER" --password-stdin
     - name: Docker push tag
+      if: github.event_name == 'push' && github.ref == 'refs/heads/main' && github.repository == 'BuildTheEarth/main-bot'
       run: docker push buildtheearth/main-bot:$(git rev-parse --short HEAD)
     - name: Docker push latest
+      if: github.event_name == 'push' && github.ref == 'refs/heads/main' && github.repository == 'BuildTheEarth/main-bot'
       run: docker push buildtheearth/main-bot:latest

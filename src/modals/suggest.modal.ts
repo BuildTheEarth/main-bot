@@ -3,6 +3,7 @@ import { truncateString } from "@buildtheearth/bot-utils"
 import { isSuggestInfo } from "../typings/InteractionInfo.js"
 import {
     ModalSubmitInteraction,
+    MessageFlags,
     TextChannel,
     ThreadAutoArchiveDuration
 } from "discord.js"
@@ -12,9 +13,10 @@ export default async function createSuggestion(
     interaction: ModalSubmitInteraction,
     client: BotClient
 ): Promise<void> {
-    const customId = interaction.customId
-    const info = client.interactionInfo.get(customId)
-    if (client.interactionInfo.has(customId) && isSuggestInfo(info)) {
+    try {
+        const customId = interaction.customId
+        const info = client.interactionInfo.get(customId)
+        if (!isSuggestInfo(info)) return
         const anon = info.anon
         const title = interaction.fields.getTextInputValue("title")
         const body = interaction.fields.getTextInputValue("body")
@@ -30,30 +32,38 @@ export default async function createSuggestion(
             return
         }
 
+        await interaction.deferReply({ flags: MessageFlags.Ephemeral })
         const identifier = info.subsuggestion
         const extend = identifier ? Suggestion.parseIdentifier(identifier) : null
 
         let error: string | null = null
-        if (extend && !(await Suggestion.findOne({ number: extend.number })))
-            error = `The suggestion you're trying to extend (**#${extend}**) doesn't exist!`
+        const parent = extend
+            ? await Suggestion.findOne({ number: extend.number, staff })
+            : null
+        if (extend && !parent)
+            error = `The suggestion you're trying to extend (**#${identifier}**) doesn't exist!`
         if (!body) error = client.messages.getMessage("noBody", interaction.locale)
         if (!title) error = client.messages.getMessage("noTitle", interaction.locale)
         if (title?.length > 200)
             error = client.messages.getMessage("titleTooLong", interaction.locale)
-        if (
-            extend &&
-            (await Suggestion.find({ where: { extends: extend.number } })).some(
-                async suggestion =>
-                    (await suggestion.getIdentifier()).match(/\d+(?<l>[a-z])/)?.groups
-                        ?.l == extend.extension
+        if (extend?.extension) {
+            const subsuggestions = await Suggestion.find({
+                where: { extends: extend.number, staff }
+            })
+            const identifiers = await Promise.all(
+                subsuggestions.map(suggestion => suggestion.getIdentifier())
             )
-        )
-            error = client.messages.getMessage(
-                "alreadyExistsSubsuggestion",
-                interaction.locale
+            if (
+                identifiers.some(value => value === `${extend.number}${extend.extension}`)
             )
+                error = client.messages.getMessage(
+                    "alreadyExistsSubsuggestion",
+                    interaction.locale
+                )
+        }
         if (error) {
-            await client.response.sendError(interaction, error)
+            await interaction.editReply({ content: error })
+            return
         }
 
         const suggestion = new Suggestion()
@@ -75,20 +85,18 @@ export default async function createSuggestion(
         suggestion.message = suggestionMessage.id
 
         if (extend?.extension) {
-            const old = await Suggestion.findOne({ number: extend.number })
-            if (old?.thread) {
+            if (parent?.thread) {
                 const thread = await (
                     client.channels.cache.get(
                         client.config.suggestions.discussion[staff ? "staff" : "main"]
                     ) as TextChannel
-                ).threads.fetch(old.thread)
+                ).threads.fetch(parent.thread)
                 if (thread)
-                    client.response.sendSuccess(thread, {
+                    await client.response.sendSuccess(thread, {
                         description: `**New subsuggestion:** [${title}](${suggestion.getURL(
                             client
-                        )},)`
+                        )})`
                     })
-                await suggestion.save()
             }
         } else {
             const newIdentifier = await suggestion.getIdentifier()
@@ -101,17 +109,25 @@ export default async function createSuggestion(
             })
             await thread.setRateLimitPerUser(1)
             suggestion.thread = thread.id
-            await suggestion.save()
-            client.response.sendSuccess(
-                interaction,
-                { description: "Suggestion created!" },
-                true
-            )
         }
+        await suggestion.save()
+
+        await interaction.editReply({ content: "Suggestion created!" })
 
         await suggestionMessage.react(client.config.emojis.upvote)
         await suggestionMessage.react(client.config.emojis.downvote)
-        //some nice cleanup
-        client.interactionInfo.delete(customId)
+    } catch (error) {
+        client.logger.error(`Suggestion submission failed: ${String(error)}`)
+        const content =
+            "Could not finish creating your suggestion. Check the suggestions channel before trying again."
+        if (interaction.deferred || interaction.replied) {
+            await interaction.editReply({ content }).catch(() => null)
+        } else {
+            await interaction
+                .reply({ content, flags: MessageFlags.Ephemeral })
+                .catch(() => null)
+        }
+    } finally {
+        client.interactionInfo.delete(interaction.customId)
     }
 }
