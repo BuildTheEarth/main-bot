@@ -104,6 +104,7 @@ export default class Suggestion extends typeorm.BaseEntity {
         } else {
             const extenders = await Suggestion.find({
                 extends: this.extends,
+                staff: this.staff,
                 createdAt: typeorm.LessThan(this.createdAt || new Date())
             })
             const letter = Suggestion.ALPHABET[extenders.length + 1]
