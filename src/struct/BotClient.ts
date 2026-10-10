@@ -1,4 +1,4 @@
-import typeorm, { Migration } from "typeorm"
+import typeorm from "typeorm"
 import {
     APIEmbed,
     Client,
@@ -36,6 +36,8 @@ import AssetList from "./client/AssetList.js"
 import ComponentHandlersList from "./client/ComponentHandlersList.js"
 import ContextMenuCommandList from "./client/ContextMenuCommandList.js"
 
+import SuggestionDashboard from "./client/SuggestionDashboard.js"
+
 export default class BotClient extends Client {
     declare guilds: GuildManager
     customGuilds = new BotGuildManager(this)
@@ -72,6 +74,7 @@ export default class BotClient extends Client {
     reactionRoles: Map<string, ReactionRole> = new Map()
     webEvents = new WebEvents(this)
     teamsCron: Cron | null = null
+    suggestionDashboard = new SuggestionDashboard(this)
     contextMenuCommandList = new ContextMenuCommandList(this)
 
     async initDatabase(): Promise<void> {

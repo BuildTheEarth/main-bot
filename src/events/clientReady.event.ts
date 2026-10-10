@@ -28,6 +28,10 @@ export default async function clientReady(this: BotClient): Promise<void> {
     await this.componentHandlers.load()
     this.logger.info("Loaded interaction handlers.")
 
+    await this.suggestionDashboard.startWeeklyPublishing().catch(error => {
+        this.logger.error(`Suggestion dashboard could not start: ${String(error)}`)
+    })
+
     const guildList = await this.guilds.fetch()
 
     for (const guild of guildList) {
